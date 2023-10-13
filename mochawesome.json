@@ -1,0 +1,278 @@
+{
+  "stats": {
+    "suites": 3,
+    "tests": 6,
+    "passes": 6,
+    "pending": 0,
+    "failures": 0,
+    "testsRegistered": 6,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false,
+    "start": "2023-09-19T11:05:45.107Z",
+    "end": "2023-09-19T11:06:28.108Z",
+    "duration": 43001
+  },
+  "results": [
+    {
+      "uuid": "b538021f-62f2-4c1c-ac58-15e2ed2eb53c",
+      "title": "",
+      "fullFile": "cypress/e2e/markets.cy.js",
+      "file": "cypress/e2e/markets.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "f9f7f7f6-6961-4e50-8546-aa300bd4d250",
+          "title": "Markets link tests",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Markets - menu",
+              "fullTitle": "Markets link tests Markets - menu",
+              "timedOut": null,
+              "duration": 6917,
+              "state": "passed",
+              "speed": "medium",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "//tag: smoke\nif (Cypress.env('isMobile') == 'true') {\n  //Click through 'Markets' menu-items. \n  cy.findByRole('img', {\n    name: 'hamburger menu'\n  }).click();\n  cy.findByRole('button', {\n    name: 'Markets chevron'\n  }).click();\n  cy.findByRole('link', {\n    name: 'Forex Forex Trade the world’s largest financial market with popular forex pairs.'\n  }).click();\n  cy.findByRole('heading', {\n    name: 'Forex',\n    exact: true\n  }).should('be.visible');\n} else {\n  cy.findByRole('link', {\n    name: 'Who we are'\n  }).click();\n  cy.findByRole('heading', {\n    name: 'Who we are'\n  }).should('be.visible');\n}",
+              "err": {},
+              "uuid": "55a4baef-90f1-4387-9699-ffcc07f89b50",
+              "parentUUID": "f9f7f7f6-6961-4e50-8546-aa300bd4d250",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "55a4baef-90f1-4387-9699-ffcc07f89b50"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 6917,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    },
+    {
+      "uuid": "5e4d078b-74f9-4d0a-a9d5-a1c3e5cb5fc4",
+      "title": "",
+      "fullFile": "cypress/e2e/signups.cy.js",
+      "file": "cypress/e2e/signups.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "0a2a7a9e-56e9-4ce7-b09c-4be53b018b98",
+          "title": "Validate signup links",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Validate user can signup at EU/non-EU Website",
+              "fullTitle": "Validate signup links Validate user can signup at EU/non-EU Website",
+              "timedOut": null,
+              "duration": 2079,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "const email = Cypress.env('email');\ncy.findByPlaceholderText('Email').type(email);\ncy.findByLabelText('I agree to the terms and conditions').check();\ncy.contains('button', 'Create demo account').click();\ncy.url().should('include', `/signup-success?email=${email}`);",
+              "err": {},
+              "uuid": "4abf872c-cdd8-4ce2-b040-4f962c0741d6",
+              "parentUUID": "0a2a7a9e-56e9-4ce7-b09c-4be53b018b98",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "4abf872c-cdd8-4ce2-b040-4f962c0741d6"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 2079,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    },
+    {
+      "uuid": "cbcbb960-a3f8-4b58-9ca4-1540b606606d",
+      "title": "",
+      "fullFile": "cypress/e2e/home.cy.js",
+      "file": "cypress/e2e/home.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "b2803054-32d0-4da4-8690-9c528bfcb80d",
+          "title": "Home page link tests",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Markets - menu",
+              "fullTitle": "Home page link tests Markets - menu",
+              "timedOut": null,
+              "duration": 6961,
+              "state": "passed",
+              "speed": "medium",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "//tag: smoke\nif (Cypress.env('isMobile') == 'true') {\n  //Click through 'Markets' menu-items. \n  cy.findByRole('img', {\n    name: 'hamburger menu'\n  }).click();\n  cy.findByRole('button', {\n    name: 'Markets chevron'\n  }).click();\n  cy.findByRole('link', {\n    name: 'Forex Forex Trade the world’s largest financial market with popular forex pairs.'\n  }).click();\n  cy.findByRole('heading', {\n    name: 'Forex',\n    exact: true\n  }).should('be.visible');\n} else {\n  cy.findByRole('link', {\n    name: 'Who we are'\n  }).click();\n  cy.findByRole('heading', {\n    name: 'Who we are'\n  }).should('be.visible');\n}",
+              "err": {},
+              "uuid": "ca4d1892-691b-4d89-ae06-8305c4dab35d",
+              "parentUUID": "b2803054-32d0-4da4-8690-9c528bfcb80d",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "About us - menu",
+              "fullTitle": "Home page link tests About us - menu",
+              "timedOut": null,
+              "duration": 7933,
+              "state": "passed",
+              "speed": "medium",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "//tag: smoke\nif (Cypress.env('isMobile') == 'true') {\n  //Click through 'About us' menu items. \n  cy.findByRole('img', {\n    name: 'hamburger menu'\n  }).click();\n  cy.findByRole('button', {\n    name: 'About us chevron'\n  }).click();\n  cy.findByRole('link', {\n    name: 'Who we are'\n  }).click();\n  cy.findByRole('heading', {\n    name: 'Who we are'\n  }).should('be.visible');\n  cy.findByRole('img', {\n    name: 'hamburger menu'\n  }).click();\n  cy.findByRole('button', {\n    name: 'About us chevron'\n  }).click();\n  cy.findByRole('link', {\n    name: 'Why choose us'\n  }).click();\n  cy.findByRole('heading', {\n    name: 'Why choose us'\n  }).should('be.visible');\n} else {\n  cy.findByRole('link', {\n    name: 'Who we are'\n  }).click();\n  cy.findByRole('heading', {\n    name: 'Who we are'\n  }).should('be.visible');\n}",
+              "err": {},
+              "uuid": "2a6c96bd-1340-4bb2-95ee-4b8f1033d8f6",
+              "parentUUID": "b2803054-32d0-4da4-8690-9c528bfcb80d",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Validate footer exists",
+              "fullTitle": "Home page link tests Validate footer exists",
+              "timedOut": null,
+              "duration": 6282,
+              "state": "passed",
+              "speed": "medium",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.get('footer').should('exist');",
+              "err": {},
+              "uuid": "1d72af95-a1ea-48cb-a54a-5fc25c64b7c3",
+              "parentUUID": "b2803054-32d0-4da4-8690-9c528bfcb80d",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Validate WhatsApp is available",
+              "fullTitle": "Home page link tests Validate WhatsApp is available",
+              "timedOut": null,
+              "duration": 6381,
+              "state": "passed",
+              "speed": "medium",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.findByRole('button', {\n  name: 'whatsapp icon'\n}).click();",
+              "err": {},
+              "uuid": "dc8e6498-1cfe-4c43-a4ae-8d5501927948",
+              "parentUUID": "b2803054-32d0-4da4-8690-9c528bfcb80d",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "ca4d1892-691b-4d89-ae06-8305c4dab35d",
+            "2a6c96bd-1340-4bb2-95ee-4b8f1033d8f6",
+            "1d72af95-a1ea-48cb-a54a-5fc25c64b7c3",
+            "dc8e6498-1cfe-4c43-a4ae-8d5501927948"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 27557,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/results",
+        "overwrite": false,
+        "html": false,
+        "json": true
+      },
+      "version": "6.2.0"
+    }
+  }
+}
