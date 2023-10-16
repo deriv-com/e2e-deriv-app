@@ -2,8 +2,8 @@ import '@testing-library/cypress/add-commands'
 
 describe('Deriv Trader', () => {
   beforeEach(() => {
-    cy.c_visitResponsive('/dtrader', 'large')
-    cy.findByLabelText('Login').click()
+    cy.c_visitResponsive('/dtrader', 'small')
+    cy.findByRole('button', { name: 'Log in' }).click()
     cy.c_login()
   })
 
