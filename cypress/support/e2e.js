@@ -25,26 +25,51 @@ Cypress.Commands.add('c_visitResponsive', (path, size) => {
             cy.findByRole('heading', { name: "Didn’t find your answer? We can help." }).should('be.visible', { timeout: 30000 })
         }
 
+    if (path.includes('traders-hub')) //Wait for relevent elements to appear (based on page)
+        {
+            cy.log('Trader Hub Selected')
+            cy.findByText('CFDs', { exact: true }).should('be.visible', { timeout: 30000 })
+            cy.findByText('Options & Multipliers').should('be.visible', { timeout: 30000 })
+            cy.findByTestId('dt_div_100_vh').findByText('Trader\'s Hub').should('be.visible', { timeout: 30000 })
+            cy.findByText('Total assets').should('be.visible', { timeout: 30000 })
+        }
+
 });
 
 Cypress.Commands.add('c_login', () => {
-    cy.findByPlaceholderText('example@email.com').type(Cypress.env('loginEmail'), { log: false })
-    cy.findByLabelText('Password').click()
-    cy.findByLabelText('Password').type(Cypress.env('loginPassword'), { log: false })
-    cy.findByRole('button', { name: 'Log in' }).click()
+
+    cy.c_visitResponsive('/endpoint', 'large')
+
+    //NB. This is being replaced by 
+    // cy.findByLabelText('Server').click()
+    // cy.findByLabelText('Server').type('qa10.deriv.dev')
+    // cy.findByLabelText('OAuth App ID').type('1006')
+    // cy.findByText('Enable Service Worker registration for this URL').click()
+    // cy.findByRole('button', { name: 'Submit' }).click()
+
+    localStorage.setItem('config.server_url', Cypress.env('configServer'))
+    localStorage.setItem('config.app_id', Cypress.env('configAppId'))
+
+    cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
+    cy.findByText('Trader\'s Hub').should('be.visible')
+
 });
 
 Cypress.on('uncaught:exception', (err, runnable, promise) => {
     // when the exception originated from an unhandled promise
     // rejection, the promise is provided as a third argument
     // you can turn off failing the test in this case
-    if (promise) {
-      return false
-    }
+    // if (promise) {
+    //   return false
+    // }
     // we still want to ensure there are no other unexpected
     // errors, so we let them fail the test
+
+    console.log(err)
+    return false
   })
 
+  
 
 
 

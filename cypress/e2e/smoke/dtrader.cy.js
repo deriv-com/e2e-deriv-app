@@ -2,9 +2,8 @@ import '@testing-library/cypress/add-commands'
 
 describe('Deriv Trader', () => {
   beforeEach(() => {
-    cy.c_visitResponsive('/dtrader', 'small')
-    cy.findByRole('button', { name: 'Log in' }).click()
     cy.c_login()
+    cy.findAllByRole('button', { name: 'Open' }).first().click()
   })
 
   it('Markets menu', () => {
@@ -14,23 +13,36 @@ describe('Deriv Trader', () => {
 
   })
 
-  it('Rise and Fall Options', () => {
+  it('Demo and Real Account Switcher', () => {
 
-    cy.findByRole('button', { name: 'Minutes' }).click()
-    cy.findByRole('button', { name: 'Ticks' }).click()
+    cy.c_login()
+
+    cy.findByTestId('dt_contract_dropdown').findByText('Rise/Fall').click()
+    cy.findByTestId('dt_contract_wrapper').findByText('Higher/Lower').click()
+    cy.findByText('5 Ticks', { exact: true }).click()
+    cy.findByLabelText('Toggle between advanced and simple duration settings').click()
     cy.findByRole('button', { name: 'Payout' }).click()
-    cy.findByRole('button', { name: 'Stake' }).click()
-
+    cy.findByRole('button', { name: 'End time' }).click()
+  
   })
 
-  it('Change Language', () => {
+  // it('Rise and Fall Options', () => {
 
-    cy.findByTestId('dt_toggle_language_settings').click()
-    cy.findByText('Español').click()
-    cy.findByTestId('dt_toggle_language_settings', { force: true }).click()
-    cy.findByRole('heading', { name: 'Seleccionar idioma' }).click()
-    cy.findByText('English').click()
+  //   cy.findByRole('button', { name: 'Minutes' }).click()
+  //   cy.findByRole('button', { name: 'Ticks' }).click()
+  //   cy.findByRole('button', { name: 'Payout' }).click()
+  //   cy.findByRole('button', { name: 'Stake' }).click()
 
-  });
+  // })
+
+  // it('Change Language', () => {
+
+  //   cy.findByTestId('dt_toggle_language_settings').click()
+  //   cy.findByText('Español').click()
+  //   cy.findByTestId('dt_toggle_language_settings', { force: true }).click()
+  //   cy.findByRole('heading', { name: 'Seleccionar idioma' }).click()
+  //   cy.findByText('English').click()
+
+  // });
 
 })

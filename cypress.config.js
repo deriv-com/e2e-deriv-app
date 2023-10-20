@@ -5,13 +5,12 @@ require('dotenv').config()
 
 module.exports = defineConfig({
   e2e: {
-    projectId: 'j4ifga',
+    projectId: 'qc89n6',
     setupNodeEvents(on, config) {},
-    baseUrl: 'https://deriv.com',
-    //baseUrl: 'https://deriv-com-v2.pages.dev/',
-    //baseUrl: 'https://handle-languages.deriv-com-preview-links.pages.dev',
+    baseUrl: 'https://app.deriv.com',
     defaultCommandTimeout: 15000,
     supportFile: "cypress/support/e2e.js",
+    experimentalWebKitSupport: true,
   },
   env: {
     RegionEU: '/?region=at',
@@ -21,6 +20,12 @@ module.exports = defineConfig({
     viewPortSize: 'small',
     loginEmail: process.env.DERIV_LOGIN,
     loginPassword: process.env.DERIV_PASSWORD,
+    endpointPath: process.env.ENDPOINT_PATH,
+    appstorePath: process.env.APPSTORE_PATH,
+    configServer: process.env.CONFIG_SERVER,
+    configAppId: process.env.CONFIG_APPID,
+    oAuthUrl: process.env.OAUTH_URL,
+    tradersHubUrl: 'appstore/traders-hub'
   },  
   retries: {
       "runMode": 2,
