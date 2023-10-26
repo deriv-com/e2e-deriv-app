@@ -2,7 +2,11 @@ import '@testing-library/cypress/add-commands'
 
 describe('QATEST-5778, QATEST-5781, QATEST-5615', () => {
   beforeEach(() => {
-    cy.c_login()
+    //cy.c_login()
+    cy.log('serv>' + Cypress.env('configServer') + '<')
+    cy.log('appid>' + Cypress.env('configAppId') + '<')
+    cy.log('oauth>' + Cypress.env('oAuthUrl') + '<')
+
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
   })
 
