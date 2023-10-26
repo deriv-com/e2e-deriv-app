@@ -41,7 +41,7 @@ Cypress.Commands.add('c_login', () => {
     cy.log('serv>' + Cypress.env('configServer') + '<')
     cy.log('appid>' + Cypress.env('configAppId') + '<')
     cy.log('oauth>' + Cypress.env('oAuthUrl') + '<')
-    
+
     cy.c_visitResponsive('/', 'large')
 
     //NB. This is being replaced by 
@@ -60,8 +60,8 @@ Cypress.Commands.add('c_login', () => {
 
     // cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
 
-    localStorage.setItem('config.server_url', Cypress.env('configServer'))
-    localStorage.setItem('config.app_id', Cypress.env('configAppId'))
+    //localStorage.setItem('config.server_url', Cypress.env('configServer'))
+    //localStorage.setItem('config.app_id', Cypress.env('configAppId'))
 
     cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
     cy.findByText('Trader\'s Hub').should('be.visible')
