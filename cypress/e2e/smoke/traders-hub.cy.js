@@ -3,7 +3,7 @@ import '@testing-library/cypress/add-commands'
 describe('QATEST-5778, QATEST-5781, QATEST-5615', () => {
   beforeEach(() => {
     cy.c_login()
-    cy.c_visitResponsive('appstore/traders-hub', 'large')
+    cy.c_visitResponsive('/appstore/traders-hub', 'large')
   })
 
   it('Verify account selector, Verify Real and Demo pages and total assets', () => {
