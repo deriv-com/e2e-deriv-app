@@ -38,7 +38,7 @@ Cypress.Commands.add('c_visitResponsive', (path, size) => {
 
 Cypress.Commands.add('c_login', () => {
 
-    cy.c_visitResponsive('/endpoint', 'large')
+    cy.c_visitResponsive('/', 'large')
 
     //NB. This is being replaced by 
     // cy.findByLabelText('Server').click()
