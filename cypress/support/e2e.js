@@ -47,6 +47,14 @@ Cypress.Commands.add('c_login', () => {
     // cy.findByText('Enable Service Worker registration for this URL').click()
     // cy.findByRole('button', { name: 'Submit' }).click()
 
+    // cy.log('serv>' + Cypress.env('configServer') + '<')
+    // cy.log('appid>' + Cypress.env('configAppId') + '<')
+    // cy.log('oauth>' + Cypress.env('oAuthUrl') + '<')
+
+    // localStorage.setItem('config.server_url', Cypress.env('configServer'))
+    // localStorage.setItem('config.app_id', Cypress.env('configAppId'))
+
+    // cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
 
     localStorage.setItem('config.server_url', Cypress.env('configServer'))
     localStorage.setItem('config.app_id', Cypress.env('configAppId'))
