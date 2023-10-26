@@ -63,7 +63,7 @@ Cypress.Commands.add('c_login', () => {
     //localStorage.setItem('config.server_url', Cypress.env('configServer'))
     //localStorage.setItem('config.app_id', Cypress.env('configAppId'))
 
-    cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
+    //cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
     cy.findByText('Trader\'s Hub').should('be.visible')
 
 });
