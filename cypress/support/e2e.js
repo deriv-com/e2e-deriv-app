@@ -42,7 +42,7 @@ Cypress.Commands.add('c_login', () => {
     cy.log('appid>' + Cypress.env('configAppId') + '<')
     cy.log('oauth>' + Cypress.env('oAuthUrl') + '<')
 
-    cy.c_visitResponsive('/', 'large')
+    //cy.c_visitResponsive('/', 'large')
 
     //NB. This is being replaced by 
     // cy.findByLabelText('Server').click()
