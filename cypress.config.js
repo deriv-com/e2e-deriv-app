@@ -25,9 +25,9 @@ module.exports = defineConfig({
     loginPassword: process.env.DERIV_PASSWORD,
     endpointPath: process.env.ENDPOINT_PATH,
     appstorePath: process.env.APPSTORE_PATH,
-    configServer: process.env.CONFIG_SERVER,
-    configAppId: process.env.CONFIG_APPID,
-    oAuthUrl: process.env.OAUTH_URL,
+    configServer: process.env.E2E_CONFIG_SERVER,
+    configAppId: process.env.E2E_CONFIG_APPID,
+    oAuthUrl: process.env.E2E_OAUTH_URL,
     tradersHubUrl: 'appstore/traders-hub'
   },  
   retries: {
