@@ -40,23 +40,10 @@ Cypress.Commands.add('c_login', () => {
 
     cy.c_visitResponsive('/', 'large')
 
-    //NB. This is being replaced by 
-    // cy.findByLabelText('Server').click()
-    // cy.findByLabelText('Server').type('qa10.deriv.dev')
-    // cy.findByLabelText('OAuth App ID').type('1006')
-    // cy.findByText('Enable Service Worker registration for this URL').click()
-    // cy.findByRole('button', { name: 'Submit' }).click()
-
-    // cy.log('serv>' + Cypress.env('configServer') + '<')
-    // cy.log('appid>' + Cypress.env('configAppId') + '<')
-    // cy.log('oauth>' + Cypress.env('oAuthUrl') + '<')
-
     localStorage.setItem('config.server_url', Cypress.env('configServer'))
     localStorage.setItem('config.app_id', Cypress.env('configAppId'))
 
-    //TODO - Get token- const valueFromPlaywright = Cypress.env('SHARED_VALUE');
-
-    cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
+    cy.c_visitResponsive(Cypress.env('oAuthUrl').replace('<token>', Cypress.env('oE2EToken')), 'large')
     cy.findByText('Trader\'s Hub').should('be.visible')
 
 });
