@@ -48,6 +48,19 @@ Cypress.Commands.add('c_login', () => {
 
 });
 
+Cypress.Commands.add('c_mt5login', () => {
+
+    cy.c_visitResponsive('https://mt5-demo-web.deriv.com/terminal', 'large')
+
+    cy.findByRole('button', { name: 'Accept' }).click()
+    cy.findByPlaceholderText('Enter Login').click()
+    cy.findByPlaceholderText('Enter Login').type('5369826')
+    cy.findByPlaceholderText('Enter Password').click()
+    cy.findByPlaceholderText('Enter Password').type('Mw#%O&wIgA0E^gVE')
+    cy.findByRole('button', { name: 'Connect to account' }).click()
+
+});
+
 Cypress.on('uncaught:exception', (err, runnable, promise) => {
     // when the exception originated from an unhandled promise
     // rejection, the promise is provided as a third argument
