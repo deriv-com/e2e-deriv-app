@@ -9,9 +9,9 @@ describe('QATEST-5014 - Verify Main Page', () => {
 
     //Account switcher
     cy.findByTestId('dt_acc_info').click()
-    cy.findByText('Demo').click()
-    cy.findByTestId('dt_acc_info').click()
+    cy.get('#dt_core_account-switcher_demo-tab').click()
     cy.findByTestId('acc-switcher').findByText('Real').click()
+    cy.get('#dt_core_account-switcher_demo-tab').click()
 
     //Markets
     cy.get('.cq-symbol-select-btn').click()
@@ -19,7 +19,7 @@ describe('QATEST-5014 - Verify Main Page', () => {
     cy.findByText('Commodities Basket', { exact: true }).should('be.visible')
     cy.findByText('Forex Basket', { exact: true }).should('be.visible')
     cy.get('.sc-mcd__category__content--commodities-basket > .subcategory > a > .ic-icon').should('be.visible') //Cypress multiple tabs support issue
-    //TODO
+    //TODO - Playwright task for this?
 
     //Trade Types
     cy.findByTestId('dt_contract_dropdown').click()
@@ -36,7 +36,7 @@ describe('QATEST-5014 - Verify Main Page', () => {
   it('QATEST-5055 - Verify contract for Multipliers', () => {
 
     cy.findByTestId('dt_acc_info').click()
-    cy.findByText('Demo').click()
+    cy.get('#dt_core_account-switcher_demo-tab').click()
     cy.get('.acc-switcher__id > :nth-child(2)')
 
     //Stake
