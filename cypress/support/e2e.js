@@ -52,10 +52,12 @@ Cypress.Commands.add('c_mt5login', () => {
 
     cy.c_visitResponsive(Cypress.env('mt5BaseUrl') + '/terminal', 'large')
 
+    cy.findByRole('button', { name: 'Accept' }).click()
+
     cy.findByPlaceholderText('Enter Login').click()
     cy.findByPlaceholderText('Enter Login').type(Cypress.env('mt5Login'))
     cy.findByPlaceholderText('Enter Password').click()
-    cy.findByPlaceholderText('Enter Password').type(Cypress.env('mt5password'))
+    cy.findByPlaceholderText('Enter Password').type(Cypress.env('mt5Password'))
     cy.findByRole('button', { name: 'Connect to account' }).click()
 
 });
