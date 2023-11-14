@@ -6,7 +6,7 @@ describe('QATEST-20309, QATEST-20310 - Login to an existing account.', () => {
   })
 
   it('Should show the mt5 home page after login.', () => {
-    cy.findByTitle('Menu').findByRole('img').click()
+    cy.findByTitle('Menu').click()
     cy.findByText('Trading accounts').should('be.visible')
   })
 
