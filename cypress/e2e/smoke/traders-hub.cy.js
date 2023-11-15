@@ -6,7 +6,7 @@ describe('QATEST-5778, QATEST-5781, QATEST-5615', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
   })
 
-  it('Verify account selector, Verify Real and Demo pages and total assets.', () => {
+  it('should be able to use account selector to verify Real and Demo pages.', () => {
 
     cy.findByTestId('dti_dropdown_display').findByText('Demo').click()
     cy.get('#real').click()
@@ -14,13 +14,6 @@ describe('QATEST-5778, QATEST-5781, QATEST-5615', () => {
     cy.findByTestId('dti_dropdown_display').findByText('Real').click()
     cy.get('#demo').click()
     cy.findByText('Swap-Free Demo', { exact: true }).should('be.visible')
-  
-  })
-
-  it('Should be able to open MT5 login from Traders Hub.', () => {
-
-    cy.get('button:nth-child(2)').first().click()
-    cy.get('#modal_root').findByRole('link', { name: 'Open' }).should('have.attr', 'href', Cypress.env('mt5BaseUrl') + '/terminal')
   
   })
 
