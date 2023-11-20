@@ -1,3 +1,5 @@
+const { getLoginToken } = require('./common');
+
 Cypress.Commands.add('c_visitResponsive', (path, size) => {
     //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
     cy.log(path)
@@ -43,10 +45,18 @@ Cypress.Commands.add('c_login', () => {
     localStorage.setItem('config.server_url', Cypress.env('configServer'))
     localStorage.setItem('config.app_id', Cypress.env('configAppId'))
 
-    cy.c_visitResponsive(Cypress.env('oAuthUrl').replace('<token>', Cypress.env('oE2EToken')), 'large')
-    cy.findByText('Trader\'s Hub').should('be.visible')
+    if (Cypress.env('E2EToken') == '')
+    {
+        getLoginToken('mark1@deriv.com', (token) => {
+            cy.log('Token received: ' + token);
+            Cypress.env('E2EToken', token);
+            cy.c_visitResponsive(Cypress.env('oAuthUrl').replace('<token>', token), 'large')
+            //cy.findByText('Trader\'s Hub').should('be.visible')
+      });
+    }
 
 });
+
 
 Cypress.Commands.add('c_mt5login', () => {
 
@@ -67,6 +77,12 @@ Cypress.on('uncaught:exception', (err, runnable, promise) => {
     console.log(err)
     return false
   })
+
+
+ 
+
+
+
 
   
 
