@@ -2,17 +2,29 @@ import '@testing-library/cypress/add-commands'
 
 describe('Validate login functionality', () => {
   beforeEach(() => {
-    cy.c_visitResponsive(Cypress.env('RegionEU'), 'small')
+    //cy.c_visitResponsive(Cypress.env('RegionEU'), 'large')
   })
 
   it('Validate user can login at EU/non-EU Website', () => {
 
-    cy.findByLabelText('Login').click()
-    cy.findByPlaceholderText('example@email.com').type(Cypress.env('loginEmail'), { log: false })
-    cy.findByLabelText('Password').click()
-    cy.findByLabelText('Password').type(Cypress.env('loginPassword'), { log: false })
-    cy.findByRole('button', { name: 'Log in' }).click()
-    //await page.goto('https://app.deriv.com/');
-    //cy.findByText('Volatility 100 (1s) Index').should('be.visible')
+    cy.c_visitResponsive('https://app.deriv.com', 'large')
+    cy.c_visitResponsive('https://app.deriv.com/endpoint', 'large')
+    cy.findByLabelText('Server').click({force: true})
+    cy.findByLabelText('Server').clear()
+    cy.findByLabelText('Server').type('qa10.deriv.dev')
+    cy.findByLabelText('OAuth App ID').click( {force: true} )
+    cy.findByLabelText('OAuth App ID').clear()
+    cy.findByLabelText('OAuth App ID').type('1006')
+
+    cy.origin('https://qa10.deriv.dev', () => {
+      cy.visit('/oauth2/authorize?app_id=1006&l=EN&signup_device=desktop&date_first_contact=2023-11-21&brand=deriv')
+      cy.get('#txtEmail').click()
+      cy.get('#txtEmail').type('mark1@deriv.com')
+      cy.get('#txtPass').click()
+      cy.get('#txtPass').type('Abcd1234')
+      cy.get('#lost-password-container > .button').click()
+      cy.wait(10000)
+    })
+
   })
 })

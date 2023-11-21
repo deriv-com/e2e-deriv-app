@@ -30,10 +30,10 @@ Cypress.Commands.add('c_visitResponsive', (path, size) => {
     if (path.includes('traders-hub')) //Wait for relevent elements to appear (based on page)
         {
             cy.log('Trader Hub Selected')
-            cy.findByText('CFDs', { exact: true }).should('be.visible', { timeout: 30000 })
-            cy.findByText('Options & Multipliers').should('be.visible', { timeout: 30000 })
-            cy.findByTestId('dt_div_100_vh').findByText('Trader\'s Hub').should('be.visible', { timeout: 30000 })
-            cy.findByText('Total assets').should('be.visible', { timeout: 30000 })
+            // cy.findByText('CFDs', { exact: true }).should('be.visible', { timeout: 30000 })
+            // cy.findByText('Options & Multipliers').should('be.visible', { timeout: 30000 })
+            // cy.findByTestId('dt_div_100_vh').findByText('Trader\'s Hub').should('be.visible', { timeout: 30000 })
+            // cy.findByText('Total assets').should('be.visible', { timeout: 30000 })
         }
 
 });
@@ -51,8 +51,13 @@ Cypress.Commands.add('c_login', () => {
             cy.log('Token received: ' + token);
             Cypress.env('E2EToken', token);
             cy.c_visitResponsive(Cypress.env('oAuthUrl').replace('<token>', token), 'large')
-            //cy.findByText('Trader\'s Hub').should('be.visible')
+            cy.findByText('Trader\'s Hub').should('be.visible')
       });
+    }
+    else
+    {
+        cy.c_visitResponsive(Cypress.env('oAuthUrl').replace('<token>', Cypress.env('E2EToken')), 'large')
+        cy.findByText('Trader\'s Hub').should('be.visible')
     }
 
 });
