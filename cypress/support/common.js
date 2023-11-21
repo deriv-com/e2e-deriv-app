@@ -1,4 +1,4 @@
-function getLoginToken(login, callback) {
+function getLoginToken(callback) {
     cy.request({
       method: 'POST',
       url: 'https://' + Cypress.env('configServer') + '/oauth2/api/v1/verify',
@@ -16,7 +16,6 @@ function getLoginToken(login, callback) {
       const solution = crypto.createHmac('sha256', "tok3n").update(challenge).digest("hex"); 
   
       cy.log('<solution>' + solution)
-        // Continue with your Cypress commands
     
       cy.request({
         method: 'POST',
@@ -35,7 +34,7 @@ function getLoginToken(login, callback) {
           const bearerToken = response.body.token;
           cy.log('<bearer token>' + bearerToken);
           expect(response.status).to.eq(200);
-          // Additional assertions can be made here based on the response
+
           cy.request({
             method: 'POST',
             url: 'https://' + Cypress.env('configServer') + '/oauth2/api/v1/login',
@@ -52,15 +51,12 @@ function getLoginToken(login, callback) {
           }).then((response) => {
             const token = response.body.tokens[0].token;
             cy.log('<login token>' + token);
-            // cy.log('>' + login);
-            // cy.log('>' + password);
-
-            expect(response.status).to.eq(200); // Adjust the assertion based on expected response
 
             callback(token);
-            // Additional assertions can be added here
+
+            expect(response.status).to.eq(200); 
+
           });
-        // Check if the login was successful
   
       });
     });

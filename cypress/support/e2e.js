@@ -47,7 +47,7 @@ Cypress.Commands.add('c_login', () => {
 
     if (Cypress.env('E2EToken') == '')
     {
-        getLoginToken('mark1@deriv.com', (token) => {
+        getLoginToken((token) => {
             cy.log('Token received: ' + token);
             Cypress.env('E2EToken', token);
             cy.c_visitResponsive(Cypress.env('oAuthUrl').replace('<token>', token), 'large')
