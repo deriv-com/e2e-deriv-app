@@ -45,16 +45,22 @@ Cypress.Commands.add('c_login', () => {
     localStorage.setItem('config.server_url', Cypress.env('configServer'))
     localStorage.setItem('config.app_id', Cypress.env('configAppId'))
 
-    if (Cypress.env('E2EToken') == '')
+    if (Cypress.env('oAuthToken') == '')
     {
         getLoginToken((token) => {
-            cy.log('Token received: ' + token);
-            Cypress.env('E2EToken', token);
+            cy.log('getLoginToken - token value: ' + token)
+            Cypress.env('oAuthToken', token)
+            cy.c_visitResponsive(Cypress.env('oAuthUrl').replace('<token>', Cypress.env('oAuthToken')), 'large')
+            cy.findByText('Trader\'s Hub').should('be.visible')
+            //cy.get('[data-layer="Content"]').should('be.visible')
       });
     }
-
-    cy.c_visitResponsive(Cypress.env('oAuthUrl').replace('<token>', Cypress.env('E2EToken')), 'large')
-    cy.findByText('Trader\'s Hub').should('be.visible')
+    else
+    {
+        cy.log('E2EToken:' + Cypress.env('oAuthToken'))
+        cy.c_visitResponsive(Cypress.env('oAuthUrl').replace('<token>', Cypress.env('oAuthToken')), 'large')
+        cy.findByText('Trader\'s Hub').should('be.visible')
+    }
 
 });
 

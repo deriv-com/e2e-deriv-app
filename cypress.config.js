@@ -32,7 +32,8 @@ module.exports = defineConfig({
     configServer: process.env.E2E_CONFIG_SERVER,
     configAppId: process.env.E2E_CONFIG_APPID,
     oAuthUrl: process.env.E2E_OAUTH_URL,
-    E2EToken: process.env.E2E_TOKEN,
+    oAuthToken: process.env.E2E_OAUTH_TOKEN,
+    HMACKey: process.env.E2E_HMAC_KEY,
     tradersHubUrl: 'appstore/traders-hub'
   },  
   retries: {

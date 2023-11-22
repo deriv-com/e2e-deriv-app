@@ -13,7 +13,7 @@ function getLoginToken(callback) {
       const challenge = response.body.challenge;
       const expire = response.body.expire;
       var crypto = require('crypto');
-      const solution = crypto.createHmac('sha256', "tok3n").update(challenge).digest("hex"); 
+      const solution = crypto.createHmac('sha256', Cypress.env('HMACKey')).update(challenge).digest("hex"); 
   
       cy.log('<solution>' + solution)
     
