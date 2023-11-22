@@ -14,6 +14,7 @@ module.exports = defineConfig({
     defaultCommandTimeout: 15000,
     supportFile: "cypress/support/e2e.js",
     experimentalWebKitSupport: true,
+    chromeWebSecurity: false,
   },
   env: {
     RegionEU: '/?region=at',

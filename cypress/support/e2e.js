@@ -50,15 +50,11 @@ Cypress.Commands.add('c_login', () => {
         getLoginToken((token) => {
             cy.log('Token received: ' + token);
             Cypress.env('E2EToken', token);
-            cy.c_visitResponsive(Cypress.env('oAuthUrl').replace('<token>', token), 'large')
-            cy.findByText('Trader\'s Hub').should('be.visible')
       });
     }
-    else
-    {
-        cy.c_visitResponsive(Cypress.env('oAuthUrl').replace('<token>', Cypress.env('E2EToken')), 'large')
-        cy.findByText('Trader\'s Hub').should('be.visible')
-    }
+
+    cy.c_visitResponsive(Cypress.env('oAuthUrl').replace('<token>', Cypress.env('E2EToken')), 'large')
+    cy.findByText('Trader\'s Hub').should('be.visible')
 
 });
 

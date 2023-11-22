@@ -5,7 +5,7 @@ describe('Validate login functionality', () => {
     //cy.c_visitResponsive(Cypress.env('RegionEU'), 'large')
   })
 
-  it('Validate user can login at EU/non-EU Website', () => {
+  it('should validate that a user can login via the EU/non-EU Website', () => {
 
     cy.c_visitResponsive('https://app.deriv.com', 'large')
     cy.c_visitResponsive('https://app.deriv.com/endpoint', 'large')
