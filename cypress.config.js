@@ -14,6 +14,7 @@ module.exports = defineConfig({
     defaultCommandTimeout: 15000,
     supportFile: "cypress/support/e2e.js",
     experimentalWebKitSupport: true,
+    chromeWebSecurity: false,
   },
   env: {
     RegionEU: '/?region=at',
@@ -31,7 +32,8 @@ module.exports = defineConfig({
     configServer: process.env.E2E_CONFIG_SERVER,
     configAppId: process.env.E2E_CONFIG_APPID,
     oAuthUrl: process.env.E2E_OAUTH_URL,
-    oE2EToken: process.env.E2E_TOKEN,
+    oAuthToken: process.env.E2E_OAUTH_TOKEN,
+    HMACKey: process.env.E2E_HMAC_KEY,
     tradersHubUrl: 'appstore/traders-hub'
   },  
   retries: {
