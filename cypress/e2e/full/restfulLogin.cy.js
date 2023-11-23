@@ -7,13 +7,13 @@ describe('Get token using RESTful API Request', () => {
     cy.c_login()
   })
 
-  it('(Test run 1) Login called, show the e2e token value', () => {
+  it('should get the oauth token from API', () => {
 
     cy.log('<E2EToken - Test 1>' + Cypress.env('oAuthToken'))
 
   });
 
-  it('(Test run 2) Login called, show the e2e token value', () => {
+  it('should get the ouauth token from env variable', () => {
 
     cy.log('<E2EToken - Test 2>' + Cypress.env('oAuthToken'))
 
