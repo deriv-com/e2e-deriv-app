@@ -52,7 +52,6 @@ Cypress.Commands.add('c_login', (app) => {
         })
     }
 
-
     if (Cypress.env('oAuthToken') == '')
     {
         getLoginToken((token) => {
