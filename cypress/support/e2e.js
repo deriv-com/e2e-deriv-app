@@ -30,20 +30,28 @@ Cypress.Commands.add('c_visitResponsive', (path, size) => {
     if (path.includes('traders-hub')) //Wait for relevent elements to appear (based on page)
         {
             cy.log('Trader Hub Selected')
-            // cy.findByText('CFDs', { exact: true }).should('be.visible', { timeout: 30000 })
-            // cy.findByText('Options & Multipliers').should('be.visible', { timeout: 30000 })
-            // cy.findByTestId('dt_div_100_vh').findByText('Trader\'s Hub').should('be.visible', { timeout: 30000 })
-            // cy.findByText('Total assets').should('be.visible', { timeout: 30000 })
         }
 
 });
 
-Cypress.Commands.add('c_login', () => {
+Cypress.Commands.add('c_login', (app) => {
 
-    cy.c_visitResponsive('/', 'large')
+    cy.c_visitResponsive('/endpoint', 'large')
 
     localStorage.setItem('config.server_url', Cypress.env('configServer'))
     localStorage.setItem('config.app_id', Cypress.env('configAppId'))
+
+    if (app == 'wallets')
+    {
+        cy.contains('next_wallet').then(($element) => {
+        //Check if the element exists
+        if ($element.length) {
+        // If the element exists, click on it
+            cy.wrap($element).click()
+            }
+        })
+    }
+
 
     if (Cypress.env('oAuthToken') == '')
     {
