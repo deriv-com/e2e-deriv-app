@@ -47,17 +47,17 @@ Make sure to adapt these settings according to your project's needs.
 
 ## .env
 
-Create a .env file within the e2e-deriv-app folder and save the following environment variables (where you see [abcd], add your own credentials; where empty, leave empty):
-E2E_DERIV_LOGIN=[Your Deriv Login]
-E2E_DERIV_PASSWORD=[Your Deriv Password]
-E2E_MT5_LOGIN=[Your MT5 Login]
-E2E_MT5_PASSWORD=[Your MT5 Password]
-E2E_CONFIG_SERVER=[Your Server]
-E2E_CONFIG_APPID=[Your AppId]
-E2E_OAUTH_URL=?acct1=[Your Account]&token1=<token>&cur1=USD&state=&lang=EN
-E2E_OAUTH_TOKEN=
-E2E_HMAC_KEY=[Your Challenge Key]
-E2E_MT5_BASEURL=https://mt5-demo-web.deriv.com
+Create a .env file within the e2e-deriv-app folder and save the following environment variables (where you see [abcd], add your own credentials; where empty, leave empty):<br>
+E2E_DERIV_LOGIN=[Your Deriv Login]<br>
+E2E_DERIV_PASSWORD=[Your Deriv Password]<br>
+E2E_MT5_LOGIN=[Your MT5 Login]<br>
+E2E_MT5_PASSWORD=[Your MT5 Password]<br>
+E2E_CONFIG_SERVER=[Your Server]<br>
+E2E_CONFIG_APPID=[Your AppId]<br>
+E2E_OAUTH_URL=?acct1=[Your Account]&token1=<token>&cur1=USD&state=&lang=EN<br>
+E2E_OAUTH_TOKEN=<br>
+E2E_HMAC_KEY=[Your Challenge Key]<br>
+E2E_MT5_BASEURL=https://mt5-demo-web.deriv.com<br>
 
 ## Contributing
 
