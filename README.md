@@ -21,10 +21,10 @@ To set up and run the E2E tests, follow these steps:
    git clone git@github.com:deriv-com/e2e-deriv-com.git
 2. Navigate to the project directory:
     ```bash
-    cd e2e-deriv-com
-3. Install project dependencies:
+    cd e2e-deriv-app
+3. Install Cypress:
     ```bash
-    npm i
+    npm install cypress --save-dev
 4. Write e2e tests under `cypress/e2e/`
 
 5. **To run the available test using Cypress APP UI**
@@ -44,6 +44,20 @@ In `cypress.config.js`, the Cypress configuration includes settings such as:
 - `env`: Environment variables that can be used in your tests.
 
 Make sure to adapt these settings according to your project's needs.
+
+## .env
+
+Create a .env file within the e2e-deriv-app folder and save the following environment variables (where you see [abcd], add your own credentials; where empty, leave empty):
+E2E_DERIV_LOGIN=[Your Deriv Login]
+E2E_DERIV_PASSWORD=[Your Deriv Password]
+E2E_MT5_LOGIN=[Your MT5 Login]
+E2E_MT5_PASSWORD=[Your MT5 Password]
+E2E_CONFIG_SERVER=[Your Server]
+E2E_CONFIG_APPID=[Your AppId]
+E2E_OAUTH_URL=?acct1=[Your Account]&token1=<token>&cur1=USD&state=&lang=EN
+E2E_OAUTH_TOKEN=
+E2E_HMAC_KEY=[Your Challenge Key]
+E2E_MT5_BASEURL=https://mt5-demo-web.deriv.com
 
 ## Contributing
 
