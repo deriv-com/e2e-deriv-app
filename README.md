@@ -22,16 +22,19 @@ To set up and run the E2E tests, follow these steps:
 2. Navigate to the project directory:
     ```bash
     cd e2e-deriv-app
-3. Install Cypress:
+3. Install Dependencies:
+    ```bash
+    npm i
+4. Install Cypress:
     ```bash
     npm install cypress --save-dev
-4. Write e2e tests under `cypress/e2e/`
+5. Write e2e tests under `cypress/e2e/`
 
-5. **To run the available test using Cypress APP UI**
+6. **To run the available test using Cypress APP UI**
     ```sh
     npx cypress open
     ```
-6. **To run the available test in terminal**
+7. **To run the available test in terminal**
     ```sh
     npx cypress run
 
