@@ -6,17 +6,17 @@ describe('QATEST-9999 - <Clickup description here>', () => {
     cy.c_visitResponsive('/wallets', 'large')
   })
 
-  it('should be able to test 1 ...', () => {
+  it('should be able to test cashier step 1 ...', () => {
 
     cy.log('Tests to go here!')
-    cy.findByRole('heading', { name: 'CFDs' }).should('be.visible')
+    cy.findByText('CFDs', { exact: true }).should('be.visible')
   
   })
 
-  it('should be able to test 2 ...', () => {
+  it('should be able to test cashier step 2 ...', () => {
 
     cy.log('Tests to go here!')
-    cy.findByRole('heading', { name: 'CFDs' }).should('be.visible')
+    cy.findByText('CFDs', { exact: true }).should('be.visible')
   
   })
 
