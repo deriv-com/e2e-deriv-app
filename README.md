@@ -22,7 +22,7 @@ To set up and run the E2E tests, follow these steps:
 2. Navigate to the project directory:
     ```bash
     cd e2e-deriv-app
-3. Install Dependencies:
+3. Install Project Dependencies:
     ```bash
     npm i
 4. Install Cypress:
