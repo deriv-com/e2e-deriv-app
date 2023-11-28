@@ -6,11 +6,15 @@ describe('QATEST-9999 - <Clickup description here>', () => {
     cy.c_visitResponsive('/wallets', 'large')
   })
 
-  it('should be able to test cashier step 1 ...', () => {
+  it('should be able to reset balance for demo account...', () => {
+    cy.log('Reset Balance for Demo Account')
+    cy.contains('Wallet', {timeout: 10000}).should('exist'); 
+    cy.c_reset_balance()
+  })
 
+  it('should be able to test cashier step 1 ...', () => {
     cy.log('Tests to go here!')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
-  
   })
 
   it('should be able to test cashier step 2 ...', () => {

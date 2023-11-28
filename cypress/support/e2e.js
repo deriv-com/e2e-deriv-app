@@ -35,12 +35,9 @@ Cypress.Commands.add('c_visitResponsive', (path, size) => {
 });
 
 Cypress.Commands.add('c_login', (app) => {
-
     cy.c_visitResponsive('/endpoint', 'large')
-
     localStorage.setItem('config.server_url', Cypress.env('configServer'))
     localStorage.setItem('config.app_id', Cypress.env('configAppId'))
-
     if (app == 'wallets')
     {
         cy.contains('next_wallet').then(($element) => {
@@ -72,28 +69,41 @@ Cypress.Commands.add('c_login', (app) => {
 });
 
 
+Cypress.Commands.add('c_reset_balance', ()  =>  {
+    cy.findByText('Demo').scrollIntoView();
+    cy.get('[class*="virtual"].wallets-accordion__header--virtual')
+      .find('.wallets-accordion__dropdown > svg')
+      .click();
+    cy.findByRole('button', { name: 'Reset balance' }).click();
+    cy.get('[class="wallets-cashier-content"]')
+      .findByRole('button', {name: 'Reset balance' }).click();
+    cy.findByText('Success').should('exist');
+    cy.findByRole('button', { name: 'Transfer funds' }).click();
+    //To check if Transfer tab is active on clicking Transfer funds
+    cy.get('[class*="wallets-cashier-header__tab"].wallets-cashier-header__tab')
+      .contains('Transfer')
+      .parent()
+      .should('be.visible')
+      .invoke('attr', 'class') //would return the string of that class
+      .should('include', 'wallets-cashier-header__tab--active'); //find if the class has "active" string
+});
+
+
 Cypress.Commands.add('c_mt5login', () => {
 
     cy.c_visitResponsive(Cypress.env('mt5BaseUrl') + '/terminal', 'large')
-
     cy.findByRole('button', { name: 'Accept' }).click()
-
     cy.findByPlaceholderText('Enter Login').click()
     cy.findByPlaceholderText('Enter Login').type(Cypress.env('mt5Login'))
     cy.findByPlaceholderText('Enter Password').click()
     cy.findByPlaceholderText('Enter Password').type(Cypress.env('mt5Password'))
     cy.findByRole('button', { name: 'Connect to account' }).click()
-
 });
 
 Cypress.on('uncaught:exception', (err, runnable, promise) => {
-
     console.log(err)
     return false
   })
-
-
- 
 
 
 
