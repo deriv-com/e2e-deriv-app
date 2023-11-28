@@ -68,27 +68,6 @@ Cypress.Commands.add('c_login', (app) => {
 
 });
 
-
-Cypress.Commands.add('c_reset_balance', ()  =>  {
-    cy.findByText('Demo').scrollIntoView();
-    cy.get('[class*="virtual"].wallets-accordion__header--virtual')
-      .find('.wallets-accordion__dropdown > svg')
-      .click();
-    cy.findByRole('button', { name: 'Reset balance' }).click();
-    cy.get('[class="wallets-cashier-content"]')
-      .findByRole('button', {name: 'Reset balance' }).click();
-    cy.findByText('Success').should('exist');
-    cy.findByRole('button', { name: 'Transfer funds' }).click();
-    //To check if Transfer tab is active on clicking Transfer funds
-    cy.get('[class*="wallets-cashier-header__tab"].wallets-cashier-header__tab')
-      .contains('Transfer')
-      .parent()
-      .should('be.visible')
-      .invoke('attr', 'class') //would return the string of that class
-      .should('include', 'wallets-cashier-header__tab--active'); //find if the class has "active" string
-});
-
-
 Cypress.Commands.add('c_mt5login', () => {
 
     cy.c_visitResponsive(Cypress.env('mt5BaseUrl') + '/terminal', 'large')
