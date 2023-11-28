@@ -68,6 +68,6 @@ Feel free to contribute to this project by submitting issues, pull requests, or 
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE)..
 
 
