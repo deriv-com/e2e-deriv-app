@@ -1,4 +1,4 @@
-const { getLoginToken } = require('./common');
+const { getLoginToken } = require('./common')
 
 Cypress.Commands.add('c_visitResponsive', (path, size) => {
     //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
@@ -32,15 +32,12 @@ Cypress.Commands.add('c_visitResponsive', (path, size) => {
             cy.log('Trader Hub Selected')
         }
 
-});
+})
 
 Cypress.Commands.add('c_login', (app) => {
-
     cy.c_visitResponsive('/endpoint', 'large')
-
     localStorage.setItem('config.server_url', Cypress.env('configServer'))
     localStorage.setItem('config.app_id', Cypress.env('configAppId'))
-
     if (app == 'wallets')
     {
         cy.contains('next_wallet').then(($element) => {
@@ -60,7 +57,7 @@ Cypress.Commands.add('c_login', (app) => {
             cy.c_visitResponsive(Cypress.env('oAuthUrl').replace('<token>', Cypress.env('oAuthToken')), 'large')
             cy.findByText('Trader\'s Hub').should('be.visible')
             //cy.get('[data-layer="Content"]').should('be.visible')
-      });
+      })
     }
     else
     {
@@ -69,31 +66,23 @@ Cypress.Commands.add('c_login', (app) => {
         cy.findByText('Trader\'s Hub').should('be.visible')
     }
 
-});
-
+})
 
 Cypress.Commands.add('c_mt5login', () => {
 
     cy.c_visitResponsive(Cypress.env('mt5BaseUrl') + '/terminal', 'large')
-
     cy.findByRole('button', { name: 'Accept' }).click()
-
     cy.findByPlaceholderText('Enter Login').click()
     cy.findByPlaceholderText('Enter Login').type(Cypress.env('mt5Login'))
     cy.findByPlaceholderText('Enter Password').click()
     cy.findByPlaceholderText('Enter Password').type(Cypress.env('mt5Password'))
     cy.findByRole('button', { name: 'Connect to account' }).click()
-
-});
+})
 
 Cypress.on('uncaught:exception', (err, runnable, promise) => {
-
     console.log(err)
     return false
   })
-
-
- 
 
 
 
