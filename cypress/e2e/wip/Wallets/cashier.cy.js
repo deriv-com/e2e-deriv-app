@@ -4,7 +4,7 @@ function reset_balance_demo() {
   cy.findByText('Demo').scrollIntoView()
     cy.get('[class*="virtual"].wallets-accordion__header--virtual')
       .find('.wallets-accordion__dropdown > svg')
-      .click();
+      .click()
     cy.findByRole('button', { name: 'Reset balance' }).click()
     cy.get('[class="wallets-cashier-content"]')
       .findByRole('button', {name: 'Reset balance' }).click()
@@ -16,7 +16,7 @@ function reset_balance_demo() {
       .parent()
       .should('be.visible')
       .invoke('attr', 'class') //would return the string of that class
-      .should('include', 'wallets-cashier-header__tab--active'); //find if the class has "active" string
+      .should('include', 'wallets-cashier-header__tab--active') //find if the class has "active" string
 }
 
 describe('WALL-2760 - Reset Balance for Demo wallet', () => {
