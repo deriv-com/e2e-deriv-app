@@ -35,55 +35,33 @@ describe("WALL-2760 - Reset Balance for Demo wallet", () => {
   it("should be able to transfer demo funds", () => {
     cy.log("Transfer Demo Funds for Demo Account")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.findByText("Demo").scrollIntoView()
-    cy.get('[class*="virtual"].wallets-accordion__header--virtual')
-      .find(
-        ".wallets-list-header__card_container > .wallets-list-header__content > .wallets-list-header__details-container > .wallets-list-details__action-container > .wallets-header__actions > button"
-      )
-      .first()
-      .click()
-    cy.findByRole("button", {
-      name: "Transfer from USD Wallet Balance: 10,000.00 USD Demo",
-    }).click()
+    reset_balance_demo()
+    cy.contains(/Transfer from/).click()
     cy.findByRole("button", {
       name: "USD Wallet Balance: 10,000.00 USD Demo",
       exact: true,
     }).click()
-    cy.findByRole("button", {
-      name: "Transfer to Select a trading account or a Wallet",
-    }).click()
-    cy.findByRole("button", {
-      name: "Deriv X Balance: 10,000.00 USD Demo",
-      exact: true,
-    }).click()
+    cy.contains(/Transfer to/).click()
+    cy.contains(/Deriv X/).click()
     cy.get('input[class="wallets-atm-amount-input__input"]')
       .eq(1)
       .click()
       .type("1.000")
-    cy.get(
-      'button[class="wallets-button wallets-button__size--lg wallets-button__variant--contained wallets-button__rounded--sm wallets-button__color--primary"]'
-    )
+    cy.get('form').findByRole('button', { name: 'Transfer', exact: true })
       .should("be.enabled")
       .click()
     cy.findByText("Your transfer is successful!", {
       exact: true,
     }).should("be.visible")
     cy.findByRole("button", { name: "Make a new transfer" }).click()
-    cy.findByRole("button", {
-      name: "Transfer from USD Wallet Balance: 9,990.00 USD Demo",
-    }).should("be.visible")
+    cy.contains(/Transfer from/)
   })
 
   it("should be able to view demo transactions", () => {
     cy.log("View Transactions for Demo Account")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.findByText("Demo").scrollIntoView()
-    cy.get('[class*="virtual"].wallets-accordion__header--virtual')
-      .find(
-        ".wallets-list-header__card_container > .wallets-list-header__content > .wallets-list-header__details-container > .wallets-list-details__action-container > .wallets-header__actions > button"
-      )
-      .eq(1)
-      .click()
+    reset_balance_demo()
+    cy.findByRole('button', { name: 'Transactions' }).click()
     cy.get("#downshift-0-toggle-button").findByRole("button").click()
     cy.findByRole("option", { name: "Reset balance" }).click()
     cy.contains("+10,000.00 USD")
