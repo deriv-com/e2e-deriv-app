@@ -18,7 +18,7 @@ To set up and run the E2E tests, follow these steps:
 1. Clone this repository:
 
    ```bash
-   git clone git@github.com:deriv-app/e2e-deriv-app.git
+   git clone git@github.com:deriv-com/e2e-deriv-app.git
 2. Navigate to the project directory:
     ```bash
     cd e2e-deriv-app
