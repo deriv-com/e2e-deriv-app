@@ -43,7 +43,7 @@ Cypress.Commands.add("c_login", (app) => {
   localStorage.setItem("config.server_url", Cypress.env("configServer"))
   localStorage.setItem("config.app_id", Cypress.env("configAppId"))
 
-  if (app == "wallets" || "doughflow") {
+  if (app == "wallets" || "doughflow" || "onramp") {
     cy.contains("next_wallet").then(($element) => {
       //Check if the element exists
       if ($element.length) {
@@ -59,7 +59,11 @@ Cypress.Commands.add("c_login", (app) => {
       Cypress.env("doughflowConfigServer")
     )
     localStorage.setItem("config.app_id", Cypress.env("doughflowConfigAppId"))
-}
+  }
+
+  if (app == "onramp") {
+    localStorage.setItem("config.app_id", Cypress.env("onrampConfigAppId"))
+  }
 
 if (Cypress.env("oAuthToken") && Cypress.env("doughflowOAuthToken") == "") {
       getLoginToken(
