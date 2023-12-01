@@ -107,6 +107,12 @@ Cypress.Commands.add('c_mt5login', () => {
     cy.findByRole('button', { name: 'Connect to account' }).click()
 })
 
+Cypress.Commands.add('c_qaboxlogin', () => {
+    cy.c_visitResponsive(Cypress.env('qaBoxBaseUrl'), 'large')
+    cy.contains("Email").type(Cypress.env('qaBoxLoginEmail'))
+    cy.contains("Password").type(Cypress.env('qaBoxLoginPassword')+'{enter}')
+})
+
 Cypress.on('uncaught:exception', (err, runnable, promise) => {
     console.log(err)
     return false
