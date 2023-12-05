@@ -92,6 +92,7 @@ if (Cypress.env("oAuthToken") == "") {
       "large"
     )
     }
+    cy.findByRole('button', { name: 'Continue' }).click()
     cy.findByText("Trader's Hub").should("be.visible")
   }
 })
