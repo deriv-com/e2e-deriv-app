@@ -11,8 +11,7 @@ describe("WALL-2817 - Fiat deposit iframe access", () => {
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     cy.findAllByText(/USD Wallet/).first().scrollIntoView()
     cy.findByRole('button', { name: 'Deposit' }).click()
-    cy.wait(10000) //to account for third party doughflow provider loading time
-    cy.contains("iframe")
+    cy.get('#app_contents iframe').should("exist")
   })
 })
 
