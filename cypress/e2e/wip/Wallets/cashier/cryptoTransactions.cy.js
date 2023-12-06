@@ -1,8 +1,8 @@
 import "@testing-library/cypress/add-commands"
 
 function crypto_transfer(to_account) {
-  cy.contains("Transfer to").click();
-  cy.contains(`${to_account} Wallet`).click();
+  cy.contains("Transfer to").click()
+  cy.contains(`${to_account} Wallet`).click()
   cy.get('input[class="wallets-atm-amount-input__input"]')
     .eq(1)
     .click()
