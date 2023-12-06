@@ -1,10 +1,10 @@
-import "@testing-library/cypress/add-commands";
+import "@testing-library/cypress/add-commands"
 
 describe("WALL-2831 - Crypto deposit and fiat onramp", () => {
   beforeEach(() => {
-    cy.c_login("onramp");
-    cy.c_visitResponsive("/wallets", "large");
-  });
+    cy.c_login("onramp")
+    cy.c_visitResponsive("/wallets", "large")
+  })
 
   it("should be able to view crypto deposit details", () => {
     cy.log("Crypto Deposit")
@@ -18,7 +18,7 @@ describe("WALL-2831 - Crypto deposit and fiat onramp", () => {
     cy.contains("Copied")
     cy.findByText("Try Fiat onramp").click()
     cy.contains("Banxa")
-  });
+  })
 
   it("should be able to deposit into crypto account through fiat onramp", () => {
     cy.log("Access Fiat OnRamp Provider")
@@ -43,5 +43,5 @@ describe("WALL-2831 - Crypto deposit and fiat onramp", () => {
     //   })
     // })
     // cy.get("@windowOpen").should("be.called")
-  });
-});
+  })
+})
