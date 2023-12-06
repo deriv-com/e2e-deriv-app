@@ -96,7 +96,6 @@ if (Cypress.env("oAuthToken") == "") {
     cy.contains("Continue").then(($element) => {
       if ($element.length) {
         cy.wrap($element).click()
-        // cy.findByRole('button', { name: 'Continue' }).click()
       }
     })
     cy.findByText("Trader's Hub").should("be.visible")
