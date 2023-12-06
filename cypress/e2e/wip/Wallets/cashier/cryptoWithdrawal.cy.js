@@ -55,7 +55,6 @@ describe("WALL-2830 - Crypto withdrawal content access from email", () => {
               verification_code = code[1]
               Cypress.env("walletsWithdrawalCode", verification_code)
               cy.log(verification_code)
-              cy.log(Cypress.env("walletsWithdrawalCode"))
             } else {
               cy.log("Unable to find code in the URL")
             }
@@ -64,7 +63,6 @@ describe("WALL-2830 - Crypto withdrawal content access from email", () => {
     )
 
     cy.then(() => {
-      cy.log(Cypress.env("walletsWithdrawalCode"))
       Cypress.config("baseUrl")
       cy.c_visitResponsive(
         `${withdrawal_url}?verification=${verification_code}`,

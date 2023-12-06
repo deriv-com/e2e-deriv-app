@@ -92,7 +92,13 @@ if (Cypress.env("oAuthToken") == "") {
       "large"
     )
     }
-    cy.findByRole('button', { name: 'Continue' }).click()
+    //Clicks on Continue for Deriv Tradre Chart popup if it exists
+    cy.contains("Continue").then(($element) => {
+      if ($element.length) {
+        cy.wrap($element).click()
+        // cy.findByRole('button', { name: 'Continue' }).click()
+      }
+    })
     cy.findByText("Trader's Hub").should("be.visible")
   }
 })
