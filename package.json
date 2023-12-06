@@ -1,7 +1,7 @@
 {
   "devDependencies": {
     "@testing-library/cypress": "^10.0.1",
-    "cypress": "^13.5.0",
+    "cypress": "^13.6.0",
     "cypress-dotenv": "^2.0.0",
     "dotenv": "^16.3.1",
     "mochawesome": "^7.1.3",

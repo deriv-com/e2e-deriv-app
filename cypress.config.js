@@ -29,6 +29,7 @@ module.exports = defineConfig({
     qaBoxLoginEmail: process.env.E2E_QABOX_LOGIN,
     qaBoxLoginPassword: process.env.E2E_QABOX_PASSWORD,
     qaBoxBaseUrl: process.env.E2E_QABOX_BASEURL,
+    mainQaBoxBaseUrl: process.env.E2E_MAIN_QABOX_BASEURL,
     mt5Login: process.env.E2E_MT5_LOGIN,
     mt5Password: process.env.E2E_MT5_PASSWORD,
     mt5BaseUrl: process.env.E2E_MT5_BASEURL,
@@ -43,6 +44,8 @@ module.exports = defineConfig({
     oAuthToken: process.env.E2E_OAUTH_TOKEN,
     doughflowOAuthUrl: process.env.E2E_DOUGHFLOW_OAUTH_URL,
     doughflowOAuthToken: process.env.E2E_DOUGHFLOW_OAUTH_TOKEN,
+    walletsWithdrawalUrl: process.env.E2E_WALLETS_WITHDRAWAL_URL,
+    walletsWithdrawalCode: process.env.E2E_WALLETS_WITHDRAWAL_CODE,
     HMACKey: process.env.E2E_HMAC_KEY,
     tradersHubUrl: 'appstore/traders-hub'
   },  
