@@ -36,7 +36,7 @@ module.exports = defineConfig({
     appstorePath: process.env.APPSTORE_PATH,
     configServer: process.env.E2E_CONFIG_SERVER,
     configAppId: process.env.E2E_CONFIG_APPID,
-    fiatOnrampAppId: process.env.E2E_FIAT_ONRAMP_APPID,
+    onrampConfigAppId: process.env.E2E_ONRAMP_CONFIG_APPID,
     doughflowConfigServer: process.env.E2E_DOUGHFLOW_CONFIG_SERVER,
     doughflowConfigAppId: process.env.E2E_DOUGHFLOW_CONFIG_APPID,
     oAuthUrl: process.env.E2E_OAUTH_URL,

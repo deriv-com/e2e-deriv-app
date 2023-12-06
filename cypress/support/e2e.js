@@ -43,7 +43,7 @@ Cypress.Commands.add("c_login", (app) => {
   localStorage.setItem("config.server_url", Cypress.env("configServer"))
   localStorage.setItem("config.app_id", Cypress.env("configAppId"))
 
-  if (app == "wallets" || app == "doughflow") {
+  if (app == "wallets" || app == "doughflow" || app == "onramp") {
     cy.contains("next_wallet").then(($element) => {
       //Check if the element exists
       if ($element.length) {
@@ -59,7 +59,11 @@ Cypress.Commands.add("c_login", (app) => {
       Cypress.env("doughflowConfigServer")
     )
     localStorage.setItem("config.app_id", Cypress.env("doughflowConfigAppId"))
-}
+  }
+
+  if (app == "onramp") {
+    localStorage.setItem("config.app_id", Cypress.env("onrampConfigAppId"))
+  }
 
 if (Cypress.env("oAuthToken") == "") {
       getLoginToken(
@@ -105,12 +109,6 @@ Cypress.Commands.add('c_mt5login', () => {
     cy.findByPlaceholderText('Enter Password').click()
     cy.findByPlaceholderText('Enter Password').type(Cypress.env('mt5Password'))
     cy.findByRole('button', { name: 'Connect to account' }).click()
-})
-
-Cypress.Commands.add('c_qaboxlogin', () => {
-    cy.c_visitResponsive(Cypress.env('qaBoxBaseUrl'), 'large')
-    cy.contains("Email").type(Cypress.env('qaBoxLoginEmail'))
-    cy.contains("Password").type(Cypress.env('qaBoxLoginPassword')+'{enter}')
 })
 
 Cypress.on('uncaught:exception', (err, runnable, promise) => {
