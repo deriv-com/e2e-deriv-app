@@ -73,6 +73,14 @@ if (Cypress.env("oAuthToken") == "") {
             ),
             "large"
           )
+          //If Deriv charts popup exists, click continue
+          cy.contains("Continue").then(($element) => {
+            //Check if the continue button exists
+            if ($element.length) {
+              // If the element exists, click on it
+              cy.wrap($element).click()
+            }
+          })
           cy.findByText("Trader's Hub").should("be.visible")
           //cy.get('[data-layer="Content"]').should('be.visible')
         }
@@ -92,6 +100,26 @@ if (Cypress.env("oAuthToken") == "") {
       "large"
     )
     }
+    cy.contains("Continue").then(($element) => {
+      //Check if the element exists
+      if ($element.length) {
+        // If the element exists, click on it
+        cy.wrap($element).click()
+      }
+    })
+    //cy.wait(5000)
+    //If Deriv charts popup exists, click continue
+  //   if (cy.findByRole('button', { name: 'Continue' }).should('exist'))
+  //   {
+  //     cy.contains("Continue").click()
+  //     // then(($element) => {
+  //     // //Check if the continue button exists
+  //     // if ($element.length) {
+  //     //   // If the element exists, click on it
+  //     //   cy.wrap($element).click()
+  //     // }
+  //  // })
+  // }
     cy.findByText("Trader's Hub").should("be.visible")
   }
 })
