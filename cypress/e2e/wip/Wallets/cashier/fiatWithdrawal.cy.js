@@ -31,34 +31,8 @@ describe("WALL-2830 - Crypto withdrawal content access from email", () => {
   
     it("should be able to access doughflow iframe", () => {
       cy.log("Access Fiat Withdrawal Iframe Through Email Link")
-      cy.visit(
-        `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
-          "qaBoxLoginPassword"
-        )}@${Cypress.env("qaBoxBaseUrl")}`
-      )
-      cy.origin(
-        `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
-          "qaBoxLoginPassword"
-        )}@${Cypress.env("qaBoxBaseUrl")}`, () => {
-          cy.scrollTo("bottom")
-          cy.get("a").last().click()
-          cy
-            .get("a")
-            .eq(1)
-            .invoke("attr", "href")
-            .then((href) => {
-              const code = href.match(/code=([A-Za-z0-9]{8})/)
-              if (code) {
-                verification_code = code[1]
-                Cypress.env("walletsWithdrawalCode", verification_code)
-                cy.log(verification_code)
-              } else {
-                cy.log("Unable to find code in the URL")
-              }
-            })
-        }
-      )
-  
+      cy.c_emailVerification(verification_code, Cypress.env("qaBoxBaseUrl"))
+
       cy.then(() => {
         verification_code = Cypress.env("walletsWithdrawalCode")
         cy.log(verification_code)

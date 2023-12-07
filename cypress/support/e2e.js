@@ -96,18 +96,11 @@ if (Cypress.env("oAuthToken") == "") {
       "large"
     )
     }
-    //Clicks on Continue for Deriv Tradre Chart popup if it exists
-    cy.contains("Continue").then(($element) => {
-      if ($element.length) {
-        cy.wrap($element).click()
-      }
-    })
     cy.findByText("Trader's Hub").should("be.visible")
   }
 })
 
 Cypress.Commands.add('c_mt5login', () => {
-
     cy.c_visitResponsive(Cypress.env('mt5BaseUrl') + '/terminal', 'large')
     cy.findByRole('button', { name: 'Accept' }).click()
     cy.findByPlaceholderText('Enter Login').click()
@@ -115,6 +108,36 @@ Cypress.Commands.add('c_mt5login', () => {
     cy.findByPlaceholderText('Enter Password').click()
     cy.findByPlaceholderText('Enter Password').type(Cypress.env('mt5Password'))
     cy.findByRole('button', { name: 'Connect to account' }).click()
+})
+
+Cypress.Commands.add('c_emailVerification', (verification_code, base_url) => {
+  cy.visit(
+    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+      "qaBoxLoginPassword"
+    )}@${base_url}`
+  )
+  cy.origin(
+    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+      "qaBoxLoginPassword"
+    )}@${base_url}`, () => {
+      cy.scrollTo("bottom")
+      cy.get("a").last().click()
+      cy
+        .get("a")
+        .eq(1)
+        .invoke("attr", "href")
+        .then((href) => {
+          const code = href.match(/code=([A-Za-z0-9]{8})/)
+          if (code) {
+            verification_code = code[1]
+            Cypress.env("walletsWithdrawalCode", verification_code)
+            cy.log(verification_code)
+          } else {
+            cy.log("Unable to find code in the URL")
+          }
+        })
+    }
+  )
 })
 
 Cypress.on('uncaught:exception', (err, runnable, promise) => {
