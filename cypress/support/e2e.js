@@ -43,7 +43,8 @@ Cypress.Commands.add("c_login", (app) => {
   localStorage.setItem("config.server_url", Cypress.env("configServer"))
   localStorage.setItem("config.app_id", Cypress.env("configAppId"))
 
-  if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet") {
+
+  if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet") || app == "onramp")  {
     cy.contains("next_wallet").then(($element) => {
       //Check if the element exists
       if ($element.length) {
@@ -59,7 +60,11 @@ Cypress.Commands.add("c_login", (app) => {
       Cypress.env("doughflowConfigServer")
     )
     localStorage.setItem("config.app_id", Cypress.env("doughflowConfigAppId"))
-}
+  }
+
+  if (app == "onramp") {
+    localStorage.setItem("config.app_id", Cypress.env("onrampConfigAppId"))
+  }
 
 if (Cypress.env("oAuthToken") == "") {
       getLoginToken(
@@ -120,6 +125,36 @@ Cypress.Commands.add('c_mt5login', () => {
     cy.findByPlaceholderText('Enter Password').click()
     cy.findByPlaceholderText('Enter Password').type(Cypress.env('mt5Password'))
     cy.findByRole('button', { name: 'Connect to account' }).click()
+})
+
+Cypress.Commands.add('c_emailVerification', (verification_code, base_url) => {
+  cy.visit(
+    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+      "qaBoxLoginPassword"
+    )}@${base_url}`
+  )
+  cy.origin(
+    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+      "qaBoxLoginPassword"
+    )}@${base_url}`, () => {
+      cy.scrollTo("bottom")
+      cy.get("a").last().click()
+      cy
+        .get("a")
+        .eq(1)
+        .invoke("attr", "href")
+        .then((href) => {
+          const code = href.match(/code=([A-Za-z0-9]{8})/)
+          if (code) {
+            verification_code = code[1]
+            Cypress.env("walletsWithdrawalCode", verification_code)
+            cy.log(verification_code)
+          } else {
+            cy.log("Unable to find code in the URL")
+          }
+        })
+    }
+  )
 })
 
 Cypress.on('uncaught:exception', (err, runnable, promise) => {
