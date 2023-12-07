@@ -70,7 +70,8 @@ function onboardingfiatwallet() {
     cy.findByRole('button', { name: 'Next' }).click()
     onboardingcfdtrading()
   }
-describe("WALL-2797 - User Onboarding on Desktop for Fiat Wallets", () => {
+
+describe("WALL-3037 - User Onboarding on Desktop for Fiat Wallets", () => {
   beforeEach(() => {
     cy.c_login("wallets")
     cy.c_visitResponsive("/wallets", "large")
@@ -80,7 +81,7 @@ describe("WALL-2797 - User Onboarding on Desktop for Fiat Wallets", () => {
     onboardingfiatwallet()
    })
 })
-describe("WALL-2797 - User Onboarding on Desktop for Demo Only Wallet", () => {
+describe("WALL-3037 - User Onboarding on Desktop for Demo Only Wallet", () => {
   beforeEach(() => {
     cy.c_login("demoonlywallet")
     cy.c_visitResponsive("/wallets", "large")
@@ -90,3 +91,4 @@ describe("WALL-2797 - User Onboarding on Desktop for Demo Only Wallet", () => {
     onboardingdemowallet()
   })
 })
+
