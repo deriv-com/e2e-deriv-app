@@ -43,7 +43,7 @@ Cypress.Commands.add("c_login", (app) => {
   localStorage.setItem("config.server_url", Cypress.env("configServer"))
   localStorage.setItem("config.app_id", Cypress.env("configAppId"))
 
-  if (app == "wallets" || app == "doughflow") {
+  if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet") {
     cy.contains("next_wallet").then(($element) => {
       //Check if the element exists
       if ($element.length) {
@@ -73,6 +73,15 @@ if (Cypress.env("oAuthToken") == "") {
             ),
             "large"
           )
+          //If Deriv charts popup exists, click continue
+          cy.contains("Continue").then(($element) => {
+            //Check if the continue button exists
+            if ($element.length) {
+              // If the element exists, click on it
+              cy.wrap($element).click()
+            }
+          })
+          //cy.findByRole('button', { name: 'Continue' }).click()
           cy.findByText("Trader's Hub").should("be.visible")
           //cy.get('[data-layer="Content"]').should('be.visible')
         }
@@ -85,7 +94,14 @@ if (Cypress.env("oAuthToken") == "") {
         Cypress.env("doughflowOAuthUrl").replace("<token>", Cypress.env("doughflowOAuthToken")),
         "large"
     )
-    } else {
+    } else if (app == "demoonlywallet"){
+      cy.log("DemowalletToken:" + Cypress.env("demoOAuthToken"))
+      cy.c_visitResponsive(
+        Cypress.env("demoOAuthUrl").replace("<token>", Cypress.env("demoOAuthToken")),
+        "large"
+      )
+      }
+    else {
     cy.log("E2EToken:" + Cypress.env("oAuthToken"))
     cy.c_visitResponsive(
       Cypress.env("oAuthUrl").replace("<token>", Cypress.env("oAuthToken")),
@@ -97,7 +113,6 @@ if (Cypress.env("oAuthToken") == "") {
 })
 
 Cypress.Commands.add('c_mt5login', () => {
-
     cy.c_visitResponsive(Cypress.env('mt5BaseUrl') + '/terminal', 'large')
     cy.findByRole('button', { name: 'Accept' }).click()
     cy.findByPlaceholderText('Enter Login').click()

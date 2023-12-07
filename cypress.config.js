@@ -37,6 +37,8 @@ module.exports = defineConfig({
     doughflowConfigServer: process.env.E2E_DOUGHFLOW_CONFIG_SERVER,
     doughflowConfigAppId: process.env.E2E_DOUGHFLOW_CONFIG_APPID,
     oAuthUrl: process.env.E2E_OAUTH_URL,
+    demoOAuthUrl: process.env.E2E_DEMO_WALLET_OAUTH_URL,
+    demoOAuthToken: process.env.E2E_DEMO_OAUTH_TOKEN,
     oAuthToken: process.env.E2E_OAUTH_TOKEN,
     doughflowOAuthUrl: process.env.E2E_DOUGHFLOW_OAUTH_URL,
     doughflowOAuthToken: process.env.E2E_DOUGHFLOW_OAUTH_TOKEN,
