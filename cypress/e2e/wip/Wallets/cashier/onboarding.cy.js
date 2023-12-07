@@ -29,11 +29,10 @@ function onboardingcfdtrading(){
 }
 
 function onboardingfiatwallet() {
-    cy.contains("Wallet", { timeout: 10000 }).should("exist").wait(5000)
+    cy.contains("Wallet", { timeout: 10000 }).should("exist")
     // Onboarding - Account having Fiat wallets (without CFD and Trading account).
-    cy.wait(2000)
-    cy.findByTestId('dt_traders_hub_onboarding_icon').click();
-    cy.get('.react-joyride__spotlight').should('exist');
+    cy.findByTestId('dt_traders_hub_onboarding_icon').click()
+    cy.get('.react-joyride__spotlight').should('exist')
     cy.get('[class*="wallets-accordion wallets-accordion"]').first().should('be.visible')
       .children()
       .eq(1)
@@ -54,11 +53,10 @@ function onboardingfiatwallet() {
 
 
   function onboardingdemowallet() {
-    cy.contains("Wallet", { timeout: 10000 }).should("exist").wait(5000)
+    cy.contains("Wallet", { timeout: 10000 }).should("exist")
     // Onboarding - Account having Demo wallets (without CFD and Trading account).
-    cy.wait(2000)
-    cy.findByTestId('dt_traders_hub_onboarding_icon').click();
-    cy.get('.react-joyride__spotlight').should('exist');
+    cy.findByTestId('dt_traders_hub_onboarding_icon').click()
+    cy.get('.react-joyride__spotlight').should('exist')
     cy.get('[class*="wallets-accordion wallets-accordion"]').first().should('be.visible')
       .children()
       .eq(1)
