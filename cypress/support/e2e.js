@@ -77,17 +77,22 @@ if (Cypress.env("oAuthToken") == "") {
             ),
             "large"
           )
-          //If Deriv charts popup exists, click continue
-          cy.contains("Continue").then(($element) => {
-            //Check if the continue button exists
-            if ($element.length) {
-              // If the element exists, click on it
-              cy.wrap($element).click()
+          //If Deriv charts popup exists, click continuee
+          cy.contains('Loading...').should('not.exist', { timeout: 10000 })
+          cy.get('#modal_root, .modal-root', { timeout: 10000 })
+            .then(($element) => {
+              if ($element.children().length > 0) {
+              cy.contains("Continue").then(($element) => {
+                if ($element.length) {
+                  cy.wrap($element).click()
+                }
+              cy.findByText("Trader's Hub").should("be.visible")
+              })
+            } else {
+                  cy.findByText("Trader's Hub").should("be.visible")
             }
           })
-          //cy.findByRole('button', { name: 'Continue' }).click()
-          cy.findByText("Trader's Hub").should("be.visible")
-          //cy.get('[data-layer="Content"]').should('be.visible')
+          
         }
       )
   } else {
@@ -112,7 +117,24 @@ if (Cypress.env("oAuthToken") == "") {
       "large"
     )
     }
-    cy.findByText("Trader's Hub").should("be.visible")
+    //If Deriv charts popup exists, click continuee
+    cy.contains('Loading...').should('not.exist', { timeout: 10000 })
+    cy.get('cq-crosshair active').children().get('.cq-bottom-ui-widgets', { timeout: 10000 }).should('be.visible')
+    cy.get('.cq-bottom-ui-widgets').should('have.css', 'bottom', '30px')
+    //cy.get('.cq-bottom-ui-widgets"]', { timeout: 10000 }).should('exist')
+    cy.get('#modal_root, .modal-root', { timeout: 10000 })
+      .then(($element) => {
+        if ($element.children().length > 0) {
+          cy.contains("Continue").then(($element) => {
+            if ($element.length) {
+            cy.wrap($element).click()
+          }
+        cy.findByText("Trader's Hub").should("be.visible")
+        })
+      } else {
+            cy.findByText("Trader's Hub").should("be.visible")
+      }
+    })
   }
 })
 
