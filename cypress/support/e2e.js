@@ -88,17 +88,17 @@ if (Cypress.env("oAuthToken") == "") {
           //If Deriv charts popup exists, click continue
           cy.get('#modal_root, .modal-root', { timeout: 10000 })
             .then(($element) => {
-              if ($element.children().length > 0) {
-              cy.contains("Continue").then(($element) => {
-                if ($element.length) {
-                  cy.wrap($element).click()
-                }
-              cy.findByText("Trader's Hub").should("be.visible")
-              })
-            } else {
+             if ($element.children().length > 0) {
+                cy.contains("Continue").then(($element) => {
+                  if ($element.length) {
+                    cy.wrap($element).click()
+                  }
                   cy.findByText("Trader's Hub").should("be.visible")
-            }
-          })
+                })
+              } else {
+                cy.findByText("Trader's Hub").should("be.visible")
+              }
+            })
         })
   } else {
     //Other credential use cases could be added here to access different oAuth tokens
@@ -135,17 +135,16 @@ if (Cypress.env("oAuthToken") == "") {
         if ($element.children().length > 0) {
           cy.contains("Continue").then(($element) => {
             if ($element.length) {
-            cy.wrap($element).click()
-          }
-        cy.findByText("Trader's Hub").should("be.visible")
-        })
-      } else {
+              cy.wrap($element).click()
+            }
             cy.findByText("Trader's Hub").should("be.visible")
-      }
-    })
-  }
+          })
+        } else {
+          cy.findByText("Trader's Hub").should("be.visible")
+        }
+      })
+    }
 })
-
 Cypress.Commands.add('c_mt5login', () => {
     cy.c_visitResponsive(Cypress.env('mt5BaseUrl') + '/terminal', 'large')
     cy.findByRole('button', { name: 'Accept' }).click()
