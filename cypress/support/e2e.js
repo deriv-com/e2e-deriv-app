@@ -77,8 +77,15 @@ if (Cypress.env("oAuthToken") == "") {
             ),
             "large"
           )
-          //If Deriv charts popup exists, click continuee
-          cy.contains('Loading...').should('not.exist', { timeout: 10000 })
+          //To let the dtrader page load completely
+          cy.get('.ciq-chart', { timeout: 10000 })
+          .should('exist')
+          .children()
+          .get('.cq-bottom-ui-widgets', {timeout:15000}).should('exist')
+          .invoke('css', 'bottom')
+          .should('eq', '14px', { timeout: 10000 })
+
+          //If Deriv charts popup exists, click continue
           cy.get('#modal_root, .modal-root', { timeout: 10000 })
             .then(($element) => {
               if ($element.children().length > 0) {
@@ -92,9 +99,7 @@ if (Cypress.env("oAuthToken") == "") {
                   cy.findByText("Trader's Hub").should("be.visible")
             }
           })
-          
-        }
-      )
+        })
   } else {
     //Other credential use cases could be added here to access different oAuth tokens
     if (app == "doughflow") {
@@ -109,7 +114,7 @@ if (Cypress.env("oAuthToken") == "") {
         Cypress.env("demoOAuthUrl").replace("<token>", Cypress.env("demoOAuthToken")),
         "large"
       )
-      }
+    }
     else {
     cy.log("E2EToken:" + Cypress.env("oAuthToken"))
     cy.c_visitResponsive(
@@ -117,11 +122,14 @@ if (Cypress.env("oAuthToken") == "") {
       "large"
     )
     }
-    //If Deriv charts popup exists, click continuee
-    cy.contains('Loading...').should('not.exist', { timeout: 10000 })
-    cy.get('cq-crosshair active').children().get('.cq-bottom-ui-widgets', { timeout: 10000 }).should('be.visible')
-    cy.get('.cq-bottom-ui-widgets').should('have.css', 'bottom', '30px')
-    //cy.get('.cq-bottom-ui-widgets"]', { timeout: 10000 }).should('exist')
+    //To let the dtrader page load completely
+    cy.get('.ciq-chart', { timeout: 10000 })
+      .children()
+      .get('.cq-bottom-ui-widgets', {timeout:15000}).should('exist')
+      .invoke('css', 'bottom')
+      .should('eq', '14px', { timeout: 10000 })
+
+    //If Deriv charts popup exists, click continue
     cy.get('#modal_root, .modal-root', { timeout: 10000 })
       .then(($element) => {
         if ($element.children().length > 0) {
