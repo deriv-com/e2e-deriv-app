@@ -78,12 +78,8 @@ if (Cypress.env("oAuthToken") == "") {
             "large"
           )
           //To let the dtrader page load completely
-          cy.get('.ciq-chart', { timeout: 10000 })
-          .should('exist')
-          .children()
-          .get('.cq-bottom-ui-widgets', {timeout:15000}).should('exist')
-          .invoke('css', 'bottom')
-          .should('eq', '14px', { timeout: 10000 })
+          cy.get('.cq-symbol-select-btn', { timeout: 10000})
+            .should('exist')
 
           //If Deriv charts popup exists, click continue
           cy.get('#modal_root, .modal-root', { timeout: 10000 })
@@ -123,11 +119,8 @@ if (Cypress.env("oAuthToken") == "") {
     )
     }
     //To let the dtrader page load completely
-    cy.get('.ciq-chart', { timeout: 10000 })
-      .children()
-      .get('.cq-bottom-ui-widgets', {timeout:15000}).should('exist')
-      .invoke('css', 'bottom')
-      .should('eq', '14px', { timeout: 10000 })
+    cy.get('.cq-symbol-select-btn', { timeout: 10000})
+      .should('exist')
 
     //If Deriv charts popup exists, click continue
     cy.get('#modal_root, .modal-root', { timeout: 10000 })
