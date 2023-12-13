@@ -77,19 +77,29 @@ if (Cypress.env("oAuthToken") == "") {
             ),
             "large"
           )
+          //To let the dtrader page load completely
+          cy.get('.ciq-chart', { timeout: 10000 })
+          .should('exist')
+          .children()
+          .get('.cq-bottom-ui-widgets', {timeout:15000}).should('exist')
+          .invoke('css', 'bottom')
+          .should('eq', '14px', { timeout: 10000 })
+
           //If Deriv charts popup exists, click continue
-          cy.contains("Continue").then(($element) => {
-            //Check if the continue button exists
-            if ($element.length) {
-              // If the element exists, click on it
-              cy.wrap($element).click()
-            }
-          })
-          //cy.findByRole('button', { name: 'Continue' }).click()
-          cy.findByText("Trader's Hub").should("be.visible")
-          //cy.get('[data-layer="Content"]').should('be.visible')
-        }
-      )
+          cy.get('#modal_root, .modal-root', { timeout: 10000 })
+            .then(($element) => {
+             if ($element.children().length > 0) {
+                cy.contains("Continue").then(($element) => {
+                  if ($element.length) {
+                    cy.wrap($element).click()
+                  }
+                  cy.findByText("Trader's Hub").should("be.visible")
+                })
+              } else {
+                cy.findByText("Trader's Hub").should("be.visible")
+              }
+            })
+        })
   } else {
     //Other credential use cases could be added here to access different oAuth tokens
     if (app == "doughflow") {
@@ -104,7 +114,7 @@ if (Cypress.env("oAuthToken") == "") {
         Cypress.env("demoOAuthUrl").replace("<token>", Cypress.env("demoOAuthToken")),
         "large"
       )
-      }
+    }
     else {
     cy.log("E2EToken:" + Cypress.env("oAuthToken"))
     cy.c_visitResponsive(
@@ -112,10 +122,29 @@ if (Cypress.env("oAuthToken") == "") {
       "large"
     )
     }
-    cy.findByText("Trader's Hub").should("be.visible")
-  }
-})
+    //To let the dtrader page load completely
+    cy.get('.ciq-chart', { timeout: 10000 })
+      .children()
+      .get('.cq-bottom-ui-widgets', {timeout:15000}).should('exist')
+      .invoke('css', 'bottom')
+      .should('eq', '14px', { timeout: 10000 })
 
+    //If Deriv charts popup exists, click continue
+    cy.get('#modal_root, .modal-root', { timeout: 10000 })
+      .then(($element) => {
+        if ($element.children().length > 0) {
+          cy.contains("Continue").then(($element) => {
+            if ($element.length) {
+              cy.wrap($element).click()
+            }
+            cy.findByText("Trader's Hub").should("be.visible")
+          })
+        } else {
+          cy.findByText("Trader's Hub").should("be.visible")
+        }
+      })
+    }
+})
 Cypress.Commands.add('c_mt5login', () => {
     cy.c_visitResponsive(Cypress.env('mt5BaseUrl') + '/terminal', 'large')
     cy.findByRole('button', { name: 'Accept' }).click()
