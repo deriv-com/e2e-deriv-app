@@ -341,7 +341,4 @@ it('open mt5 web terminal', () => {
      cy.get('.symbol').should('be.visible')
      cy.get('.item > .checked > .icon > svg').click()
      cy.get('.close').click()
-
-
-
 })
