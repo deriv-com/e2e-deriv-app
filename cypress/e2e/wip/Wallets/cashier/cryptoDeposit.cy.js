@@ -37,6 +37,6 @@ describe("WALL-2831 - Crypto deposit and fiat onramp", () => {
       .invoke("removeAttr", "target")
       .click()
     //TODO: check if banxa provider tab is properly loaded and banxa url is able to be fetched
-    // cy.url().should("include", "https://deriv.banxa-sandbox.com/");
+    // cy.url().should("include", "Cypress.env("onrampProviderUrl")");
   })
 })
