@@ -9,64 +9,79 @@ cy.get('.wallets-add-more__card')
     // Filter wallets that contain only blockchain 
     const walletList = $element.filter((index, element) => {
     const allwalletText = Cypress.$(element).text()
-    const cryptoText  = allwalletText.includes('blockchain')
-    const wallettoadd = allwalletText.includes('Add')
+    const cryptoText  = allwalletText.includes('blockchain') // crypto wallet list 
+    const wallettoadd = allwalletText.includes('Add') // crypto wallet having Add 
     if (cryptoText) {
-      if(wallettoadd) {
-        return allwalletText // It will return the text having crypto and Add
+      if (wallettoadd) {
+        return allwalletText // It will return the text having crypto and Add  // list the text of all crypto wallet having add button 
       } else {
-        return allwalletText // It will return the text having crypto and not Add
+        return allwalletText // It will return the text having crypto and not Add // list the text of all crypto wallet having added button 
       }
     }
       else if (wallettoadd) {
-        return allwalletText // It will return the text having Fiat and Add
+        return allwalletText // It will return the text having Fiat and Add button
       }
        else {
         return allwalletText // It will return the text having Fiat and not Add
        }
     })
-  }).toArray()
-     //Return only the crypto wallets in the wallet carouse
-
+     //Return only the crypto wallets in the wallet carousel
     // Extract text content of filtered wallets in an Array
-    const CarouselList = walletList.map(element => Cypress.$(element).text());
+    const CarouselList = walletList.toArray().map(element => Cypress.$(element).text());
     cy.log({CarouselList: CarouselList})
     //Check if the filtered wallets are sorted alphabetically
     const expectedSortedList = [...CarouselList].sort()
     expect(CarouselList).to.deep.equal(expectedSortedList)
     cy.log({expectedlist: expectedSortedList})
   })
-  
-// //To verify if all Fiat wallets are sorted in the wallet carousel
-  cy.get('.wallets-add-more__card')
-    .each($element => {
-    // Filter wallets that does contain text "blockchain"
-    const fiatwalletList = $element.filter((index, element) => {
-    const walletList = Cypress.$(element).text()
-    const includesFiat = !walletList.includes('blockchain.');
-    const wallettoadd = allwalletText.includes('Add')
-    if (includesFiat && wallettoadd)
-    {
-      return allwalletText
-    }
-    
-    return includesFiat  //Return only the Fiat wallets in the wallet carousel
-    })
-
-  // Extract text content of filtered wallets in an Array
-    const fiatCarouselList = fiatwalletList.toArray().map(element => Cypress.$(element).text())
-    cy.log({fiatCarouselList: fiatCarouselList})
-    // Check if the filtered wallets are sorted alphabetically
-    const expectedSortedFiatList = [...fiatCarouselList].sort()
-    expect(fiatCarouselList).to.deep.equal(expectedSortedFiatList)
-    cy.log({expectedlist: expectedSortedFiatList})
-  })
-
 }
+  
+// // //To verify if all Fiat wallets are sorted in the wallet carousel
+//   cy.get('.wallets-add-more__card')
+//     .each($element => {
+//     // Filter wallets that does contain text "blockchain"
+//     const fiatwalletList = $element.filter((index, element) => {
+//     const walletList = Cypress.$(element).text()
+//     const includesFiat = !walletList.includes('blockchain.');
+//     const wallettoadd = allwalletText.includes('Add')
+//     if (includesFiat && wallettoadd)
+//     {
+//       return allwalletText
+//     }
+    
+//     return includesFiat  //Return only the Fiat wallets in the wallet carousel
+//     })
+
+//   // Extract text content of filtered wallets in an Array
+//     const fiatCarouselList = fiatwalletList.toArray().map(element => Cypress.$(element).text())
+//     cy.log({fiatCarouselList: fiatCarouselList})
+//     // Check if the filtered wallets are sorted alphabetically
+//     const expectedSortedFiatList = [...fiatCarouselList].sort()
+//     expect(fiatCarouselList).to.deep.equal(expectedSortedFiatList)
+//     cy.log({expectedlist: expectedSortedFiatList})
+//   })
+
 function addmorewallets(){
   cy.get('.wallets-add-more__card')
-  .then(($element) => {
-    cy.get($element).findByRole('button', { name: 'Add' }).eq(0).click()
+  .each(($element, index) => {
+    cy.get($element).findByRole('button', { name: 'Add' }).eq(index).click()
+    let walletname
+    cy.get('.wallets-card__details__bottom')
+      .invoke('text')
+      .then((text) => {
+        walletname = text.trim()
+        cy.log({wallet: walletname})
+        walletname.split(' ')
+        walletname = walletname[0] //tusdt
+        cy.log({split: walletname})
+        cy.findByRole('button', { name: 'Maybe later' }).click()
+        //Once Maybelater is clicked we goes to the newly added wallet widget opened.
+        cy.get('[class*="wallets-accordion wallets-accordion"]')
+          .contains(walletname) //tusdt = tusdt
+          .should('not.have.class', 'class="wallets-accordion__dropdown"')
+  })
+    //once the wallet is added check the sorting
+    walletdefaultsorting()
 })
 }
 describe("WALL-3094 - Add wallets from wallets carousels", () => {
@@ -79,7 +94,7 @@ describe("WALL-3094 - Add wallets from wallets carousels", () => {
 
 it("should be able to see the tour for Demo Only Wallets", () => {
     cy.wait(1000)
-    // walletdefaultsorting()
+    walletdefaultsorting()
     addmorewallets()
   })
 })
