@@ -43,7 +43,7 @@ describe("WALL-2858 - Crypto transfer and transactions", () => {
     cy.contains("Transactions").first().click()
     cy.get("#downshift-0-toggle-button").findByRole("button").click()
     cy.findByRole("option", { name: "Deposit" }).click()
-    cy.contains("+1.00000000 BTC")
+    cy.contains("+5.00000000 BTC")
     cy.get("#downshift-0-toggle-button").findByRole("button").click()
     cy.findByRole("option", { name: "Withdrawal" }).click()
     cy.contains("No recent transactions")
