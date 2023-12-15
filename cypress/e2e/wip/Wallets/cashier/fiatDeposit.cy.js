@@ -1,6 +1,7 @@
 import "@testing-library/cypress/add-commands"
 
 describe("WALL-2817 - Fiat deposit iframe access", () => {
+  //Prerequisites: Fiat wallet account in qa04 with USD wallet
   beforeEach(() => {
     cy.c_login("doughflow")
     cy.c_visitResponsive("/wallets", "large")
@@ -16,6 +17,7 @@ describe("WALL-2817 - Fiat deposit iframe access", () => {
 })
 
 describe("WALL-2817 - Fiat deposit error", () => {
+  //Prerequisites: Fiat wallet account in qa box besides qa04 with USD wallet
   beforeEach(() => {
     cy.c_login("wallets")
     cy.c_visitResponsive("/wallets", "large")
