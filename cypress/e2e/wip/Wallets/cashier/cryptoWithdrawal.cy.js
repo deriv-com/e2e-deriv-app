@@ -11,15 +11,18 @@ describe("WALL-2830 - Crypto withdrawal send email", () => {
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     cy.findAllByText(/BTC Wallet/).first().scrollIntoView()
     cy.findByRole('button', { name: 'Withdraw' }).click()
-    cy.contains("Please help us verify")
-    cy.findByRole('button', { name: 'Send email' }).click().click()
-    cy.contains("We’ve sent you an email.")
+    cy.contains("Please help us verify").should("be.visible")
+    if(cy.findByRole('button', { name: 'Send email' }).should("be.visible")){
+      cy.findByRole('button', { name: 'Send email' }).click()
+    }
+    cy.contains("We've sent you an email.")
     cy.findByRole('button', { name: 'Didn\'t receive the email?' }).click()
     cy.contains(/Resend email/)
   })
 })
 
 describe("WALL-2830 - Crypto withdrawal content access from email", () => {
+  //Prerequisites: Crypto wallet account in qa29 with BTC balance
   let verification_code = Cypress.env("walletsWithdrawalCode")
   const withdrawal_url = Cypress.env("walletsWithdrawalUrl")
 

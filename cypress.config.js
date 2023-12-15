@@ -38,6 +38,7 @@ module.exports = defineConfig({
     configServer: process.env.E2E_CONFIG_SERVER,
     configAppId: process.env.E2E_CONFIG_APPID,
     onrampConfigAppId: process.env.E2E_ONRAMP_CONFIG_APPID,
+    onrampProviderUrl: process.env.E2E_ONRAMP_PROVIDER_URL,
     doughflowConfigServer: process.env.E2E_DOUGHFLOW_CONFIG_SERVER,
     doughflowConfigAppId: process.env.E2E_DOUGHFLOW_CONFIG_APPID,
     oAuthUrl: process.env.E2E_OAUTH_URL,

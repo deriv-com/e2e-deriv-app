@@ -20,6 +20,7 @@ function fiat_transfer(to_account) {
 }
 
 describe("WALL-2858 - Fiat transfer and transactions", () => {
+  //Prerequisites: Fiat wallet account in any qa box with 10,000.00 USD balance and BTC, ETH and LTC wallets
   beforeEach(() => {
     cy.c_login("wallets")
     cy.c_visitResponsive("/wallets", "large")
@@ -28,7 +29,6 @@ describe("WALL-2858 - Fiat transfer and transactions", () => {
   it("should be able to perform transfer from fiat account", () => {
     cy.log("Transfer from Fiat account")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.findAllByText(/USD Wallet/).first().scrollIntoView()
     cy.get('.wallets-accordion__dropdown').first().click()
     cy.contains("Transfer").first().click()
     fiat_transfer("BTC")
@@ -39,7 +39,6 @@ describe("WALL-2858 - Fiat transfer and transactions", () => {
   it("should be able to view transactions of fiat account", () => {
     cy.log("View Transactions of Fiat account")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.findAllByText(/USD Wallet/).first().scrollIntoView()
     cy.get('.wallets-accordion__dropdown').first().click()
     cy.contains("Transactions").first().click()
     cy.get("#downshift-0-toggle-button").findByRole("button").click()
