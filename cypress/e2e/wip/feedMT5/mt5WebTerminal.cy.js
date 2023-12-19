@@ -75,9 +75,17 @@ it('open mt5 web terminal', () => {
     cy.get('input.svelte-1nc9ygh').type('GBPNOK')
     cy.wait(1000)
     //cy.get('.symbol').should('be.visible')
+    if (cy.get('.item > .checked').should('be.true')){
+        cy.log('symbol is already added to the watchlist')
+    }
+    else  {
+        cy.get('.icon.svelte-6nbdup > .icon > svg').click()
+        cy.get('.close').click()
+    }  
+
+    
     cy.get('.icon.svelte-6nbdup > .icon > svg').click()
     cy.get('.close').click()
-    cy.wait(1000)
     //cy.get('[title="GBPNOK"] > :nth-child(1) > .name > .text').should('be.visible')
 
     cy.get('[title="GBPNOK"] > :nth-child(1) > .name > .text').invoke('text').then((text) => {
@@ -116,13 +124,6 @@ it('open mt5 web terminal', () => {
                 cy.log('*******************************')
             })
         });
-
-        //Remove GBPNOK from watchlist
-        cy.get('input.svelte-1nc9ygh').type('GBPNOK')
-        cy.get('.symbol').should('be.visible')
-        cy.get('.item > .checked > .icon > svg').click()
-        cy.get('.close').click()
-        cy.wait(2000)
 
     })
 
@@ -173,13 +174,6 @@ it('open mt5 web terminal', () => {
         });
     })
 
-     //Remove AUDUSD from watchlist
-     cy.get('input.svelte-1nc9ygh').type('AUDUSD')
-     cy.get('.symbol').should('be.visible')
-     cy.get('.item > .checked > .icon > svg').click()
-     cy.get('.close').click()
-
-
     //***********************************************************************************
     //Check price streaming on Commodities market symbol "XPTUSD" -  idata provider
     //***********************************************************************************
@@ -226,14 +220,6 @@ it('open mt5 web terminal', () => {
             })
         });
     })
-
-     //Remove XPTUSD from watchlist
-     cy.get('input.svelte-1nc9ygh').type('XPTUSD')
-     cy.get('.symbol').should('be.visible')
-     cy.get('.item > .checked > .icon > svg').click()
-     cy.get('.close').click()
-
-
 
     //***********************************************************************************
     //Check price streaming on Commodities market symbol "XAGUSD" -  Bloomberg provider
@@ -282,13 +268,6 @@ it('open mt5 web terminal', () => {
         });
     })
 
-     //Remove XAGUSD from watchlist
-     cy.get('input.svelte-1nc9ygh').type('XAGUSD')
-     cy.get('.symbol').should('be.visible')
-     cy.get('.item > .checked > .icon > svg').click()
-     cy.get('.close').click()
-
-
     //***********************************************************************************
     //- Check price streaming on Stock indices market symbol "AUS_200" -  oz provider
     //***********************************************************************************
@@ -335,10 +314,6 @@ it('open mt5 web terminal', () => {
             })
         });
     })
+    
 
-     //Remove AUS_200 from watchlist
-     cy.get('input.svelte-1nc9ygh').type('AUS_200')
-     cy.get('.symbol').should('be.visible')
-     cy.get('.item > .checked > .icon > svg').click()
-     cy.get('.close').click()
 })
