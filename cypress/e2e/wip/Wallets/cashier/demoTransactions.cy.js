@@ -5,7 +5,7 @@ function reset_balance_demo() {
   cy.get('[class*="virtual"].wallets-accordion__header--virtual')
     .find(".wallets-accordion__dropdown > svg")
     .click()
-  cy.findByRole("button", { name: "Reset balance" }).click()
+  cy.get('[class*="virtual"].wallets-accordion__header--virtual').contains('Reset balance').click()
   cy.get('[class="wallets-cashier-content"]')
     .findByRole("button", { name: "Reset balance" })
     .click()
@@ -20,21 +20,16 @@ function reset_balance_demo() {
     .should("include", "wallets-cashier-header__tab--active") //find if the class has "active" string
 }
 
-describe("WALL-2760 - Reset Balance for Demo wallet", () => {
+describe("WALL-2760 - Transfer and check transactions for Demo wallet", () => {
   //Prerequisites: Demo wallet account in any qa box with USD demo funds
   beforeEach(() => {
     cy.c_login("wallets")
     cy.c_visitResponsive("/wallets", "large")
   })
 
-  it("should be able to reset balance for demo wallet", () => {
-    cy.log("Reset Balance for Demo Account")
-    cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    reset_balance_demo()
-  })
-
   it("should be able to transfer demo funds", () => {
     cy.log("Transfer Demo Funds for Demo Account")
+    cy.c_rateLimit()
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     reset_balance_demo()
     cy.contains(/Transfer from/).click()
@@ -60,6 +55,7 @@ describe("WALL-2760 - Reset Balance for Demo wallet", () => {
 
   it("should be able to view demo transactions", () => {
     cy.log("View Transactions for Demo Account")
+    cy.c_rateLimit()
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     reset_balance_demo()
     cy.findByRole('button', { name: 'Transactions' }).click()

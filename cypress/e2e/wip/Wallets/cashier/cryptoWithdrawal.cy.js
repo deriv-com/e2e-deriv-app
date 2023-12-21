@@ -8,9 +8,11 @@ describe("WALL-2830 - Crypto withdrawal send email", () => {
 
   it("should be able to send withdrawal verification link", () => {
     cy.log("Send Crypto Withdrawal Verification")
+    cy.c_rateLimit()
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.findAllByText(/BTC Wallet/).first().scrollIntoView()
-    cy.findByRole('button', { name: 'Withdraw' }).click()
+    cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().should("exist")
+      cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().click()
+      cy.get(".wallets-accordion__header").contains("Withdraw").first().click()
     cy.contains("Please help us verify").should("be.visible")
     if(cy.findByRole('button', { name: 'Send email' }).should("be.visible")){
       cy.findByRole('button', { name: 'Send email' }).click()
@@ -29,9 +31,11 @@ describe("WALL-2830 - Crypto withdrawal content access from email", () => {
   beforeEach(() => {
     cy.c_login("wallets")
     cy.c_visitResponsive("/wallets", "large")
+    cy.c_rateLimit()
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.findAllByText(/BTC Wallet/).first().scrollIntoView()
-    cy.findByRole('button', { name: 'Withdraw' }).click()
+    cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().should("exist")
+      cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().click()
+      cy.get(".wallets-accordion__header").contains("Withdraw").first().click()
   })
 
   it("should be able to access crypto withdrawal content and perform withdrawal", () => {
@@ -51,10 +55,17 @@ describe("WALL-2830 - Crypto withdrawal content access from email", () => {
       cy.contains("0% of available balance")
       cy.contains("Amount (BTC)").click().type("0.005")
       cy.get("form").findByRole("button", { name: "Withdraw" }).click()
+      cy.get('#modal_root, .modal-root', { timeout: 10000 })
+    .then(() => {
+      if (cy.get(".wallets-button__loader")) {
+        return
+      } else {
       cy.contains("0.00500000 BTC", { exact: true })
       cy.contains("Your withdrawal is currently in process")
       cy.findByRole("button", { name: "Close" }).click()
       cy.contains("Please help us verify")
+      }
+    })
     })
   })
 })

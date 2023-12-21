@@ -178,6 +178,79 @@ Cypress.Commands.add('c_emailVerification', (verification_code, base_url) => {
   )
 })
 
+Cypress.Commands.add('c_rateLimit', () => {
+  function refreshIfExist() {
+    cy.get('#modal_root, .modal-root', { timeout: 10000 })
+      .then(($element) => {
+        if ($element.children().length > 0) {
+          cy.contains("Refresh").then(($element) => {
+            if ($element.length) {
+              cy.wrap($element).click();
+              //Timeout if rate limited and should wait until content is rendered
+              cy.get('#modal_root, .modal-root', { timeout: 30000 }).should('exist')
+              refreshIfExist();
+            }
+          });
+        }
+      });
+  }
+  refreshIfExist();
+});
+
+Cypress.Commands.add("c_transferLimit", (transferMessage) => {
+  cy.get(".wallets-cashier-content", { timeout: 10000 }).contains(
+    `You can only perform up to ${3 | 6 | 10} transfers a day. Please try again tomorrow.` |
+      "You have exceeded 200.00 USD in cumulative transactions. To continue, you will need to verify your identity.")
+  .then(($element) => {
+    if ($element.children().length > 0) {
+      cy.contains(
+        `You can only perform up to ${3 | 6 | 10} transfers a day. Please try again tomorrow.` |
+          "You have exceeded 200.00 USD in cumulative transactions. To continue, you will need to verify your identity."
+      ).then(() => {
+        cy.contains("Reset error").then(($element) => {
+          if ($element.length) {
+            cy.wrap($element).click()
+          }
+          cy.contains("Wallet", { timeout: 10000 }).should("exist")
+        })
+      })
+    } else {
+      cy.findByText("Your transfer is successful!", {
+        exact: true,
+      }).should("be.visible")
+      cy.contains(transferMessage)
+      cy.contains("% transfer fees")
+      cy.findByRole("button", { name: "Make a new transfer" }).click()
+    }
+  })
+})
+
+// Cypress.Commands.add("c_transferLimit", (transferMessage) => {
+//   cy.get(".wallets-cashier-content", { timeout: 10000 }).contains(
+//     `You can only perform up to ${3 | 6 | 10} transfers a day. Please try again tomorrow.` |
+//       "You have exceeded 200.00 USD in cumulative transactions. To continue, you will need to verify your identity.")
+//   .then(($element) => {
+//     if ($element.text().includes(
+//       `You can only perform up to ${3 | 6 | 10} transfers a day. Please try again tomorrow.` |
+//         "You have exceeded 200.00 USD in cumulative transactions. To continue, you will need to verify your identity."
+//     )) {
+//         cy.contains("Reset error").then(($element) => {
+//           if ($element.length) {
+//             cy.wrap($element).click()
+//           }
+//           cy.contains("Wallet", { timeout: 10000 }).should("exist")
+//         })
+//     } else {
+//       cy.findByText("Your transfer is successful!", {
+//         exact: true,
+//       }).should("be.visible")
+//       cy.contains(transferMessage)
+//       cy.contains("% transfer fees")
+//       cy.findByRole("button", { name: "Make a new transfer" }).click()
+//     }
+//   })
+// })
+
 Cypress.on('uncaught:exception', (err, runnable, promise) => {
     console.log(err)
     return false
