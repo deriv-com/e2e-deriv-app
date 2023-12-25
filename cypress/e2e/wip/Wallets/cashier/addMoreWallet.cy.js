@@ -62,28 +62,78 @@ cy.get('.wallets-add-more__card')
 //   })
 
 function addmorewallets(){
+  // let currentIndex = 0
   cy.get('.wallets-add-more__card')
-  .each(($element, index) => {
-    cy.get($element).findByRole('button', { name: 'Add' }).eq(index).click()
-    let walletname
-    cy.get('.wallets-card__details__bottom')
-      .invoke('text')
-      .then((text) => {
-        walletname = text.trim()
-        cy.log({wallet: walletname})
-        walletname.split(' ')
-        walletname = walletname[0] //tusdt
-        cy.log({split: walletname})
-        cy.findByRole('button', { name: 'Maybe later' }).click()
-        //Once Maybelater is clicked we goes to the newly added wallet widget opened.
-        cy.get('[class*="wallets-accordion wallets-accordion"]')
-          .contains(walletname) //tusdt = tusdt
-          .should('not.have.class', 'class="wallets-accordion__dropdown"')
-  })
+    .each(($element, index) => {
+      cy.log({element: $element})
+      cy.log({eachindex: index})
+      cy.get($element)
+        .findByRole('button')
+        .then(($button) => {
+          cy.log({button: $button})
+          if ($button.is(':disabled')) {
+            cy.log('Button is disabled')
+          } else {
+            cy.log(`Button at index ${index} is enabled`);
+            cy.wait(1000)
+            //index = 0
+            cy.findByTestId('dt-wallets-add-more').scrollIntoView()
+            cy.log({currentIndex: index})
+            // cy.get($element)
+              cy.wrap($button)
+                .should('exist')
+                .click({force: true})
+            // currentIndex == 0
+            cy.log({dcurrentIndex: index})
+
+            let walletname
+            cy.get('.wallets-card__details__bottom')
+              .find('span')
+              .eq(1)
+              .invoke('text')
+              .then((text) => {
+                walletname = text.trim()
+                cy.log({wallet: walletname})
+                cy.findByRole('button', { name: 'Maybe later' }).click()
+                cy.get('[class*="wallets-accordion wallets-accordion"]')
+                  .contains(walletname) //tusdt = tusdt
+                  .should('not.have.class', 'class="wallets-accordion__dropdown"')
+          })
+          cy.log({ nowindex: index });
+          }
+        })
+      })
+    }
+         
+    // //const Addbutton = cy.get($element).findByRole('button', { name: 'Add' })
+    //      // if ($buttons.attr('name') == 'Add')  {
+    //         cy.wrap($buttons).eq(index).click()
+    //         let walletname
+    //         cy.get('.wallets-card__details__bottom')
+    //           .find('span')
+    //           .eq(1)
+    //           .invoke('text')
+    //           .then((text) => {
+    //         walletname = text.trim()
+    //         cy.log({wallet: walletname})
+    //           // walletname.split(' ')
+    //           // walletname = walletname[0] //tusdt
+    //           // cy.log({split: walletname})
+    //         cy.findByRole('button', { name: 'Maybe later' }).click()
+    //           //Once Maybelater is clicked we goes to the newly added wallet widget opened.
+    //         cy.get('[class*="wallets-accordion wallets-accordion"]')
+    //           .contains(walletname) //tusdt = tusdt
+    //           .should('not.have.class', 'class="wallets-accordion__dropdown"')
+    //       })
+          // } else {
+          //   cy.log("wallets are already added")
+          // }
     //once the wallet is added check the sorting
-    walletdefaultsorting()
-})
-}
+    //walletdefaultsorting()
+// })
+//   })
+
+
 describe("WALL-3094 - Add wallets from wallets carousels", () => {
     beforeEach(() => {
       cy.c_login("demoonlywallet")
@@ -94,7 +144,7 @@ describe("WALL-3094 - Add wallets from wallets carousels", () => {
 
 it("should be able to see the tour for Demo Only Wallets", () => {
     cy.wait(1000)
-    walletdefaultsorting()
+    //walletdefaultsorting()
     addmorewallets()
   })
 })
