@@ -3,6 +3,8 @@ import common from "../pageobjects/common";
 import botBuilder from "../pageobjects/bot_builder_page";
 import quickStrategy from "../pageobjects/quick_strategy";
 import runPanel from "../pageobjects/run_panel";
+import '@testing-library/cypress/add-commands'
+
 
 describe("Verify Quick Strategy from bot builder page", () => {
   let userName = Cypress.env("username_cr_unauthenticated");

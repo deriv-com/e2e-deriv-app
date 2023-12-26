@@ -2,6 +2,8 @@ import tradersHub from "../pageobjects/traders_hub";
 import common from "../pageobjects/common";
 import botDashboard from "../pageobjects/bot_dashboard_page";
 import runPanel from "../pageobjects/run_panel";
+import '@testing-library/cypress/add-commands'
+
 
 describe("Import and run custom strategy", () => {
   let userName = Cypress.env("username_cr_unauthenticated");

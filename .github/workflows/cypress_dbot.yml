@@ -1,0 +1,90 @@
+name: DBot
+
+run-name: ${{ github.event.head_commit.message }} ${{ github.event.inputs.trigger_mode }}
+on: 
+  push:
+    branches:
+        - 'cypress-dbot'
+        - '*/BOT*'
+  workflow_dispatch:
+    inputs:
+      trigger_mode:
+        description: 'Select your trigger mode:'
+        required: true
+        type: choice
+        options:
+          - Stage
+          - Production
+
+jobs:
+  dbot:
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/cypress-dbot' || contains(github.ref, 'bot') }}
+    steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+        - name: install apt get
+          run: sudo apt-get update
+        - name: install git
+          run: sudo apt-get -y install git
+        - name: Install python & libs
+          run: sudo apt-get install -y libnss3 libgconf-2-4  python3 python3-pip
+        - name: Install pip install pyyaml
+          run: sudo python3 -m pip install pyyaml==5.4.1
+        - name:  Install npm
+          run: |
+           curl -SLO https://deb.nodesource.com/nsolid_setup_deb.sh
+           chmod 500 nsolid_setup_deb.sh
+           ./nsolid_setup_deb.sh 21
+           sudo apt-get install nodejs -y
+           sudo npm install -g npm
+           npm --version
+           npx --version
+        # - name: Install cypress dependencies
+        #   run: |
+        #     echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
+        #     sudo apt-get install -y -q libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+        - name: Install cypress dependencies
+          run: |
+            npm i
+        - name: Decryption
+          run: |
+            openssl aes-256-cbc -d -in cypress-env-json-chiper -pass pass:"${{ secrets.CYPRESSVARKEY }}" >> cypress.env.json -md md5
+            unset NODE_OPTIONS
+            unset DISPLAY
+        - name:  Run Test
+          env:
+            commit_msg: ${{ github.event.head_commit.message }}
+          run: |
+            if [[ "${{ github.event_name }}" == "push" ]]; then
+                trigger_mode="$(echo $commit_msg | awk '{print $1;}')"
+                if [ "$trigger_mode" == "Stage" ]; then
+                    echo "Running DBot Tests on Stage"
+                    export CYPRESS_FELINK="https://staging-app.deriv.com/"
+                    npx cypress run --spec "cypress/e2e/dbot/sanity-tests/*"
+                elif [ "$trigger_mode" == "Prod" ]; then
+                    echo "Running DBot Tests on Prod"
+                    export CYPRESS_FELINK="https://app.deriv.com/"
+                    npx cypress run --spec "cypress/e2e/dbot/sanity-tests/*"
+                else
+                    echo "Tests have been skipped due to invalid commit message"
+                fi
+            elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.trigger_mode }}" == "Stage" ]]; then
+                echo "Running DBot Tests on Stage"
+                export CYPRESS_FELINK="https://staging-app.deriv.com/"
+                npx cypress run --spec "cypress/e2e/dbot/sanity-tests/*"
+            elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.trigger_mode }}" == "Prod" ]]; then
+                echo "Running DBot Tests on Prod"
+                export CYPRESS_FELINK="https://app.deriv.com/"
+                npx cypress run --spec "cypress/e2e/dbot/sanity-tests/*"
+            else
+                echo "This is an UNSUPPORTED GITHUB EVENT!"
+            fi
+        - name: Publish Test Results
+          if: always()
+          uses: actions/upload-artifact@v3
+          with:
+            name: dbot-test-results-${{ github.job }}
+            path: |
+              cypress/screenshots
+              cypress/videos
