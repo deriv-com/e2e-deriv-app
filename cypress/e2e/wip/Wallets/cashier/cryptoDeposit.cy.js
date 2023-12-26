@@ -1,6 +1,7 @@
 import "@testing-library/cypress/add-commands"
 
 describe("WALL-2831 - Crypto deposit and fiat onramp", () => {
+  //Prerequisites: Crypto wallet account with access to banxa provider in any qa box with app id 11780
   beforeEach(() => {
     cy.c_login("onramp")
     cy.c_visitResponsive("/wallets", "large")
@@ -36,12 +37,6 @@ describe("WALL-2831 - Crypto deposit and fiat onramp", () => {
       .invoke("removeAttr", "target")
       .click()
     //TODO: check if banxa provider tab is properly loaded and banxa url is able to be fetched
-    // cy.window().then((win) => {
-    //   cy.stub(win, 'open').as('windowOpen').callsFake(url => 
-    //   {
-    //     win.location.href = url;
-    //   })
-    // })
-    // cy.get("@windowOpen").should("be.called")
+    // cy.url().should("include", "Cypress.env("onrampProviderUrl")");
   })
 })
