@@ -77,6 +77,9 @@ if (Cypress.env("oAuthToken") == "") {
             ),
             "large"
           )
+          /// writing this as a temporary solution
+              cy.get('[data-testid="dt_modal_footer"] > .dc-btn').click()
+          ///
           cy.findByText("Trader's Hub").should("be.visible")
           //cy.get('[data-layer="Content"]').should('be.visible')
         }
@@ -102,6 +105,7 @@ if (Cypress.env("oAuthToken") == "") {
         cy.wrap($element).click()
       }
     })
+    
     cy.findByText("Trader's Hub").should("be.visible")
   }
 })
@@ -121,6 +125,7 @@ Cypress.on('uncaught:exception', (err, runnable, promise) => {
     console.log(err)
     return false
   })
+
 
 
 
