@@ -7,6 +7,10 @@ function fiat_transfer(to_account) {
     .eq(1)
     .click()
     .type("1.000")
+  // cy.findByText("Your remaining lifetime transfer limit from USD Wallet to any cryptocurrency Wallets is \d+\.\d+  USD.", {
+  //     exact: false, 
+  //   }).should("be.visible")
+  cy.contains("The lifetime transfer limit from BTC Wallet to any fiat Wallets is up to")
   cy.get("form")
     .findByRole("button", { name: "Transfer", exact: true })
     .should("be.enabled")
