@@ -7,10 +7,12 @@ function fiat_transfer(to_account) {
     .eq(1)
     .click()
     .type("1.000")
-  // cy.findByText("Your remaining lifetime transfer limit from USD Wallet to any cryptocurrency Wallets is \d+\.\d+  USD.", {
-  //     exact: false, 
-  //   }).should("be.visible")
-  cy.contains("The lifetime transfer limit from BTC Wallet to any fiat Wallets is up to")
+  // cy.contains("Your remaining lifetime transfer limit from USD Wallet to any cryptocurrency Wallets is").should('exist').or('contain', 'The lifetime transfer limit from USD Wallet to any cryptocurrency Wallets is')
+  cy.contains('Your remaining lifetime transfer limit from USD Wallet to any cryptocurrency Wallets is').then(($element) => {
+    if ($element.length === 0) {
+      cy.contains('The lifetime transfer limit from USD Wallet to any cryptocurrency Wallets is').should('exist');
+    }
+  })
   cy.get("form")
     .findByRole("button", { name: "Transfer", exact: true })
     .should("be.enabled")
@@ -33,7 +35,8 @@ describe("WALL-2858 - Fiat transfer and transactions", () => {
   it("should be able to perform transfer from fiat account", () => {
     cy.log("Transfer from Fiat account")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.get('.wallets-accordion__dropdown').first().click()
+    cy.findAllByText(/USD Wallet/).first().scrollIntoView()
+    // cy.get('.wallets-accordion__dropdown').first().click()
     cy.contains("Transfer").first().click()
     fiat_transfer("BTC")
     fiat_transfer("ETH")
@@ -43,7 +46,8 @@ describe("WALL-2858 - Fiat transfer and transactions", () => {
   it("should be able to view transactions of fiat account", () => {
     cy.log("View Transactions of Fiat account")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.get('.wallets-accordion__dropdown').first().click()
+    // cy.get('.wallets-accordion__dropdown').first().click()
+    cy.findAllByText(/USD Wallet/).first().scrollIntoView()
     cy.contains("Transactions").first().click()
     cy.get("#downshift-0-toggle-button").findByRole("button").click()
     cy.findByRole("option", { name: "Deposit" }).click()

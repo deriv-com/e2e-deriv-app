@@ -101,7 +101,7 @@ if (Cypress.env("oAuthToken") == "") {
     if (app == "doughflow") {
         cy.log("DoughflowToken:" + Cypress.env("doughflowOAuthToken"))
         cy.c_visitResponsive(
-        Cypress.env("doughflowOAuthUrl").replace("<token>", Cypress.env("doughflowOAuthToken")),
+        Cypress.env("doughflowOAuthUrl"),
         "large"
     )
     } else if (app == "demoonlywallet"){
