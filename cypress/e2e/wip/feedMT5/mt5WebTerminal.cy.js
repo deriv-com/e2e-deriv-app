@@ -73,20 +73,16 @@ it('open mt5 web terminal', () => {
     //Check price streaming on "GBPNOK" - forex minor (Bloomberg provider symbol)
     //******************************************************************************
     cy.get('input.svelte-1nc9ygh').type('GBPNOK')
-    cy.wait(1000)
-    //cy.get('.symbol').should('be.visible')
-    if (cy.get('.item > .checked').should('be.true')){
+    cy.get('.symbol').should('be.visible')
+
+    if (cy.get('.item > .checked').should('have.class','checked')){
         cy.log('symbol is already added to the watchlist')
+        cy.get('.close').click()
     }
     else  {
         cy.get('.icon.svelte-6nbdup > .icon > svg').click()
         cy.get('.close').click()
     }  
-
-    
-    cy.get('.icon.svelte-6nbdup > .icon > svg').click()
-    cy.get('.close').click()
-    //cy.get('[title="GBPNOK"] > :nth-child(1) > .name > .text').should('be.visible')
 
     cy.get('[title="GBPNOK"] > :nth-child(1) > .name > .text').invoke('text').then((text) => {
         cy.log(`checking Feed streaming for the Symbol: ' ${text}`)
@@ -132,9 +128,15 @@ it('open mt5 web terminal', () => {
     //***********************************************************************************
     cy.get('input.svelte-1nc9ygh').type('AUDUSD')
     cy.get('.symbol').should('be.visible')
-    cy.get(':nth-child(1) > .item > .icon.svelte-6nbdup').click()
-    cy.get('.close').click()
-    //cy.wait(2000);
+
+    if (cy.get('.item > .checked').should('have.class','checked')){
+        cy.log('symbol is already added to the watchlist')
+        cy.get('.close').click()
+    }
+    else  {
+        cy.get('.icon.svelte-6nbdup > .icon > svg').click()
+        cy.get('.close').click()
+    }  
        
     cy.get('[title="AUDUSD"] > :nth-child(1) > .name > .text').invoke('text').then((text) => {
         cy.log(`checking Feed streaming for the Symbol: ' ${text}`)
@@ -179,9 +181,15 @@ it('open mt5 web terminal', () => {
     //***********************************************************************************
     cy.get('input.svelte-1nc9ygh').type('XPTUSD')
     cy.get('.symbol').should('be.visible')
-    cy.get(':nth-child(1) > .item > .icon.svelte-6nbdup').click()
-    cy.get('.close').click()
-    //cy.wait(2000);
+
+    if (cy.get('.item > .checked').should('have.class','checked')){
+        cy.log('symbol is already added to the watchlist')
+        cy.get('.close').click()
+    }
+    else  {
+        cy.get('.icon.svelte-6nbdup > .icon > svg').click()
+        cy.get('.close').click()
+    }  
        
     cy.get('[title="XPTUSD"] > :nth-child(1) > .name > .text').invoke('text').then((text) => {
         cy.log(`checking Feed streaming for the Symbol: ' ${text}`)
@@ -226,9 +234,15 @@ it('open mt5 web terminal', () => {
     //***********************************************************************************
     cy.get('input.svelte-1nc9ygh').type('XAGUSD')
     cy.get('.symbol').should('be.visible')
-    cy.get(':nth-child(1) > .item > .icon.svelte-6nbdup').click()
-    cy.get('.close').click()
-    //cy.wait(2000);
+
+    if (cy.get('.item > .checked').should('have.class','checked')){
+        cy.log('symbol is already added to the watchlist')
+        cy.get('.close').click()
+    }
+    else  {
+        cy.get('.icon.svelte-6nbdup > .icon > svg').click()
+        cy.get('.close').click()
+    } 
        
     cy.get('[title="XAGUSD"] > :nth-child(1) > .name > .text').invoke('text').then((text) => {
         cy.log(`checking Feed streaming for the Symbol: ' ${text}`)
@@ -273,9 +287,15 @@ it('open mt5 web terminal', () => {
     //***********************************************************************************
     cy.get('input.svelte-1nc9ygh').type('AUS_200')
     cy.get('.symbol').should('be.visible')
-    cy.get(':nth-child(1) > .item > .icon.svelte-6nbdup').click()
-    cy.get('.close').click()
-    //cy.wait(2000);
+    
+    if (cy.get('.item > .checked').should('have.class','checked')){
+        cy.log('symbol is already added to the watchlist')
+        cy.get('.close').click()
+    }
+    else  {
+        cy.get('.icon.svelte-6nbdup > .icon > svg').click()
+        cy.get('.close').click()
+    }  
        
     cy.get('[title="AUS_200"] > :nth-child(1) > .name > .text').invoke('text').then((text) => {
         cy.log(`checking Feed streaming for the Symbol: ' ${text}`)
