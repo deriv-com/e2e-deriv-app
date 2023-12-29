@@ -99,10 +99,10 @@ if (Cypress.env("oAuthToken") == "") {
   } else {
     //Other credential use cases could be added here to access different oAuth tokens
     if (app == "doughflow") {
-        Cypress.env("doughflowOAuthUrl").replace("<token>", Cypress.env("doughflowOAuthToken")),
-        cy.c_visitResponsive(
-        Cypress.env("doughflowOAuthUrl"),
-        "large"
+      cy.log("DoughflowToken:" + Cypress.env("doughflowOAuthToken"))
+      cy.c_visitResponsive(
+      Cypress.env("doughflowOAuthUrl").replace("<token>", Cypress.env("doughflowOAuthToken")),
+      "large"
     )
     } else if (app == "demoonlywallet"){
       cy.log("DemowalletToken:" + Cypress.env("demoOAuthToken"))
