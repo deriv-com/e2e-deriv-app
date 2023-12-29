@@ -3,10 +3,13 @@ import "@testing-library/cypress/add-commands"
 function fiat_transfer(to_account) {
   cy.contains("Transfer to").click()
   cy.contains(`${to_account} Wallet`).click()
+  //transfer more than account balance error verification
   cy.get('input[class="wallets-atm-amount-input__input"]')
   .eq(1)
   .click()
   .type("110000.000")
+  // transfer with permitted amount
+  cy.contains('Your USD Wallet has insufficient balance.').should('exist')
   cy.get('input[class="wallets-atm-amount-input__input"]')
     .eq(1)
     .clear()
@@ -14,12 +17,8 @@ function fiat_transfer(to_account) {
     .eq(1)
     .click()
     .type("1.000")
-//Check the transfer limit message for first time and next tries
-  cy.contains('Your remaining lifetime transfer limit from USD Wallet to any cryptocurrency Wallets is').then(($element) => {
-    if ($element.length === 0) {
-      cy.contains('The lifetime transfer limit from USD Wallet to any cryptocurrency Wallets is').should('exist');
-    }
-  })
+//Check the transfer limit message 
+  cy.contains('lifetime transfer limit from USD Wallet to any cryptocurrency Wallets is').should('exist')
   cy.get("form")
     .findByRole("button", { name: "Transfer", exact: true })
     .should("be.enabled")
@@ -37,16 +36,6 @@ describe("WALL-2858 - Fiat transfer and transactions", () => {
   beforeEach(() => {
     cy.c_login("wallets")
     cy.c_visitResponsive("/wallets", "large")
-  })
-
-  it("should not be able to transfer more that account balance", () => {
-    cy.log("Transfer more than account balance form fiat account")
-    cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.findAllByText(/USD Wallet/).first().scrollIntoView()
-    cy.contains("Transfer").first().click()
-    fiat_transfer("BTC")
-    fiat_transfer("ETH")
-    fiat_transfer("LTC")
   })
 
   it("should be able to perform transfer from fiat account", () => {
