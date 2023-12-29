@@ -334,6 +334,5 @@ it('open mt5 web terminal', () => {
             })
         });
     })
-    
 
 })
