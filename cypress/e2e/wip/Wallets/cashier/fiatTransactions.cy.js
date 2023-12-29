@@ -7,7 +7,7 @@ function fiat_transfer(to_account) {
   cy.get('input[class="wallets-atm-amount-input__input"]')
   .eq(1)
   .click()
-  .type("110000.000")
+  .type("11000.000")
   // transfer with permitted amount
   cy.contains('Your USD Wallet has insufficient balance.').should('exist')
   cy.get('input[class="wallets-atm-amount-input__input"]')
@@ -42,7 +42,6 @@ describe("WALL-2858 - Fiat transfer and transactions", () => {
     cy.log("Transfer from Fiat account")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     cy.findAllByText(/USD Wallet/).first().scrollIntoView()
-    // cy.get('.wallets-accordion__dropdown').first().click()
     cy.contains("Transfer").first().click()
     fiat_transfer("BTC")
     fiat_transfer("ETH")
@@ -52,7 +51,6 @@ describe("WALL-2858 - Fiat transfer and transactions", () => {
   it("should be able to view transactions of fiat account", () => {
     cy.log("View Transactions of Fiat account")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    // cy.get('.wallets-accordion__dropdown').first().click()
     cy.findAllByText(/USD Wallet/).first().scrollIntoView()
     cy.contains("Transactions").first().click()
     cy.get("#downshift-0-toggle-button").findByRole("button").click()
