@@ -99,7 +99,7 @@ if (Cypress.env("oAuthToken") == "") {
   } else {
     //Other credential use cases could be added here to access different oAuth tokens
     if (app == "doughflow") {
-        cy.log("DoughflowToken:" + Cypress.env("doughflowOAuthToken"))
+        Cypress.env("doughflowOAuthUrl").replace("<token>", Cypress.env("doughflowOAuthToken")),
         cy.c_visitResponsive(
         Cypress.env("doughflowOAuthUrl"),
         "large"
