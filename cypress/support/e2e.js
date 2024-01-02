@@ -1,4 +1,5 @@
 const { getLoginToken } = require("./common")
+const { getOAuthUrl } = require("./common")
 
 Cypress.Commands.add("c_visitResponsive", (path, size) => {
   //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
@@ -65,18 +66,12 @@ Cypress.Commands.add("c_login", (app) => {
     localStorage.setItem("config.app_id", Cypress.env("onrampConfigAppId"))
   }
 
-if (Cypress.env("oAuthToken") == "") {
-      getLoginToken(
-        (token) => {
-          cy.log("getLoginToken - token value: " + token)
-          Cypress.env("oAuthToken", token)
-          cy.c_visitResponsive(
-            Cypress.env("oAuthUrl").replace(
-              "<token>",
-              Cypress.env("oAuthToken")
-            ),
-            "large"
-          )
+if (Cypress.env("oAuthUrl") == "") {
+      getOAuthUrl(
+        (oAuthUrl) => {
+          cy.log("getOAuthUrl - value: " + oAuthUrl)
+          Cypress.env("oAuthUrl", oAuthUrl)
+          cy.c_visitResponsive(Cypress.env("oAuthUrl"),"large")
           //To let the dtrader page load completely
           cy.get('.cq-symbol-select-btn', { timeout: 10000})
             .should('exist')
@@ -112,11 +107,8 @@ if (Cypress.env("oAuthToken") == "") {
       )
     }
     else {
-    cy.log("E2EToken:" + Cypress.env("oAuthToken"))
-    cy.c_visitResponsive(
-      Cypress.env("oAuthUrl").replace("<token>", Cypress.env("oAuthToken")),
-      "large"
-    )
+      cy.log("oAuthUrl:" + Cypress.env("oAuthUrl"))
+      cy.c_visitResponsive(Cypress.env("oAuthUrl"),"large")
     }
     //To let the dtrader page load completely
     cy.get('.cq-symbol-select-btn', { timeout: 10000})
@@ -138,6 +130,7 @@ if (Cypress.env("oAuthToken") == "") {
       })
     }
 })
+
 Cypress.Commands.add('c_mt5login', () => {
     cy.c_visitResponsive(Cypress.env('mt5BaseUrl') + '/terminal', 'large')
     cy.findByRole('button', { name: 'Accept' }).click()
