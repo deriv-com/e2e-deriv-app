@@ -7,8 +7,8 @@ it('open mt5 web terminal', () => {
     //cy.visit('https://mt5-real01-web.deriv.com/');
     cy.visit('https://mt5-real01-web.regentmarkets.com/');
     cy.get('.accept-button').click();
-    cy.get('[title="Enter Login"] > .svelte-1hckigs').type('41492917');
-    cy.get('.password > .input > .svelte-1hckigs').type('Abcd@1234');
+    cy.get('[title="Enter Login"] > .svelte-1hckigs').type('');
+    cy.get('.password > .input > .svelte-1hckigs').type('');
     cy.wait(2000);
     cy.get('.footer > .button').click();
     cy.viewport(1024, 768);
@@ -63,8 +63,8 @@ it('open mt5 web terminal', () => {
     cy.get(':nth-child(2) > .item').click()
     cy.wait(2000)
     cy.get('[title="Connect to account"]').click()
-    cy.get('[title="Enter Login"] > .svelte-1hckigs').clear().type('9320998')
-    cy.get('.password > .input > .svelte-1hckigs').clear().type('Abcd@1234')
+    cy.get('[title="Enter Login"] > .svelte-1hckigs').clear().type('')
+    cy.get('.password > .input > .svelte-1hckigs').clear().type('')
     cy.wait(1000)
     cy.get('.footer > .button').click();
     cy.get('.active > :nth-child(1) > .name > .text').should('be.visible')
