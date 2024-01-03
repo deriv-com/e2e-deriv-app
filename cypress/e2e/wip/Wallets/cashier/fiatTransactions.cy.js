@@ -23,9 +23,9 @@ describe("WALL-2858 - Fiat transfer and transactions", () => {
 
   it("should be able to perform transfer from fiat account", () => {
     cy.log("Transfer from Fiat account")
-    cy.c_rateLimit()
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.get(".wallets-accordion__header").contains("Transfer").first().click()
+    cy.get('.wallets-accordion__dropdown').first().click()
+    cy.contains("Transfer").first().click()
     fiat_transfer("BTC")
     fiat_transfer("ETH")
     fiat_transfer("LTC")
@@ -33,9 +33,9 @@ describe("WALL-2858 - Fiat transfer and transactions", () => {
 
   it("should be able to view transactions of fiat account", () => {
     cy.log("View Transactions of Fiat account")
-    cy.c_rateLimit()
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.get(".wallets-accordion__header").contains("Transactions").first().click()
+    cy.get('.wallets-accordion__dropdown').first().click()
+    cy.contains("Transactions").first().click()
     cy.get("#downshift-0-toggle-button").findByRole("button").click()
     cy.findByRole("option", { name: "Deposit" }).click()
     cy.contains("+10,000.00 USD")

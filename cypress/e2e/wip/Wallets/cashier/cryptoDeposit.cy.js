@@ -9,7 +9,6 @@ describe("WALL-2831 - Crypto deposit and fiat onramp", () => {
 
   it("should be able to view crypto deposit details", () => {
     cy.log("Crypto Deposit")
-    cy.c_rateLimit()
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().should("exist")
     cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().click()
@@ -25,7 +24,6 @@ describe("WALL-2831 - Crypto deposit and fiat onramp", () => {
 
   it("should be able to deposit into crypto account through fiat onramp", () => {
     cy.log("Access Fiat OnRamp Provider")
-    cy.c_rateLimit()
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().should("exist")
     cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().click()

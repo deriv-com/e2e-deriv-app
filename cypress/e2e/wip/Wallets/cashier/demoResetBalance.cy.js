@@ -29,7 +29,6 @@ describe("WALL-2760 - Reset Balance for Demo wallet", () => {
 
   it("should be able to reset balance for demo wallet", () => {
     cy.log("Reset Balance for Demo Account")
-    cy.c_rateLimit()
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     reset_balance_demo()
   })

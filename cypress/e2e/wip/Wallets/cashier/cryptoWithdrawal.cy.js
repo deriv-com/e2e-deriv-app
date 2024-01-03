@@ -8,7 +8,6 @@ describe("WALL-2830 - Crypto withdrawal send email", () => {
 
   it("should be able to send withdrawal verification link", () => {
     cy.log("Send Crypto Withdrawal Verification")
-    cy.c_rateLimit()
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().should("exist")
       cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().click()
@@ -31,7 +30,6 @@ describe("WALL-2830 - Crypto withdrawal content access from email", () => {
   beforeEach(() => {
     cy.c_login("wallets")
     cy.c_visitResponsive("/wallets", "large")
-    cy.c_rateLimit()
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().should("exist")
       cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().click()

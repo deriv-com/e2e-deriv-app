@@ -29,7 +29,6 @@ describe("WALL-2760 - Transfer and check transactions for Demo wallet", () => {
 
   it("should be able to transfer demo funds", () => {
     cy.log("Transfer Demo Funds for Demo Account")
-    cy.c_rateLimit()
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     reset_balance_demo()
     cy.contains(/Transfer from/).click()
@@ -55,7 +54,6 @@ describe("WALL-2760 - Transfer and check transactions for Demo wallet", () => {
 
   it("should be able to view demo transactions", () => {
     cy.log("View Transactions for Demo Account")
-    cy.c_rateLimit()
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     reset_balance_demo()
     cy.findByRole('button', { name: 'Transactions' }).click()
