@@ -1,4 +1,38 @@
 import "@testing-library/cypress/add-commands"
+
+function walletsorting(){
+  //Fiat Wallet - CRW Sorting in Wallet Carousel 
+  const walletTextArray = []
+  cy.get('.wallets-add-more__card').each(($element, index, $list) => {
+    const wallettext = Cypress.$($element).text()
+    const fiatwallet = !wallettext.includes('blockchain')
+    const cryptowallet = Cypress.$($element).text().includes('blockchain')
+    const Addedcrypto = Cypress.$($element).text().includes('Add')
+    
+    if (fiatwallet && index > 0) {
+      // To check the previous element
+      const previousElementButtonText = Cypress.$($list[index - 1]).find('button')
+      cy.wrap(previousElementButtonText).should('not.contain.text', 'Added')
+      cy.log ("Added Fiat wallet is sorted - displayed first")
+    } else if (cryptowallet && Addedcrypto) {
+      //const wallettitle = Cypress.$($element).text()
+      walletTextArray.push(wallettext.toString())
+      cy.log({wallet: wallettext})
+      cy.log({walletArray: walletTextArray[1]}) //debugging
+      cy.wrap(walletTextArray).as('cryptoArray')
+      //return wallettext
+    }
+
+  })
+
+  // Log the whole list of Array elements as a JSON string
+      cy.log({ walletArray: walletTextArray })
+      const expectedSortedList = [...walletTextArray].sort()
+      expect(walletTextArray).to.deep.equal(expectedSortedList)
+      cy.log({expectedSortedList: expectedSortedList})
+
+}
+
 function addcryptowallet(){
   cy.get('.wallets-add-more__carousel-wrapper')
     .find('button')
