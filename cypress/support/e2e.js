@@ -178,6 +178,61 @@ Cypress.Commands.add('c_emailVerification', (verification_code, base_url) => {
   )
 })
 
+//To be added on hotspots as an edge case only when constantly hitting rate limits
+Cypress.Commands.add("c_rateLimit", () => {
+  cy.get("#modal_root, .modal-root", { timeout: 10000 }).then(($element) => {
+    if ($element.children().length > 0) {
+      cy.contains("Refresh").then(($element) => {
+        if (
+          $element.length &&
+          cy.contains("You have reached your rate limit")
+        ) {
+          cy.wrap($element).click()
+          //Timeout if rate limited and should wait until content is re-rendered
+          cy.wait(30000)
+        }
+        return
+      })
+    } else {
+      return
+    }
+  })
+})
+
+Cypress.Commands.add("c_transferLimit", (transferMessage) => {
+  cy.get(".wallets-cashier-content", { timeout: 10000 })
+    // IF ADDED ONLY IF CONDITION WORKS, IF REMOVED ONLY ELSE CONDITION WORKS
+    // .contains(
+    //   `You can only perform up to 10 transfers a day. Please try again tomorrow.` ||
+    //     "You have exceeded 200.00 USD in cumulative transactions. To continue, you will need to verify your identity.",
+    //     {timeout: 5000}
+    // )
+    .then(($element) => {
+      if (
+        $element
+          .text()
+          .includes(
+            `You can only perform up to 10 transfers a day. Please try again tomorrow.` ||
+              "You have exceeded 200.00 USD in cumulative transactions. To continue, you will need to verify your identity."
+          )
+      ) {
+        cy.contains("Reset error").then(($resetElement) => {
+          if ($resetElement.length) {
+            cy.wrap($resetElement).click()
+          }
+          cy.contains("Wallet", { timeout: 10000 }).should("exist")
+        })
+      } else {
+        cy.findByText("Your transfer is successful!", {
+          exact: true,
+        }).should("be.visible")
+        cy.contains(transferMessage)
+        cy.contains("% transfer fees")
+        cy.findByRole("button", { name: "Make a new transfer" }).click()
+      }
+    })
+})
+
 Cypress.on('uncaught:exception', (err, runnable, promise) => {
     console.log(err)
     return false

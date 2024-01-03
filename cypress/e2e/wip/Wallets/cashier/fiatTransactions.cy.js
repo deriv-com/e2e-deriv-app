@@ -23,12 +23,7 @@ function fiat_transfer(to_account) {
     .findByRole("button", { name: "Transfer", exact: true })
     .should("be.enabled")
     .click()
-  cy.findByText("Your transfer is successful!", {
-    exact: true,
-  }).should("be.visible")
-  cy.contains("10.00 USD")
-  cy.contains("% transfer fees")
-  cy.findByRole("button", { name: "Make a new transfer" }).click()
+    cy.c_transferLimit("10.00 USD")
 }
 
 describe("WALL-2858 - Fiat transfer and transactions", () => {

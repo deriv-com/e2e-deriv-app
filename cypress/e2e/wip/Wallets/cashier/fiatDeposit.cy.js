@@ -10,8 +10,7 @@ describe("WALL-2817 - Fiat deposit iframe access", () => {
   it("should be able to access doughflow iframe", () => {
     cy.log("Access Fiat Deposit Iframe")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.findAllByText(/USD Wallet/).first().scrollIntoView()
-    cy.findByRole('button', { name: 'Deposit' }).click()
+    cy.get(".wallets-accordion__header").contains("Deposit").first().click()
     cy.get('#app_contents iframe').should("exist")
   })
 })
@@ -26,8 +25,7 @@ describe("WALL-2817 - Fiat deposit error", () => {
   it("should be able to see error message when no access provided", () => {
     cy.log("Error for Fiat Deposit")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.findAllByText(/USD Wallet/).first().scrollIntoView()
-    cy.get('.wallets-button').first().click()
+    cy.get(".wallets-accordion__header").contains("Deposit").first().click()
     cy.get(".wallets-action-screen")
       .findByText("Oops, something went wrong!", {
         exact: true,

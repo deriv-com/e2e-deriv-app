@@ -12,12 +12,7 @@ function crypto_transfer(to_account) {
     .findByRole("button", { name: "Transfer", exact: true })
     .should("be.enabled")
     .click()
-  cy.findByText("Your transfer is successful!", {
-    exact: true,
-  }).should("be.visible")
-  cy.contains("0.00010000 BTC")
-  cy.contains("% transfer fees")
-  cy.findByRole("button", { name: "Make a new transfer" }).click()
+    cy.c_transferLimit("0.00010000 BTC")
 }
 
 describe("WALL-2858 - Crypto transfer and transactions", () => {
