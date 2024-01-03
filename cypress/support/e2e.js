@@ -39,10 +39,20 @@ Cypress.Commands.add("c_visitResponsive", (path, size) => {
 })
 
 Cypress.Commands.add("c_login", (app) => {
+
   cy.c_visitResponsive("/endpoint", "large")
 
   localStorage.setItem("config.server_url", Cypress.env("configServer"))
   localStorage.setItem("config.app_id", Cypress.env("configAppId"))
+
+  if (app == "doughflow") {
+    localStorage.setItem("config.server_url", Cypress.env("doughflowConfigServer"))
+    localStorage.setItem("config.app_id", Cypress.env("doughflowConfigAppId"))
+  }
+
+  if (app == "onramp") {
+    localStorage.setItem("config.app_id", Cypress.env("onrampConfigAppId"))
+  }
 
   if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet" || app == "onramp") {
     cy.contains("next_wallet").then(($element) => {
@@ -54,81 +64,39 @@ Cypress.Commands.add("c_login", (app) => {
     })
   }
 
-  if (app == "doughflow") {
-    localStorage.setItem(
-      "config.server_url",
-      Cypress.env("doughflowConfigServer")
-    )
-    localStorage.setItem("config.app_id", Cypress.env("doughflowConfigAppId"))
-  }
-
-  if (app == "onramp") {
-    localStorage.setItem("config.app_id", Cypress.env("onrampConfigAppId"))
-  }
-
-if (Cypress.env("oAuthUrl") == "") {
+  if (Cypress.env("oAuthUrl") == "") {
       getOAuthUrl(
         (oAuthUrl) => {
           cy.log("getOAuthUrl - value: " + oAuthUrl)
           Cypress.env("oAuthUrl", oAuthUrl)
-          cy.c_visitResponsive(Cypress.env("oAuthUrl"),"large")
-          //To let the dtrader page load completely
-          cy.get('.cq-symbol-select-btn', { timeout: 10000})
-            .should('exist')
-
-          //If Deriv charts popup exists, click continue
-          cy.get('#modal_root, .modal-root', { timeout: 10000 })
-            .then(($element) => {
-             if ($element.children().length > 0) {
-                cy.contains("Continue").then(($element) => {
-                  if ($element.length) {
-                    cy.wrap($element).click()
-                  }
-                  cy.findByText("Trader's Hub").should("be.visible")
-                })
-              } else {
-                cy.findByText("Trader's Hub").should("be.visible")
-              }
-            })
+          cy.c_doOAuthLogin()
         })
-  } else {
-    //Other credential use cases could be added here to access different oAuth tokens
-    if (app == "doughflow") {
-        cy.log("DoughflowToken:" + Cypress.env("doughflowOAuthToken"))
-        cy.c_visitResponsive(
-        Cypress.env("doughflowOAuthUrl").replace("<token>", Cypress.env("doughflowOAuthToken")),
-        "large"
-    )
-    } else if (app == "demoonlywallet"){
-      cy.log("DemowalletToken:" + Cypress.env("demoOAuthToken"))
-      cy.c_visitResponsive(
-        Cypress.env("demoOAuthUrl").replace("<token>", Cypress.env("demoOAuthToken")),
-        "large"
-      )
-    }
-    else {
-      cy.log("oAuthUrl:" + Cypress.env("oAuthUrl"))
-      cy.c_visitResponsive(Cypress.env("oAuthUrl"),"large")
-    }
-    //To let the dtrader page load completely
-    cy.get('.cq-symbol-select-btn', { timeout: 10000})
-      .should('exist')
+  } else
+  {
+    cy.c_doOAuthLogin()
+  } 
 
-    //If Deriv charts popup exists, click continue
-    cy.get('#modal_root, .modal-root', { timeout: 10000 })
-      .then(($element) => {
-        if ($element.children().length > 0) {
-          cy.contains("Continue").then(($element) => {
-            if ($element.length) {
-              cy.wrap($element).click()
-            }
-            cy.findByText("Trader's Hub").should("be.visible")
-          })
-        } else {
+})
+
+Cypress.Commands.add('c_doOAuthLogin', () => {
+  cy.c_visitResponsive(Cypress.env("oAuthUrl"),"large")
+  //To let the dtrader page load completely
+  cy.get('.cq-symbol-select-btn', { timeout: 10000}).should('exist')
+
+  //If Deriv charts popup exists, click continue
+  cy.get('#modal_root, .modal-root', { timeout: 10000 })
+    .then(($element) => {
+      if ($element.children().length > 0) {
+        cy.contains("Continue").then(($element) => {
+          if ($element.length) {
+            cy.wrap($element).click()
+          }
           cy.findByText("Trader's Hub").should("be.visible")
-        }
-      })
-    }
+        })
+      } else {
+        cy.findByText("Trader's Hub").should("be.visible")
+      }
+    })
 })
 
 Cypress.Commands.add('c_mt5login', () => {

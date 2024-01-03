@@ -63,6 +63,7 @@ function getLoginToken(callback) {
   }
 
   function getOAuthUrl(callback) {
+    // Step 1: Perform a GET on the OAuth Url in order to generate a CSRF token.
     cy.request({
       method: 'GET',
       url: 'https://' + Cypress.env('configServer') + '/oauth2/authorize?app_id=' + Cypress.env('configAppId') + '&l=en&brand=deriv&date_first_contact=',
@@ -71,20 +72,21 @@ function getLoginToken(callback) {
         'Origin': 'https://oauth.deriv.com'
       }
     }).then((response) => {
-      // Step 2: Extract CSRF token from the response
+   
+      // Step 2: Extract CSRF token and set-cookie value from the response
       // This will depend on how the token is presented in the response.
       // For example, it might be in a cookie, a header, or in the HTML body.
       const csrfToken = extractCsrfToken(response);
       cy.log('csrfToken>>' + csrfToken);
       const cookie = response.headers['set-cookie'];
-      cy.log('Cookie Test:' + response.headers['set-cookie'])
+      cy.log('Cookie Test:' + response.headers['set-cookie']);
 
-      // Step 3: Make a POST request with the CSRF token
+      // Step 3: Make a POST request with the CSRF token and cookie.
       cy.request({
         method: 'POST',
-        url: 'https://' + Cypress.env('configServer') + '/oauth2/authorize?app_id=' + Cypress.env('configAppId') + '&l=en&brand=deriv&date_first_contact=', // replace with the actual login URL
-        form: false, // indicates the body should be form-urlencoded
-        followRedirect: false,
+        url: 'https://' + Cypress.env('configServer') + '/oauth2/authorize?app_id=' + Cypress.env('configAppId') + '&l=en&brand=deriv&date_first_contact=',
+        form: false, 
+        followRedirect: false, //This ensures we get a 302 status.
         body: {
           email: Cypress.env('loginEmail'),
           password: Cypress.env('loginPassword'),
@@ -103,19 +105,19 @@ function getLoginToken(callback) {
 
           callback(oAuthUrl);
 
-          expect(response.status).to.eq(302);
+          expect(response.status).to.eq(302); //302 means success on this occasion!
       });
     });
   }
 
   function extractCsrfToken(response) {
-    // Implement the logic to extract the CSRF token from the response
-    // This is just a placeholder function
+
     const regex = /name="csrf_token" value="([^"]*)"/;
     const found = response.body.match(regex);
 
     return found[1];
   }
+
 
   module.exports = { getLoginToken };
   module.exports = { getOAuthUrl };
