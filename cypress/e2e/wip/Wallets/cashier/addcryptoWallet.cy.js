@@ -1,8 +1,8 @@
 import "@testing-library/cypress/add-commands"
 function addcryptowallet(){
   cy.get('.wallets-add-more__carousel-wrapper')
-  .find('button')
-  .then((buttons) => {
+    .find('button')
+    .then((buttons) => {
     const buttoncount = buttons.filter((index, button) => Cypress.$(button).text().trim() === 'Add').length // To get the exact match of the text
     cy.log(`Number of buttons": ${buttoncount}`)
     if (buttoncount >0) {
@@ -14,7 +14,6 @@ function addcryptowallet(){
         .click()
 
         let walletname
-        let wallet
         //To verify newly added wallet widgets are expanded in dashboard
         cy.get('.wallets-card__details__bottom')
           .find('span')
@@ -24,14 +23,14 @@ function addcryptowallet(){
             walletname = text.trim()
             cy.log({wallet: walletname})
             cy.findByRole('button', { name: 'Maybe later' }).click()
-          //To verify newly added wallet widgets are expanded in dashboard
-          cy.get('[class*="wallets-accordion wallets-accordion"]')
-            .contains(walletname) 
-            .should('not.have.class', 'class="wallets-accordion__dropdown"')
+        
+        cy.get('[class*="wallets-accordion wallets-accordion"]')
+          .contains(walletname) 
+          .should('not.have.class', 'class="wallets-accordion__dropdown"')
             })
           }
     } else {
-      cy.log('Button not found with Add')
+      cy.log('All wallets are already added')
     }
       })
     }
@@ -42,7 +41,7 @@ describe("WALL-3094 - Add wallets from wallets carousels", () => {
       cy.c_visitResponsive("/wallets", "large")
     })
   
-    it("should be able to see the tour for Demo Only Wallets", () => {
+    it("should be able to add more wallets", () => {
       addcryptowallet()
     })
   })
