@@ -1,0 +1,15 @@
+{
+
+    "mt5Locators":
+    {
+        "demo_derived_get":"div:nth-of-type(2) > .trading-app-card__container > .trading-app-card__actions > .dc-btn.dc-btn--primary__light",
+        "demo_finanical_get":"div:nth-of-type(3) > .trading-app-card__container > .trading-app-card__actions > .dc-btn.dc-btn--primary__light",
+        "demo_swapfree_get":"div:nth-of-type(4) > .trading-app-card__container > .trading-app-card__actions > .dc-btn.dc-btn--primary__light",
+        "tradershubDropDown":"[data-testid='dt_dropdown_display'] > .dc-text",
+        "demo":"#demo",
+        "real":"#real",
+        "mt5cfdsaccounttitle":".cfd-accounts__title:nth-child(1)>span.dc-text",
+        "mt5tradingdetails":".trading-app-card__details"
+        
+    }
+}
