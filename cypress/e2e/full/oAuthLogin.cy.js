@@ -13,7 +13,7 @@ describe('Get oAuthUrl', () => {
 
   });
 
-  it('should get the ouauth url from env variable', () => {
+  it('should get the oauth url from env variable', () => {
 
     cy.log('<E2EOAuthUrl - Test 2>' + Cypress.env('oAuthUrl'))
 
