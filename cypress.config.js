@@ -7,7 +7,7 @@ module.exports = defineConfig({
   e2e: {
     projectId: 'qc89n6',
     setupNodeEvents(on, config) {},
-    baseUrl: 'https://test-app.deriv.com',
+    baseUrl: 'https://staging-app.deriv.com',
     //baseUrl: 'https://deriv-app-git-fork-yauheni-deriv-evgeniygetchangeablefieldbug.binary.sx',
     //baseUrl: 'https://deriv-app-git-fork-lubega-deriv-wall-2270-add-try-fiat-onramp.binary.sx',
     //baseUrl: 'https://deriv-app-git-fork-maryia-deriv-maryia-dtra-147trade-typ-456a1b.binary.sx',

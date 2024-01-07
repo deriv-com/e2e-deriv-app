@@ -25,7 +25,7 @@ class mt5_tradershub{
         //return cy.get(multiSelector, { timeout: 60000 });
         return cy.get(element).should('be.visible').then(() => true).catch(() => false);
     }
- buttonClick=(el)=>
+    buttonClick=(el)=>
     {
        // cy.wait(10000);
         el.should('be.visible').click();
@@ -59,7 +59,7 @@ class mt5_tradershub{
     // combined functions
     selectDemoAccount =() =>{
         
-        //this.tradershubDropDown.click();
+      //this.tradershubDropDown.click();
        const tradersHub=this.tradershubDropDown;
        this.buttonClick(tradersHub);
        this.buttonClick(this.selectDemo);
@@ -78,6 +78,21 @@ verifyMFHasCFDsDemoAccount=()=>{
     expect(demoName.trim()).to.equal("CFDs Demo");
   })
     };
+  verifyMT5DemoPasswordModal=()=>
+  {
+    let mt5PasswordTitle
+  cy.get(mt5locators.mt5Locators.mt5passwordmodeltitle).invoke('text').then((text) => {
+    mt5PasswordTitle=text.trim();
+    cy.log("MT5 DEMO Title:: "+mt5PasswordTitle);
+    expect(mt5PasswordTitle).to.equal("Create a Deriv MT5 password");
+  })
 
+  };
+  createMT5MFDemoCreate=()=>{
+      this.buttonClick(mt5locators.mt5Locators.mt5cfddemobutton);
+      this.verifyMT5DemoPasswordModal();
+
+    };
 }
+
 export default new mt5_tradershub();

@@ -9,7 +9,10 @@
         "demo":"#demo",
         "real":"#real",
         "mt5cfdsaccounttitle":".cfd-accounts__title:nth-child(1)>span.dc-text",
-        "mt5tradingdetails":".trading-app-card__details"
+        "mt5tradingdetails":".trading-app-card__details",
+        "mt5cfddemobutton":".trading-app-card__actions>button[type='submit']",
+        "mt5passwordmodeltitle":".cfd-password-modal__create-password-title",
+        "mt5inputcreatepassword":"[data-testid='dt_mt5_password']"
         
     }
 }

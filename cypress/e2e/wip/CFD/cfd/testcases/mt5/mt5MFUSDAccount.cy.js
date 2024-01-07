@@ -13,9 +13,10 @@ it("Should be able to successfully create mt5 MF demo account", () => {
 cy.log("Create MT5  Demo Account")
 
 cy.wait(2000)
-mt5tradershub.selectDemoAccount();
+//mt5tradershub.selectDemoAccount();
+cy.get(mt5locators.mt5Locators.tradershubDropDown).should('be.visible').click();
 mt5tradershub.verifyText(mt5locators.mt5Locators.mt5cfdsaccounttitle,"CFDs");
 mt5tradershub.verifyMFHasCFDsDemoAccount();
-
+mt5tradershub.createMT5MFDemoCreate();
   })
 })
