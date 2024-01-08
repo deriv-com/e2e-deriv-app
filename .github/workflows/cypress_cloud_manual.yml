@@ -7,8 +7,8 @@ on:
         type: choice
         description: Select the environment
         options:
-        - https://staging.deriv.com/
-        - https://deriv.com/
+        - https://staging-app.deriv.com/
+        - https://app.deriv.com/
       suite:
         type: choice
         description: Run smoke or full test suite
