@@ -19,7 +19,6 @@ describe("WALL-2831 - Crypto deposit and fiat onramp", () => {
     cy.findByText("Try Fiat onramp").click()
     cy.contains("Banxa")
   })
-
   it("should be able to deposit into crypto account through fiat onramp", () => {
     cy.log("Access Fiat OnRamp Provider")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
