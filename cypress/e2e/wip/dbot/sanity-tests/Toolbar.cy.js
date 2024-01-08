@@ -2,7 +2,6 @@ import tradersHub from "../pageobjects/traders_hub";
 import common from "../pageobjects/common";
 import botDashboard from "../pageobjects/bot_dashboard_page";
 import botBuilder from "../pageobjects/bot_builder_page";
-import '@testing-library/cypress/add-commands'
 
 
 describe("Verify toolbar on bot builder page", () => {
