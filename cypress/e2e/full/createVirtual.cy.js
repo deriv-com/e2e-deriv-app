@@ -52,7 +52,7 @@ describe("TBC - Create virtual account", () => {
     cy.findByLabelText('Citizenship').click().type('indonesia')
     cy.findByText('Indonesia').click()
     cy.findByRole('button', { name: 'Next' }).click()
-    cy.findByLabelText('Create a password').click().type('Abcd1234')
+    cy.findByLabelText('Create a password').click().type(Cypress.env('loginPassword'))
     cy.findByRole('button', { name: 'Start trading' }).click()
     cy.wait(2000)
     
