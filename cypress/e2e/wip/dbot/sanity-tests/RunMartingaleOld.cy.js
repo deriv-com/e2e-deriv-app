@@ -3,6 +3,7 @@ import common from "../pageobjects/common";
 import botDashboard from "../pageobjects/bot_dashboard_page";
 import runPanel from "../pageobjects/run_panel";
 
+
 describe("Import and run custom strategy", () => {
   let userName = Cypress.env("username_cr_unauthenticated");
   let totalPL;
