@@ -3,7 +3,6 @@ import common from "../pageobjects/common";
 import botDashboard from "../pageobjects/bot_dashboard_page";
 import botBuilder from "../pageobjects/bot_builder_page";
 
-
 describe("Verify toolbar on bot builder page", () => {
   let userName = Cypress.env("username_cr_unauthenticated");
   let strategyName = "Stock_Netherland_25"+(Math.random()).toString();
