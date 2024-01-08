@@ -7,7 +7,8 @@ module.exports = defineConfig({
   e2e: {
     projectId: 'qc89n6',
     setupNodeEvents(on, config) {},
-    baseUrl: 'https://test-app.deriv.com',
+    baseUrl: 'https://staging-app.deriv.com',
+    // baseUrl: 'https://test-app.deriv.com',
     //baseUrl: 'https://deriv-app-git-fork-yauheni-deriv-evgeniygetchangeablefieldbug.binary.sx',
     //baseUrl: 'https://deriv-app-git-fork-lubega-deriv-wall-2270-add-try-fiat-onramp.binary.sx',
     //baseUrl: 'https://deriv-app-git-fork-maryia-deriv-maryia-dtra-147trade-typ-456a1b.binary.sx',
@@ -21,7 +22,7 @@ module.exports = defineConfig({
     RegionROW: '/?region=za',
     skipROWTests: false,
     email: 'test@example.com',
-    viewPortSize: 'small',
+    viewPortSize: 'big',
     loginEmail: process.env.E2E_DERIV_LOGIN,
     loginPassword: process.env.E2E_DERIV_PASSWORD,
     doughflowLoginEmail:  process.env.E2E_DOUGHFLOW_LOGIN,
@@ -49,7 +50,8 @@ module.exports = defineConfig({
     walletsWithdrawalUrl: process.env.E2E_WALLETS_WITHDRAWAL_URL,
     walletsWithdrawalCode: process.env.E2E_WALLETS_WITHDRAWAL_CODE,
     HMACKey: process.env.E2E_HMAC_KEY,
-    tradersHubUrl: 'appstore/traders-hub'
+    tradersHubUrl: 'appstore/traders-hub',
+    newSignupCode: process.env.E2E_NEW_SIGNUP_CODE
   },  
   retries: {
       "runMode": 2,

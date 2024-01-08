@@ -178,6 +178,46 @@ Cypress.Commands.add('c_emailVerification', (verification_code, base_url) => {
   )
 })
 
+Cypress.Commands.add('c_emailNewAccount', (verification_code, base_url) => {
+  cy.visit(
+    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+      "qaBoxLoginPassword"
+    )}@${base_url}`
+  )
+  cy.origin(
+    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+      "qaBoxLoginPassword"
+    )}@${base_url}`, () => {
+      cy.scrollTo("bottom")
+      cy.get('a[href*="account_opening"]').then(($elements) => {
+        // cy.get("a").last().click()
+        // Get the last matching element
+        const lastElement = $elements.last();
+
+      // Click on the last matching element
+      cy.wrap(lastElement).click();
+    })
+      cy
+        .get("a")
+        .eq(1)
+        .invoke("attr", "href")
+        .then((href) => {
+          const code = href.match(/code=([A-Za-z0-9]{8})/)
+          if (code) {
+            verification_code = code[1]
+            Cypress.env("newSignupCode", verification_code)
+            cy.log(verification_code)
+            cy.log(Cypress.env("newSignupCode"))
+          } else {
+            cy.log("Unable to find code in the URL")
+            cy.fail()
+          }
+        })
+    }
+  )
+})
+
+
 Cypress.on('uncaught:exception', (err, runnable, promise) => {
     console.log(err)
     return false
