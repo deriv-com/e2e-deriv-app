@@ -14,7 +14,8 @@ on:
         description: Run smoke or full test suite
         options:
         - full
-        - wip/dbot
+        - wip/bot
+        - wip/Wallets
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
