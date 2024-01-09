@@ -89,18 +89,18 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
       if ($element.children().length > 0) {
         cy.contains("Continue").then(($element) => {
           if ($element.length) {
-            cy.wrap($element).click()
+            cy.wrap($element).should("be.visible")
           }
           //To redirect to wallet page
           if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet" || app == "onramp") {
-          cy.findByRole('banner').click()
+          cy.findByRole('banner').should("be.visible")
           } else { //To redirect to trader's hub page
             cy.findByText("Trader's Hub").should("be.visible")
           }
         })
       } else { //when deriv charts popup is not available and if we need to redirect to wallet page 
         if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet" || app == "onramp") {
-          cy.findByRole('banner').click()
+          cy.findByRole('banner').should("be.visible")
           } else { //when deriv charts popup is not available and if we need to redirect to trader's hub page 
             cy.findByText("Trader's Hub").should("be.visible")
           }
