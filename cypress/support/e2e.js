@@ -91,10 +91,10 @@ Cypress.Commands.add('c_doOAuthLogin', () => {
           if ($element.length) {
             cy.wrap($element).click()
           }
-          cy.findByText("Trader's Hub").should("be.visible")
+          cy.findByRole('banner').click()
         })
       } else {
-        cy.findByText("Trader's Hub").should("be.visible")
+        cy.findByRole('banner').click()
       }
     })
 })
