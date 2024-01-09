@@ -69,16 +69,16 @@ Cypress.Commands.add("c_login", (app) => {
         (oAuthUrl) => {
           cy.log("getOAuthUrl - value: " + oAuthUrl)
           Cypress.env("oAuthUrl", oAuthUrl)
-          cy.c_doOAuthLogin()
+          cy.c_doOAuthLogin(app)
         })
   } else
   {
-    cy.c_doOAuthLogin()
+    cy.c_doOAuthLogin(app)
   } 
 
 })
 
-Cypress.Commands.add('c_doOAuthLogin', () => {
+Cypress.Commands.add('c_doOAuthLogin', (app) => {
   cy.c_visitResponsive(Cypress.env("oAuthUrl"),"large")
   //To let the dtrader page load completely
   cy.get('.cq-symbol-select-btn', { timeout: 10000}).should('exist')
@@ -91,10 +91,19 @@ Cypress.Commands.add('c_doOAuthLogin', () => {
           if ($element.length) {
             cy.wrap($element).click()
           }
+          //To redirect to wallet page
+          if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet" || app == "onramp") {
           cy.findByRole('banner').click()
+          } else { //To redirect to trader's hub page
+            cy.findByText("Trader's Hub").should("be.visible")
+          }
         })
-      } else {
-        cy.findByRole('banner').click()
+      } else { //when deriv charts popup is not available and if we need to redirect to wallet page 
+        if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet" || app == "onramp") {
+          cy.findByRole('banner').click()
+          } else { //when deriv charts popup is not available and if we need to redirect to trader's hub page 
+            cy.findByText("Trader's Hub").should("be.visible")
+          }
       }
     })
 })
