@@ -7,16 +7,12 @@ function crypto_transfer(to_account) {
     .eq(1)
     .click()
     .type("0.000010000")
+  cy.contains("lifetime transfer limit from BTC Wallet to any fiat Wallets is up to")  
   cy.get("form")
     .findByRole("button", { name: "Transfer", exact: true })
     .should("be.enabled")
     .click()
-  cy.findByText("Your transfer is successful!", {
-    exact: true,
-  }).should("be.visible")
-  cy.contains("0.00010000 BTC")
-  cy.contains("% transfer fees")
-  cy.findByRole("button", { name: "Make a new transfer" }).click()
+    cy.c_transferLimit("0.00010000 BTC")
 }
 
 describe("WALL-2858 - Crypto transfer and transactions", () => {
@@ -30,6 +26,7 @@ describe("WALL-2858 - Crypto transfer and transactions", () => {
     cy.log("Transfer from Crypto account")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     cy.findAllByText(/BTC Wallet/).first().scrollIntoView()
+    cy.get('.wallets-accordion__dropdown > svg > path').first().click({force: true})
     cy.contains("Transfer").first().click()
     crypto_transfer("USD")
     crypto_transfer("ETH")
@@ -40,6 +37,7 @@ describe("WALL-2858 - Crypto transfer and transactions", () => {
     cy.log("View Transactions of Crypto account")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     cy.findAllByText(/BTC Wallet/).first().scrollIntoView()
+    cy.get('.wallets-accordion__dropdown > svg > path').first().click({force: true})
     cy.contains("Transactions").first().click()
     cy.get("#downshift-0-toggle-button").findByRole("button").click()
     cy.findByRole("option", { name: "Deposit" }).click()

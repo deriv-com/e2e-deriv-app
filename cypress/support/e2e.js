@@ -1,4 +1,5 @@
 const { getLoginToken } = require("./common")
+const { getOAuthUrl } = require("./common")
 
 Cypress.Commands.add("c_visitResponsive", (path, size) => {
   //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
@@ -38,10 +39,20 @@ Cypress.Commands.add("c_visitResponsive", (path, size) => {
 })
 
 Cypress.Commands.add("c_login", (app) => {
+
   cy.c_visitResponsive("/endpoint", "large")
 
   localStorage.setItem("config.server_url", Cypress.env("configServer"))
   localStorage.setItem("config.app_id", Cypress.env("configAppId"))
+
+  if (app == "doughflow") {
+    localStorage.setItem("config.server_url", Cypress.env("doughflowConfigServer"))
+    localStorage.setItem("config.app_id", Cypress.env("doughflowConfigAppId"))
+  }
+
+  if (app == "onramp") {
+    localStorage.setItem("config.app_id", Cypress.env("onrampConfigAppId"))
+  }
 
   if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet" || app == "onramp") {
     cy.contains("next_wallet").then(($element) => {
@@ -53,91 +64,41 @@ Cypress.Commands.add("c_login", (app) => {
     })
   }
 
-  if (app == "doughflow") {
-    localStorage.setItem(
-      "config.server_url",
-      Cypress.env("doughflowConfigServer")
-    )
-    localStorage.setItem("config.app_id", Cypress.env("doughflowConfigAppId"))
-  }
-
-  if (app == "onramp") {
-    localStorage.setItem("config.app_id", Cypress.env("onrampConfigAppId"))
-  }
-
-if (Cypress.env("oAuthToken") == "") {
-      getLoginToken(
-        (token) => {
-          cy.log("getLoginToken - token value: " + token)
-          Cypress.env("oAuthToken", token)
-          cy.c_visitResponsive(
-            Cypress.env("oAuthUrl").replace(
-              "<token>",
-              Cypress.env("oAuthToken")
-            ),
-            "large"
-          )
-          //To let the dtrader page load completely
-          cy.get('.cq-symbol-select-btn', { timeout: 10000})
-            .should('exist')
-
-          //If Deriv charts popup exists, click continue
-          cy.get('#modal_root, .modal-root', { timeout: 10000 })
-            .then(($element) => {
-             if ($element.children().length > 0) {
-                cy.contains("Continue").then(($element) => {
-                  if ($element.length) {
-                    cy.wrap($element).click()
-                  }
-                  cy.findByText("Trader's Hub").should("be.visible")
-                })
-              } else {
-                cy.findByText("Trader's Hub").should("be.visible")
-              }
-            })
+  if (Cypress.env("oAuthUrl") == "") {
+      getOAuthUrl(
+        (oAuthUrl) => {
+          cy.log("getOAuthUrl - value: " + oAuthUrl)
+          Cypress.env("oAuthUrl", oAuthUrl)
+          cy.c_doOAuthLogin()
         })
-  } else {
-    //Other credential use cases could be added here to access different oAuth tokens
-    if (app == "doughflow") {
-        cy.log("DoughflowToken:" + Cypress.env("doughflowOAuthToken"))
-        cy.c_visitResponsive(
-        Cypress.env("doughflowOAuthUrl").replace("<token>", Cypress.env("doughflowOAuthToken")),
-        "large"
-    )
-    } else if (app == "demoonlywallet"){
-      cy.log("DemowalletToken:" + Cypress.env("demoOAuthToken"))
-      cy.c_visitResponsive(
-        Cypress.env("demoOAuthUrl").replace("<token>", Cypress.env("demoOAuthToken")),
-        "large"
-      )
-    }
-    else {
-    cy.log("E2EToken:" + Cypress.env("oAuthToken"))
-    cy.c_visitResponsive(
-      Cypress.env("oAuthUrl").replace("<token>", Cypress.env("oAuthToken")),
-      "large"
-    )
-    }
-    //To let the dtrader page load completely
-    cy.get('.cq-symbol-select-btn', { timeout: 10000})
-      .should('exist')
+  } else
+  {
+    cy.c_doOAuthLogin()
+  } 
 
-    //If Deriv charts popup exists, click continue
-    cy.get('#modal_root, .modal-root', { timeout: 10000 })
-      .then(($element) => {
-        if ($element.children().length > 0) {
-          cy.contains("Continue").then(($element) => {
-            if ($element.length) {
-              cy.wrap($element).click()
-            }
-            cy.findByText("Trader's Hub").should("be.visible")
-          })
-        } else {
-          cy.findByText("Trader's Hub").should("be.visible")
-        }
-      })
-    }
 })
+
+Cypress.Commands.add('c_doOAuthLogin', () => {
+  cy.c_visitResponsive(Cypress.env("oAuthUrl"),"large")
+  //To let the dtrader page load completely
+  cy.get('.cq-symbol-select-btn', { timeout: 10000}).should('exist')
+
+  //If Deriv charts popup exists, click continue
+  cy.get('#modal_root, .modal-root', { timeout: 10000 })
+    .then(($element) => {
+      if ($element.children().length > 0) {
+        cy.contains("Continue").then(($element) => {
+          if ($element.length) {
+            cy.wrap($element).click()
+          }
+          cy.findByText("Trader's Hub").should("be.visible")
+        })
+      } else {
+        cy.findByText("Trader's Hub").should("be.visible")
+      }
+    })
+})
+
 Cypress.Commands.add('c_mt5login', () => {
     cy.c_visitResponsive(Cypress.env('mt5BaseUrl') + '/terminal', 'large')
     cy.findByRole('button', { name: 'Accept' }).click()
@@ -176,6 +137,61 @@ Cypress.Commands.add('c_emailVerification', (verification_code, base_url) => {
         })
     }
   )
+})
+
+//To be added on hotspots as an edge case only when constantly hitting rate limits
+Cypress.Commands.add("c_rateLimit", () => {
+  cy.get("#modal_root, .modal-root", { timeout: 10000 }).then(($element) => {
+    if ($element.children().length > 0) {
+      cy.contains("Refresh").then(($element) => {
+        if (
+          $element.length &&
+          cy.contains("You have reached your rate limit")
+        ) {
+          cy.wrap($element).click()
+          //Timeout if rate limited and should wait until content is re-rendered
+          cy.wait(30000)
+        }
+        return
+      })
+    } else {
+      return
+    }
+  })
+})
+
+Cypress.Commands.add("c_transferLimit", (transferMessage) => {
+  cy.get(".wallets-cashier-content", { timeout: 10000 })
+    // IF ADDED ONLY IF CONDITION WORKS, IF REMOVED ONLY ELSE CONDITION WORKS
+    // .contains(
+    //   `You can only perform up to 10 transfers a day. Please try again tomorrow.` ||
+    //     "You have exceeded 200.00 USD in cumulative transactions. To continue, you will need to verify your identity.",
+    //     {timeout: 5000}
+    // )
+    .then(($element) => {
+      if (
+        $element
+          .text()
+          .includes(
+            `You can only perform up to 10 transfers a day. Please try again tomorrow.` ||
+              "You have exceeded 200.00 USD in cumulative transactions. To continue, you will need to verify your identity."
+          )
+      ) {
+        cy.contains("Reset error").then(($resetElement) => {
+          if ($resetElement.length) {
+            cy.wrap($resetElement).click()
+          }
+          cy.contains("Wallet", { timeout: 10000 }).should("exist")
+        })
+      } else {
+        cy.findByText("Your transfer is successful!", {
+          exact: true,
+        }).should("be.visible")
+        cy.contains(transferMessage)
+        cy.contains("% transfer fees")
+        cy.findByRole("button", { name: "Make a new transfer" }).click()
+      }
+    })
 })
 
 Cypress.on('uncaught:exception', (err, runnable, promise) => {
