@@ -1,0 +1,24 @@
+{
+
+    "mt5Locators":
+    {
+        "demo_derived_get":"div:nth-of-type(2) > .trading-app-card__container > .trading-app-card__actions > .dc-btn.dc-btn--primary__light",
+        "demo_finanical_get":"div:nth-of-type(3) > .trading-app-card__container > .trading-app-card__actions > .dc-btn.dc-btn--primary__light",
+        "demo_swapfree_get":"div:nth-of-type(4) > .trading-app-card__container > .trading-app-card__actions > .dc-btn.dc-btn--primary__light",
+        "tradershubDropDown":"[data-testid='dt_dropdown_display'] > .dc-text",
+        "demo":"#demo",
+        "real":"#real",
+        "mt5CfdsAccountTitle":".cfd-accounts__title:nth-child(1)>span.dc-text",
+        "mt5TradingDetails":".trading-app-card__details",
+        "mt5ButtonCfdDemo":".trading-app-card__actions>button[type='submit']",
+        "mt5PasswordModelTitle":".cfd-password-modal__create-password-title",
+        "mt5DemoAssetBalance":"balance-text__container balance-text--dotted",
+        "mt5InputPassword":"[data-testid='dt_mt5_password']",
+        "mt5ButtonCreatePassword":"button:contains('Create Deriv MT5 password')",
+        "mt5ButtonContinue":"button:contains('Continue')",
+        "mt5TextAccountType":".demo-account-card__type",
+        "mt5DemoSuccessMessage":".dc-modal-body>:nth-child(1)>svg:nth-child(2)"
+
+        
+    }
+}

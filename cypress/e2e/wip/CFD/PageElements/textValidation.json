@@ -1,0 +1,10 @@
+{
+    "textValidation":
+    {
+        "mt5DemoAccountSuccess":"Success!Congratulations, you have successfully created your demo MT5 CFDs account.",
+        "mt5CFD":"CFDs",
+        "mt5CFDsDemo":"CFDs Demo",
+        "mt5EURDemoBalance":"10,000.00 EUR",
+        "mt5CreatePasswordMsg":"Create a Deriv MT5 password"
+    }
+}
