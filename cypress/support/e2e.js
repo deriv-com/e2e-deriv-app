@@ -93,7 +93,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
           }
           //To redirect to wallet page
           if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet" || app == "onramp") {
-          cy.findByRole('banner').should("be.visible")
+           cy.findByRole('banner').should("be.visible")
           } else { //To redirect to trader's hub page
             cy.findByText("Trader's Hub").should("be.visible")
           }
