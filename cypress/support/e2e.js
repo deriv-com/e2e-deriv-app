@@ -89,7 +89,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
       if ($element.children().length > 0) {
         cy.contains("Continue").then(($element) => {
           if ($element.length) {
-            cy.wrap($element).should("be.visible")
+            cy.wrap($element).should("click")
           }
           //To redirect to wallet page
           if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet" || app == "onramp") {
