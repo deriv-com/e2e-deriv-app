@@ -2,12 +2,12 @@ const locators=require('../PageElements/mt5TransferLocators.json')
 class mt5_tradershub{
 
     get tradershubDropDown() {
-        return cy.get(locators.mt5Locators.tradershubDropDown);
+        return cy.get(locators.mt5Locators.tradershubDropDown)
       }
     
     get selectReal()
     {
-        return cy.get(locators.mt5Locators.real);
+        return cy.get(locators.mt5Locators.real)
     }
     selectRealAccount =() =>{
 
@@ -18,4 +18,4 @@ class mt5_tradershub{
   
 }
 
-export default new mt5_tradershub();
+export default new mt5_tradershub()
