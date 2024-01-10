@@ -64,11 +64,12 @@ Cypress.Commands.add("c_login", (app) => {
     })
   }
 
-  if (Cypress.env("oAuthUrl") == "") {
+  cy.log("getOAuthUrl - value before: " + Cypress.env("oAuthUrl"))
+  if (Cypress.env("oAuthUrl") == "<empty>") {
       getOAuthUrl(
         (oAuthUrl) => {
-          cy.log("getOAuthUrl - value: " + oAuthUrl)
           Cypress.env("oAuthUrl", oAuthUrl)
+          cy.log("getOAuthUrl - value after: " + Cypress.env("oAuthUrl"))
           cy.c_doOAuthLogin(app)
         })
   } else
