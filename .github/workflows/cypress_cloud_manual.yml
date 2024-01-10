@@ -15,6 +15,7 @@ on:
         description: Run smoke or full test suite
         options:
         - full
+        - wip/CFD/testcases
         - wip/dbot/sanity-tests
         - wip/Wallets/cashier
 jobs:
@@ -56,3 +57,12 @@ jobs:
         CYPRESS_BASE_URL: "${{ github.event.inputs.environment }}"
         # Send PR details to Cypress test run
         COMMIT_INFO_MESSAGE: Manual Run of "${{ github.event.inputs.suite }} tests" on "${{ github.event.inputs.environment }}"
+        # Set test env variables
+        E2E_DERIV_LOGIN: ${{ secrets.E2E_DERIV_LOGIN }}
+        E2E_DERIV_PASSWORD: ${{ secrets.E2E_DERIV_PASSWORD }}
+        E2E_CONFIG_APPID: ${{ secrets.E2E_CONFIG_APPID }}
+        E2E_CONFIG_SERVER: ${{ secrets.E2E_CONFIG_SERVER }}
+        E2E_OAUTH_URL: ${{ secrets.E2E_OAUTH_URL }}
+        E2E_MT5_LOGIN: ${{ secrets.E2E_MT5_LOGIN }}
+        E2E_MT5_PASSWORD: ${{ secrets.E2E_MT5_PASSWORD }}
+        E2E_MT5_BASEURL: ${{ secrets.E2E_MT5_BASEURL }}
