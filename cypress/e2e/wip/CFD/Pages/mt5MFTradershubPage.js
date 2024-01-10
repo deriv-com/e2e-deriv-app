@@ -87,12 +87,14 @@ verifyMFHasCFDsDemoAccount=()=>{
     
     let mt5PasswordTitle
     let mt5Success
+    let passwordgen
     cy.get(mt5locators.mt5Locators.mt5PasswordModelTitle).invoke('text').then((text) => {
     mt5PasswordTitle=text.trim();
     cy.log("MT5 DEMO Title:: "+mt5PasswordTitle);
     expect(mt5PasswordTitle).to.equal(textVal.textValidation.mt5CreatePasswordMsg);
   })
-    this.inputText(mt5locators.mt5Locators.mt5InputPassword,"Abcd@1234");
+    passwordgen=this.generateRandomString();
+    this.inputText(mt5locators.mt5Locators.mt5InputPassword,passwordgen);
     cy.wait(1000);
     cy.get(mt5locators.mt5Locators.mt5ButtonCreatePassword).should('be.visible').click();
     cy.wait(2000);
@@ -131,6 +133,36 @@ verifyMFHasCFDsDemoAccount=()=>{
         expect(demoCurrency.trim()).to.equal(textVal.textValidation.mt5EURDemoBalance);
       })
         };
+     generateRandomString=()=> {
+          const characters = 'abcdefghijklmnopqrstuvwxyz';
+          const specials = '!@#$';
+          
+          let randomLower = '';
+          let randomUpper='';
+          let specialletter='';
+          let digit='';
+          let finalLetter
+          
+        
+          for (let i = 0; i < 5; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            randomLower += characters[randomIndex];
+          }
+          
+          const randomUpperIndex = Math.floor(Math.random() * characters.length);
+          randomUpper= characters[randomUpperIndex].toUpperCase();
+         
+          const randomSpecialIndex = Math.floor(Math.random() * specials.length);
+          specialletter = specials[randomSpecialIndex];
+          for (let i = 0; i < 3; i++) {
+          const randomDigit = Math.floor(Math.random() * 10);
+          digit = randomDigit;
+            }
+          finalLetter=randomUpper+randomLower+digit+specialletter;
+          cy.log("Random string generated ::" + finalLetter);
+          return finalLetter;
+        };
+        
 }
 
 export default new mt5_tradershub();
