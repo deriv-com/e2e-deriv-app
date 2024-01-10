@@ -7,6 +7,7 @@
     "fundTransferLocators":{
         "mt5AccountHandle":"[class='trading-app-card__container trading-app-card--divider']",
         "mt5TradingDetails":".trading-app-card__details",
+        "mt5TradingActions":".trading-app-card__actions",
         "usdBalanceLabel":"[data-testid='dt_balance_text_container']",
         "mt5TransferFromDropdown":"[class='dc-dropdown-container account-transfer-form__drop-down']",
         "dropdownList":"[class='dc-dropdown__list dc-dropdown__list--enter-done']",
