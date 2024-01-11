@@ -134,33 +134,26 @@ verifyMFHasCFDsDemoAccount=()=>{
       })
         }
      generateRandomString=()=> {
-          const characters = 'abcdefghijklmnopqrstuvwxyz'
-          const specials = '!@#$'
-          
-          let randomLower = ''
-          let randomUpper=''
-          let specialletter=''
-          let digit=''
-          let finalLetter
-          
-        
-          for (let i = 0; i < 5; i++) {
-            const randomIndex = Math.floor(Math.random() * characters.length)
-            randomLower += characters[randomIndex]
-          }
-          
-          const randomUpperIndex = Math.floor(Math.random() * characters.length)
-          randomUpper= characters[randomUpperIndex].toUpperCase()
-         
-          const randomSpecialIndex = Math.floor(Math.random() * specials.length)
-          specialletter = specials[randomSpecialIndex]
-          for (let i = 0; i < 3; i++) {
-          const randomDigit = Math.floor(Math.random() * 10)
-          digit = randomDigit
-            }
-          finalLetter=randomUpper+randomLower+digit+specialletter
-          cy.log("Random string generated ::" + finalLetter)
-          return finalLetter
+      let randomLower = ''
+      let randomUpper=''
+      let specialletter=''
+      let digit=''
+      let finalLetter
+      
+      const capitalLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      const smallLetters = 'abcdefghijklmnopqrstuvwxyz'
+      const digits = '0123456789'
+      const specialChars = '!@#'
+      
+      randomUpper = randomUpper+capitalLetters.charAt(crypto.getRandomValues(new Uint32Array(1))[0] % capitalLetters.length)
+      digit = digit+digits.charAt(crypto.getRandomValues(new Uint32Array(1))[0] % digits.length)
+      specialletter = specialletter+specialChars.charAt(crypto.getRandomValues(new Uint32Array(1))[0] % specialChars.length)
+      randomLower = randomUpper + digit + specialletter
+      for (let i = 0; i < 6; i++) {
+        randomLower = randomLower+smallLetters.charAt(crypto.getRandomValues(new Uint32Array(1))[0] % smallLetters.length)
+      }
+      finalLetter=randomUpper+digit+specialletter+randomLower
+      return finalLetter
         }
         
 }
