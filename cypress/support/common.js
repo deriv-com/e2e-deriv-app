@@ -102,7 +102,7 @@ function getLoginToken(callback) {
       }).then((response) => {
           const oAuthUrl = response.headers['location'];
           cy.log('oAuthUrl: ' + oAuthUrl);
-
+// ß
           callback(oAuthUrl);
 
           expect(response.status).to.eq(302); //302 means success on this occasion!
