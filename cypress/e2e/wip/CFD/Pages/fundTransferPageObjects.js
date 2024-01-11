@@ -125,5 +125,8 @@ class FundTransferPageObjects{
         
     }
 
+
+    
+
 }
 export default new FundTransferPageObjects()
