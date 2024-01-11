@@ -62,16 +62,12 @@ Cypress.Commands.add("c_login", (app) => {
       Cypress.env("oAuthUrl", "<empty>") 
     }
 
-  if (app == "onramp") {
-    localStorage.setItem("config.app_id", Cypress.env("onrampConfigAppId"))
-  }
-
   cy.log("server: " + Cypress.env("configServer"))
   cy.log("appId: " + Cypress.env("configAppId"))
   localStorage.setItem("config.server_url", Cypress.env("configServer"))
   localStorage.setItem("config.app_id", Cypress.env("configAppId"))
 
-  if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet" || app == "onramp") {
+  if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet") {
     cy.contains("next_wallet").then(($element) => {
       //Check if the element exists
       if ($element.length) {
