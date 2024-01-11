@@ -34,9 +34,6 @@ describe('QATEST-5014, QATEST-5055 - Verify Main Page and Multipliers', () => {
 
     it('Should buy Matches contract from Matches/Differs Trade Type', () => {
         cy.c_selectDemoAccount()
-        // if(cy.get('.notification__close-button').should('be.visible')){
-        //   cy.get('.notification__close-button').click({ multiple: true })  
-        // }
         selectSymbol('Volatility 100 (1s) Index')
         selectTradeType('Options','Matches/Differs')
         createMatchDiffContract('Matches')
