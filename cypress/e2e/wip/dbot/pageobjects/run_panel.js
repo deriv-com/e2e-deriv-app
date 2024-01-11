@@ -40,4 +40,4 @@ class RunPanel {
   }
 }
 
-export default new RunPanel();
+export default RunPanel;

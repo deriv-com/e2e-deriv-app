@@ -3,7 +3,7 @@ import common from "../pageobjects/common";
 import botDashboard from "../pageobjects/bot_dashboard_page";
 import runPanel from "../pageobjects/run_panel";
 
-describe.only("Import and run custom strategy", () => {
+describe("Import and run custom strategy", () => {
   let userName = Cypress.env("username_cr_unauthenticated");
   let beforePurchaseBalanceString;
   let beforePurchaseBalanceNumber;
@@ -12,11 +12,12 @@ describe.only("Import and run custom strategy", () => {
   beforeEach(() => {
     cy.login_setup(userName);
     tradersHub.openBotButton.click();
+    cy.wait(6000);
+    common.skipTour();
+    common.switchToDemo();
   });
 
   it("Run Timely Balance Strategy", () => {
-    common.skipTour();
-    common.switchToDemo();
     botDashboard.importStrategy("TimelyBalance");
     common.skipTour();
 

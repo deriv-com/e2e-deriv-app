@@ -59,6 +59,9 @@ class QuickStrategy {
     this.quickStrategyLoss.type("10");
     this.quickStrategyProfit.type("15");
   };
+  
+  
+
 }
 
 export default new QuickStrategy();

@@ -1,20 +1,26 @@
-import tradersHub from "../pageobjects/traders_hub";
-import common from "../pageobjects/common";
-import botDashboard from "../pageobjects/bot_dashboard_page";
-import runPanel from "../pageobjects/run_panel";
+import LoginPage from "../pageobjects/login_page";
+import TradersHub from "../pageobjects/traders_hub";
+import Common from "../pageobjects/common";
+import BotDashboard from "../pageobjects/bot_dashboard_page";
+import RunPanel from "../pageobjects/run_panel";
 
 describe("Import and run custom strategy", () => {
+  const loginPage = new LoginPage();
+  const tradersHub = new TradersHub();
+  const common = new Common();
+  const botDashboard = new BotDashboard();
+  const runpanel = new RunPanel();
   let userName = Cypress.env("username_cr_unauthenticated");
   let totalPL;
 
   beforeEach(() => {
     cy.login_setup(userName);
     tradersHub.openBotButton.click();
+    common.skipTour();
+    common.switchToDemo();
   });
 
   it("Run Martingale Old Strategy", () => {
-    common.skipTour();
-    common.switchToDemo();
     botDashboard.importStrategy("Martingale Old");
     common.skipTour();
 
@@ -33,7 +39,7 @@ describe("Import and run custom strategy", () => {
       .getElementWithTimeout(common.botRunButtonEl, 3200000)
       .should("be.visible");
 
-    runPanel.profitLossValue.then(($value) => {
+    runpanel.profitLossValue.then(($value) => {
       totalPL = $value.text();
     });
 
@@ -55,14 +61,14 @@ describe("Import and run custom strategy", () => {
         }
       });
 
-    runPanel.transactionsTab.click(); //Switch to transactions tab
+    runpanel.transactionsTab.click(); //Switch to transactions tab
 
     //Verify Stake doubles after a loss
-    runPanel.runPanelScrollbar.scrollTo("bottom", { ensureScrollable: false });
-    runPanel.transactionAfterFirstLoss.should("have.text", "2.00 USD");
+    runpanel.runPanelScrollbar.scrollTo("bottom", { ensureScrollable: false });
+    runpanel.transactionAfterFirstLoss.should("have.text", "2.00 USD");
   });
 
   after(() => {
-    botDashboard.deleteStrategy();
+  botDashboard.deleteStrategy();
   });
 });
