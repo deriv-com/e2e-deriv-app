@@ -38,6 +38,8 @@ module.exports = defineConfig({
     onrampProviderUrl: process.env.E2E_ONRAMP_PROVIDER_URL,
     doughflowConfigServer: process.env.E2E_DOUGHFLOW_CONFIG_SERVER,
     doughflowConfigAppId: process.env.E2E_DOUGHFLOW_CONFIG_APPID,
+    stdConfigServer: process.env.E2E_STD_CONFIG_SERVER,
+    stdConfigAppId: process.env.E2E_STD_CONFIG_APPID,
     oAuthUrl: process.env.E2E_OAUTH_URL,
     demoOAuthUrl: process.env.E2E_DEMO_WALLET_OAUTH_URL,
     demoOAuthToken: process.env.E2E_DEMO_OAUTH_TOKEN,

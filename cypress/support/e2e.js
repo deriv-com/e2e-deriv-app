@@ -1,6 +1,8 @@
 const { getLoginToken } = require("./common")
 const { getOAuthUrl } = require("./common")
 
+Cypress.prevAppId = 0
+
 Cypress.Commands.add("c_visitResponsive", (path, size) => {
   //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
   cy.log(path)
@@ -42,19 +44,30 @@ Cypress.Commands.add("c_login", (app) => {
 
   cy.c_visitResponsive("/endpoint", "large")
 
+  if (app == "doughflow") {
+    Cypress.env("configServer", Cypress.env("doughflowConfigServer"))
+    Cypress.env("configAppId", Cypress.env("doughflowConfigAppId"))
+  } else
+  
+  { 
+    Cypress.env("configServer", Cypress.env("stdConfigServer"))
+    Cypress.env("configAppId", Cypress.env("stdConfigAppId"))
+  }
+
+  //If we're switching between apps, we'll need to re-authenticate
+  if (Cypress.prevAppId != Cypress.env("configAppId"))
+    {
+      cy.log("prevAppId: " + Cypress.prevAppId)
+      Cypress.prevAppId = Cypress.env("configAppId")
+      Cypress.env("oAuthUrl", "<empty>") 
+    }
+
+  cy.log("server: " + Cypress.env("configServer"))
+  cy.log("appId: " + Cypress.env("configAppId"))
   localStorage.setItem("config.server_url", Cypress.env("configServer"))
   localStorage.setItem("config.app_id", Cypress.env("configAppId"))
 
-  if (app == "doughflow") {
-    localStorage.setItem("config.server_url", Cypress.env("doughflowConfigServer"))
-    localStorage.setItem("config.app_id", Cypress.env("doughflowConfigAppId"))
-  }
-
-  if (app == "onramp") {
-    localStorage.setItem("config.app_id", Cypress.env("onrampConfigAppId"))
-  }
-
-  if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet" || app == "onramp") {
+  if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet") {
     cy.contains("next_wallet").then(($element) => {
       //Check if the element exists
       if ($element.length) {
