@@ -32,16 +32,19 @@ describe('QATEST-5014, QATEST-5055 - Verify Main Page and Multipliers', () => {
       }
     }
 
-    it('Should buy Matches contract from Matches/Differs Trade Type', () => {
-        cy.c_selectDemoAccount()
-        selectSymbol('Volatility 100 (1s) Index')
-        selectTradeType('Options','Matches/Differs')
-        createMatchDiffContract('Matches')
-        cy.get('a.dc-result__caption-wrapper', { timeout: 7000 }).should('be.visible');
-        cy.get('a.dc-result__caption-wrapper').click()
+    function checkContractDetailsPage(){
+      cy.get('a.dc-result__caption-wrapper').click()
+      cy.findByText('Contract details').should('be.visible')  
+      cy.contains('span[data-testid="dt_span"]', '10.00').should('be.visible')    //verify stake amount
+    }
 
-        cy.findByText('Contract details').should('be.visible')
-        cy.contains('span[data-testid="dt_span"]', '10.00').should('be.visible')    //this will check stake amount      
+    it('Should buy Matches contract from Matches/Differs Trade Type', () => {
+      cy.c_selectDemoAccount()
+      selectSymbol('Volatility 100 (1s) Index')
+      selectTradeType('Options','Matches/Differs')
+      createMatchDiffContract('Matches')
+      cy.get('a.dc-result__caption-wrapper', { timeout: 7000 }).should('be.visible');
+      checkContractDetailsPage()  
             
     })
 
@@ -51,11 +54,8 @@ describe('QATEST-5014, QATEST-5055 - Verify Main Page and Multipliers', () => {
       selectTradeType('Options','Matches/Differs')
       createMatchDiffContract('Differs')
       cy.get('a.dc-result__caption-wrapper', { timeout: 7000 }).should('be.visible');
-      cy.get('a.dc-result__caption-wrapper').click()
+      checkContractDetailsPage()
 
-      cy.findByText('Contract details').should('be.visible')  
-      cy.contains('span[data-testid="dt_span"]', '10.00').should('be.visible')    //this will check stake amount
-          
   })
 
 })
