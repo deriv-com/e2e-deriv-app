@@ -2,7 +2,7 @@ import { FILEPATH } from "../constants";
 class BotDashboard {
   get dashboardTab() {
     return cy
-      .get("li[id='id-dbot-dashboard']", { timeout: 5000 })
+      .get('#id-dbot-dashboard', { timeout: 5000 })
       .contains("Dashboard");
   }
 
@@ -16,7 +16,7 @@ class BotDashboard {
 
   get deleteStrategyButton() {
     return cy
-      .get("div.load-strategy__recent-item__button", { timeout: 5000 })
+      .get("div.bot-list__item__actions__action-item", { timeout: 5000 })
       .last();
   }
 
@@ -31,14 +31,14 @@ class BotDashboard {
   }
 
   /**
-   * Import custom strategy from dashboard
-   * @param strategyFileName File Name
-   */
+  * Import custom strategy from dashboard
+  * @param strategyFileName File Name
+  */
   importStrategy = (strategyFileName) => {
-    this.fileInput.selectFile(FILEPATH + `${strategyFileName}.xml`, {
-      force: true,
-    });
-    this.openStrategyButton.click();
+      this.fileInput.selectFile(FILEPATH + `${strategyFileName}.xml`, {
+        force: true,
+      });
+      this.openStrategyButton.click();
   };
 
   /**
@@ -55,4 +55,4 @@ class BotDashboard {
   };
 }
 
-export default new BotDashboard();
+export default BotDashboard;

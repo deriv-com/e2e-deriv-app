@@ -65,6 +65,7 @@ class Common {
     this.accountSwitcherButton.click();
     this.demoAccountTab.click();
     this.demoAccount.click();
+    cy.wait(5000);
   };
 
   logOut = () => {
@@ -138,4 +139,4 @@ class Common {
   };
 }
 
-export default new Common();
+export default Common;

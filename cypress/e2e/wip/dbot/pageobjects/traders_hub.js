@@ -4,4 +4,4 @@ class TradersHub {
   }
 }
 
-export default new TradersHub();
+export default TradersHub;

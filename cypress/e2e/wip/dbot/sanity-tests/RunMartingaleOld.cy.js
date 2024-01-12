@@ -1,21 +1,27 @@
-import tradersHub from "../pageobjects/traders_hub";
-import common from "../pageobjects/common";
-import botDashboard from "../pageobjects/bot_dashboard_page";
-import runPanel from "../pageobjects/run_panel";
+import LoginPage from "../pageobjects/login_page";
+import TradersHub from "../pageobjects/traders_hub";
+import Common from "../pageobjects/common";
+import BotDashboard from "../pageobjects/bot_dashboard_page";
+import RunPanel from "../pageobjects/run_panel";
 
 describe("Import and run custom strategy", () => {
+  const loginPage = new LoginPage();
+  const tradersHub = new TradersHub();
+  const common = new Common();
+  const botDashboard = new BotDashboard();
+  const runPanel = new RunPanel();
   let userName = Cypress.env("username_cr_unauthenticated");
   let totalPL;
 
   beforeEach(() => {
     cy.login_setup(userName);
     tradersHub.openBotButton.click();
+    common.skipTour();
+    common.switchToDemo();
   });
 
   it("Run Martingale Old Strategy", () => {
-    common.skipTour();
-    common.switchToDemo();
-    botDashboard.importStrategy("Martingale Old");
+    botDashboard.importStrategy("MartingaleOld");
     common.skipTour();
 
     //Enter Expected profit, expected Loss, and Trade Amount
@@ -38,7 +44,7 @@ describe("Import and run custom strategy", () => {
     });
 
     common
-      .getElementWithTimeout(runpanel.totalProfitLossEl, 3200000)
+      .getElementWithTimeout(runPanel.totalProfitLossEl, 3200000)
       .then(($amt) => {
         if ($amt.hasClass("run-panel__stat-amount--positive")) {
           cy.on("window:alert", (str) => {

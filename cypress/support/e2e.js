@@ -1,3 +1,6 @@
+import './commands'
+require('cypress-xpath')
+
 const { getLoginToken } = require("./common")
 const { getOAuthUrl } = require("./common")
 
