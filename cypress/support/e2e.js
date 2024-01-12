@@ -226,6 +226,22 @@ Cypress.on('uncaught:exception', (err, runnable, promise) => {
   })
 
 
+//Select Real account from Dtrader
+Cypress.Commands.add("c_selectRealAccount", () => {
+  cy.findByTestId('dt_acc_info').should('be.visible').click()
+  cy.findByText('Real').should('be.visible').click()
+  cy.get('acc-switcher__new-account').should('not.exist');
+  cy.get('.dc-content-expander__content').should('be.visible').click()
+  cy.findByTestId('dt_acc_info').should('be.visible')
+})
+
+//Select Demo account from Dtrader
+Cypress.Commands.add("c_selectDemoAccount", () => {
+  cy.findByTestId('dt_acc_info').should('be.visible').click()
+  cy.findByText('Demo').should('be.visible').click()
+  cy.get('.dc-content-expander__content').should('be.visible').click()
+  cy.findByTestId('dt_acc_info').should('be.visible')
+})
 
 
   

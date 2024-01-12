@@ -36,9 +36,6 @@ describe('QATEST-5014, QATEST-5055 - Verify Main Page and Multipliers', () => {
     cy.findByTestId('dt_acc_info').click()
     cy.get('#dt_core_account-switcher_demo-tab').click()
     cy.get('.acc-switcher__id > :nth-child(2)')
-
-    //Stake
-    
     cy.findByTestId('dt_contract_dropdown').click({force: true})
     cy.get('#dt_contract_multiplier_item').click({force: true})
     cy.findByRole('button', { name: 'Up 10.00 USD' }).should('exist')
