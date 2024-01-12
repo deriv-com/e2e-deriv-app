@@ -69,6 +69,6 @@ describe("Import and run custom strategy", () => {
   });
 
   after(() => {
-  botDashboard.deleteStrategy();
+    botDashboard.deleteStrategy();
   });
 });
