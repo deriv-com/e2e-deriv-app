@@ -30,16 +30,16 @@ class BotDashboard {
     );
   }
 
-    /**
-   * Import custom strategy from dashboard
-   * @param strategyFileName File Name
-   */
-    importStrategy = (strategyFileName) => {
+  /**
+  * Import custom strategy from dashboard
+  * @param strategyFileName File Name
+  */
+  importStrategy = (strategyFileName) => {
       this.fileInput.selectFile(FILEPATH + `${strategyFileName}.xml`, {
         force: true,
       });
       this.openStrategyButton.click();
-    };
+  };
 
   /**
    * Delete a strategy from dashboard

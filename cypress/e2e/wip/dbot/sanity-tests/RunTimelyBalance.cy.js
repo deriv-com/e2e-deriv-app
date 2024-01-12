@@ -27,7 +27,6 @@ describe.only("Import and run custom strategy", () => {
     botDashboard.importStrategy("TimelyBalance");
     common.skipTour();
  
-
     common.accountBalance.then(($el) => {
       beforePurchaseBalanceString = $el.text();
       beforePurchaseBalanceNumber = parseFloat(
