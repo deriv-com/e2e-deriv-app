@@ -1,9 +1,15 @@
-import tradersHub from "../pageobjects/traders_hub";
-import common from "../pageobjects/common";
-import botDashboard from "../pageobjects/bot_dashboard_page";
-import runPanel from "../pageobjects/run_panel";
+import LoginPage from "../pageobjects/login_page";
+import TradersHub from "../pageobjects/traders_hub";
+import Common from "../pageobjects/common";
+import BotDashboard from "../pageobjects/bot_dashboard_page";
+import RunPanel from "../pageobjects/run_panel";
 
-describe("Import and run custom strategy", () => {
+describe.only("Import and run custom strategy", () => {
+  const loginPage = new LoginPage();
+  const tradersHub = new TradersHub();
+  const common = new Common();
+  const botDashboard = new BotDashboard();
+  const runPanel = new RunPanel();
   let userName = Cypress.env("username_cr_unauthenticated");
   let beforePurchaseBalanceString;
   let beforePurchaseBalanceNumber;
@@ -12,7 +18,7 @@ describe("Import and run custom strategy", () => {
   beforeEach(() => {
     cy.login_setup(userName);
     tradersHub.openBotButton.click();
-    cy.wait(6000);
+    cy.wait(4000);
     common.skipTour();
     common.switchToDemo();
   });
@@ -20,6 +26,7 @@ describe("Import and run custom strategy", () => {
   it("Run Timely Balance Strategy", () => {
     botDashboard.importStrategy("TimelyBalance");
     common.skipTour();
+ 
 
     common.accountBalance.then(($el) => {
       beforePurchaseBalanceString = $el.text();
@@ -27,6 +34,7 @@ describe("Import and run custom strategy", () => {
         common.removeCurrencyCode(common.removeComma($el.text()))
       );
     });
+
     common.runBot();
     common.stopBot(7000);
     runPanel.journalTab.click();
@@ -50,6 +58,6 @@ describe("Import and run custom strategy", () => {
   });
 
   after(() => {
-    botDashboard.deleteStrategy();
+     botDashboard.deleteStrategy();
   });
 });

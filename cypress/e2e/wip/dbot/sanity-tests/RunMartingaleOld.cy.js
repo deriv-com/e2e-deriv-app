@@ -9,7 +9,7 @@ describe("Import and run custom strategy", () => {
   const tradersHub = new TradersHub();
   const common = new Common();
   const botDashboard = new BotDashboard();
-  const runpanel = new RunPanel();
+  const runPanel = new RunPanel();
   let userName = Cypress.env("username_cr_unauthenticated");
   let totalPL;
 
@@ -21,7 +21,7 @@ describe("Import and run custom strategy", () => {
   });
 
   it("Run Martingale Old Strategy", () => {
-    botDashboard.importStrategy("Martingale Old");
+    botDashboard.importStrategy("MartingaleOld");
     common.skipTour();
 
     //Enter Expected profit, expected Loss, and Trade Amount
@@ -39,12 +39,12 @@ describe("Import and run custom strategy", () => {
       .getElementWithTimeout(common.botRunButtonEl, 3200000)
       .should("be.visible");
 
-    runpanel.profitLossValue.then(($value) => {
+    runPanel.profitLossValue.then(($value) => {
       totalPL = $value.text();
     });
 
     common
-      .getElementWithTimeout(runpanel.totalProfitLossEl, 3200000)
+      .getElementWithTimeout(runPanel.totalProfitLossEl, 3200000)
       .then(($amt) => {
         if ($amt.hasClass("run-panel__stat-amount--positive")) {
           cy.on("window:alert", (str) => {
@@ -61,11 +61,11 @@ describe("Import and run custom strategy", () => {
         }
       });
 
-    runpanel.transactionsTab.click(); //Switch to transactions tab
+    runPanel.transactionsTab.click(); //Switch to transactions tab
 
     //Verify Stake doubles after a loss
-    runpanel.runPanelScrollbar.scrollTo("bottom", { ensureScrollable: false });
-    runpanel.transactionAfterFirstLoss.should("have.text", "2.00 USD");
+    runPanel.runPanelScrollbar.scrollTo("bottom", { ensureScrollable: false });
+    runPanel.transactionAfterFirstLoss.should("have.text", "2.00 USD");
   });
 
   after(() => {

@@ -132,4 +132,4 @@ class BotBuilder {
   };
 }
 
-export default new BotBuilder();
+export default BotBuilder;
