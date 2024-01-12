@@ -7,7 +7,13 @@ function crypto_transfer(to_account) {
     .eq(1)
     .click()
     .type("0.000010000")
-  cy.contains("lifetime transfer limit from BTC Wallet to any fiat Wallets is up to")  
+  if (to_account == 'USD'){
+    cy.contains("lifetime transfer limit from BTC Wallet to any fiat Wallets is")  
+  } 
+  else 
+  {
+    cy.contains("lifetime transfer limit between cryptocurrency Wallets is")  
+  }
   cy.get("form")
     .findByRole("button", { name: "Transfer", exact: true })
     .should("be.enabled")
