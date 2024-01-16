@@ -1,3 +1,4 @@
+import '@testing-library/cypress/add-commands'
 import TradersHub from "../pageobjects/traders_hub";
 import LoginPage from "../pageobjects/login_page";
 import Common from "../pageobjects/common";
@@ -15,7 +16,9 @@ describe("Verify Quick Strategy from bot builder page", () => {
   let userName = Cypress.env("username_cr_unauthenticated");
 
   beforeEach(() => {
-    cy.login_setup(userName); 
+    //cy.login_setup(userName);
+    cy.c_login();
+    cy.c_visitResponsive('/appstore/traders-hub', 'large');
     tradersHub.openBotButton.click();
     common.skipTour();
     common.switchToDemo();

@@ -1,3 +1,4 @@
+import '@testing-library/cypress/add-commands'
 import LoginPage from "../pageobjects/login_page";
 import TradersHub from "../pageobjects/traders_hub";
 import Common from "../pageobjects/common";
@@ -14,7 +15,9 @@ describe("Import and run custom strategy", () => {
   let totalPL;
 
   beforeEach(() => {
-    cy.login_setup(userName);
+    //cy.login_setup(userName);
+    cy.c_login();
+    cy.c_visitResponsive('/appstore/traders-hub', 'large');
     tradersHub.openBotButton.click();
     common.skipTour();
     common.switchToDemo();
