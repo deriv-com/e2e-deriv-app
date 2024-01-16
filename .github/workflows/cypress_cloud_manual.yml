@@ -1,4 +1,4 @@
-name: Run Tests Manually
+name: Run Cypress Tests
 
 on:
   workflow_dispatch:
@@ -15,12 +15,14 @@ on:
         description: Run smoke or full test suite
         options:
         - full
-        - wip/CFD/testcases
+        - wip/CFD/testcases/MT5
         - wip/dbot/sanity-tests
         - wip/Wallets/cashier
+        - wip/dTrader
 jobs:
   cypress-run:
-    runs-on: ubuntu-latest
+    runs-on:
+      group: github-hosted-regentmarkets
     strategy:
       fail-fast: false # https://github.com/cypress-io/github-action/issues/48
       matrix:
