@@ -21,8 +21,7 @@ on:
         - wip/dTrader
 jobs:
   cypress-run:
-    runs-on:
-      group: github-hosted-regentmarkets
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false # https://github.com/cypress-io/github-action/issues/48
       matrix:
