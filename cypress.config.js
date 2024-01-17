@@ -5,7 +5,7 @@ require('dotenv').config()
 
 module.exports = defineConfig({
   e2e: {
-    projectId: 'qc89n6',
+    projectId: 'rjvf4u',
     setupNodeEvents(on, config) {},
     baseUrl: 'https://staging-app.deriv.com',
     defaultCommandTimeout: 15000,
