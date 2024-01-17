@@ -24,8 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false # https://github.com/cypress-io/github-action/issues/48
-      # matrix:
-        # containers: [1,2,3] # Uses 3 instance
+      matrix:
+        containers: [1,2]
 
     steps:
     - name: Checkout external repository with Cypress tests
@@ -44,7 +44,7 @@ jobs:
         # Records to Cypress Cloud 
         # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
         record: true
-        parallel: false # Runs test in parallel using settings above
+        parallel: true # Runs test in parallel using settings above
         spec: cypress/e2e/${{ github.event.inputs.suite }}/*.js
         group: 'e2e Tests'
         
