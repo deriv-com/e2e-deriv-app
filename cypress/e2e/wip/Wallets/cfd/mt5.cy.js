@@ -36,7 +36,7 @@ function verifyTransferFundsMessage(accountType) {
 describe("WALL-2000 - Create MT5 account", () => {
   
   beforeEach(() => {
-    cy.c_login("wallets");
+    cy.c_login("wallets","walletEmail","walletPassword");
     cy.c_visitResponsive("/wallets", "large");
   });
 

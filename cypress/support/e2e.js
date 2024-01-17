@@ -43,10 +43,15 @@ Cypress.Commands.add("c_visitResponsive", (path, size) => {
   }
 })
 
-Cypress.Commands.add("c_login", (app) => {
+Cypress.Commands.add("c_login", (app , email, password) => {
 
   cy.c_visitResponsive("/endpoint", "large")
+  if (email) {  
+    Cypress.env("loginEmail", Cypress.env(email))
+    Cypress.env("loginPassword", Cypress.env(password))
+  }
 
+  
   if (app == "doughflow") {
     Cypress.env("configServer", Cypress.env("doughflowConfigServer"))
     Cypress.env("configAppId", Cypress.env("doughflowConfigAppId"))

@@ -20,6 +20,8 @@ module.exports = defineConfig({
     email: 'test@example.com',
     viewPortSize: 'small',
     loginEmail: process.env.E2E_DERIV_LOGIN,
+    walletEmail: process.env.E2E_WALLETS_LOGIN,
+    walletPassword: process.env.E2E_WALLET_PASSWORD,
     loginPassword: process.env.E2E_DERIV_PASSWORD,
     doughflowLoginEmail:  process.env.E2E_DOUGHFLOW_LOGIN,
     doughflowLoginPassword: process.env.E2E_DOUGHFLOW_PASSWORD,
