@@ -30,7 +30,7 @@ function verifyDerivMT5Creation(accountType) {
 
 function verifyTransferFundsMessage(accountType) {
   cy.findByText(`Transfer funds from your USD Wallet to your ${accountType} (SVG) account to start trading.`).should("be.visible");
-  cy.get(`div:contains("Deriv MT5 ${accountType} (SVG)USD Wallet0.00 USDYour ${accountType} (SVG) account is ready")`).eq(2).should("be.visible");
+  cy.get(`div:contains("MT5 ${accountType} (SVG)USD Wallet0.00 USDYour ${accountType} (SVG) account is ready")`).eq(2).should("be.visible");
 }
 
 function verifyDemoCreationsMessage(accountType) {
@@ -64,6 +64,7 @@ describe("WALL-2000 - Create MT5 account", () => {
     cy.findByRole('button', { name: 'Transfer funds' }).should('exist');
     cy.findByRole('button', { name: 'Maybe later' }).click();
 
+
     clickAddMt5Button();
     verifyJurisdictionSelection('Financial');
     verifyDerivMT5Creation('Financial');
@@ -94,7 +95,7 @@ describe("WALL-2000 - Create MT5 account", () => {
     verifyDerivMT5Creation('Demo');
     verifyDemoCreationsMessage('Financial');
 
-    // this part is commented due to this bug [https://app.clickup.com/t/20696747/WALL-3302]
+      // this part is commented due to this bug [https://app.clickup.com/t/20696747/WALL-3302]
     // cy.log("create demo mt5 svg swap free account");
     // cy.findByText("CFDs", { exact: true }).should("be.visible");
     // clickAddMt5Button();
