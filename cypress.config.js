@@ -7,7 +7,7 @@ module.exports = defineConfig({
   e2e: {
     projectId: 'qc89n6',
     setupNodeEvents(on, config) {},
-    baseUrl: 'https://test-app.deriv.com/',
+    baseUrl: 'https://app.deriv.com',
     defaultCommandTimeout: 15000,
     supportFile: "cypress/support/e2e.js",
     experimentalWebKitSupport: true,
