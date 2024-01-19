@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
 
-describe('Place order Matches and Differes order from Digits trade category', () => {
+describe('Place order Odd and ven order from Digits trade category', () => {
     beforeEach(() => {
       cy.c_login()
     })
@@ -18,14 +18,14 @@ describe('Place order Matches and Differes order from Digits trade category', ()
       cy.findByText(tradeType).should('be.visible').click()
     }
 
-    function createMatchDiffContract(tradeType){
+    function createEvenOddContract(tradeType){
       //cy.get('span.range-slider__ticks-step').eq(4).click()
       cy.get('span.number-selector__selection[data-value="5"]').click()
       cy.findByRole('button', { name: 'Stake' }).click()
       cy.findByLabelText('Amount').clear().type('10')
-      if(tradeType == 'Matches'){
+      if(tradeType == 'Even'){
         cy.get('button.btn-purchase.btn-purchase--1').click()
-      }else if(tradeType == 'Differs'){
+      }else if(tradeType == 'Odd'){
         cy.get('button.btn-purchase.btn-purchase--2').click()
       }else{
         cy.log("Please check trade type entered and locator")
@@ -38,21 +38,21 @@ describe('Place order Matches and Differes order from Digits trade category', ()
       cy.contains('span[data-testid="dt_span"]', '10.00').should('be.visible')    //verify stake amount
     }
 
-    it('Should buy Matches contract from Matches/Differs Trade Type', () => {
+    it('Should buy Even contract from Even/Odd Trade Type', () => {
       cy.c_selectDemoAccount()
       selectSymbol('Volatility 100 (1s) Index')
-      selectTradeType('Options','Matches/Differs')
-      createMatchDiffContract('Matches')
+      selectTradeType('Options','Even/Odd')
+      createEvenOddContract('Even')
       cy.get('a.dc-result__caption-wrapper', { timeout: 7000 }).should('be.visible');
       checkContractDetailsPage()  
             
     })
 
-    it('Should buy Differs contract from Matches/Differs Trade Type', () => {
+    it('Should buy Odd contract from Even/Odd Trade Type', () => {
       cy.c_selectDemoAccount()
       selectSymbol('Volatility 100 (1s) Index')
-      selectTradeType('Options','Matches/Differs')
-      createMatchDiffContract('Differs')
+      selectTradeType('Options','Even/Odd')
+      createEvenOddContract('Odd')
       cy.get('a.dc-result__caption-wrapper', { timeout: 7000 }).should('be.visible');
       checkContractDetailsPage()
 
