@@ -118,7 +118,8 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
       } else { //when deriv charts popup is not available and if we need to redirect to wallet page 
         if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet" || app == "onramp") {
           cy.findByRole('banner').should("be.visible")
-          } else { //when deriv charts popup is not available and if we need to redirect to trader's hub page 
+          } else { //when deriv charts popup is not available and if we need to redirect to trader's hub page
+            cy.get('div[data-testid="dt_modal_footer"]').find('button:nth-child(2)').click()
             cy.findByText("Trader's Hub").should("be.visible")
           }
       }
@@ -244,7 +245,20 @@ Cypress.Commands.add("c_selectDemoAccount", () => {
 })
 
 
-  
+Cypress.Commands.add("c_selectSymbol", (symbolName) => {
+  cy.get('.cq-symbol-select-btn', { timeout: 20000 }).should('be.visible')
+  cy.get('.cq-symbol-select-btn').click()
+  cy.get('.ic-icon.sc-mcd__filter__group-icon.sc-mcd__filter__group-icon--open').should('be.visible')
+  cy.findByText('Synthetics').should('be.visible').click()
+  cy.contains('div.sc-mcd__item__name', symbolName).click()
+})
+
+
+Cypress.Commands.add("c_selectTradeType", (category,tradeType) => {
+  cy.findByTestId('dt_contract_dropdown').click()
+  cy.findByText(category).click()
+  cy.findByText(tradeType).should('be.visible').click()
+})
 
 
 

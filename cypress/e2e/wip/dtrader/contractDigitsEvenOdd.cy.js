@@ -5,20 +5,6 @@ describe('Place order Odd and ven order from Digits trade category', () => {
       cy.c_login()
     })
 
-    function selectSymbol(symbolName){
-      cy.get('.cq-symbol-select-btn', { timeout: 20000 }).should('be.visible')
-      cy.get('.cq-symbol-select-btn').click()
-      cy.get('.ic-icon.sc-mcd__filter__group-icon.sc-mcd__filter__group-icon--open').should('be.visible')
-      cy.findByText('Synthetics').should('be.visible').click()
-      cy.contains('div.sc-mcd__item__name', symbolName).click()
-    }
-
-    function selectTradeType(category,tradeType){
-      cy.findByTestId('dt_contract_dropdown').click()
-      cy.findByText(category).click()
-      cy.findByText(tradeType).should('be.visible').click()
-    }
-
     function createEvenOddContract(tradeType){
       cy.findByRole('button', { name: 'Stake' }).click()
       cy.findByLabelText('Amount').clear().type('10')
@@ -39,8 +25,8 @@ describe('Place order Odd and ven order from Digits trade category', () => {
 
     it('Should buy Even contract from Even/Odd Trade Type', () => {
       cy.c_selectDemoAccount()
-      selectSymbol('Volatility 100 (1s) Index')
-      selectTradeType('Options','Even/Odd')
+      cy.c_selectSymbol('Volatility 100 (1s) Index')
+      cy.c_selectTradeType('Options','Even/Odd')
       createEvenOddContract('Even')
       cy.get('a.dc-result__caption-wrapper', { timeout: 8000 }).should('be.visible');
       checkContractDetailsPage()  
@@ -49,8 +35,8 @@ describe('Place order Odd and ven order from Digits trade category', () => {
 
     it('Should buy Odd contract from Even/Odd Trade Type', () => {
       cy.c_selectDemoAccount()
-      selectSymbol('Volatility 100 (1s) Index')
-      selectTradeType('Options','Even/Odd')
+      cy.c_selectSymbol('Volatility 100 (1s) Index')
+      cy.c_selectTradeType('Options','Even/Odd')
       createEvenOddContract('Odd')
       cy.get('a.dc-result__caption-wrapper', { timeout: 8000 }).should('be.visible');
       checkContractDetailsPage()

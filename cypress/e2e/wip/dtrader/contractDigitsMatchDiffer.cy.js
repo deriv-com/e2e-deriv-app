@@ -40,8 +40,8 @@ describe('Place order Matches and Differes order from Digits trade category', ()
 
     it('Should buy Matches contract from Matches/Differs Trade Type', () => {
       cy.c_selectDemoAccount()
-      selectSymbol('Volatility 100 (1s) Index')
-      selectTradeType('Options','Matches/Differs')
+      cy.c_selectSymbol('Volatility 100 (1s) Index')
+      cy.c_selectTradeType('Options','Matches/Differs')
       createMatchDiffContract('Matches')
       cy.get('a.dc-result__caption-wrapper', { timeout: 8000 }).should('be.visible');
       checkContractDetailsPage()  
@@ -50,8 +50,8 @@ describe('Place order Matches and Differes order from Digits trade category', ()
 
     it('Should buy Differs contract from Matches/Differs Trade Type', () => {
       cy.c_selectDemoAccount()
-      selectSymbol('Volatility 100 (1s) Index')
-      selectTradeType('Options','Matches/Differs')
+      cy.c_selectSymbol('Volatility 100 (1s) Index')
+      cy.c_selectTradeType('Options','Matches/Differs')
       createMatchDiffContract('Differs')
       cy.get('a.dc-result__caption-wrapper', { timeout: 8000 }).should('be.visible');
       checkContractDetailsPage()
