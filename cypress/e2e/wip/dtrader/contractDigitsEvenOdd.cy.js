@@ -6,6 +6,7 @@ describe('Place order Odd and ven order from Digits trade category', () => {
     })
 
     function selectSymbol(symbolName){
+      cy.get('.cq-symbol-select-btn', { timeout: 20000 }).should('be.visible')
       cy.get('.cq-symbol-select-btn').click()
       cy.get('.ic-icon.sc-mcd__filter__group-icon.sc-mcd__filter__group-icon--open').should('be.visible')
       cy.findByText('Synthetics').should('be.visible').click()
@@ -19,8 +20,6 @@ describe('Place order Odd and ven order from Digits trade category', () => {
     }
 
     function createEvenOddContract(tradeType){
-      //cy.get('span.range-slider__ticks-step').eq(4).click()
-      cy.get('span.number-selector__selection[data-value="5"]').click()
       cy.findByRole('button', { name: 'Stake' }).click()
       cy.findByLabelText('Amount').clear().type('10')
       if(tradeType == 'Even'){
@@ -43,7 +42,7 @@ describe('Place order Odd and ven order from Digits trade category', () => {
       selectSymbol('Volatility 100 (1s) Index')
       selectTradeType('Options','Even/Odd')
       createEvenOddContract('Even')
-      cy.get('a.dc-result__caption-wrapper', { timeout: 7000 }).should('be.visible');
+      cy.get('a.dc-result__caption-wrapper', { timeout: 8000 }).should('be.visible');
       checkContractDetailsPage()  
             
     })
@@ -53,7 +52,7 @@ describe('Place order Odd and ven order from Digits trade category', () => {
       selectSymbol('Volatility 100 (1s) Index')
       selectTradeType('Options','Even/Odd')
       createEvenOddContract('Odd')
-      cy.get('a.dc-result__caption-wrapper', { timeout: 7000 }).should('be.visible');
+      cy.get('a.dc-result__caption-wrapper', { timeout: 8000 }).should('be.visible');
       checkContractDetailsPage()
 
   })

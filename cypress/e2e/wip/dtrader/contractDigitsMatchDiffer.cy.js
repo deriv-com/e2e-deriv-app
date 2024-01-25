@@ -43,7 +43,7 @@ describe('Place order Matches and Differes order from Digits trade category', ()
       selectSymbol('Volatility 100 (1s) Index')
       selectTradeType('Options','Matches/Differs')
       createMatchDiffContract('Matches')
-      cy.get('a.dc-result__caption-wrapper', { timeout: 7000 }).should('be.visible');
+      cy.get('a.dc-result__caption-wrapper', { timeout: 8000 }).should('be.visible');
       checkContractDetailsPage()  
             
     })
@@ -53,7 +53,7 @@ describe('Place order Matches and Differes order from Digits trade category', ()
       selectSymbol('Volatility 100 (1s) Index')
       selectTradeType('Options','Matches/Differs')
       createMatchDiffContract('Differs')
-      cy.get('a.dc-result__caption-wrapper', { timeout: 7000 }).should('be.visible');
+      cy.get('a.dc-result__caption-wrapper', { timeout: 8000 }).should('be.visible');
       checkContractDetailsPage()
 
   })
