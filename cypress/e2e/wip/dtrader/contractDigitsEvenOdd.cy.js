@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
 
-describe('Place order Odd and ven order from Digits trade category', () => {
+describe('QATEST-5040 -  Verify contract for Digits', () => {
     beforeEach(() => {
       cy.c_login()
     })

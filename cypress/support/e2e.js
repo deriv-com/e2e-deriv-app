@@ -119,7 +119,11 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
         if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet" || app == "onramp") {
           cy.findByRole('banner').should("be.visible")
           } else { //when deriv charts popup is not available and if we need to redirect to trader's hub page
-            cy.get('div[data-testid="dt_modal_footer"]').find('button:nth-child(2)').click()
+            cy.get('div[data-testid="dt_modal_footer"]').find('button:nth-child(2)').then(($buttons) => {
+              if ($buttons.length) {
+                cy.wrap($buttons).click()
+              }
+            });
             cy.findByText("Trader's Hub").should("be.visible")
           }
       }
