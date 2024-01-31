@@ -13,3 +13,15 @@ Cypress.Commands.add("c_selectSymbol", (symbolName) => {
     cy.findByText(category).click()
     cy.findByText(tradeType).should('be.visible').click()
   })
+
+
+  Cypress.Commands.add("c_checkSymbolTickChange" , (duration)=> {
+    let initialText;
+    cy.get('div.cq-animated-price.cq-current-price.cq-down').invoke('text').then((text) => {
+      initialText = text
+    })
+    cy.wait(duration);
+    cy.get('div.cq-animated-price.cq-current-price.cq-down').invoke('text').then((text) => {
+      expect(text).to.not.eq(initialText)
+    })
+  })

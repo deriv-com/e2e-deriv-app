@@ -50,5 +50,23 @@ describe('QATEST-5014, QATEST-5055 - Verify Main Page and Multipliers', () => {
 
   });
 
+  it.only('To check ticks are coming for different markets ', () => {
+    cy.c_selectDemoAccount()
+    
+    cy.c_selectSymbol('Gold Basket')
+    cy.c_checkSymbolTickChange(5000)
+
+    cy.c_selectSymbol('Volatility 10 (1s) Index')
+    cy.c_checkSymbolTickChange(3000)
+
+    cy.c_selectSymbol('AUD/JPY')    
+    cy.c_checkSymbolTickChange(5000)
+
+    cy.c_selectSymbol('Gold/USD') //Bloomberg, oz, idataprovider provider 
+    cy.c_checkSymbolTickChange(5000)
+
+
+  })
+
 
 })
