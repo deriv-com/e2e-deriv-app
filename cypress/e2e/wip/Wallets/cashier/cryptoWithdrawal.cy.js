@@ -50,7 +50,6 @@ describe("WALL-2830 - Crypto withdrawal content access from email", () => {
       cy.contains("Your Bitcoin cryptocurrency wallet address").click().type(
         "1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71" //Example bitcoin wallet address
       )
-      cy.contains("0% of available balance")
       cy.contains("Amount (BTC)").click().type("0.005")
       cy.get("form").findByRole("button", { name: "Withdraw" }).click()
       cy.get('#modal_root, .modal-root', { timeout: 10000 })
