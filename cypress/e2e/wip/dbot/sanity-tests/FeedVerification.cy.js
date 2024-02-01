@@ -1,0 +1,48 @@
+import charts from "../pageobjects/charts";
+import "@testing-library/cypress/add-commands";
+import TradersHub from "../pageobjects/traders_hub";
+import Common from "../pageobjects/common";
+
+describe("Verify feed is loading on charts tab", () => {
+  const tradersHub = new TradersHub();
+  const common = new Common();
+
+  beforeEach(() => {
+    cy.c_login();
+    cy.c_visitResponsive("/appstore/traders-hub", "large");
+    tradersHub.openBotButton.click();
+    common.skipTour();
+  });
+
+  it("Verify feed for real account", () => {
+    charts.openChartsTab();
+    charts.selectSymbolOnCharts("Volatility 10 (1s) Index");
+    charts.verifyTickChange(5000);
+
+    charts.selectSymbolOnCharts("Gold Basket");
+    charts.verifyTickChange(5000);
+
+    charts.selectSymbolOnCharts("AUD/JPY");
+    charts.verifyTickChange(5000);
+
+    charts.selectSymbolOnCharts("Gold/USD");
+    charts.verifyTickChange(5000);
+  });
+
+  it("Verify feed for demo account", () => {
+    common.switchToDemo();
+    charts.openChartsTab();
+
+    charts.selectSymbolOnCharts("Volatility 10 (1s) Index");
+    charts.verifyTickChange(5000);
+
+    charts.selectSymbolOnCharts("Gold Basket");
+    charts.verifyTickChange(5000);
+
+    charts.selectSymbolOnCharts("AUD/JPY");
+    charts.verifyTickChange(5000);
+
+    charts.selectSymbolOnCharts("Gold/USD");
+    charts.verifyTickChange(5000);
+  });
+});
