@@ -45,10 +45,10 @@ jobs:
     
     - name: Create server URL
       if: ${{github.event.inputs.QABox !='' }}
-      run: echo ::set-env name=E2E_CONFIG_SERVER::qa${{github.event.inputs.QABox}}.deriv.dev
+      run: echo QA_SERVER= 'qa'-'${{github.event.inputs.QABox}}'-''.deriv.dev' >> $GITHUB_ENV
 
     - name: Test server URL
-      run: echo $E2E_CONFIG_SERVER
+      run: echo $QA_SERVER
 
     - name: Cypress run
       # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
