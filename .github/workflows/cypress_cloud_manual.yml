@@ -45,7 +45,7 @@ jobs:
     
     - name: Create server URL
       if: ${{github.event.inputs.QABox !='' }}
-      run: echo SERVER = $(format('qa{0}.deriv.dev', ${{github.event.inputs.QABox}}))
+      run: SERVER = format('qa{0}.deriv.dev', ${{github.event.inputs.QABox}}
 
     - name: Test server URL
       run: echo $SERVER
