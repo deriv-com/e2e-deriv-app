@@ -19,15 +19,18 @@ on:
         - wip/dbot/sanity-tests
         - wip/Wallets/cashier
         - wip/dtrader
-        - wip/dbot/sanity-tests/FeedVerification.cy.js
-      QABox:
+      testlink:
+        type: string
+        required: false
+        description: Enter your test URL
+      qabox:
         type: number
         required: false
-        description: Enter QA box number
-      AppID:
+        description: Enter QA box number (Optional)
+      appid:
         type: number
         required: false
-        description: Enter app ID
+        description: Enter app ID (Optional)
 
 jobs:
   cypress-run:
@@ -44,11 +47,15 @@ jobs:
         repository: deriv-com/e2e-deriv-app # Replace with your repository name
     
     - name: Create server URL
-      if: ${{github.event.inputs.QABox !='' }}
-      run: echo QA_SERVER= qa"${{github.event.inputs.QABox}}".deriv.dev >> $GITHUB_ENV
+      if: ${{github.event.inputs.qabox !='' }}
+      run: echo QA_SERVER= qa"${{github.event.inputs.qabox}}".deriv.dev >> $GITHUB_ENV
 
     - name: Test server URL
       run: echo ${{env.QA_SERVER}}
+
+    - name: Update environment if running tests on test URL
+      if: ${{github.event.inputs.testlink !='' }}
+      run: echo TEST_URL= qa"${{github.event.inputs.qabox}}".deriv.dev >> $GITHUB_ENV
 
     - name: Cypress run
       # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
@@ -72,20 +79,20 @@ jobs:
         # Creating a token https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token
         # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # Set Base Url from client_payload.
-        CYPRESS_BASE_URL: "${{ github.event.inputs.environment }}"
+        CYPRESS_BASE_URL: "${{ env.TEST_URL || github.event.inputs.environment }}"
         # Send PR details to Cypress test run
         COMMIT_INFO_MESSAGE: Manual Run of "${{ github.event.inputs.suite }} tests" on "${{ github.event.inputs.environment }}"
         # Set test env variables
         E2E_DERIV_LOGIN: ${{ secrets.E2E_DERIV_LOGIN }}
         E2E_DERIV_PASSWORD: ${{ secrets.E2E_DERIV_PASSWORD }}
-        E2E_CONFIG_APPID: ${{ github.event.inputs.AppID || secrets.E2E_CONFIG_APPID }}
+        E2E_CONFIG_APPID: ${{ github.event.inputs.appid || secrets.E2E_CONFIG_APPID }}
         E2E_CONFIG_SERVER: ${{ env.QA_SERVER || secrets.E2E_CONFIG_SERVER }}
         E2E_OAUTH_URL: ${{ secrets.E2E_OAUTH_URL }}
         E2E_MT5_LOGIN: ${{ secrets.E2E_MT5_LOGIN }}
         E2E_MT5_PASSWORD: ${{ secrets.E2E_MT5_PASSWORD }}
         E2E_MT5_BASEURL: ${{ secrets.E2E_MT5_BASEURL }}
         E2E_STD_CONFIG_SERVER: ${{ env.QA_SERVER || secrets.E2E_STD_CONFIG_SERVER }}
-        E2E_STD_CONFIG_APPID: ${{ github.event.inputs.AppID || secrets.E2E_STD_CONFIG_APPID }}
+        E2E_STD_CONFIG_APPID: ${{ github.event.inputs.appid || secrets.E2E_STD_CONFIG_APPID }}
         E2E_DOUGHFLOW_CONFIG_SERVER: ${{ secrets.E2E_DOUGHFLOW_CONFIG_SERVER }}
         E2E_DOUGHFLOW_CONFIG_APPID: ${{ secrets.E2E_DOUGHFLOW_CONFIG_APPID }}
         E2E_QABOX_URL: ${{ secrets.E2E_QABOX_URL }}
