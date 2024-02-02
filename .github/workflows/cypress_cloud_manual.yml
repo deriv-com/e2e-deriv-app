@@ -45,7 +45,7 @@ jobs:
     
     - name: Create server URL
       if: ${{github.event.inputs.QABox !='' }}
-      run: E2E_CONFIG_SERVER = qa${{github.event.inputs.QABox}}.deriv.dev
+      run: echo ::set-env name=E2E_CONFIG_SERVER::qa${{github.event.inputs.QABox}}.deriv.dev
 
     - name: Test server URL
       run: echo $E2E_CONFIG_SERVER
