@@ -55,7 +55,7 @@ jobs:
 
     - name: Update environment if running tests on test URL
       if: ${{github.event.inputs.testlink !='' }}
-      run: echo TEST_URL= qa"${{github.event.inputs.qabox}}".deriv.dev >> $GITHUB_ENV
+      run: echo TEST_URL= qa"${{github.event.inputs.testlink}}".deriv.dev >> $GITHUB_ENV
 
     - name: Cypress run
       # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
