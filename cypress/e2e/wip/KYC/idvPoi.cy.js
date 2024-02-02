@@ -16,14 +16,15 @@ describe('IDV POI submission', () => {
     // })
 
     beforeEach(()=> {
-        cy.viewport(1280, 720);
-        localStorage.setItem("config.server_url", Cypress.env("configServer"))
-        localStorage.setItem("config.app_id", Cypress.env("configAppId"))
-        cy.visit('https://qa117.deriv.dev/oauth2/authorize?app_id=1007&l=EN&signup_device=desktop&date_first_contact=2024-01-23&brand=deriv')
-        // cy.get('#dt_login_button').click();
-        cy.get('#txtEmail').type(Cypress.env("loginEmail"));
-        cy.get('#txtPass').type(Cypress.env("loginPassword"));
-        cy.contains('button', 'Log in').click();
+        
+        // cy.viewport(1280, 720);
+        // localStorage.setItem("config.server_url", Cypress.env("configServer"))
+        // localStorage.setItem("config.app_id", Cypress.env("configAppId"))
+        // cy.visit('https://qa10.deriv.dev/oauth2/authorize?app_id=1007&l=EN&signup_device=desktop&date_first_contact=2024-01-23&brand=deriv')
+        // // cy.get('#dt_login_button').click();
+        // cy.get('#txtEmail').type(Cypress.env("loginEmail"));
+        // cy.get('#txtPass').type(Cypress.env("loginPassword"));
+        // cy.contains('button', 'Log in').click();
 
     })
     
@@ -31,10 +32,16 @@ describe('IDV POI submission', () => {
         cy.get('a[href="/account/personal-details"]').click()
         cy.get('a[href="/account/proof-of-identity"]').click()
         cy.get('.proof-of-identity').contains('Proof of identity')
-        cy.get('input[name="country_input"]').type("Ghana")
-        cy.get
+        // cy.get('input[name="country_input"]').click().type("Ghana")
+        cy.wait(1000)
+        cy.get('input[name="country_input"]').type('Ghana')
+        // cy.get('input[name="country_input"]').invoke('val', 'Ghana').trigger('change');
+        // cy.get('input[name="country_input"]').click()
+        // cy.get('.dc_dropdown-list--enter-done').contains('Ghana').click()
+        // cy.contains('button', 'Next').click()
+        // cy.get('input[name="country_input"]').type("Ghan", { delay: 100 });
+           
 
-        // cy.get('.button').contains('Log in').click()
         // cy.get('#btnGrant').contains('Authorise this app').click()
         // botBuilder.changeMarketOnBlocklyWorkspace(1, "Stock Indices");
         // botBuilder.changeMarketOnBlocklyWorkspace(2, "European indices");
