@@ -48,14 +48,14 @@ jobs:
     
     - name: Create server URL
       if: ${{github.event.inputs.qabox !='' }}
-      run: echo QA_SERVER= qa"${{github.event.inputs.qabox}}".deriv.dev >> $GITHUB_ENV
+      run: echo QA_SERVER=qa"${{github.event.inputs.qabox}}".deriv.dev >> $GITHUB_ENV
 
     - name: Test server URL
       run: echo ${{env.QA_SERVER}}
 
     - name: Update environment if running tests on test URL
       if: ${{github.event.inputs.testlink !='' }}
-      run: echo TEST_URL= ${{github.event.inputs.testlink}} >> $GITHUB_ENV
+      run: echo TEST_URL=${{github.event.inputs.testlink}} >> $GITHUB_ENV
 
     - name: Cypress run
       # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
