@@ -44,10 +44,8 @@ jobs:
         repository: deriv-com/e2e-deriv-app # Replace with your repository name
     
     - name: Create server URL
-      run: |
-          if [[${{github.event.inputs.QABox}}!='']]; then
-            SERVER = format('qa{0}.deriv.dev', ${{github.event.inputs.QABox}})
-           fi
+      if: ${{github.event.inputs.QABox !='' }}
+      run: echo SERVER = $(format('qa{0}.deriv.dev', ${{github.event.inputs.QABox}}))
 
     - name: Test server URL
       run: echo $SERVER
