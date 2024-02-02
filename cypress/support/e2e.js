@@ -1,4 +1,5 @@
 import './commands'
+import './dtrader'
 require('cypress-xpath')
 
 const { getLoginToken } = require("./common")
@@ -99,8 +100,11 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
   cy.c_visitResponsive(Cypress.env("oAuthUrl"),"large")
   //To let the dtrader page load completely
   cy.get('.cq-symbol-select-btn', { timeout: 10000}).should('exist')
-
-  //If Deriv charts popup exists, click continue
+  cy.findByTestId('launch-modal').then(($element) =>{
+    if($element){
+      cy.findByRole('button', { name: 'Ok' }).click();
+    }
+  })
   cy.get('#modal_root, .modal-root', { timeout: 10000 })
     .then(($element) => {
       if ($element.children().length > 0) {
@@ -118,7 +122,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
       } else { //when deriv charts popup is not available and if we need to redirect to wallet page 
         if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet" || app == "onramp") {
           cy.findByRole('banner').should("be.visible")
-          } else { //when deriv charts popup is not available and if we need to redirect to trader's hub page 
+          } else { //when deriv charts popup is not available and if we need to redirect to trader's hub page
             cy.findByText("Trader's Hub").should("be.visible")
           }
       }
@@ -242,11 +246,3 @@ Cypress.Commands.add("c_selectDemoAccount", () => {
   cy.get('.dc-content-expander__content').should('be.visible').click()
   cy.findByTestId('dt_acc_info').should('be.visible')
 })
-
-
-  
-
-
-
-
-  
