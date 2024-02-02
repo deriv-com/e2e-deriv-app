@@ -19,6 +19,16 @@ on:
         - wip/dbot/sanity-tests
         - wip/Wallets/cashier
         - wip/dtrader
+        - wip/dbot/sanity-tests/FeedVerification.cy.js
+      QABox:
+        type: number
+        required: false
+        description: Enter QA box number
+      AppID:
+        type: number
+        required: false
+        description: Enter app ID
+
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
@@ -32,6 +42,13 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: deriv-com/e2e-deriv-app # Replace with your repository name
+    
+    - name: Create server URL
+      run: if (${{github.event.inputs.QABox}}!='')
+            echo "SERVER=qa${{github.event.inputs.QABox}}.deriv.dev"
+
+    - name: Test server URL
+      run: echo $SERVER
 
     - name: Cypress run
       # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
@@ -61,14 +78,14 @@ jobs:
         # Set test env variables
         E2E_DERIV_LOGIN: ${{ secrets.E2E_DERIV_LOGIN }}
         E2E_DERIV_PASSWORD: ${{ secrets.E2E_DERIV_PASSWORD }}
-        E2E_CONFIG_APPID: ${{ secrets.E2E_CONFIG_APPID }}
+        E2E_CONFIG_APPID: ${{ github.event.inputs.AppID || secrets.E2E_CONFIG_APPID }}
         E2E_CONFIG_SERVER: ${{ secrets.E2E_CONFIG_SERVER }}
         E2E_OAUTH_URL: ${{ secrets.E2E_OAUTH_URL }}
         E2E_MT5_LOGIN: ${{ secrets.E2E_MT5_LOGIN }}
         E2E_MT5_PASSWORD: ${{ secrets.E2E_MT5_PASSWORD }}
         E2E_MT5_BASEURL: ${{ secrets.E2E_MT5_BASEURL }}
         E2E_STD_CONFIG_SERVER: ${{ secrets.E2E_STD_CONFIG_SERVER }}
-        E2E_STD_CONFIG_APPID: ${{ secrets.E2E_STD_CONFIG_APPID }}
+        E2E_STD_CONFIG_APPID: ${{ github.event.inputs.AppID || secrets.E2E_STD_CONFIG_APPID }}
         E2E_DOUGHFLOW_CONFIG_SERVER: ${{ secrets.E2E_DOUGHFLOW_CONFIG_SERVER }}
         E2E_DOUGHFLOW_CONFIG_APPID: ${{ secrets.E2E_DOUGHFLOW_CONFIG_APPID }}
         E2E_QABOX_URL: ${{ secrets.E2E_QABOX_URL }}
