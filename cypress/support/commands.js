@@ -7,7 +7,7 @@
 // this command is to change side layout (responsive mode)
 Cypress.Commands.add('login_setup' , (username) => {
   cy.viewport_switch('macbook-16');
-  const felink = Cypress.env('FELINK');
+  const felink = Cypress.env('oAuthUrl');
   
   cy.visit(felink);
   cy.loading_check(); 
@@ -866,4 +866,11 @@ Cypress.Commands.add("close_notification_banner", () => {
   });
 });
 
-  
+Cypress.Commands.add('navigate_to_poi' , (country) => {
+  cy.get('a[href="/account/personal-details"]').click()
+  cy.get('a[href="/account/proof-of-identity"]').click()
+  cy.get('input[name="country_input"]').click()
+  cy.get('input[name="country_input"]').type(country);
+  cy.contains(country).click()
+  cy.contains('button', 'Next').click()
+})
