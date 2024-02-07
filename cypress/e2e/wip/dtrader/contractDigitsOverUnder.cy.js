@@ -7,7 +7,7 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
 
     function createOverUnderContract(tradeType){
       cy.get('span.number-selector__selection[data-value="5"]').click()
-      cy.findByRole('button', { name: 'Stake' }).click()
+      cy.c_selectStakeTab()
       cy.findByLabelText('Amount').clear().type('10')
       if(tradeType == 'Over'){
         cy.get('button.btn-purchase.btn-purchase--1').click()
