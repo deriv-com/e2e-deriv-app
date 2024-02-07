@@ -50,7 +50,7 @@ describe('QATEST-5014, QATEST-5055 - Verify Main Page and Multipliers', () => {
 
   });
 
-  it.only('To check ticks are coming for different markets ', () => {
+  it('To check ticks are coming for different markets ', () => {
     cy.c_selectDemoAccount()
     
     cy.c_selectSymbol('Gold Basket')
@@ -65,8 +65,23 @@ describe('QATEST-5014, QATEST-5055 - Verify Main Page and Multipliers', () => {
     cy.c_selectSymbol('Gold/USD') //Bloomberg, oz, idataprovider provider 
     cy.c_checkSymbolTickChange(5000)
 
+  })
+
+
+  it.only('To check on switching Stake and Payout tab', () => {
+    cy.c_selectDemoAccount()
+
+    cy.c_selectSymbol('Volatility 100 (1s) Index')
+    cy.c_selectTradeType('Options','Rise/Fall')
+    cy.c_selectStakeTab()
+    
+
+    
+
+
 
   })
+
 
 
 })

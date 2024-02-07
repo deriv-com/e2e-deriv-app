@@ -25,3 +25,11 @@ Cypress.Commands.add("c_selectSymbol", (symbolName) => {
       expect(text).to.not.eq(initialText)
     })
   })
+
+  Cypress.Commands.add("c_selectStakeTab" , ()=> {
+    cy.findByRole('button', { name: 'Stake' }).click()  
+  })
+
+  Cypress.Commands.add("c_selectPayoutTab" , ()=> {
+    cy.findByRole('button', { name: 'Payout' }).click()  
+  })

@@ -6,7 +6,7 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
     })
 
     function createEvenOddContract(tradeType){
-      cy.findByRole('button', { name: 'Stake' }).click()
+      cy.c_selectStakeTab()
       cy.findByLabelText('Amount').clear().type('10')
       if(tradeType == 'Even'){
         cy.get('button.btn-purchase.btn-purchase--1').click()

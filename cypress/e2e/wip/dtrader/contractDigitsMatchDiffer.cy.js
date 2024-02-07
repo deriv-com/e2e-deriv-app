@@ -5,23 +5,10 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
       cy.c_login()
     })
 
-    function selectSymbol(symbolName){
-      cy.get('.cq-symbol-select-btn').click()
-      cy.get('.ic-icon.sc-mcd__filter__group-icon.sc-mcd__filter__group-icon--open').should('be.visible')
-      cy.findByText('Synthetics').should('be.visible').click()
-      cy.contains('div.sc-mcd__item__name', symbolName).click()
-    }
-
-    function selectTradeType(category,tradeType){
-      cy.findByTestId('dt_contract_dropdown').click()
-      cy.findByText(category).click()
-      cy.findByText(tradeType).should('be.visible').click()
-    }
-
     function createMatchDiffContract(tradeType){
       //cy.get('span.range-slider__ticks-step').eq(4).click()
       cy.get('span.number-selector__selection[data-value="5"]').click()
-      cy.findByRole('button', { name: 'Stake' }).click()
+      cy.c_selectStakeTab()
       cy.findByLabelText('Amount').clear().type('10')
       if(tradeType == 'Matches'){
         cy.get('button.btn-purchase.btn-purchase--1').click()
