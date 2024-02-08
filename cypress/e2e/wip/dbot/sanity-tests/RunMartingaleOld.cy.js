@@ -1,23 +1,19 @@
-import '@testing-library/cypress/add-commands'
-import LoginPage from "../pageobjects/login_page";
+import "@testing-library/cypress/add-commands";
 import TradersHub from "../pageobjects/traders_hub";
 import Common from "../pageobjects/common";
 import BotDashboard from "../pageobjects/bot_dashboard_page";
 import RunPanel from "../pageobjects/run_panel";
 
-describe("Import and run custom strategy", () => {
-  const loginPage = new LoginPage();
+describe("QATEST-99420: Import and run custom strategy", () => {
   const tradersHub = new TradersHub();
   const common = new Common();
   const botDashboard = new BotDashboard();
   const runPanel = new RunPanel();
-  let userName = Cypress.env("username_cr_unauthenticated");
   let totalPL;
 
   beforeEach(() => {
-    //cy.login_setup(userName);
     cy.c_login();
-    cy.c_visitResponsive('/appstore/traders-hub', 'large');
+    cy.c_visitResponsive("/appstore/traders-hub", "large");
     tradersHub.openBotButton.click();
     common.skipTour();
     common.switchToDemo();
