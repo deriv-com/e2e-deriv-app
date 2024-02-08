@@ -1,4 +1,6 @@
 
+const stakeAmount = 10 
+
 Cypress.Commands.add("c_selectSymbol", (symbolName) => {
     cy.get('.cq-symbol-select-btn', { timeout: 20000 }).should('be.visible')
     cy.get('.cq-symbol-select-btn').click()

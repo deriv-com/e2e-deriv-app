@@ -1,4 +1,5 @@
 import '@testing-library/cypress/add-commands'
+import { stakeAmount } from '../../../support/dtrader'
 
 describe('QATEST-5040 -  Verify contract for Digits', () => {
     beforeEach(() => {
@@ -7,7 +8,7 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
 
     function createEvenOddContract(tradeType){
       cy.c_selectStakeTab()
-      cy.findByLabelText('Amount').clear().type('10')
+      cy.findByLabelText('Amount').clear().type(stakeAmount.toString())
       if(tradeType == 'Even'){
         cy.get('button.btn-purchase.btn-purchase--1').click()
       }else if(tradeType == 'Odd'){
