@@ -10,7 +10,7 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
     function createMatchDiffContract(tradeType){
       cy.get('span.number-selector__selection[data-value="5"]').click()
       cy.c_selectStakeTab()
-      cy.findByLabelText('Amount').clear().type(stakeAmount.toString())
+      cy.findByLabelText('Amount').clear().type(stakeAmount)
       if(tradeType == 'Matches'){
         cy.get('button.btn-purchase.btn-purchase--1').click()
       }else if(tradeType == 'Differs'){
@@ -23,7 +23,7 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
     function checkContractDetailsPage(){
       cy.get('a.dc-result__caption-wrapper').click()
       cy.findByText('Contract details').should('be.visible')  
-      cy.contains('span[data-testid="dt_span"]', '10.00').should('be.visible')    //verify stake amount
+      cy.contains('span[data-testid="dt_span"]', stakeAmount).should('be.visible')    //verify stake amount
     }
 
     it('Should buy Matches contract from Matches/Differs Trade Type', () => {
