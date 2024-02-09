@@ -51,7 +51,15 @@ module.exports = defineConfig({
     HMACKey: process.env.E2E_HMAC_KEY,
     username_cr_unauthenticated: process.env.E2E_USENAME_BOT,
     password: process.env.E2E_PASS_BOT,
-    tradersHubUrl: 'appstore/traders-hub'
+    tradersHubUrl: 'appstore/traders-hub',
+    emailVerificationCode : process.env.E2E_EMAIL_VERIFICATION_CODE,
+    emailUser: process.env.E2E_AUTH_EMAIL_USER,
+    emailPassword: process.env.E2E_AUTH_EMAIL_PASSWORD,
+    event_email_url: process.env.E2E_EVENTS_EMAIL,
+    diel_country_list: ['Ecuador', 'South Africa', 'Brazil', 'Sri Lanka', 'Uruguay', 'Switzerland'],
+    country_of_residence: process.env.E2E_COUNTRY_OF_RESIDENCE,
+    user_password: process.env.E2E_USERPASSWORD,
+    citizenship: process.env.E2E_CITIZENSHIP,
   },  
   retries: {
       "runMode": 2,
