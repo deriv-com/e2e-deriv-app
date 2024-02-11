@@ -35,3 +35,14 @@ Cypress.Commands.add("c_selectSymbol", (symbolName) => {
   Cypress.Commands.add("c_selectPayoutTab" , ()=> {
     cy.findByRole('button', { name: 'Payout' }).click()  
   })
+
+  Cypress.Commands.add("c_validateDurationDigits", (tradetype) => {
+   if(tradetype == 'Matches/Differs' || 'Even/Odd' || 'Over/Under'){
+    cy.contains('span.dc-text.dc-dropdown__display-text', 'Ticks').should('be.visible')
+    cy.findByRole('button', { name: 'Ticks' }).should('not.exist')
+    cy.findByRole('button', { name: 'Minutes' }).should('not.exist')
+    cy.findByRole('button', { name: 'End time' }).should('not.exist')
+    cy.findByRole('button', { name: 'Duration' }).should('not.exist')
+   }
+
+  })
