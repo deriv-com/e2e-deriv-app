@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-import { stakeAmount } from '../../../support/dtrader'
+import * as dtraderVariable from '../../../support/dtrader'
 
 
 describe('QATEST-5040 -  Verify contract for Digits', () => {
@@ -10,7 +10,7 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
     function createMatchDiffContract(tradeType){
       cy.get('span.number-selector__selection[data-value="5"]').click()
       cy.c_selectStakeTab()
-      cy.findByLabelText('Amount').clear().type(stakeAmount)
+      cy.findByLabelText('Amount').clear().type(dtraderVariable.stakeAmount)
       if(tradeType == 'Matches'){
         cy.get('button.btn-purchase.btn-purchase--1').click()
       }else if(tradeType == 'Differs'){
@@ -20,29 +20,29 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
       }
     }
 
-    function checkContractDetailsPage(){
-      cy.get('a.dc-result__caption-wrapper').click()
-      cy.findByText('Contract details').should('be.visible')  
-      cy.contains('span[data-testid="dt_span"]', stakeAmount).should('be.visible')    //verify stake amount
-    }
-
-    it('Should buy Matches contract from Matches/Differs Trade Type', () => {
+    it('Should buy Matches contract from Matches Trade Type', () => {
       cy.c_selectDemoAccount()
       cy.c_selectSymbol('Volatility 100 (1s) Index')
       cy.c_selectTradeType('Options','Matches/Differs')
+      cy.c_validateDurationDigits('Matches/Differs')
+      cy.c_selectTickDuration()
+      cy.c_matchStakePayoutValue('Matches/Differs', '#dt_purchase_digitmatch_price' )
       createMatchDiffContract('Matches')
-      cy.get('a.dc-result__caption-wrapper', { timeout: 8000 }).should('be.visible');
-      checkContractDetailsPage()  
+      cy.get('a.dc-result__caption-wrapper', { timeout: (dtraderVariable.tickDuration *1000)+3000 }).should('be.visible')
+      cy.c_checkContractDetailsPage('Matches/Differs',dtraderVariable.stakeAmount,dtraderVariable.tickDuration )
             
     })
 
-    it('Should buy Differs contract from Matches/Differs Trade Type', () => {
+    it('Should buy Differs contract from Differs Trade Type', () => {
       cy.c_selectDemoAccount()
       cy.c_selectSymbol('Volatility 100 (1s) Index')
       cy.c_selectTradeType('Options','Matches/Differs')
+      cy.c_validateDurationDigits('Matches/Differs')
+      cy.c_selectTickDuration()
+      cy.c_matchStakePayoutValue('Matches/Differs', '#dt_purchase_digitmatch_price' )
       createMatchDiffContract('Differs')
-      cy.get('a.dc-result__caption-wrapper', { timeout: 8000 }).should('be.visible');
-      checkContractDetailsPage()
+      cy.get('a.dc-result__caption-wrapper', { timeout: (dtraderVariable.tickDuration *1000)+3000 }).should('be.visible')
+      cy.c_checkContractDetailsPage('Matches/Differs',dtraderVariable.stakeAmount,dtraderVariable.tickDuration )
 
   })
 
