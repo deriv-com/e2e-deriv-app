@@ -20,12 +20,6 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
       }
     }
 
-    function checkContractDetailsPage(){
-      cy.get('a.dc-result__caption-wrapper').click()
-      cy.findByText('Contract details').should('be.visible')  
-      cy.contains('span[data-testid="dt_span"]', dtraderVariable.stakeAmount).should('be.visible')    //verify stake amount
-    }
-
     it('Should buy Matches contract from Matches Trade Type', () => {
       cy.c_selectDemoAccount()
       cy.c_selectSymbol('Volatility 100 (1s) Index')
@@ -34,8 +28,8 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
       cy.c_selectTickDuration()
       cy.c_matchStakePayoutValue('Matches/Differs', '#dt_purchase_digitmatch_price' )
       createMatchDiffContract('Matches')
-      cy.get('a.dc-result__caption-wrapper', { timeout: (dtraderVariable.tickDuration *1000)+3000 }).should('be.visible');
-      checkContractDetailsPage()  
+      cy.get('a.dc-result__caption-wrapper', { timeout: (dtraderVariable.tickDuration *1000)+3000 }).should('be.visible')
+      cy.c_checkContractDetailsPage('Matches/Differs',dtraderVariable.stakeAmount,dtraderVariable.tickDuration )
             
     })
 
@@ -47,8 +41,8 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
       cy.c_selectTickDuration()
       cy.c_matchStakePayoutValue('Matches/Differs', '#dt_purchase_digitmatch_price' )
       createMatchDiffContract('Differs')
-      cy.get('a.dc-result__caption-wrapper', { timeout: (dtraderVariable.tickDuration *1000)+3000 }).should('be.visible');
-      checkContractDetailsPage()
+      cy.get('a.dc-result__caption-wrapper', { timeout: (dtraderVariable.tickDuration *1000)+3000 }).should('be.visible')
+      cy.c_checkContractDetailsPage('Matches/Differs',dtraderVariable.stakeAmount,dtraderVariable.tickDuration )
 
   })
 

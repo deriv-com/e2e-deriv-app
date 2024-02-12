@@ -55,7 +55,6 @@ Cypress.Commands.add("c_selectSymbol", (symbolName) => {
   Cypress.Commands.add("c_matchStakePayoutValue" , (tradeType, tradeTypeParentLocator)=> {
     let stakeValueUp
     let payoutValueUp
-    cy.c_selectTradeType('Options',tradeType)
     cy.c_selectStakeTab()
     cy.get(tradeTypeParentLocator).contains('.trade-container__price-info-basis', 'Payout')
     
@@ -77,3 +76,56 @@ Cypress.Commands.add("c_selectSymbol", (symbolName) => {
     })
   })
 
+
+  function checkTradeTablePage(buyReference){
+    cy.findByRole('link', { name: 'Trade table' }).click()
+    cy.findByText('Type').should('be.visible')
+    cy.findByText('Ref. ID').should('be.visible')
+    cy.findByText('Currency').should('be.visible')
+    cy.findByText('Buy time').should('be.visible')
+    cy.findByText('Buy price').should('be.visible')
+    cy.findByText('Sell time').should('be.visible')
+    cy.findByText('Sell price').should('be.visible')
+    cy.findByText('Profit / Loss').should('be.visible')
+    cy.contains(buyReference).should('be.visible')
+  }
+
+  function checkStatementPage(buyReference,sellReference){
+    cy.findByRole('link', { name: 'Statement' }).click()
+    cy.findByText('Type').should('be.visible')
+    cy.findByText('Ref. ID').should('be.visible')
+    cy.findByText('Currency').should('be.visible')
+    cy.findByText('Transaction time').should('be.visible')
+    cy.findByText('Transaction', { exact: true }).should('be.visible')
+    cy.findByText('Credit/Debit').should('be.visible')
+    cy.contains(buyReference).should('be.visible')
+    cy.contains(buyReference).should('be.visible')
+
+  }
+
+  Cypress.Commands.add("c_checkContractDetailsPage" , (tradeType, stakeAmount, tickDuration)=> {
+    cy.get('a.dc-result__caption-wrapper').click()
+    cy.findByText('Contract details').should('be.visible')  
+    cy.contains('span[data-testid="dt_span"]', stakeAmount).should('be.visible')    //verify stake amount
+    if(tradeType == 'Matches/Differs' || 'Even/Odd' || 'Over/Under'){
+      cy.get('#dt_duration_label').contains('span', `${tickDuration} ticks`).should('be.visible')   //verify ticks entered
+    }
+    let buyReference, sellReference
+    cy.get('#dt_id_label').find('.contract-audit__value').invoke('text').then((text) => {
+      const match = text.match(/(\d+) \(Buy\)/)
+      if (match) {
+        buyReference = match[1]
+      }
+    }).then(() => {
+      cy.get('#dt_id_label').find('.contract-audit__value2').invoke('text').then((text) => {
+        const match = text.match(/(\d+) \(Sell\)/)
+        if (match) {
+          sellReference = match[1]
+        }
+      }).then(() => {
+        cy.get('#dt_reports_tab > .dc-text').click()
+        checkTradeTablePage(buyReference)
+        checkStatementPage(buyReference,sellReference)
+      })
+    })
+  })
