@@ -51,7 +51,6 @@ describe('Cypress test for ROW account sign up', () => {
       cy.c_manageAccountsetting(Cypress.env("CoROnfidoROW"))
       
     })
-
     it('New account sign up ROW - IDV supported country', () => {
       cy.wait(5000) //TODO - To be replaced by a loop within the emailVerification below.
       cy.c_emailVerificationSignUp(verification_code,Cypress.env("event_email_url"), epoch)
@@ -81,11 +80,6 @@ describe('Cypress test for ROW account sign up', () => {
       cy.c_addressDetails()
       cy.c_addAccount()
       cy.c_manageAccountsetting(Cypress.env("CoRIDVROW"))
-
-
-
-    })
-  
- 
+    }) 
 })
 
