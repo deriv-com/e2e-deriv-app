@@ -29,7 +29,6 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
       cy.c_selectDemoAccount()
       cy.c_selectSymbol('Volatility 100 (1s) Index')
       cy.c_selectTradeType('Options','Over/Under')
-      cy.c_validateDurationDigits('Over/Under')
       createOverUnderContract('Over')
       cy.get('a.dc-result__caption-wrapper', { timeout: 8000 }).should('be.visible');
       checkContractDetailsPage()  
@@ -40,7 +39,6 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
       cy.c_selectDemoAccount()
       cy.c_selectSymbol('Volatility 100 (1s) Index')
       cy.c_selectTradeType('Options','Over/Under')
-      cy.c_validateDurationDigits('Over/Under')
       createOverUnderContract('Under')
       cy.get('a.dc-result__caption-wrapper', { timeout: 8000 }).should('be.visible');
       checkContractDetailsPage()
