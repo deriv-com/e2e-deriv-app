@@ -882,7 +882,7 @@ Cypress.Commands.add('c_checkTradersHubhomePage',() => {
   cy.findByText('Deriv cTrader').should('be.visible')    
   cy.contains('Other CFD Platforms').scrollIntoView().should('be.visible') 
   cy.get('#traders-hub').scrollIntoView({ position: 'top' }) 
-  })
+})
 
 Cypress.Commands.add('c_enterValidEmail',(sign_up_mail) => {
   {
@@ -977,7 +977,7 @@ Cypress.Commands.add('c_personalDetails', (firstName,identity,taxResi) => {
     }else if(identity == 'IDV'){
       cy.findByTestId('tax_identification_number').type('P000111111A');
     }else{
-      cy.log('Not IDV or Onfido')
+      cy.log('Not IDV or Onfido') //for MF account check
     }
     cy.findByTestId('dt_personal_details_container').findByTestId('dt_dropdown_display').click();
     cy.get('#Hedging').click()
@@ -986,12 +986,12 @@ Cypress.Commands.add('c_personalDetails', (firstName,identity,taxResi) => {
     }else if(identity == 'IDV'){
       cy.get('.dc-checkbox__box').eq(1).click()
     }else{
-      cy.log('Not IDV or Onfido')
+      cy.log('Not IDV or Onfido') //for MF account check
     }
+    //below check is to make sure previous button is working.
     cy.findByRole('button', { name: 'Previous' }).click();
     cy.findByRole('button', { name: 'Next' }).click();
-    cy.findByRole('button', { name: 'Next' }).click();
-    
+    cy.findByRole('button', { name: 'Next' }).click();    
 })
 
 Cypress.Commands.add('c_addressDetails',() => {
@@ -999,11 +999,8 @@ Cypress.Commands.add('c_addressDetails',() => {
   cy.findByLabelText('First line of address*').type('myaddress 1')
   cy.findByLabelText('Second line of address').type('myaddress 2')
   cy.findByLabelText('Town/City*').type('mycity')
-  //cy.findByLabelText('State/Province').click()
-  //cy.findByText('Amazonas').click()
   cy.findByLabelText('Postal/ZIP Code').type('1234')
   cy.findByRole('button', { name: 'Next' }).click();
-
 })
 
 Cypress.Commands.add('c_addAccount', () => {
