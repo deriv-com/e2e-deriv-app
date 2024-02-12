@@ -58,8 +58,10 @@ module.exports = defineConfig({
     event_email_url: process.env.E2E_EVENTS_EMAIL,
     diel_country_list: ['Ecuador', 'South Africa', 'Brazil', 'Sri Lanka', 'Uruguay', 'Switzerland'],
     CoROnfidoROW: process.env.E2E_COUNTRY_OF_RESI_ROW_ONFIDO,
+    CoRIDVROW: process.env.E2E_COUNTRY_OF_RESI_ROW_IDV,
     user_password: process.env.E2E_USERPASSWORD,
-    citizenshipOnfidoROW: process.env.E2E_CITIZENSHIP_ROW_ONFIDO
+    citizenshipOnfidoROW: process.env.E2E_CITIZENSHIP_ROW_ONFIDO,
+    citizenshipIDVROW: process.env.E2E_CITIZENSHIP_ROW_IDV
   },  
   retries: {
       "runMode": 2,

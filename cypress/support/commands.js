@@ -902,15 +902,15 @@ Cypress.Commands.add('c_enterValidEmail',(sign_up_mail) => {
 })
 
 //Below functions are used in sign up forms
-Cypress.Commands.add('c_selectCountryOfResidence', () => {
+Cypress.Commands.add('c_selectCountryOfResidence', (CoR) => {
   cy.findByLabelText('Country of residence').should('be.visible')
-  cy.findByLabelText('Country of residence').clear().type(Cypress.env("CoROnfidoROW"))
-  cy.findByText(Cypress.env("CoROnfidoROW")).click()
+  cy.findByLabelText('Country of residence').clear().type(CoR)
+  cy.findByText(CoR).click()
 })
 
-Cypress.Commands.add('c_selectCitizenship', () => {
-  cy.findByLabelText('Citizenship').type(Cypress.env("citizenshipOnfidoROW")) 
-  cy.findByText(Cypress.env("citizenshipOnfidoROW")).click()
+Cypress.Commands.add('c_selectCitizenship', (Citizenship) => {
+  cy.findByLabelText('Citizenship').type(Citizenship) 
+  cy.findByText(Citizenship).click()
   cy.findByRole('button', { name: 'Next' }).click()
 })
 
@@ -946,25 +946,52 @@ Cypress.Commands.add('c_generateRandomName', () =>  {
   return 'cypress ' + randomText
 })
 
-Cypress.Commands.add('c_personalDetails', (firstName) => {
+Cypress.Commands.add('c_personalDetails', (firstName,identity,taxResi) => {
   cy.findByText('US Dollar').click()
     cy.findByRole('button', { name: 'Next' }).click()
-    cy.contains('Any information you provide is confidential').should('be.visible')
+    if(identity == 'Onfido'){
+      cy.contains('Any information you provide is confidential').should('be.visible')
+    }else if(identity == 'IDV'){
+      cy.findByLabelText('Choose the document type').click()
+      cy.findByText('National ID Number').click()
+      cy.findByLabelText('Enter your document number').type('10101010')
+    }else{
+      cy.log('Not IDV or Onfido')
+    }
     cy.findByTestId('first_name').type(firstName)
     cy.findByTestId('last_name').type('automatn acc')
     cy.findByTestId('date_of_birth').click()
     cy.findByText('2006').click()
     cy.findByText('Feb').click()
     cy.findByText('9', { exact: true }).click()
+    if(identity == 'IDV'){
+      cy.get('.dc-checkbox__box').click()
+    }
     cy.findByTestId('phone').type('12345678')
-    cy.findByTestId('place_of_birth').type('colo')
-    cy.findByText('Colombia').click()
-    cy.findByTestId('tax_residence').type('colo')
-    cy.findByText('Colombia').click()
-    cy.findByTestId('tax_identification_number').type('1234567890');
+    cy.findByTestId('place_of_birth').type(taxResi)
+    cy.findByText(taxResi).click()
+    cy.findByTestId('tax_residence').type(taxResi)
+    cy.findByText(taxResi).click()
+    if(identity == 'Onfido'){
+      cy.findByTestId('tax_identification_number').type('1234567890');
+    }else if(identity == 'IDV'){
+      cy.findByTestId('tax_identification_number').type('P000111111A');
+    }else{
+      cy.log('Not IDV or Onfido')
+    }
     cy.findByTestId('dt_personal_details_container').findByTestId('dt_dropdown_display').click();
     cy.get('#Hedging').click()
-    cy.get('.dc-checkbox__box').click()
+    if(identity == 'Onfido'){
+      cy.get('.dc-checkbox__box').click()
+    }else if(identity == 'IDV'){
+      cy.get('.dc-checkbox__box').eq(1).click()
+    }else{
+      cy.log('Not IDV or Onfido')
+    }
+    cy.findByRole('button', { name: 'Previous' }).click();
+    cy.findByRole('button', { name: 'Next' }).click();
+    cy.findByRole('button', { name: 'Next' }).click();
+    
 })
 
 Cypress.Commands.add('c_addressDetails',() => {
@@ -972,8 +999,8 @@ Cypress.Commands.add('c_addressDetails',() => {
   cy.findByLabelText('First line of address*').type('myaddress 1')
   cy.findByLabelText('Second line of address').type('myaddress 2')
   cy.findByLabelText('Town/City*').type('mycity')
-  cy.findByLabelText('State/Province').click()
-  cy.findByText('Amazonas').click()
+  //cy.findByLabelText('State/Province').click()
+  //cy.findByText('Amazonas').click()
   cy.findByLabelText('Postal/ZIP Code').type('1234')
   cy.findByRole('button', { name: 'Next' }).click();
 
@@ -994,8 +1021,14 @@ Cypress.Commands.add('c_addAccount', () => {
 
 })
 
-Cypress.Commands.add('c_manageAccountsetting', () => {
+Cypress.Commands.add('c_manageAccountsetting', (CoR) => {
   cy.get('.traders-hub-header__setting').click()
+  cy.findByRole('link', { name: 'Proof of identity' }).click();
+  cy.findByText('In which country was your document issued?').should('be.visible')
+  cy.findByRole('button',{name:'Next'}).should('be.disabled')
+  cy.findByLabelText('Country').type(CoR)
+  cy.findByText(CoR).click()
+  cy.findByRole('button',{name:'Next'}).should('not.be.disabled')
 })
  
 
