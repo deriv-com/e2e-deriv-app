@@ -904,13 +904,13 @@ Cypress.Commands.add('c_enterValidEmail',(sign_up_mail) => {
 //Below functions are used in sign up forms
 Cypress.Commands.add('c_selectCountryOfResidence', () => {
   cy.findByLabelText('Country of residence').should('be.visible')
-  cy.findByLabelText('Country of residence').clear().type(Cypress.env("country_of_residence"))
-  cy.findByText(Cypress.env("country_of_residence")).click()
+  cy.findByLabelText('Country of residence').clear().type(Cypress.env("CoROnfidoROW"))
+  cy.findByText(Cypress.env("CoROnfidoROW")).click()
 })
 
 Cypress.Commands.add('c_selectCitizenship', () => {
-  cy.findByLabelText('Citizenship').type(Cypress.env("citizenship")) 
-  cy.findByText(Cypress.env("citizenship")).click()
+  cy.findByLabelText('Citizenship').type(Cypress.env("citizenshipOnfidoROW")) 
+  cy.findByText(Cypress.env("citizenshipOnfidoROW")).click()
   cy.findByRole('button', { name: 'Next' }).click()
 })
 
@@ -988,7 +988,7 @@ Cypress.Commands.add('c_addAccount', () => {
   cy.findByRole('heading', { name: 'Your account is ready' }).should('be.visible')
   cy.findByRole('button', { name: 'Deposit' }).should('be.visible')
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
-  cy.url().should('be.equal', Cypress.config('baseUrl') +Cypress.config('tradersHubUrl'))
+  cy.url().should('be.equal', Cypress.config('baseUrl') + '/appstore/traders-hub')
   cy.get('#traders-hub').scrollIntoView({ position: 'top' }) 
   cy.findByTestId('dt_traders_hub').findByText('0.00').should('be.visible')
 

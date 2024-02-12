@@ -10,8 +10,8 @@ describe('Cypress test for ROW account sign up', () => {
     let verification_code
 
     beforeEach(() => {
-      localStorage.setItem("config.server_url", Cypress.env("configServer"))
-      localStorage.setItem("config.app_id", Cypress.env("configAppId"))
+      localStorage.setItem("config.server_url", Cypress.env("stdConfigServer"))
+      localStorage.setItem("config.app_id", Cypress.env("stdConfigAppId"))
       cy.c_visitResponsive('/endpoint',"desktop")
       cy.findByRole('button', { name: 'Sign up' }).should('not.be.disabled')
       //cy.findByRole('button', { name: 'Sign up' }).click()
@@ -23,8 +23,8 @@ describe('Cypress test for ROW account sign up', () => {
       cy.then(() => {
       cy.c_visitResponsive('/endpoint',"desktop").then(() => {
           cy.window().then((win) => {
-          win.localStorage.setItem("config.server_url", Cypress.env('configServer'))
-          win.localStorage.setItem("config.app_id", Cypress.env('configAppId'))
+          win.localStorage.setItem("config.server_url", Cypress.env('stdConfigServer'))
+          win.localStorage.setItem("config.app_id", Cypress.env('stdConfigAppId'))
           })
         })
 
@@ -57,8 +57,8 @@ describe('Cypress test for ROW account sign up', () => {
       cy.findByRole('link', { name: 'Proof of identity' }).click();
       cy.findByText('In which country was your document issued?').should('be.visible')
       cy.findByRole('button',{name:'Next'}).should('be.disabled')
-      cy.findByLabelText('Country').type(Cypress.env("country_of_residence"))
-      cy.findByText(Cypress.env("country_of_residence")).click()
+      cy.findByLabelText('Country').type(Cypress.env("CoROnfidoROW"))
+      cy.findByText(Cypress.env("CoROnfidoROW")).click()
       cy.findByRole('button',{name:'Next'}).should('not.be.disabled')
       
     })
