@@ -1,11 +1,4 @@
-Cypress.Commands.add('c_checkTradersHubhomePage',() => {
-  cy.findByText('Total assets').should('be.visible')
-  cy.findByText('Options & Multipliers').should('be.visible')
-  cy.findByText('CFDs').should('be.visible')
-  cy.findByText('Deriv cTrader').should('be.visible')    
-  cy.contains('Other CFD Platforms').scrollIntoView().should('be.visible') 
-  cy.get('#traders-hub').scrollIntoView({ position: 'top' }) 
-  })
+
 
 Cypress.Commands.add("c_completePersonalDetails"),() => {
   cy.findByTestId('dt_dropdown_display').click()
