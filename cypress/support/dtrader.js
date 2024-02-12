@@ -1,5 +1,6 @@
 
 export const stakeAmount = '10.00'
+export const tickDuration = 4
 
 Cypress.Commands.add("c_selectSymbol", (symbolName) => {
     cy.get('.cq-symbol-select-btn', { timeout: 20000 }).should('be.visible')
@@ -36,6 +37,10 @@ Cypress.Commands.add("c_selectSymbol", (symbolName) => {
     cy.findByRole('button', { name: 'Payout' }).click()  
   })
 
+  Cypress.Commands.add("c_selectTickDuration" , ()=> {
+    cy.get(`[data-testid="tick_step_${tickDuration}"]`).click({ force: true }) // adding force true due to scss in locator
+  })
+
   Cypress.Commands.add("c_validateDurationDigits", (tradetype) => {
    if(tradetype == 'Matches/Differs' || 'Even/Odd' || 'Over/Under'){
     cy.contains('span.dc-text.dc-dropdown__display-text', 'Ticks').should('be.visible')
@@ -44,5 +49,31 @@ Cypress.Commands.add("c_selectSymbol", (symbolName) => {
     cy.findByRole('button', { name: 'End time' }).should('not.exist')
     cy.findByRole('button', { name: 'Duration' }).should('not.exist')
    }
-
   })
+  
+
+  Cypress.Commands.add("c_matchStakePayoutValue" , (tradeType, tradeTypeParentLocator)=> {
+    let stakeValueUp
+    let payoutValueUp
+    cy.c_selectTradeType('Options',tradeType)
+    cy.c_selectStakeTab()
+    cy.get(tradeTypeParentLocator).contains('.trade-container__price-info-basis', 'Payout')
+    
+    cy.get(tradeTypeParentLocator)
+    .find('.trade-container__price-info-value span.trade-container__price-info-currency')
+    .invoke('text')
+    .then((textValue) => {
+      stakeValueUp = textValue.trim().split(' ')[0]
+      cy.c_selectPayoutTab()
+      cy.get(tradeTypeParentLocator).contains('.trade-container__price-info-basis', 'Stake')
+  
+      cy.get(tradeTypeParentLocator)
+      .find('.trade-container__price-info-value span.trade-container__price-info-currency')
+      .invoke('text')
+      .then((textValue) => {
+        payoutValueUp = textValue.trim().split(' ')[0]
+        expect(stakeValueUp).to.not.equal(payoutValueUp)
+      })
+    })
+  })
+
