@@ -15,6 +15,7 @@ on:
         description: Run smoke or full test suite
         options:
         - full
+        - smoke
         - wip/CFD/testcases/MT5
         - wip/dbot/sanity-tests
         - wip/Wallets/cashier
