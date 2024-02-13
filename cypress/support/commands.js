@@ -892,7 +892,6 @@ Cypress.Commands.add('c_enterValidEmail',(sign_up_mail) => {
         win.localStorage.setItem("config.app_id", Cypress.env('configAppId'));
       }
     })    
-    // cy.findByPlaceholderText('Email').should('be.visible').type(sign_up_mail)
     cy.findByPlaceholderText('Email').as('email').should('be.visible')
     cy.get('@email').type(sign_up_mail)
     cy.findByRole('checkbox').click()
