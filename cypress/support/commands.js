@@ -892,7 +892,9 @@ Cypress.Commands.add('c_enterValidEmail',(sign_up_mail) => {
         win.localStorage.setItem("config.app_id", Cypress.env('configAppId'));
       }
     })    
-    cy.findByPlaceholderText('Email').should('be.visible').type(sign_up_mail)
+    // cy.findByPlaceholderText('Email').should('be.visible').type(sign_up_mail)
+    cy.findByPlaceholderText('Email').as('email').should('be.visible')
+    cy.get('@email').type(sign_up_mail)
     cy.findByRole('checkbox').click()
     cy.get('.error').should('not.exist')
     //cy.findByRole('button', { name: 'Create demo account' }).should('not.be.disbaled')
@@ -957,9 +959,10 @@ Cypress.Commands.add('c_personalDetails', (firstName,identity,taxResi) => {
       cy.findByLabelText('Enter your document number').type('10101010')
     }else{
       cy.log('Not IDV or Onfido')
+      cy.get('[type="radio"]').first().click({force: true});
     }
     cy.findByTestId('first_name').type(firstName)
-    cy.findByTestId('last_name').type('automatn acc')
+    cy.findByTestId('last_name').type('automation acc')
     cy.findByTestId('date_of_birth').click()
     cy.findByText('2006').click()
     cy.findByText('Feb').click()
@@ -970,7 +973,11 @@ Cypress.Commands.add('c_personalDetails', (firstName,identity,taxResi) => {
     cy.findByTestId('phone').type('12345678')
     cy.findByTestId('place_of_birth').type(taxResi)
     cy.findByText(taxResi).click()
-    cy.findByTestId('tax_residence').type(taxResi)
+    if(identity == 'MF'){
+      cy.findByTestId('citizenship').clear().type(taxResi)
+      cy.findByText(taxResi).click()
+    }
+    cy.findByTestId('tax_residence').clear().type(taxResi)
     cy.findByText(taxResi).click()
     if(identity == 'Onfido'){
       cy.findByTestId('tax_identification_number').type('1234567890');
@@ -978,15 +985,24 @@ Cypress.Commands.add('c_personalDetails', (firstName,identity,taxResi) => {
       cy.findByTestId('tax_identification_number').type('P000111111A');
     }else{
       cy.log('Not IDV or Onfido') //for MF account check
+      cy.findByTestId('tax_identification_number').type('12345678A')
     }
+    if(identity == 'MF') {
+      cy.findByTestId('dt_personal_details_container').findAllByTestId('dt_dropdown_display').eq(0).click();
+      cy.get('#Employed').click()
+      cy.findByTestId('dt_personal_details_container').findAllByTestId('dt_dropdown_display').eq(1).click();
+      cy.get('#Hedging').click()
+    } else {
     cy.findByTestId('dt_personal_details_container').findByTestId('dt_dropdown_display').click();
     cy.get('#Hedging').click()
+    }
     if(identity == 'Onfido'){
       cy.get('.dc-checkbox__box').click()
     }else if(identity == 'IDV'){
       cy.get('.dc-checkbox__box').eq(1).click()
     }else{
       cy.log('Not IDV or Onfido') //for MF account check
+      cy.get('.dc-checkbox__box').click()
     }
     //below check is to make sure previous button is working.
     cy.findByRole('button', { name: 'Previous' }).click();
@@ -995,7 +1011,6 @@ Cypress.Commands.add('c_personalDetails', (firstName,identity,taxResi) => {
 })
 
 Cypress.Commands.add('c_addressDetails',() => {
-  cy.contains('Only use an address for which you have proof of residence').should('be.visible')
   cy.findByLabelText('First line of address*').type('myaddress 1')
   cy.findByLabelText('Second line of address').type('myaddress 2')
   cy.findByLabelText('Town/City*').type('mycity')
@@ -1026,6 +1041,54 @@ Cypress.Commands.add('c_manageAccountsetting', (CoR) => {
   cy.findByLabelText('Country').type(CoR)
   cy.findByText(CoR).click()
   cy.findByRole('button',{name:'Next'}).should('not.be.disabled')
+})
+
+Cypress.Commands.add('c_completeTradingAssessment', ()=> {
+  let count = 1;
+  cy.get('[type="radio"]').first().click({force: true});
+  cy.findByRole('button', { name: 'Next' }).click();
+  cy.get('[type="radio"]').eq(1).click({force: true});
+  cy.findByRole('button', { name: 'Next' }).click();
+  while(count < 5) {
+    cy.findAllByTestId('dt_dropdown_display').eq(count).click();
+    cy.findAllByTestId('dti_list_item').eq(2).click();
+    count++;
+  }
+  cy.findByRole('button', { name: 'Next' }).click();
+  cy.get('[type="radio"]').eq(2).click({force: true});
+  cy.findByRole('button', { name: 'Next' }).click();
+  cy.get('[type="radio"]').eq(3).click({force: true});
+  cy.findByRole('button', { name: 'Next' }).click();
+  cy.get('[type="radio"]').eq(1).click({force: true});
+  cy.findByRole('button', { name: 'Next' }).click();
+  cy.get('[type="radio"]').eq(3).click({force: true});
+  cy.findByRole('button', { name: 'Next' }).click();
+})
+
+Cypress.Commands.add('c_completeFinancialAssessment', ()=> {
+  let count = 1;
+  while(count < 9) {
+    cy.findAllByTestId('dt_dropdown_display').eq(count).click();
+    cy.findAllByTestId('dti_list_item').eq(1).click();
+    count++;
+  }
+  cy.findByRole('button', { name: 'Next' }).click();
+})
+
+Cypress.Commands.add('c_addAccountMF', ()=>{
+  cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
+  cy.get('.dc-checkbox__box').eq(0).click()
+  cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
+  cy.get('.dc-checkbox__box').eq(1).click()
+  cy.findByRole('button', { name: 'Add account' }).click()
+  cy.findByRole('heading', {name: 'Deposit'}).should('be.visible');
+  cy.findByTestId('dt_modal_close_icon').click();
+  cy.findByRole('heading', { name: 'Account added' }).should('be.visible')
+  cy.findByRole('button', { name: 'Verify now' }).should('be.visible')
+  cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
+  cy.url().should('be.equal', Cypress.config('baseUrl') + '/appstore/traders-hub')
+  cy.findByRole('button', { name: 'Next' }).click();
+  cy.findByRole('button', { name: 'OK' }).click();
 })
  
 
