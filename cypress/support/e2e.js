@@ -54,8 +54,8 @@ Cypress.Commands.add("c_login", (app) => {
   } 
   else //Use production server and app id for production base url
   if (Cypress.config().baseUrl == 'https://app.deriv.com') {
-    Cypress.env("configServer", 'blue.derivws.com')
-    Cypress.env("configAppId", 16929)
+    Cypress.env("configServer", Cypress.env("prodServer"))
+    Cypress.env("configAppId", Cypress.env("prodAppId"))
   }
   else
   { 
