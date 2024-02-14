@@ -51,8 +51,13 @@ Cypress.Commands.add("c_login", (app) => {
   if (app == "doughflow") {
     Cypress.env("configServer", Cypress.env("doughflowConfigServer"))
     Cypress.env("configAppId", Cypress.env("doughflowConfigAppId"))
-  } else
-  
+  } 
+  else //Use production server and app id for production base url
+  if (Cypress.config().baseUrl == 'https://app.deriv.com') {
+    Cypress.env("configServer", 'blue.derivws.com')
+    Cypress.env("configAppId", 16929)
+  }
+  else
   { 
     Cypress.env("configServer", Cypress.env("stdConfigServer"))
     Cypress.env("configAppId", Cypress.env("stdConfigAppId"))
@@ -68,9 +73,12 @@ Cypress.Commands.add("c_login", (app) => {
 
   cy.log("server: " + Cypress.env("configServer"))
   cy.log("appId: " + Cypress.env("configAppId"))
+
+  //Do not set the server for production as it uses two servers: green & blue
+  if (Cypress.config().baseUrl != 'https://app.deriv.com') {
   localStorage.setItem("config.server_url", Cypress.env("configServer"))
   localStorage.setItem("config.app_id", Cypress.env("configAppId"))
-
+  }
   if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet") {
     cy.contains("next_wallet").then(($element) => {
       //Check if the element exists

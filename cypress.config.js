@@ -21,6 +21,8 @@ module.exports = defineConfig({
     viewPortSize: 'small',
     loginEmail: process.env.E2E_DERIV_LOGIN,
     loginPassword: process.env.E2E_DERIV_PASSWORD,
+    loginEmailProd: process.env.E2E_DERIV_LOGIN_PROD,
+    loginPasswordProd: process.env.E2E_DERIV_PASSWORD_PROD,
     doughflowLoginEmail:  process.env.E2E_DOUGHFLOW_LOGIN,
     doughflowLoginPassword: process.env.E2E_DOUGHFLOW_PASSWORD,
     qaBoxLoginEmail: process.env.E2E_QABOX_LOGIN,

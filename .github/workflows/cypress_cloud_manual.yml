@@ -81,8 +81,8 @@ jobs:
         # Send PR details to Cypress test run
         COMMIT_INFO_MESSAGE: Manual Run of "${{ github.event.inputs.suite }} tests" on "${{ github.event.inputs.environment }}"
         # Set test env variables
-        E2E_DERIV_LOGIN: ${{ secrets.E2E_DERIV_LOGIN }}
-        E2E_DERIV_PASSWORD: ${{ secrets.E2E_DERIV_PASSWORD }}
+        E2E_DERIV_LOGIN: ${{ secrets.E2E_DERIV_LOGIN_PROD || secrets.E2E_DERIV_LOGIN }}
+        E2E_DERIV_PASSWORD: ${{ secrets.E2E_DERIV_PASSWORD_PROD || secrets.E2E_DERIV_PASSWORD }}
         E2E_CONFIG_APPID: ${{ github.event.inputs.appid || secrets.E2E_CONFIG_APPID }}
         E2E_CONFIG_SERVER: ${{ env.QA_SERVER || secrets.E2E_CONFIG_SERVER }}
         E2E_OAUTH_URL: ${{ secrets.E2E_OAUTH_URL }}
