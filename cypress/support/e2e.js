@@ -53,7 +53,7 @@ Cypress.Commands.add("c_login", (app) => {
     Cypress.env("configAppId", Cypress.env("doughflowConfigAppId"))
   } 
   else //Use production server and app id for production base url
-  if (Cypress.config().baseUrl == Cypress.config().prodURL || Cypress.env.baseUrl == Cypress.config().prodURL) {
+  if (Cypress.config().baseUrl == Cypress.env('prodURL') || Cypress.env('BASE_URL') == Cypress.env('prodURL')) {
     Cypress.env("configServer", Cypress.env("prodServer"))
     Cypress.env("configAppId", Cypress.env("prodAppId"))
   }
@@ -75,7 +75,7 @@ Cypress.Commands.add("c_login", (app) => {
   cy.log("appId: " + Cypress.env("configAppId"))
 
   //Do not set the server for production as it uses two servers: green & blue
-  if (Cypress.config().baseUrl != Cypress.config().prodURL || Cypress.env.baseUrl != Cypress.config().prodURL) {
+  if (Cypress.config().baseUrl != (Cypress.env('prodURL') || Cypress.env('prodURL'))) {
   localStorage.setItem("config.server_url", Cypress.env("configServer"))
   localStorage.setItem("config.app_id", Cypress.env("configAppId"))
   }
