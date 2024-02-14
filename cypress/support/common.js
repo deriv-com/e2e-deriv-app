@@ -67,7 +67,7 @@ function getLoginToken(callback) {
     let loginPassword
     /* User production credentials if base url is production
     Else use test credentials */
-    if (Cypress.config().baseUrl == 'https://app.deriv.com/') {
+    if (Cypress.config().baseUrl == Cypress.config().prodURL || Cypress.env.baseUrl == Cypress.config().prodURL) {
       loginEmail = Cypress.env('loginEmailProd')
       loginPassword = Cypress.env('loginPasswordProd')
     } else

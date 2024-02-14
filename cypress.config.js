@@ -14,6 +14,7 @@ module.exports = defineConfig({
     chromeWebSecurity: false,
   },
   env: {
+    prodURL: 'https://app.deriv.com',
     RegionEU: '/?region=at',
     RegionROW: '/?region=za',
     skipROWTests: false,
