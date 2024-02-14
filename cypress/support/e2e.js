@@ -53,7 +53,7 @@ Cypress.Commands.add("c_login", (app) => {
     Cypress.env("configAppId", Cypress.env("doughflowConfigAppId"))
   } 
   else //Use production server and app id for production base url
-  if (Cypress.config().baseUrl == 'https://app.deriv.com') {
+  if (Cypress.config().baseUrl == 'https://app.deriv.com/') {
     Cypress.env("configServer", Cypress.env("prodServer"))
     Cypress.env("configAppId", Cypress.env("prodAppId"))
   }
