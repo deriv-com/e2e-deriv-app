@@ -75,7 +75,7 @@ Cypress.Commands.add("c_login", (app) => {
   cy.log("appId: " + Cypress.env("configAppId"))
 
   //Do not set the server for production as it uses two servers: green & blue
-  if (Cypress.config().baseUrl != 'https://app.deriv.com') {
+  if (Cypress.config().baseUrl != 'https://app.deriv.com/') {
   localStorage.setItem("config.server_url", Cypress.env("configServer"))
   localStorage.setItem("config.app_id", Cypress.env("configAppId"))
   }
