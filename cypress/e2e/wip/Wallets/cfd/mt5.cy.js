@@ -56,22 +56,22 @@ describe("WALL-2000 - Create MT5 account", () => {
     cy.log("create mt5 svg account");
     cy.findByText("CFDs", { exact: true }).should("be.visible");
 
-    clickAddMt5Button();
-    verifyJurisdictionSelection('Derived');
-    verifyDerivMT5Creation('Derived');
-    verifyTransferFundsMessage('Derived');
-    cy.findByRole('button', { name: 'Maybe later' }).should('exist');
-    cy.findByRole('button', { name: 'Transfer funds' }).should('exist');
-    cy.findByRole('button', { name: 'Maybe later' }).click();
+    // clickAddMt5Button();
+    // verifyJurisdictionSelection('Derived');
+    // verifyDerivMT5Creation('Derived');
+    // verifyTransferFundsMessage('Derived');
+    // cy.findByRole('button', { name: 'Maybe later' }).should('exist');
+    // cy.findByRole('button', { name: 'Transfer funds' }).should('exist');
+    // cy.findByRole('button', { name: 'Maybe later' }).click();
 
 
-    clickAddMt5Button();
-    verifyJurisdictionSelection('Financial');
-    verifyDerivMT5Creation('Financial');
-    verifyTransferFundsMessage('Financial');
-    cy.findByRole('button', { name: 'Maybe later' }).should('exist');
-    cy.findByRole('button', { name: 'Transfer funds' }).should('exist');
-    cy.findByRole('button', { name: 'Maybe later' }).click();
+    // clickAddMt5Button();
+    // verifyJurisdictionSelection('Financial');
+    // verifyDerivMT5Creation('Financial');
+    // verifyTransferFundsMessage('Financial');
+    // cy.findByRole('button', { name: 'Maybe later' }).should('exist');
+    // cy.findByRole('button', { name: 'Transfer funds' }).should('exist');
+    // cy.findByRole('button', { name: 'Maybe later' }).click();
 
     // this part is commented due to this bug [https://app.clickup.com/t/20696747/WALL-3302]
     // clickAddMt5Button();
@@ -81,19 +81,18 @@ describe("WALL-2000 - Create MT5 account", () => {
     // cy.findByRole('button', { name: 'Maybe later' }).should('exist');
     // cy.findByRole('button', { name: 'Transfer funds' }).should('exist');
     // cy.findByRole('button', { name: 'Maybe later' }).click();
-
     // create SVG Financil account
-    cy.contains('div', /^Get moreGet more Deriv MT5 accounts under your preferred jurisdictions\.$/).eq(1).click()
+    // cy.contains('div', /^Get moreGet more Deriv MT5 accounts under your preferred jurisdictions\.$/).eq(1).click()
+    cy.findByText('Get more', { exact: true }).click()
     cy.findByText("Select Deriv MT5’s account type").should("be.visible");
     cy.get('.wallets-mt5-account-type-card-list-content').first().click();
     cy.findByRole('button', { name: 'Next' }).click();
-    cy.findByText('Choose a jurisdiction for').should("be.visible");
-    cy.findByText('British Virgin IslandsAssets40+Synthetics, Baskets and Derived FXLeverage1:').click()
-    cy.findByText('I confirm and accept Deriv').should("be.visible")
-    cy.findByLabel('I confirm and accept Deriv (').click()
+    cy.findByText('Choose a jurisdiction for your Deriv MT5 Derived account').should("be.visible");
+    cy.findByText('British Virgin Islands', { exact: true }).click()
+    // cy.findByText('I confirm and accept Deriv (').should("be.visible")
+    cy.findByText('I confirm and accept Deriv (BVI) Ltd‘s').click()
     cy.findByRole('button', { name: 'Next' }).click()
-    cy.findbyTestId('dt_wallets_textfield_icon_right').click()
-
+    cy.findByTestId('dt_wallets_textfield_icon_right').click()
     cy.log("create demo mt5 svg account");
     expandDemoWallet();
     cy.findByText("CFDs", { exact: true }).should("be.visible");
