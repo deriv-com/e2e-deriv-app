@@ -83,6 +83,10 @@ jobs:
         # Set test env variables
         E2E_DERIV_LOGIN: ${{ secrets.E2E_DERIV_LOGIN }}
         E2E_DERIV_PASSWORD: ${{ secrets.E2E_DERIV_PASSWORD }}
+        E2E_DERIV_LOGIN_PROD: ${{secrets.E2E_DERIV_LOGIN_PROD}}
+        E2E_DERIV_PASSWORD_PROD: ${{secrets.E2E_DERIV_PASSWORD_PROD }}
+        E2E_PROD_SERVER: ${{secrets.E2E_PROD_SERVER}}
+        E2E_PROD_APPID: ${{secrets.E2E_PROD_APPID}}
         E2E_CONFIG_APPID: ${{ github.event.inputs.appid || secrets.E2E_CONFIG_APPID }}
         E2E_CONFIG_SERVER: ${{ env.QA_SERVER || secrets.E2E_CONFIG_SERVER }}
         E2E_OAUTH_URL: ${{ secrets.E2E_OAUTH_URL }}

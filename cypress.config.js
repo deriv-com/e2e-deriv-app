@@ -14,6 +14,7 @@ module.exports = defineConfig({
     chromeWebSecurity: false,
   },
   env: {
+    prodURL: 'https://app.deriv.com/',
     RegionEU: '/?region=at',
     RegionROW: '/?region=za',
     skipROWTests: false,
@@ -21,6 +22,10 @@ module.exports = defineConfig({
     viewPortSize: 'small',
     loginEmail: process.env.E2E_DERIV_LOGIN,
     loginPassword: process.env.E2E_DERIV_PASSWORD,
+    loginEmailProd: process.env.E2E_DERIV_LOGIN_PROD,
+    loginPasswordProd: process.env.E2E_DERIV_PASSWORD_PROD,
+    prodServer: process.env.E2E_PROD_SERVER,
+    prodAppId: process.env.E2E_PROD_APPID,
     doughflowLoginEmail:  process.env.E2E_DOUGHFLOW_LOGIN,
     doughflowLoginPassword: process.env.E2E_DOUGHFLOW_PASSWORD,
     qaBoxLoginEmail: process.env.E2E_QABOX_LOGIN,
