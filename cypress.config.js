@@ -59,9 +59,11 @@ module.exports = defineConfig({
     diel_country_list: ['Ecuador', 'South Africa', 'Brazil', 'Sri Lanka', 'Uruguay', 'Switzerland'],
     CoROnfidoROW: process.env.E2E_COUNTRY_OF_RESI_ROW_ONFIDO,
     CoRIDVROW: process.env.E2E_COUNTRY_OF_RESI_ROW_IDV,
+    CoRMF: process.env.E2E_COUNTRY_OF_RESI_MF,
     user_password: process.env.E2E_USERPASSWORD,
     citizenshipOnfidoROW: process.env.E2E_CITIZENSHIP_ROW_ONFIDO,
-    citizenshipIDVROW: process.env.E2E_CITIZENSHIP_ROW_IDV
+    citizenshipIDVROW: process.env.E2E_CITIZENSHIP_ROW_IDV,
+    citizenshipMF: process.env.E2E_CITIZENSHIP_MF
   },  
   retries: {
       "runMode": 2,

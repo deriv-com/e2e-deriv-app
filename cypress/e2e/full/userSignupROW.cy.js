@@ -46,6 +46,7 @@ describe('Cypress test for ROW account sign up', () => {
       cy.findByRole('button', { name: 'Get a Deriv account' }).click()
       cy.c_generateRandomName().then(firstName => {
       cy.c_personalDetails(firstName,'Onfido',Cypress.env("CoROnfidoROW"))})
+      cy.contains('Only use an address for which you have proof of residence').should('be.visible')
       cy.c_addressDetails()
       cy.c_addAccount()
       cy.c_manageAccountsetting(Cypress.env("CoROnfidoROW"))
