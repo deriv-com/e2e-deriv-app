@@ -952,5 +952,10 @@ Cypress.Commands.add("c_addAccountMF", () => {
     Cypress.config("baseUrl") + "/appstore/traders-hub"
   )
   cy.findByRole("button", { name: "Next" }).click()
+  if (Cypress.env("diel_country_list").includes(Cypress.env("citizenship"))) {
+    cy.contains("Choice of regulation").should("be.visible")
+    cy.contains("button", "Next").click()
+  }
   cy.findByRole("button", { name: "OK" }).click()
+  
 })
