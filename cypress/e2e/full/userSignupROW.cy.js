@@ -29,11 +29,10 @@ function createDemoAccount(CoR,Cit,epoch) {
 function addRealAccount(identity,taxResi){
   cy.findByTestId('dt_dropdown_display').click()
   cy.get('#real').click()
-  cy.findByRole('button', { name: 'Get a Deriv account' }).click()
+  if(identity == "Onfido"){
+    cy.get('.dc-btn').first().click()}
+  else{cy.findByRole('button', { name: 'Get a Deriv account' }).click()}
   cy.c_generateRandomName().then(firstName => {
-    cy.log('pppfirstName: ' + firstName)
-    cy.log('lllidentity: ' + identity)
-    cy.log('tqqqaxResi: ' + taxResi)
     cy.c_personalDetails(firstName,identity,taxResi)})
     if (identity == 'Onfido' ){
       cy.contains('Only use an address for which you have proof of residence').should('be.visible')
@@ -60,12 +59,10 @@ describe('Cypress test for ROW account sign up', () => {
       cy.c_enterValidEmail(sign_up_mail)
     })
     it('New account sign up ROW - Onfido supported country', () => {
-      cy.log('xxxxxxtime is onfido  =' + epoch)
       createDemoAccount(Cypress.env("CoROnfidoROW"),Cypress.env("citizenshipOnfidoROW"),epoch)
       addRealAccount('Onfido', Cypress.env("CoROnfidoROW"))
     })
     it('New account sign up ROW - IDV supported country', () => {
-      cy.log('yyyyytime is IDv  =' + epoch)
       createDemoAccount(Cypress.env("CoRIDVROW"),Cypress.env("citizenshipIDVROW"),epoch)
       addRealAccount('IDV', Cypress.env("CoRIDVROW"))
     }) 
