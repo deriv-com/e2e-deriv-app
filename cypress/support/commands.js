@@ -820,13 +820,13 @@ Cypress.Commands.add("c_personalDetails", (firstName, identity, taxResi) => {
   cy.findByTestId("phone").type("12345678")
   cy.findByTestId("place_of_birth").type(taxResi)
   cy.findByText(taxResi).click()
-  if (identity == "MF") {
+  if (identity == "MF" || identity == "DIEL") {
     cy.findByTestId("citizenship").clear().type(taxResi)
     cy.findByText(taxResi).click()
   }
   cy.findByTestId("tax_residence").clear().type(taxResi)
   cy.findByText(taxResi).click()
-  if (identity == "Onfido") {
+  if (identity == "Onfido" || identity == "DIEL") {
     cy.findByTestId("tax_identification_number").type("1234567890")
   } else if (identity == "IDV") {
     cy.findByTestId("tax_identification_number").type("P000111111A")
@@ -834,7 +834,7 @@ Cypress.Commands.add("c_personalDetails", (firstName, identity, taxResi) => {
     cy.log("Not IDV or Onfido") //for MF account check
     cy.findByTestId("tax_identification_number").type("12345678A")
   }
-  if (identity == "MF") {
+  if (identity == "MF" || identity == "DIEL") {
     cy.findByTestId("dt_personal_details_container")
       .findAllByTestId("dt_dropdown_display")
       .eq(0)
