@@ -11,10 +11,17 @@ describe("QATEST-99420: Import and run custom strategy", () => {
   const runPanel = new RunPanel();
   let totalPL;
 
+  
+
   beforeEach(() => {
     cy.c_login();
     cy.c_visitResponsive("/appstore/traders-hub", "large");
     tradersHub.openBotButton.click();
+    // cy.visit('/bot', {
+    //   onBeforeLoad(win) {
+    //     cy.stub(win, "prompt").onFirstCall().returns('5').onSecondCall().returns('4').onThirdCall().returns('1')
+    //   }
+    // })
     common.skipTour();
     common.switchToDemo();
   });
@@ -22,20 +29,18 @@ describe("QATEST-99420: Import and run custom strategy", () => {
   it("Run Martingale Old Strategy", () => {
     botDashboard.importStrategy("MartingaleOld");
     common.skipTour();
+let a = 5
 
-    //Enter Expected profit, expected Loss, and Trade Amount
+    
     cy.window().then((win) => {
-      const martingaleValues = ["5", "4", "1"]; //Expected Profit, Expected Loss, Trade Amount
-      let call = 0;
-      cy.stub(win, "prompt").callsFake(() => {
-        return martingaleValues[call++];
-      });
-      common.runBot();
-    });
+     //Enter Expected Profit, Maximum Loss Amount, and Trade Amount
+      cy.stub(win, "prompt").onFirstCall().returns('5').onSecondCall().returns('4').onThirdCall().returns('1')
+    })
+    common.runBot();
 
     //Wait for bot to complete
     common
-      .getElementWithTimeout(common.botRunButtonEl, 3200000)
+      .getElementWithTimeout(common.botRunButtonEl, 320000)
       .should("be.visible");
 
     runPanel.profitLossValue.then(($value) => {
@@ -43,7 +48,7 @@ describe("QATEST-99420: Import and run custom strategy", () => {
     });
 
     common
-      .getElementWithTimeout(runPanel.totalProfitLossEl, 3200000)
+      .getElementWithTimeout(runPanel.totalProfitLossEl, 320000)
       .then(($amt) => {
         if ($amt.hasClass("run-panel__stat-amount--positive")) {
           cy.on("window:alert", (str) => {
@@ -67,7 +72,7 @@ describe("QATEST-99420: Import and run custom strategy", () => {
     runPanel.transactionAfterFirstLoss.should("have.text", "2.00 USD");
   });
 
-  after(() => {
-    botDashboard.deleteStrategy();
-  });
+  // after(() => {
+  //   botDashboard.deleteStrategy();
+  // });
 });
