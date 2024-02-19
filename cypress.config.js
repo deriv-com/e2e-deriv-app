@@ -15,6 +15,7 @@ module.exports = defineConfig({
   },
   env: {
     prodURL: 'https://app.deriv.com/',
+    derivComProdURL: 'https://deriv.com/',
     RegionEU: '/?region=at',
     RegionROW: '/?region=za',
     skipROWTests: false,
