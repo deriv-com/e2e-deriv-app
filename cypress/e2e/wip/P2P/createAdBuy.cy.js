@@ -93,14 +93,5 @@ describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
     cy.findByText("Don’t show this message again.").should("be.visible")
     cy.findByRole("button", { name: "Ok" }).should("be.enabled").click()
 
-  
-    
-
-
-
-
-
-
-
   })
 })
