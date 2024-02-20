@@ -882,7 +882,7 @@ Cypress.Commands.add("c_addAccount", () => {
   cy.findByRole("heading", { name: "Your account is ready" }).should(
     "be.visible"
   )
-  cy.findByRole("button", { name: "Deposit" }).should("be.visible")
+  cy.get('#real_account_signup_modal').findByRole("button", { name: "Deposit" }).should("be.visible")
   cy.findByRole("button", { name: "Maybe later" }).should("be.visible").click()
   cy.url().should(
     "be.equal",
