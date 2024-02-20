@@ -14,6 +14,8 @@ module.exports = defineConfig({
     chromeWebSecurity: false,
   },
   env: {
+    prodURL: 'https://app.deriv.com/',
+    derivComProdURL: 'https://deriv.com/',
     RegionEU: '/?region=at',
     RegionROW: '/?region=za',
     skipROWTests: false,
@@ -21,6 +23,10 @@ module.exports = defineConfig({
     viewPortSize: 'small',
     loginEmail: process.env.E2E_DERIV_LOGIN,
     loginPassword: process.env.E2E_DERIV_PASSWORD,
+    loginEmailProd: process.env.E2E_DERIV_LOGIN_PROD,
+    loginPasswordProd: process.env.E2E_DERIV_PASSWORD_PROD,
+    prodServer: process.env.E2E_PROD_SERVER,
+    prodAppId: process.env.E2E_PROD_APPID,
     doughflowLoginEmail:  process.env.E2E_DOUGHFLOW_LOGIN,
     doughflowLoginPassword: process.env.E2E_DOUGHFLOW_PASSWORD,
     qaBoxLoginEmail: process.env.E2E_QABOX_LOGIN,
@@ -59,9 +65,12 @@ module.exports = defineConfig({
     diel_country_list: ['Ecuador', 'South Africa', 'Brazil', 'Sri Lanka', 'Uruguay', 'Switzerland'],
     CoROnfidoROW: process.env.E2E_COUNTRY_OF_RESI_ROW_ONFIDO,
     CoRIDVROW: process.env.E2E_COUNTRY_OF_RESI_ROW_IDV,
+    CoRMF: process.env.E2E_COUNTRY_OF_RESI_MF,
     user_password: process.env.E2E_USERPASSWORD,
     citizenshipOnfidoROW: process.env.E2E_CITIZENSHIP_ROW_ONFIDO,
-    citizenshipIDVROW: process.env.E2E_CITIZENSHIP_ROW_IDV
+    citizenshipIDVROW: process.env.E2E_CITIZENSHIP_ROW_IDV,
+    citizenshipMF: process.env.E2E_CITIZENSHIP_MF,
+    dielCountry: 'South Africa'
   },  
   retries: {
       "runMode": 2,
