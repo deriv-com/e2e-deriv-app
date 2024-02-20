@@ -149,8 +149,8 @@ Cypress.Commands.add('c_compareElementScreenshots', (elementSelector, imageName1
     cy.screenshot(`${imageName2}_${timestamp}`, { clip: { x: left, y: top, width, height } })
   })
 
-  cy.readFile(`./cypress/screenshots/${imageName1}_${timestamp}.png`, 'base64').then((img1Data) => {
-    cy.readFile(`./cypress/screenshots/${imageName2}_${timestamp}.png`, 'base64').then((img2Data) => {
+  cy.readFile(`./cypress/tempScreenshots/${imageName1}_${timestamp}.png`, 'base64').then((img1Data) => {
+    cy.readFile(`./cypress/tempScreenshots/${imageName2}_${timestamp}.png`, 'base64').then((img2Data) => {
       const img1 = PNG.sync.read(Buffer.from(img1Data, 'base64'))
       const img2 = PNG.sync.read(Buffer.from(img2Data, 'base64'))
       const { width, height } = img1
@@ -161,7 +161,7 @@ Cypress.Commands.add('c_compareElementScreenshots', (elementSelector, imageName1
         threshold: 0.1, // this threshold is to adjust the sensitivity of the mismatched pixels
       })
       
-      cy.writeFile(`./cypress/screenshots/${diffImageName}_${timestamp}.png`, PNG.sync.write(diff), 'base64')
+      cy.writeFile(`./cypress/tempScreenshots/${diffImageName}_${timestamp}.png`, PNG.sync.write(diff), 'base64')
       
       expect(mismatchedPixels).to.be.greaterThan(0) // we expect the feed is updating, so the mismatchedPixels must be more than 0 to prove differences in both screenshots
 
