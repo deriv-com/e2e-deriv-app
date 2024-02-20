@@ -63,6 +63,19 @@ function getLoginToken(callback) {
   }
 
   function getOAuthUrl(callback) {
+    let loginEmail
+    let loginPassword
+    /* User production credentials if base url is production
+    Else use test credentials */
+    if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
+      loginEmail = Cypress.env('loginEmailProd')
+      loginPassword = Cypress.env('loginPasswordProd')
+    } else
+    { 
+      loginEmail = Cypress.env('loginEmail')
+      loginPassword = Cypress.env('loginPassword')      
+    }
+
     // Step 1: Perform a GET on the OAuth Url in order to generate a CSRF token.
     cy.request({
       method: 'GET',
@@ -80,7 +93,7 @@ function getLoginToken(callback) {
       cy.log('csrfToken>>' + csrfToken);
       const cookie = response.headers['set-cookie'];
       cy.log('Cookie Test:' + response.headers['set-cookie']);
-
+      
       // Step 3: Make a POST request with the CSRF token and cookie.
       cy.request({
         method: 'POST',
@@ -88,8 +101,8 @@ function getLoginToken(callback) {
         form: false, 
         followRedirect: false, //This ensures we get a 302 status.
         body: {
-          email: Cypress.env('loginEmail'),
-          password: Cypress.env('loginPassword'),
+          email: loginEmail,
+          password: loginPassword,
           login: 'Log in',
           csrf_token: csrfToken
         },

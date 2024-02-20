@@ -3,7 +3,7 @@ import mt5tradershub from "../../Pages/mt5MFTradershubPage"
 const mt5locators=require('../../PageElements/mt5TradershubLocators.json')
 const textVal=require('../../PageElements/textValidation.json')
 
-describe("CFDS-2847- Create all MF Demo CFDs accounts via Traders Hub", () => {
+describe("QATEST-20324 - Create all MF Demo CFDs accounts via Traders Hub", () => {
         beforeEach(() => {
           cy.clearCookies()
           cy.clearLocalStorage()
