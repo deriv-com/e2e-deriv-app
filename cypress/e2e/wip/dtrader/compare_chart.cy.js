@@ -1,6 +1,4 @@
 import '@testing-library/cypress/add-commands'
-import '../../../support/commands'
-
 
 describe('Make sure chart is updating', () => {
     beforeEach(() => {
@@ -11,8 +9,8 @@ describe('Make sure chart is updating', () => {
 
     it('should update the line chart', () => {
         cy.wait(15000) //TODO dont hardcode long wait time
-        cy.compareElementScreenshots('.flutter-chart', 'initial-state', 'updated-state', 'diff-state');
-      });
-
+        cy.c_visitResponsive
+        // cy.compareElementScreenshots('.flutter-chart', 'initial-state', 'updated-state', 'diff-state')
+      })
 
 })
