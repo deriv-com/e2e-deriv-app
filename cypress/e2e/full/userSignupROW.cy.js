@@ -29,9 +29,10 @@ function createDemoAccount(CoR,Cit,epoch) {
 function addRealAccount(identity,taxResi){
   cy.findByTestId('dt_dropdown_display').click()
   cy.get('#real').click()
-  if(identity == "Onfido"){
-    cy.get('.dc-btn').first().click()}
-  else{cy.findByRole('button', { name: 'Get a Deriv account' }).click()}
+  cy.get('.dc-btn').first().click()
+  cy.get('.dc-modal-header__close').click()
+  cy.findByRole('button', { name: 'Yes' }).click();
+  cy.findByRole('button', { name: 'Get a Deriv account' }).click()
   cy.c_generateRandomName().then(firstName => {
     cy.c_personalDetails(firstName,identity,taxResi)})
     if (identity == 'Onfido' ){
@@ -42,7 +43,15 @@ function addRealAccount(identity,taxResi){
   cy.c_manageAccountsetting(taxResi)
 
 }
-
+function addRealacctfromAcctswitcher() {
+  cy.get(".traders-hub-header__setting").click()
+  cy.findByTestId('dt_acc_info').click()
+  cy.findByText('Real').click()
+  cy.findByRole('button', { name: 'Add' }).click()
+  cy.get('div').filter(':contains("Add a Deriv account")').find('[role="button"]').click()
+  cy.findByRole('button', { name: 'Yes' }).click() 
+  cy.findByText('Trader\'s Hub').click()
+}
 describe('Cypress test for ROW account sign up', () => {
   let epoch
   let counter = 0
@@ -64,6 +73,7 @@ describe('Cypress test for ROW account sign up', () => {
     })
     it('New account sign up ROW - IDV supported country', () => {
       createDemoAccount(Cypress.env("CoRIDVROW"),Cypress.env("citizenshipIDVROW"),epoch)
+      addRealacctfromAcctswitcher()
       addRealAccount('IDV', Cypress.env("CoRIDVROW"))
     }) 
 })
