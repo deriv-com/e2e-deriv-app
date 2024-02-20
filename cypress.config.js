@@ -15,6 +15,7 @@ module.exports = defineConfig({
   },
   env: {
     prodURL: 'https://app.deriv.com/',
+    derivComProdURL: 'https://deriv.com/',
     RegionEU: '/?region=at',
     RegionROW: '/?region=za',
     skipROWTests: false,
@@ -68,7 +69,8 @@ module.exports = defineConfig({
     user_password: process.env.E2E_USERPASSWORD,
     citizenshipOnfidoROW: process.env.E2E_CITIZENSHIP_ROW_ONFIDO,
     citizenshipIDVROW: process.env.E2E_CITIZENSHIP_ROW_IDV,
-    citizenshipMF: process.env.E2E_CITIZENSHIP_MF
+    citizenshipMF: process.env.E2E_CITIZENSHIP_MF,
+    dielCountry: 'South Africa'
   },  
   retries: {
       "runMode": 2,

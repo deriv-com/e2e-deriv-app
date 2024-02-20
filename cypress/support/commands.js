@@ -48,10 +48,10 @@ Cypress.Commands.add("homepage_loading", () => {
   cy.get("#dt_login_button").should("be.visible")
 
   // cy.get('#dc_stake_toggle_item')
-  //   .should('be.visible'); Commenting out this, will replace this with other checks
+  //   .should('be.visible') Commenting out this, will replace this with other checks
 
   //cy.get('#dropdown-display')
-  // .should('be.visible');
+  // .should('be.visible')
 
   cy.get(".footer").should("be.visible")
 })
@@ -766,7 +766,7 @@ Cypress.Commands.add("c_enterPassword", () => {
 })
 
 Cypress.Commands.add("c_completeOnboarding", () => {
-  for (let next_button_count = 0; next_button_count < 5; next_button_count++) {
+  for (let next_button_count = 0 next_button_count < 5 next_button_count++) {
     cy.contains("button", "Next").should("be.visible")
     cy.contains("button", "Next").click()
   }
@@ -785,7 +785,7 @@ Cypress.Commands.add("c_completeOnboarding", () => {
 Cypress.Commands.add("c_generateRandomName", () => {
   const characters = "abcdefghijklmnopqrstuvwxyz"
   let randomText = ""
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0 i < 8 i++) {
     randomText += characters.charAt(
       Math.floor(Math.random() * characters.length)
     )
@@ -952,44 +952,50 @@ Cypress.Commands.add("c_addAccountMF", () => {
     Cypress.config("baseUrl") + "/appstore/traders-hub"
   )
   cy.findByRole("button", { name: "Next" }).click()
+  if (Cypress.env("diel_country_list").includes(Cypress.env("citizenship"))) {
+    cy.contains("Choice of regulation").should("be.visible")
+    cy.contains("button", "Next").click()
+  }
   cy.findByRole("button", { name: "OK" }).click()
-  })
 
-const pixelmatch = require('pixelmatch');
-const { PNG } = require('pngjs');
+
+const pixelmatch = require('pixelmatch')
+const { PNG } = require('pngjs')
 
 Cypress.Commands.add('compareElementScreenshots', (elementSelector, imageName1, imageName2, diffImageName) => {
-  const timestamp = new Date().getTime();
+  const timestamp = new Date().getTime()
   
   // To hide the timestamp in the footer
-  cy.get('[class="dc-popover server-time"]').invoke('css', 'visibility', 'hidden');
+  cy.get('[class="dc-popover server-time"]').invoke('css', 'visibility', 'hidden')
   
   cy.get(elementSelector).then(($el) => {
-    const { top, left, width, height } = $el[0].getBoundingClientRect();
+    const { top, left, width, height } = $el[0].getBoundingClientRect()
 
-    cy.screenshot(`${imageName1}_${timestamp}`, { clip: { x: left, y: top, width, height } });
+    cy.screenshot(`${imageName1}_${timestamp}`, { clip: { x: left, y: top, width, height } })
 
-    cy.wait(2000);  // 2 seconds wait time for new tick
+    cy.wait(2000)  // 2 seconds wait time for new tick
 
-    cy.screenshot(`${imageName2}_${timestamp}`, { clip: { x: left, y: top, width, height } });
-  });
+    cy.screenshot(`${imageName2}_${timestamp}`, { clip: { x: left, y: top, width, height } })
+  })
 
   cy.readFile(`./cypress/screenshots/${imageName1}_${timestamp}.png`, 'base64').then((img1Data) => {
     cy.readFile(`./cypress/screenshots/${imageName2}_${timestamp}.png`, 'base64').then((img2Data) => {
-      const img1 = PNG.sync.read(Buffer.from(img1Data, 'base64'));
-      const img2 = PNG.sync.read(Buffer.from(img2Data, 'base64'));
-      const { width, height } = img1;
-      const diff = new PNG({ width, height });
+      const img1 = PNG.sync.read(Buffer.from(img1Data, 'base64'))
+      const img2 = PNG.sync.read(Buffer.from(img2Data, 'base64'))
+      const { width, height } = img1
+      const diff = new PNG({ width, height })
 
       
       const mismatchedPixels = pixelmatch(img1.data, img2.data, diff.data, width, height, {
         threshold: 0.1, // this threshold is to adjust the sensitivity of the mismatched pixels
-      });
+      })
       
-      cy.writeFile(`./cypress/screenshots/${diffImageName}_${timestamp}.png`, PNG.sync.write(diff), 'base64');
+      cy.writeFile(`./cypress/screenshots/${diffImageName}_${timestamp}.png`, PNG.sync.write(diff), 'base64')
       
-      expect(mismatchedPixels).to.be.greaterThan(0); // we expect the feed is updating, so the mismatchedPixels must be more than 0 to prove differences in both screenshots
+      expect(mismatchedPixels).to.be.greaterThan(0) // we expect the feed is updating, so the mismatchedPixels must be more than 0 to prove differences in both screenshots
 
-    });
-  });
-});
+    })
+
+  })
+})
+})
