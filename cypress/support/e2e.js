@@ -280,4 +280,5 @@ Cypress.Commands.add('c_emailVerificationSignUp', (verification_code,event_email
             }
           })
   })
+  
 })
