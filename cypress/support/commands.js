@@ -766,7 +766,7 @@ Cypress.Commands.add("c_enterPassword", () => {
 })
 
 Cypress.Commands.add("c_completeOnboarding", () => {
-  for (let next_button_count = 0 next_button_count < 5 next_button_count++) {
+  for (let next_button_count = 0; next_button_count < 5; next_button_count++) {
     cy.contains("button", "Next").should("be.visible")
     cy.contains("button", "Next").click()
   }
@@ -785,7 +785,7 @@ Cypress.Commands.add("c_completeOnboarding", () => {
 Cypress.Commands.add("c_generateRandomName", () => {
   const characters = "abcdefghijklmnopqrstuvwxyz"
   let randomText = ""
-  for (let i = 0 i < 8 i++) {
+  for (let i = 0; i < 8; i++) {
     randomText += characters.charAt(
       Math.floor(Math.random() * characters.length)
     )
