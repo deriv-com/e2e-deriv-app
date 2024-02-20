@@ -36,7 +36,7 @@ describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
     cy.findByText("Amount is required").should("be.visible")
     cy.findByTestId('offer_amount').click().type('10')
     // insert rate 
-    cy.findByTestId('fixed_rate_type').click().type('3')
+    cy.findByTestId('fixed_rate_type').click().type('2q')
     // verify min filed
     cy.findByTestId('min_transaction').click().type('abc')
     cy.findByText("Only numbers are allowed.").should("be.visible")
@@ -86,8 +86,12 @@ describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
     cy.findByPlaceholderText('Add').click()
     cy.findByText('Cellulant').click()
     cy.findByPlaceholderText('Add').should('not.be.exist')
-
- 
+    // Post ad 
+    cy.findByRole("button", { name: "Post ad" }).should("be.enabled").click()
+    cy.findByText("You've created an ad").should("be.visible")
+    cy.findByText("If the ad doesn't receive an order for 3 days, it will be deactivated.").should("be.visible")
+    cy.findByText("Don’t show this message again.").should("be.visible")
+    cy.findByRole("button", { name: "Ok" }).should("be.enabled").click()
 
   
     
