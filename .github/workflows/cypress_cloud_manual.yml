@@ -18,6 +18,7 @@ on:
         - smoke
         - wip/CFD/testcases/MT5
         - wip/dbot/sanity-tests
+        - wip/Wallets/cashier
         - wip/dtrader
       testlink:
         type: string
