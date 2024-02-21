@@ -736,6 +736,10 @@ Cypress.Commands.add("c_enterValidEmail", (sign_up_mail) => {
         win.localStorage.setItem("config.app_id", Cypress.env("configAppId"))
       },
     })
+    //Wait for the signup page to load completely
+    cy.findByRole("button", { name: "whatsapp icon" }).should("be.visible", {
+      timeout: 30000,
+    })
     cy.findByPlaceholderText("Email").as("email").should("be.visible")
     cy.get("@email").type(sign_up_mail)
     cy.findByRole("checkbox").click()
