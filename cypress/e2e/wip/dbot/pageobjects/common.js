@@ -88,7 +88,7 @@ class Common {
   };
 
   verifyMartingaleStrategyCompleted = (totalPL) => {
-    getElementWithTimeout("div.run-panel__stat-amount", 3200000).then(
+    getElementWithTimeout("div.run-panel__stat-amount", 320000).then(
       ($amt) => {
         if ($amt.hasClass("run-panel__stat-amount--positive")) {
           cy.on("window:alert", (str) => {
