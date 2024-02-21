@@ -22,26 +22,26 @@ Cypress.Commands.add("c_visitResponsive", (path, size) => {
 
   cy.visit(path)
 
-  // if (path.includes("region")) {
-  //   //Wait for relevent elements to appear (based on page)
-  //   cy.log("Home page Selected")
-  //   cy.findByRole("button", { name: "whatsapp icon" }).should("be.visible", {
-  //     timeout: 30000,
-  //   }) //For the home page, this seems to be the best indicator that a page has fully loaded. It may change in the future.
-  // }
+  if (path.includes("region")) {
+    //Wait for relevent elements to appear (based on page)
+    cy.log("Home page Selected")
+    cy.findByRole("button", { name: "whatsapp icon" }).should("be.visible", {
+      timeout: 30000,
+    }) //For the home page, this seems to be the best indicator that a page has fully loaded. It may change in the future.
+  }
 
-  // if (path.includes("help-centre")) {
-  //   //Wait for relevent elements to appear (based on page)
-  //   cy.log("Help Centre Selected")
-  //   cy.findByRole("heading", {
-  //     name: "Didn’t find your answer? We can help.",
-  //   }).should("be.visible", { timeout: 30000 })
-  // }
+  if (path.includes("help-centre")) {
+    //Wait for relevent elements to appear (based on page)
+    cy.log("Help Centre Selected")
+    cy.findByRole("heading", {
+      name: "Didn’t find your answer? We can help.",
+    }).should("be.visible", { timeout: 30000 })
+  }
 
-  // if (path.includes("traders-hub")) {
-  //   //Wait for relevent elements to appear (based on page)
-  //   cy.log("Trader Hub Selected")
-  // }
+  if (path.includes("traders-hub")) {
+    //Wait for relevent elements to appear (based on page)
+    cy.log("Trader Hub Selected")
+  }
 })
 
 Cypress.Commands.add("c_login", (app) => {
