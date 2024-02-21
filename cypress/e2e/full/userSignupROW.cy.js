@@ -52,7 +52,7 @@ function addRealacctfromAcctswitcher() {
   cy.findByRole('button', { name: 'Yes' }).click() 
   cy.findByText('Trader\'s Hub').click()
 }
-describe('Cypress test for ROW account sign up', () => {
+describe('QATEST-24427,5533,5827 - Cypress test for ROW account sign up', () => {
   let epoch
   let counter = 0
     beforeEach(() => {
