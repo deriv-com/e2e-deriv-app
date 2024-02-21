@@ -72,7 +72,7 @@ let a = 5
     runPanel.transactionAfterFirstLoss.should("have.text", "2.00 USD");
   });
 
-  // after(() => {
-  //   botDashboard.deleteStrategy();
-  // });
+  after(() => {
+    botDashboard.deleteStrategy();
+  });
 });
