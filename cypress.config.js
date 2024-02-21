@@ -25,6 +25,8 @@ module.exports = defineConfig({
     walletEmail: process.env.E2E_WALLETS_LOGIN,
     walletPassword: process.env.E2E_WALLET_PASSWORD,
     loginPassword: process.env.E2E_DERIV_PASSWORD,
+    p2pbuyloginEmail: process.env.E2E_P2P_BUY,
+    p2psellloginEmail: process.env.E2E_P2P_SELL,
     loginEmailProd: process.env.E2E_DERIV_LOGIN_PROD,
     loginPasswordProd: process.env.E2E_DERIV_PASSWORD_PROD,
     prodServer: process.env.E2E_PROD_SERVER,
