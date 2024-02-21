@@ -40,7 +40,7 @@ let a = 5
 
     //Wait for bot to complete
     common
-      .getElementWithTimeout(common.botRunButtonEl, 320000)
+      .getElementWithTimeout(common.botRunButtonEl, 120000)
       .should("be.visible");
 
     runPanel.profitLossValue.then(($value) => {
@@ -48,7 +48,7 @@ let a = 5
     });
 
     common
-      .getElementWithTimeout(runPanel.totalProfitLossEl, 320000)
+      .getElementWithTimeout(runPanel.totalProfitLossEl, 120000)
       .then(($amt) => {
         if ($amt.hasClass("run-panel__stat-amount--positive")) {
           cy.on("window:alert", (str) => {
