@@ -6,12 +6,13 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
       cy.c_login()
     })
 
-    function createEvenOddContract(tradeType){
+    function createOverUnderContract(tradeType){
+      cy.get('span.number-selector__selection[data-value="5"]').click()
       cy.c_selectStakeTab()
       cy.findByLabelText('Amount').clear().type(stakeAmount)
-      if(tradeType == 'Even'){
+      if(tradeType == 'Over'){
         cy.get('button.btn-purchase.btn-purchase--1').click()
-      }else if(tradeType == 'Odd'){
+      }else if(tradeType == 'Under'){
         cy.get('button.btn-purchase.btn-purchase--2').click()
       }else{
         cy.log("Please check trade type entered and locator")
@@ -24,21 +25,21 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
       cy.contains('span[data-testid="dt_span"]', stakeAmount).should('be.visible')    //verify stake amount
     }
 
-    it('Should buy Even contract from Even/Odd Trade Type', () => {
+    it('Should buy Even contract from Over/Under Trade Type', () => {
       cy.c_selectDemoAccount()
       cy.c_selectSymbol('Volatility 100 (1s) Index')
-      cy.c_selectTradeType('Options','Even/Odd')
-      createEvenOddContract('Even')
+      cy.c_selectTradeType('Options','Over/Under')
+      createOverUnderContract('Over')
       cy.get('a.dc-result__caption-wrapper', { timeout: 8000 }).should('be.visible');
       checkContractDetailsPage()  
             
     })
 
-    it('Should buy Odd contract from Even/Odd Trade Type', () => {
+    it('Should buy Odd contract from Over/Under Trade Type', () => {
       cy.c_selectDemoAccount()
       cy.c_selectSymbol('Volatility 100 (1s) Index')
-      cy.c_selectTradeType('Options','Even/Odd')
-      createEvenOddContract('Odd')
+      cy.c_selectTradeType('Options','Over/Under')
+      createOverUnderContract('Under')
       cy.get('a.dc-result__caption-wrapper', { timeout: 8000 }).should('be.visible');
       checkContractDetailsPage()
 

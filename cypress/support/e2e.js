@@ -51,8 +51,13 @@ Cypress.Commands.add("c_login", (app) => {
   if (app == "doughflow") {
     Cypress.env("configServer", Cypress.env("doughflowConfigServer"))
     Cypress.env("configAppId", Cypress.env("doughflowConfigAppId"))
-  } else
-  
+  } 
+  else //Use production server and app id for production base url
+  if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
+    Cypress.env("configServer", Cypress.env("prodServer"))
+    Cypress.env("configAppId", Cypress.env("prodAppId"))
+  }
+  else
   { 
     Cypress.env("configServer", Cypress.env("stdConfigServer"))
     Cypress.env("configAppId", Cypress.env("stdConfigAppId"))
@@ -68,9 +73,12 @@ Cypress.Commands.add("c_login", (app) => {
 
   cy.log("server: " + Cypress.env("configServer"))
   cy.log("appId: " + Cypress.env("configAppId"))
+
+  //Do not set the server for production as it uses two servers: green & blue
+  if (Cypress.config().baseUrl != Cypress.env('prodURL')) {
   localStorage.setItem("config.server_url", Cypress.env("configServer"))
   localStorage.setItem("config.app_id", Cypress.env("configAppId"))
-
+  }
   if (app == "wallets" || app == "doughflow"  || app == "demoonlywallet") {
     cy.contains("next_wallet").then(($element) => {
       //Check if the element exists
@@ -245,4 +253,32 @@ Cypress.Commands.add("c_selectDemoAccount", () => {
   cy.findByText('Demo').should('be.visible').click()
   cy.get('.dc-content-expander__content').should('be.visible').click()
   cy.findByTestId('dt_acc_info').should('be.visible')
+})
+
+Cypress.Commands.add('c_emailVerificationSignUp', (verification_code,event_email_url,epoch) => {
+
+  cy.log('env event_email_url' + Cypress.env("event_email_url"));
+  cy.log('event_email_url' + event_email_url);
+  cy.visit(`https://${Cypress.env("emailUser")}:${Cypress.env("emailPassword")}@${event_email_url}`)
+  
+  cy.origin(`https://${event_email_url}`,{ args: { epoch } },  ({ epoch }) => {        
+  
+      cy.get('a[href*="account_opening_new"]').last().click()
+      cy.contains('p', "sanity"+epoch).should('be.visible')
+      cy
+        .get("a")
+        .eq(1)
+          .invoke("attr", "href")
+          .then((href) => {
+            const code = href.match(/code=([A-Za-z0-9]{8})/)
+            if (code) {
+              verification_code = code[1]
+              Cypress.env("emailVerificationCode", verification_code)
+              cy.log("verification code generated")
+            } else {
+              cy.log("Unable to find code in the URL")
+            }
+          })
+  })
+  
 })

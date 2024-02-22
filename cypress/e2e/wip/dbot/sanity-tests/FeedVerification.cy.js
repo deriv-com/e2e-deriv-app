@@ -3,7 +3,7 @@ import "@testing-library/cypress/add-commands";
 import TradersHub from "../pageobjects/traders_hub";
 import Common from "../pageobjects/common";
 
-describe("Verify feed is loading on charts tab", () => {
+describe("QATEST-99340: Verify feed is loading on charts tab", () => {
   const tradersHub = new TradersHub();
   const common = new Common();
 

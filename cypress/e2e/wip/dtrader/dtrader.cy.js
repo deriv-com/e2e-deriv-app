@@ -50,7 +50,7 @@ describe('QATEST-5014, QATEST-5055 - Verify Main Page and Multipliers', () => {
 
   });
 
-  it.only('To check ticks are coming for different markets ', () => {
+  it('To check ticks are coming for different markets ', () => {
     cy.c_selectDemoAccount()
     
     cy.c_selectSymbol('Gold Basket')
@@ -65,8 +65,42 @@ describe('QATEST-5014, QATEST-5055 - Verify Main Page and Multipliers', () => {
     cy.c_selectSymbol('Gold/USD') //Bloomberg, oz, idataprovider provider 
     cy.c_checkSymbolTickChange(5000)
 
-
   })
 
+  function matchStakePayoutValue(tradeType, tradeTypeParentLocator){
+    let stakeValueUp
+    let payoutValueUp
+
+    cy.c_selectTradeType('Options',tradeType)
+    cy.c_selectStakeTab()
+    cy.get(tradeTypeParentLocator).contains('.trade-container__price-info-basis', 'Payout')
+    
+    cy.get(tradeTypeParentLocator)
+    .find('.trade-container__price-info-value span.trade-container__price-info-currency')
+    .invoke('text')
+    .then((textValue) => {
+      stakeValueUp = textValue.trim().split(' ')[0]
+      cy.c_selectPayoutTab()
+      cy.get(tradeTypeParentLocator).contains('.trade-container__price-info-basis', 'Stake')
+  
+      cy.get(tradeTypeParentLocator)
+      .find('.trade-container__price-info-value span.trade-container__price-info-currency')
+      .invoke('text')
+      .then((textValue) => {
+        payoutValueUp = textValue.trim().split(' ')[0]
+        expect(stakeValueUp).to.not.equal(payoutValueUp)
+      })
+    })
+  }
+
+  it.only('To check on switching Stake and Payout tab', () => {
+    cy.c_selectDemoAccount()
+    cy.c_selectSymbol('Volatility 100 (1s) Index')
+
+    matchStakePayoutValue('Rise/Fall', '#dt_purchase_call_price' )
+    matchStakePayoutValue('Matches/Differs', '#dt_purchase_digitmatch_price' )
+    matchStakePayoutValue('Higher/Lower', '#dt_purchase_call_price' )    
+    
+  })
 
 })
