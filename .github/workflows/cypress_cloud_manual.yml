@@ -102,5 +102,5 @@ jobs:
         E2E_QABOX_LOGIN: ${{ secrets.E2E_QABOX_LOGIN }}
         E2E_QABOX_PASSWORD: ${{ secrets.E2E_QABOX_PASSWORD }}
 
-run-name: Manual run of ${{github.event.inputs.suite}} tests on ${{github.env.TEST_URL || github.event.inputs.environment}}       
+run-name: Manual run of ${{github.event.inputs.suite}} tests on ${{github.event.inputs.testlink || github.event.inputs.environment}}       
         
