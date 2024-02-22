@@ -1,4 +1,5 @@
 name: Run Cypress Tests
+run-name: Manual run of ${{github.event.inputs.suite}} tests on ${{github.env.CYPRESS_BASE_URL}} 
 
 on:
   workflow_dispatch:
