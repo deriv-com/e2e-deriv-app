@@ -10,7 +10,6 @@ describe('QATEST-6247 - Verify if chart streaming is working with feeds', () => 
     })
 
     it('should update the line chart', () => {
-        cy.c_visitResponsive
         cy.get('flt-glass-pane').should('exist');
         cy.wait(10000) //need to wait for 10 seconds because there is no deterministic way to ensure that the chart has started streaming
         cy.c_compareElementScreenshots('.flutter-chart', 'initial-state', 'updated-state', 'diff-state')
