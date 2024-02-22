@@ -1,5 +1,9 @@
 import '@testing-library/cypress/add-commands'
 
+let marketRate
+let rate = 0.01
+let ratecalculation
+
 describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
   beforeEach(() => {
     cy.c_login()
@@ -36,71 +40,96 @@ describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
     cy.findByText("Amount is required").should("be.visible")
     cy.findByTestId('offer_amount').click().type('10')
     // insert rate 
-    cy.findByTestId('float_rate_type').click().clear().type('0.01')
-    cy.get('#floating_rate_input_add').click({ force: true }).click({ force: true })
-    cy.get('#floating_rate_input_sub').click({ force: true })
+    cy.findByTestId('float_rate_type').click().clear()
+    cy.findByText("Floating rate is required").should("be.visible")
+    cy.findByTestId('float_rate_type').click().clear().type('abc')
+    cy.findByText("Floating rate is required").should("be.visible")
+    cy.findByTestId('float_rate_type').click().clear().type('10abc')
+    cy.findByTestId('float_rate_type').invoke('val').should('eq', '10')
+    cy.findByTestId('float_rate_type').click().clear().type('!@#')
+    cy.findByText("Floating rate is required").should("be.visible")
+    cy.findByTestId('float_rate_type').click().clear().type('1234')
+    cy.findByText("Enter a value that's within -10.00% to +10.00%").should("be.visible")
+    cy.findByTestId('float_rate_type').click().clear().type(rate, { parseSpecialCharSequences: false })
+    cy.get('.floating-rate__mkt-rate').invoke('text').then((text) => {
+      const match = text.match(/of the market rate1 USD = (\d+(\.\d+)?)/)
+      if (match) {
+        // Extracted value is available in match[1]
+        marketRate = parseFloat(match[1])
+        ratecalculation = rate * 0.001
+        const calculatedValue = (rate * marketRate) + marketRate
+        const regexPattern = new RegExp(`Your rate is = ${calculatedValue.toFixed(6)} NZD`);
+        cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern);
+        cy.get('#floating_rate_input_add').click({ force: true }).click({ force: true })
+        rate = rate + 0.02
+        ratecalculation = rate * 0.001
+        cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern);
+        cy.get('#floating_rate_input_sub').click({ force: true })
+        rate = rate - 0.01
+        ratecalculation = rate * 0.001
+        cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern);
+      }
+      else {
+        throw new Error('Text does not match the expected pattern');
+      }
 
+    })
+      cy.findByTestId('fixed_rate_type').click().type('2q')
+      // verify min filed
+      cy.findByTestId('min_transaction').click().type('abc')
+      cy.findByText("Only numbers are allowed.").should("be.visible")
+      cy.findByTestId('min_transaction').click().clear().type('123abc')
+      cy.findByText("Only numbers are allowed.").should("be.visible")
+      cy.findByTestId('min_transaction').click().clear().type('!@#')
+      cy.findByText("Only numbers are allowed.").should("be.visible")
+      cy.findByTestId('min_transaction').click().clear().type('1234567890123456')
+      cy.findByTestId('min_transaction').should('have.value', '123456789012345')
+      cy.findByTestId('min_transaction').click().clear()
+      cy.findByText("Min limit is required").should("be.visible")
+      cy.findByTestId('min_transaction').click().type('11')
+      cy.findByText("Amount should not be below Min limit").should("be.visible")
+      cy.findByText("Min limit should not exceed Amount").should("be.visible")
+      cy.findByTestId('min_transaction').click().clear().type('5')
+      // verify max filed
+      cy.findByTestId('max_transaction').click().type('abc')
+      cy.findByText("Only numbers are allowed.").should("be.visible")
+      cy.findByTestId('max_transaction').click().clear().type('123abc')
+      cy.findByText("Only numbers are allowed.").should("be.visible")
+      cy.findByTestId('max_transaction').click().clear().type('!@#')
+      cy.findByText("Only numbers are allowed.").should("be.visible")
+      cy.findByTestId('max_transaction').click().clear().type('1234567890123456')
+      cy.findByTestId('max_transaction').should('have.value', '123456789012345')
+      cy.findByTestId('max_transaction').click().clear()
+      cy.findByText("Max limit is required").should("be.visible")
+      cy.findByTestId('max_transaction').click().type('11')
+      cy.findByText("Amount should not be below Max limit").should("be.visible")
+      cy.findByText("Max limit should not exceed Amount").should("be.visible")
+      cy.findByTestId('max_transaction').click().clear().type('10')
+      // verify tooltip 
+      cy.findByTestId('dt_order_time_selection_info_icon').click()
+      cy.contains("Orders will expire if they aren’t completed within this time.")
+      cy.findByRole("button", { name: "Ok" }).click()
+      // verify completion order dropdown 
+      cy.findByText("1 hour").should("be.visible")
+      cy.findByTestId('dt_dropdown_display').click()
+      cy.findByText("45 minutes").should("be.visible")
+      cy.findByText("30 minutes").should("be.visible")
+      cy.findByText("15 minutes").should("be.visible")
+      cy.xpath('//*[@id=900]').click()
+      // add payment method 
+      cy.findByPlaceholderText('Add').click()
+      cy.findByText('Bank Transfer').click()
+      cy.findByPlaceholderText('Add').click()
+      cy.findByText('Cassava Remit').click()
+      cy.findByPlaceholderText('Add').click()
+      cy.findByText('Cellulant').click()
+      cy.findByPlaceholderText('Add').should('not.be.exist')
+      // Post ad 
+      cy.findByRole("button", { name: "Post ad" }).should("be.enabled").click()
+      cy.findByText("You've created an ad").should("be.visible")
+      cy.findByText("If the ad doesn't receive an order for 3 days, it will be deactivated.").should("be.visible")
+      cy.findByText("Don’t show this message again.").should("be.visible")
+      cy.findByRole("button", { name: "Ok" }).should("be.enabled").click()
     
-    
-   
-
-
-    // cy.findByTestId('fixed_rate_type').click().type('2q')
-    // // verify min filed
-    // cy.findByTestId('min_transaction').click().type('abc')
-    // cy.findByText("Only numbers are allowed.").should("be.visible")
-    // cy.findByTestId('min_transaction').click().clear().type('123abc')
-    // cy.findByText("Only numbers are allowed.").should("be.visible")
-    // cy.findByTestId('min_transaction').click().clear().type('!@#')
-    // cy.findByText("Only numbers are allowed.").should("be.visible")
-    // cy.findByTestId('min_transaction').click().clear().type('1234567890123456')
-    // cy.findByTestId('min_transaction').should('have.value', '123456789012345')
-    // cy.findByTestId('min_transaction').click().clear()
-    // cy.findByText("Min limit is required").should("be.visible")
-    // cy.findByTestId('min_transaction').click().type('11')
-    // cy.findByText("Amount should not be below Min limit").should("be.visible")
-    // cy.findByText("Min limit should not exceed Amount").should("be.visible")
-    // cy.findByTestId('min_transaction').click().clear().type('5')
-    // // verify max filed
-    // cy.findByTestId('max_transaction').click().type('abc')
-    // cy.findByText("Only numbers are allowed.").should("be.visible")
-    // cy.findByTestId('max_transaction').click().clear().type('123abc')
-    // cy.findByText("Only numbers are allowed.").should("be.visible")
-    // cy.findByTestId('max_transaction').click().clear().type('!@#')
-    // cy.findByText("Only numbers are allowed.").should("be.visible")
-    // cy.findByTestId('max_transaction').click().clear().type('1234567890123456')
-    // cy.findByTestId('max_transaction').should('have.value', '123456789012345')
-    // cy.findByTestId('max_transaction').click().clear()
-    // cy.findByText("Max limit is required").should("be.visible")
-    // cy.findByTestId('max_transaction').click().type('11')
-    // cy.findByText("Amount should not be below Max limit").should("be.visible")
-    // cy.findByText("Max limit should not exceed Amount").should("be.visible")
-    // cy.findByTestId('max_transaction').click().clear().type('10')
-    // // verify tooltip 
-    // cy.findByTestId('dt_order_time_selection_info_icon').click()
-    // cy.contains("Orders will expire if they aren’t completed within this time.")
-    // cy.findByRole("button", { name: "Ok" }).click()
-    // // verify completion order dropdown 
-    // cy.findByText("1 hour").should("be.visible")
-    // cy.findByTestId('dt_dropdown_display').click()
-    // cy.findByText("45 minutes").should("be.visible")
-    // cy.findByText("30 minutes").should("be.visible")
-    // cy.findByText("15 minutes").should("be.visible")
-    // cy.xpath('//*[@id=900]').click()
-    // // add payment method 
-    // cy.findByPlaceholderText('Add').click()
-    // cy.findByText('Bank Transfer').click()
-    // cy.findByPlaceholderText('Add').click()
-    // cy.findByText('Cassava Remit').click()
-    // cy.findByPlaceholderText('Add').click()
-    // cy.findByText('Cellulant').click()
-    // cy.findByPlaceholderText('Add').should('not.be.exist')
-    // // Post ad 
-    // cy.findByRole("button", { name: "Post ad" }).should("be.enabled").click()
-    // cy.findByText("You've created an ad").should("be.visible")
-    // cy.findByText("If the ad doesn't receive an order for 3 days, it will be deactivated.").should("be.visible")
-    // cy.findByText("Don’t show this message again.").should("be.visible")
-    // cy.findByRole("button", { name: "Ok" }).should("be.enabled").click()
-
   })
 })
