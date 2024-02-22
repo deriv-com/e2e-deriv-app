@@ -1,4 +1,5 @@
 name: Run Cypress Tests 
+run-name: Manual run of ${{github.event.inputs.suite}} tests on ${{github.event.inputs.testlink || github.event.inputs.environment}} 
 
 on:
   workflow_dispatch:
@@ -100,7 +101,5 @@ jobs:
         E2E_QABOX_URL: ${{ secrets.E2E_QABOX_URL }}
         E2E_MAIN_QABOX_URL: ${{ secrets.E2E_MAIN_QABOX_URL }}
         E2E_QABOX_LOGIN: ${{ secrets.E2E_QABOX_LOGIN }}
-        E2E_QABOX_PASSWORD: ${{ secrets.E2E_QABOX_PASSWORD }}
-
-run-name: Manual run of ${{github.event.inputs.suite}} tests on ${{github.event.inputs.testlink || github.event.inputs.environment}}       
+        E2E_QABOX_PASSWORD: ${{ secrets.E2E_QABOX_PASSWORD }}      
         
