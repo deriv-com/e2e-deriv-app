@@ -5,7 +5,6 @@ describe("P2P - Edit Payment Methods", () => {
     beforeEach(() => {
         cy.c_login()
         cy.c_visitResponsive('/appstore/traders-hub', 'small')
-        //        cy.fixture('cypress/e2e/wip/P2P/fixture/paymentMethodsWithData.json').as('paymentMethodAndData')
     })
 
     it('should be able to edit the existing payment methods', () => {
