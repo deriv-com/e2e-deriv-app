@@ -11,8 +11,6 @@ describe("QATEST-109419: Run custom strategy Even Odd", () => {
   const runPanel = new RunPanel();
   let beforePurchaseBalanceString;
   let beforePurchaseBalanceNumber;
-  let afterPurchaseBalanceString;
-  let totalPL;
 
   beforeEach(() => {
     cy.c_login();
@@ -37,23 +35,6 @@ describe("QATEST-109419: Run custom strategy Even Odd", () => {
     common.runBot();
     common.stopBot(7000);
     runPanel.transactionsTab.click(); //Switch to transactions tab
-    // runPanel.journalTab.click();
-    // runPanel.runPanelScrollbar
-    //   .scrollTo("bottom", { ensureScrollable: false })
-    //   .then(() => {
-    //     runPanel.secondBeforePurchaseText.then(($el) => {
-    //       afterPurchaseBalanceString = $el
-    //         .text()
-    //         .replace("[BEFORE_PURCHASE]:", "[AFTER_PURCHASE]:");
-    //       runPanel.afterPurchase.should(
-    //         "contain.text",
-    //         afterPurchaseBalanceString
-    //       );
-    //     });
-    //     runPanel.beforePurchase.should(
-    //       "contain.text",
-    //       `[BEFORE_PURCHASE]:   Number:  ${beforePurchaseBalanceNumber}      --      String:  ${beforePurchaseBalanceString}`
-    //     );
       });
   });
     
