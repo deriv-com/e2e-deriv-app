@@ -744,7 +744,6 @@ Cypress.Commands.add("c_enterValidEmail", (sign_up_mail) => {
     cy.get("@email").type(sign_up_mail)
     cy.findByRole("checkbox").click()
     cy.get(".error").should("not.exist")
-    //cy.findByRole('button', { name: 'Create demo account' }).should('not.be.disbaled')
     cy.findByRole("button", { name: "Create demo account" }).click()
     cy.findByRole("heading", { name: "Check your email" }).should("be.visible")
   }
