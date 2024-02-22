@@ -797,15 +797,6 @@ Cypress.Commands.add("c_generateRandomName", () => {
   return "cypress " + randomText
 })
 
-Cypress.Commands.add('navigate_to_poi' , (country) => {
-  cy.get('a[href="/account/personal-details"]').click()
-  cy.get('a[href="/account/proof-of-identity"]').click()
-  cy.get('input[name="country_input"]').click()
-  cy.get('input[name="country_input"]').type(country);
-  cy.contains(country).click()
-  cy.contains('button', 'Next').click()
-})
-
 Cypress.Commands.add("c_personalDetails", (firstName, identity, taxResi) => {
   cy.findByText("US Dollar").click()
   cy.findByRole("button", { name: "Next" }).click()
