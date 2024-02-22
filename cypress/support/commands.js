@@ -48,10 +48,10 @@ Cypress.Commands.add("homepage_loading", () => {
   cy.get("#dt_login_button").should("be.visible")
 
   // cy.get('#dc_stake_toggle_item')
-  //   .should('be.visible'); Commenting out this, will replace this with other checks
+  //   .should('be.visible') Commenting out this, will replace this with other checks
 
   //cy.get('#dropdown-display')
-  // .should('be.visible');
+  // .should('be.visible')
 
   cy.get(".footer").should("be.visible")
 })
@@ -961,5 +961,5 @@ Cypress.Commands.add("c_addAccountMF", () => {
     cy.contains("button", "Next").click()
   }
   cy.findByRole("button", { name: "OK" }).click()
-  
+
 })

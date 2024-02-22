@@ -47,6 +47,9 @@ jobs:
       with:
         repository: deriv-com/e2e-deriv-app # Replace with your repository name
     
+    - name: Install pixelmatch
+      run: npm install pixelmatch
+      
     - name: Create server URL
       if: ${{github.event.inputs.qabox !='' }}
       run: echo QA_SERVER=qa"${{github.event.inputs.qabox}}".deriv.dev >> $GITHUB_ENV
