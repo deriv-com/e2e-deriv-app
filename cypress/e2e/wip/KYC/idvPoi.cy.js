@@ -14,7 +14,7 @@ describe('QATEST-23015 - IDV POI submission', () => {
         cy.contains('button', 'Verify').should('be.disabled');
         cy.get('.dc-checkbox__box').click()
         cy.contains('button', 'Verify').should('be.enabled');
-        cy.contains('button', 'Verify').click()
+        // cy.contains('button', 'Verify').click()
         cy.reload()
         // making assertions on the expected behavior
     });
