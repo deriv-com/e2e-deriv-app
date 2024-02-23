@@ -7,7 +7,6 @@ function generate_epoch() {
 describe("QATEST-5699: Create a Financial Demo CFD account", () => {
   const epoch = generate_epoch()
   const sign_up_mail = `sanity${epoch}+mt5financialdemo@deriv.com`
-  let verification_code
 
   beforeEach(() => {
     localStorage.setItem("config.server_url", Cypress.env("stdConfigServer"))
@@ -17,12 +16,7 @@ describe("QATEST-5699: Create a Financial Demo CFD account", () => {
     cy.c_enterValidEmail(sign_up_mail)
   })
   it("Verify I can signup for a demo financial CFD account", () => {
-    cy.wait(5000)
-    cy.c_emailVerificationSignUp(
-      verification_code,
-      Cypress.env("event_email_url"),
-      epoch
-    )
+    cy.c_emailVerificationSignUp(epoch)
     cy.then(() => {
       cy.c_visitResponsive("/endpoint", "desktop").then(() => {
         cy.window().then((win) => {
@@ -36,15 +30,7 @@ describe("QATEST-5699: Create a Financial Demo CFD account", () => {
           )
         })
       })
-
-      verification_code = Cypress.env("emailVerificationCode")
-      const today = new Date()
-      const signupUrl = `${Cypress.config(
-        "baseUrl"
-      )}/redirect?action=signup&lang=EN_US&code=${verification_code}&date_first_contact=${
-        today.toISOString().split("T")[0]
-      }&signup_device=desktop`
-      cy.c_visitResponsive(signupUrl, "desktop")
+      cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop")
       cy.get("h1").contains("Select your country and").should("be.visible")
       cy.c_selectCountryOfResidence(Cypress.env("CoROnfidoROW"))
       cy.c_selectCitizenship(Cypress.env("citizenshipOnfidoROW"))
