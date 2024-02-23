@@ -3,6 +3,10 @@ import '@testing-library/cypress/add-commands'
 let marketRate
 let rate = 0.01
 let ratecalculation
+let calculatedValue
+let roundedValue
+let regexPattern
+const decimalPlacesToSkip = 1
 
 describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
   beforeEach(() => {
@@ -56,17 +60,24 @@ describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
       if (match) {
         // Extracted value is available in match[1]
         marketRate = parseFloat(match[1])
-        ratecalculation = rate * 0.001
-        const calculatedValue = (rate * marketRate) + marketRate
-        const regexPattern = new RegExp(`Your rate is = ${calculatedValue.toFixed(6)} NZD`);
-        cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern);
+        ratecalculation = rate * 0.01
+        calculatedValue = ratecalculation * marketRate + marketRate
+        regexPattern = new RegExp(`Your rate is = ${calculatedValue.toFixed(5 - decimalPlacesToSkip)}\\d{${decimalPlacesToSkip}} NZD`);
+        cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
+        // Verify clicking plus button twice 
         cy.get('#floating_rate_input_add').click({ force: true }).click({ force: true })
         rate = rate + 0.02
-        ratecalculation = rate * 0.001
+        ratecalculation = rate * 0.01 
+        calculatedValue = ratecalculation * marketRate + marketRate
+        regexPattern = new RegExp(`Your rate is = ${calculatedValue.toFixed(6 - decimalPlacesToSkip)}\\d{${decimalPlacesToSkip}} NZD`);
         cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern);
+        // // verify minus button once  
         cy.get('#floating_rate_input_sub').click({ force: true })
         rate = rate - 0.01
-        ratecalculation = rate * 0.001
+        ratecalculation = rate * 0.01
+        calculatedValue = ratecalculation * marketRate + marketRate
+        regexPattern = new RegExp(`Your rate is = ${calculatedValue.toFixed(6 - decimalPlacesToSkip)}\\d{${decimalPlacesToSkip}} NZD`);
+        console.log('regexPattern>>', regexPattern);
         cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern);
       }
       else {
@@ -74,7 +85,6 @@ describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
       }
 
     })
-      cy.findByTestId('fixed_rate_type').click().type('2q')
       // verify min filed
       cy.findByTestId('min_transaction').click().type('abc')
       cy.findByText("Only numbers are allowed.").should("be.visible")
@@ -118,18 +128,18 @@ describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
       cy.xpath('//*[@id=900]').click()
       // add payment method 
       cy.findByPlaceholderText('Add').click()
+      cy.findByText('Other').click()
+      cy.findByPlaceholderText('Add').click()
       cy.findByText('Bank Transfer').click()
       cy.findByPlaceholderText('Add').click()
-      cy.findByText('Cassava Remit').click()
-      cy.findByPlaceholderText('Add').click()
-      cy.findByText('Cellulant').click()
+      cy.findByText('Skrill').click()
       cy.findByPlaceholderText('Add').should('not.be.exist')
       // Post ad 
       cy.findByRole("button", { name: "Post ad" }).should("be.enabled").click()
       cy.findByText("You've created an ad").should("be.visible")
       cy.findByText("If the ad doesn't receive an order for 3 days, it will be deactivated.").should("be.visible")
       cy.findByText("Don’t show this message again.").should("be.visible")
-      cy.findByRole("button", { name: "Ok" }).should("be.enabled").click()
+      cy.findByRole("button", { name: "Ok" }).should("be.enabled").click() 
     
   })
 })
