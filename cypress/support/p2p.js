@@ -6,7 +6,7 @@ Cypress.Commands.add('redirectToP2P', () => {
     cy.get('.dc-mobile-drawer__body > :nth-child(4)').should("be.visible").click()
     // click on P2P 
     cy.findByText("Deriv P2P").should("be.visible").click()
-    // confirm warning messageF
+    // confirm warning message
     cy.get('.dc-checkbox__box').should("be.visible").click()
     cy.findByRole("button", { name: "Confirm" }).click()
   })
