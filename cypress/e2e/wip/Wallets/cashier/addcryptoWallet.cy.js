@@ -4,6 +4,7 @@ function addcryptowallet(){
     .find('button')
     .then((buttons) => {
     const buttoncount = buttons.filter((index, button) => Cypress.$(button).text().trim() === 'Add').length // To get the exact match of the text
+    const addedbuttoncount = buttons.filter((index, button) => Cypress.$(button).text().trim() === 'Added').length // To get the number of added buttons
     cy.log(`Number of buttons": ${buttoncount}`)
     if (buttoncount >0) {
      cy.log ('Button with text "Add" found') 
