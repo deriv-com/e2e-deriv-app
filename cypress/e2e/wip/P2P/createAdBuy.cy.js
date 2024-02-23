@@ -16,19 +16,6 @@ Cypress.Commands.add('verifyExchangeRate', () => {
   cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern);
 })
 
-Cypress.Commands.add('redirectToP2P', () => {
-  // click on hamburger menu
-  cy.get("#dt_mobile_drawer_toggle").should("be.visible")
-  cy.get("#dt_mobile_drawer_toggle").click()
-  // click on cashier 
-  cy.get('.dc-mobile-drawer__body > :nth-child(4)').should("be.visible").click()
-  // click on P2P 
-  cy.findByText("Deriv P2P").should("be.visible").click()
-  // confirm warning messageF
-  cy.get('.dc-checkbox__box').should("be.visible").click()
-  cy.findByRole("button", { name: "Confirm" }).click()
-})
-
 Cypress.Commands.add('createNewAd', () => {
   // click on ads tab
   cy.get('.notification__close-button').should("be.visible").click()

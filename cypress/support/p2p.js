@@ -1,3 +1,17 @@
+Cypress.Commands.add('redirectToP2P', () => {
+    // click on hamburger menu
+    cy.get("#dt_mobile_drawer_toggle").should("be.visible")
+    cy.get("#dt_mobile_drawer_toggle").click()
+    // click on cashier 
+    cy.get('.dc-mobile-drawer__body > :nth-child(4)').should("be.visible").click()
+    // click on P2P 
+    cy.findByText("Deriv P2P").should("be.visible").click()
+    // confirm warning messageF
+    cy.get('.dc-checkbox__box').should("be.visible").click()
+    cy.findByRole("button", { name: "Confirm" }).click()
+  })
+  
+
 Cypress.Commands.add('postBuyAd', () => {
     cy.findByTestId('offer_amount').click().type('10')
     cy.findByTestId('float_rate_type').click().clear().type(rate, { parseSpecialCharSequences: false })
