@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
 
-describe('IDV POI submission', () => {
+describe('QATEST-23015 - IDV POI submission', () => {
     beforeEach(()=> {
         cy.c_login();
         cy.navigate_to_poi('Ghana');
