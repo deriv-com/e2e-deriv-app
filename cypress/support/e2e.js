@@ -255,30 +255,39 @@ Cypress.Commands.add("c_selectDemoAccount", () => {
   cy.findByTestId('dt_acc_info').should('be.visible')
 })
 
-Cypress.Commands.add('c_emailVerificationSignUp', (verification_code,event_email_url,epoch) => {
+Cypress.Commands.add("c_emailVerificationSignUp", (epoch, retryCount = 0, maxRetries = 3) => {
+  const authUrl = `https://${Cypress.env("emailUser")}:${Cypress.env("emailPassword")}@${Cypress.env("event_email_url")}`
+  cy.visit(authUrl, {log: false})
 
-  cy.log('env event_email_url' + Cypress.env("event_email_url"));
-  cy.log('event_email_url' + event_email_url);
-  cy.visit(`https://${Cypress.env("emailUser")}:${Cypress.env("emailPassword")}@${event_email_url}`)
-  
-  cy.origin(`https://${event_email_url}`,{ args: { epoch } },  ({ epoch }) => {        
-  
-      cy.get('a[href*="account_opening_new"]').last().click()
-      cy.contains('p', "sanity"+epoch).should('be.visible')
-      cy
-        .get("a")
-        .last()
-          .invoke("attr", "href")
-          .then((href) => {
-            const code = href.match(/code=([A-Za-z0-9]{8})/)
-            if (code) {
-              verification_code = code[1]
-              Cypress.env("emailVerificationCode", verification_code)
-              cy.log("verification code generated")
-            } else {
-              cy.log("Unable to find code in the URL")
-            }
-          })
+  cy.origin(`https://${Cypress.env("event_email_url")}`, { args: { epoch} }, ({ epoch}) => {
+    cy.document().then((doc) => {
+      const allSignupEmails = Array.from(doc.querySelectorAll('a[href*="account_opening_new"]'))
+          if (allSignupEmails.length) {
+            const signUpEmail = allSignupEmails.pop()          
+            cy.wrap(signUpEmail).click()
+            cy.contains('p', `sanity${epoch}`).should('be.visible')
+            cy.get('a').last().invoke('attr', 'href').then((href) => {
+                  if (href) {
+                      Cypress.env('signUpUrl', href);
+                      cy.log('Sign up URL found')
+                  } else {
+                    cy.log('Sign up URL not found')
+                  }
+              })
+          } else {
+            cy.log('Sign up email not found')
+          }
+      })
   })
-  
+  cy.then(()=>{
+      //Retry finding email after 1 second interval
+      if (retryCount <= maxRetries && !Cypress.env("signUpUrl")) {
+        cy.log(`Retrying... Attempt number: ${retryCount + 1}`);
+        cy.wait(1000);
+        cy.c_emailVerificationSignUp(epoch, ++retryCount)
+      } 
+      if (retryCount > maxRetries) {
+        throw new Error(`Signup URL extraction failed after ${maxRetries} attempts.`)
+      }  
+  })  
 })

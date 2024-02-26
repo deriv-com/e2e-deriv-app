@@ -8,7 +8,6 @@ function generate_epoch() {
 describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
   const epoch = generate_epoch()
   const sign_up_mail = `sanity${epoch}dielmfcr@deriv.com`
-  let verification_code
 
   beforeEach(() => {
     localStorage.setItem("config.server_url", Cypress.env("stdConfigServer"))
@@ -19,12 +18,7 @@ describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
   })
   it("Verify I can signup for a DIEL demo and real account", () => {
     Cypress.env("citizenship", Cypress.env("dielCountry"))
-    cy.wait(5000)
-    cy.c_emailVerificationSignUp(
-      verification_code,
-      Cypress.env("event_email_url"),
-      epoch
-    )
+    cy.c_emailVerificationSignUp(epoch)
     cy.then(() => {
       cy.c_visitResponsive("/endpoint", "desktop").then(() => {
         cy.window().then((win) => {
@@ -38,15 +32,7 @@ describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
           )
         })
       })
-
-      verification_code = Cypress.env("emailVerificationCode")
-      const today = new Date()
-      const signupUrl = `${Cypress.config(
-        "baseUrl"
-      )}/redirect?action=signup&lang=EN_US&code=${verification_code}&date_first_contact=${
-        today.toISOString().split("T")[0]
-      }&signup_device=desktop`
-      cy.c_visitResponsive(signupUrl, "desktop")
+      cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop")
       cy.get("h1").contains("Select your country and").should("be.visible")
       cy.c_selectCountryOfResidence(Cypress.env("dielCountry"))
       cy.c_selectCitizenship(Cypress.env("dielCountry"))
@@ -60,8 +46,8 @@ describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
     cy.get(regulationText).should("have.text", "EU")
     cy.findByRole("button", { name: "Get a Deriv account" }).click()
     cy.c_generateRandomName().then((firstName) => {
-        cy.c_personalDetails(firstName, "DIEL", Cypress.env("dielCountry"))
-      })
+      cy.c_personalDetails(firstName, "DIEL", Cypress.env("dielCountry"))
+    })
     cy.c_addressDetails()
     cy.c_completeTradingAssessment()
     cy.c_completeFinancialAssessment()
