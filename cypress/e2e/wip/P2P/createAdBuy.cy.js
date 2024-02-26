@@ -9,18 +9,18 @@ describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
   })
 
   it('should be able to create buy type advert and verify all fields and messages', () => {
-    cy.redirectToP2P()
-    cy.createNewAd()
-    cy.verifyAmountFiled()
-    cy.verifyRate()
+    cy.c_redirectToP2P()
+    cy.c_createNewAd()
+    cy.c_verifyAmountFiled()
+    cy.c_verifyRate()
     // verify min filed 
-    cy.verifyMaxMin('min_transaction', 5, 'Min')
+    cy.c_verifyMaxMin('min_transaction', 5, 'Min')
     // verify max filed 
-    cy.verifyMaxMin('max_transaction', 10, 'Max')
-    cy.verifyTooltip()
-    cy.verifyCompletionOrderDropdown()
-    cy.addPaymentMethod()
-    cy.verifyPostAd()
+    cy.c_verifyMaxMin('max_transaction', 10, 'Max')
+    cy.c_verifyTooltip()
+    cy.c_verifyCompletionOrderDropdown()
+    cy.c_addPaymentMethod()
+    cy.c_verifyPostAd()
 
   })
 })

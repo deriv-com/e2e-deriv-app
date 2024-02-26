@@ -8,7 +8,7 @@ let regexPattern
 const decimalPlacesToSkip = 1
 
 
-Cypress.Commands.add('redirectToP2P', () => {
+Cypress.Commands.add('c_redirectToP2P', () => {
   // click on hamburger menu
   cy.get("#dt_mobile_drawer_toggle").should("be.visible")
   cy.get("#dt_mobile_drawer_toggle").click()
@@ -21,7 +21,7 @@ Cypress.Commands.add('redirectToP2P', () => {
   cy.findByRole("button", { name: "Confirm" }).click()
 })
 
-Cypress.Commands.add('createNewAd', () => {
+Cypress.Commands.add('c_createNewAd', () => {
   // click on ads tab
   cy.get('.notification__close-button').should("be.visible").click()
   cy.findByText("My ads").should("be.visible").click()
@@ -29,24 +29,24 @@ Cypress.Commands.add('createNewAd', () => {
   cy.findByRole("button", { name: "Create new ad" }).should("be.visible").click()
 })
 
-Cypress.Commands.add('postBuyAd', () => {
+Cypress.Commands.add('c_postBuyAd', () => {
   cy.findByTestId('offer_amount').click().type('10')
   cy.findByTestId('float_rate_type').click().clear().type(rate, { parseSpecialCharSequences: false })
   cy.findByTestId('min_transaction').click().clear().type('5')
   cy.findByTestId('max_transaction').click().clear().type('10')
-  cy.addPaymentMethod()
-  cy.postAd()
+  cy.c_addPaymentMethod()
+  cy.c_postAd()
 
 })
 
-Cypress.Commands.add('verifyExchangeRate', () => {
+Cypress.Commands.add('c_verifyExchangeRate', () => {
   rateCalculation = rate * 0.01
   calculatedValue = rateCalculation * marketRate + marketRate
   regexPattern = new RegExp(`Your rate is = ${calculatedValue.toFixed(6 - decimalPlacesToSkip)}\\d{${decimalPlacesToSkip}} NZD`);
   cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern);
 })
 
-Cypress.Commands.add('verifyRate', () => {
+Cypress.Commands.add('c_verifyRate', () => {
   cy.findByTestId('float_rate_type').click().clear()
   cy.findByText("Floating rate is required").should("be.visible")
   cy.findByTestId('float_rate_type').click().clear().type('abc')
@@ -79,7 +79,7 @@ Cypress.Commands.add('verifyRate', () => {
   })
 })
 
-Cypress.Commands.add('verifyPostAd', () => {
+Cypress.Commands.add('c_verifyPostAd', () => {
   cy.findByRole("button", { name: "Post ad" }).should("be.enabled").click()
   cy.findByText("You've created an ad").should("be.visible")
   cy.findByText("If the ad doesn't receive an order for 3 days, it will be deactivated.").should("be.visible")
@@ -87,13 +87,13 @@ Cypress.Commands.add('verifyPostAd', () => {
   cy.findByRole("button", { name: "Ok" }).should("be.enabled").click()
 })
 
-Cypress.Commands.add('verifyTooltip', () => {
+Cypress.Commands.add('c_verifyTooltip', () => {
   cy.findByTestId('dt_order_time_selection_info_icon').click()
   cy.contains("Orders will expire if they aren’t completed within this time.")
   cy.findByRole("button", { name: "Ok" }).click()
 })
 
-Cypress.Commands.add('verifyCompletionOrderDropdown', () => {
+Cypress.Commands.add('c_verifyCompletionOrderDropdown', () => {
   cy.findByText("1 hour").should("be.visible")
   cy.findByTestId('dt_dropdown_display').click()
   cy.findByText("45 minutes").should("be.visible")
@@ -102,7 +102,7 @@ Cypress.Commands.add('verifyCompletionOrderDropdown', () => {
   cy.xpath('//*[@id=900]').click()
 })
 
-Cypress.Commands.add('verifyMaxMin', (selector, expectedValue, expectedValidation) => {
+Cypress.Commands.add('c_verifyMaxMin', (selector, expectedValue, expectedValidation) => {
   cy.findByTestId(selector).click().type('abc')
   cy.findByText("Only numbers are allowed.").should("be.visible")
   cy.findByTestId(selector).click().clear().type('123abc')
@@ -119,7 +119,7 @@ Cypress.Commands.add('verifyMaxMin', (selector, expectedValue, expectedValidatio
   cy.findByTestId(selector).click().clear().type(expectedValue)
 })
 
-Cypress.Commands.add('addPaymentMethod', () => {
+Cypress.Commands.add('c_addPaymentMethod', () => {
   cy.findByPlaceholderText('Add').click()
   cy.findByText('Other').click()
   cy.findByPlaceholderText('Add').click()
@@ -129,7 +129,7 @@ Cypress.Commands.add('addPaymentMethod', () => {
   cy.findByPlaceholderText('Add').should('not.be.exist')
 })
 
-Cypress.Commands.add('verifyAmountFiled', () => {
+Cypress.Commands.add('c_verifyAmountFiled', () => {
   cy.findByTestId('offer_amount').click().type('abc')
   cy.findByText("Enter a valid amount").should("be.visible")
   cy.findByTestId('offer_amount').click().clear().type('123abc')
@@ -143,7 +143,7 @@ Cypress.Commands.add('verifyAmountFiled', () => {
   cy.findByTestId('offer_amount').click().type('10')
 })
 
-Cypress.Commands.add('postAd', () => {
+Cypress.Commands.add('c_postAd', () => {
   cy.findByRole("button", { name: "Post ad" }).should("be.enabled").click()
   cy.findByRole("button", { name: "Ok" }).should("be.enabled").click()
 })
