@@ -65,7 +65,7 @@ class Common {
     this.accountSwitcherButton.click();
     this.demoAccountTab.click();
     this.demoAccount.click();
-    cy.wait(5000);
+    this.accountSwitcherButton.should("be.visible");
   };
 
   logOut = () => {

@@ -20,7 +20,6 @@ describe("QATEST-4212: Verify Quick Strategy from bot builder page", () => {
     botBuilder.openBotBuilderTab();
     common.skipTour();
     quickStrategy.clickQuickStrategies();
-    cy.wait(3000);
   });
 
   it("Run Martingale Quick Strategy", () => {

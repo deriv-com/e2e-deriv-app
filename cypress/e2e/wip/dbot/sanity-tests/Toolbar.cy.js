@@ -1,5 +1,4 @@
 import "@testing-library/cypress/add-commands";
-import LoginPage from "../pageobjects/login_page";
 import TradersHub from "../pageobjects/traders_hub";
 import Common from "../pageobjects/common";
 import BotDashboard from "../pageobjects/bot_dashboard_page";
@@ -16,7 +15,7 @@ describe("QATEST-99418: Verify toolbar on bot builder page", () => {
     cy.c_login();
     cy.c_visitResponsive("/appstore/traders-hub", "large");
     tradersHub.openBotButton.click();
-    cy.wait(4000);
+    cy.loading_check();
     common.skipTour();
     common.switchToDemo();
     botBuilder.openBotBuilderTab();
