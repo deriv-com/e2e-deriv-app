@@ -17,7 +17,7 @@ describe("QATEST-99419: Import and run custom strategy", () => {
     cy.c_login();
     cy.c_visitResponsive("/appstore/traders-hub", "large");
     tradersHub.openBotButton.click();
-    cy.wait(4000);
+    cy.loading_check();
     common.skipTour();
     common.switchToDemo();
   });
