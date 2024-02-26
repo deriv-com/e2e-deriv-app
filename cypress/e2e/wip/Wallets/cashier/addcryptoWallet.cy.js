@@ -17,7 +17,6 @@ function addcryptowallet(){
         .invoke('text')
         .then((text) => {
           walletname = text.trim()
-        // })
       cy.log(walletname)
       cy.get('.wallets-add-more__card')
         .eq(0)
