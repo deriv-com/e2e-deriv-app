@@ -108,11 +108,13 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
   cy.c_visitResponsive(Cypress.env("oAuthUrl"),"large")
   //To let the dtrader page load completely
   cy.get('.cq-symbol-select-btn', { timeout: 10000}).should('exist')
-  cy.findByTestId('launch-modal').then(($element) =>{
-    if($element){
+  cy.document().then((doc)=>{
+    const launchModal = doc.querySelector('[data-test-id="launch-modal"]')
+    if(launchModal){
       cy.findByRole('button', { name: 'Ok' }).click();
     }
   })
+
   cy.get('#modal_root, .modal-root', { timeout: 10000 })
     .then(($element) => {
       if ($element.children().length > 0) {
