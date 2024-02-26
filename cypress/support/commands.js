@@ -48,10 +48,10 @@ Cypress.Commands.add("homepage_loading", () => {
   cy.get("#dt_login_button").should("be.visible")
 
   // cy.get('#dc_stake_toggle_item')
-  //   .should('be.visible'); Commenting out this, will replace this with other checks
+  //   .should('be.visible') Commenting out this, will replace this with other checks
 
   //cy.get('#dropdown-display')
-  // .should('be.visible');
+  // .should('be.visible')
 
   cy.get(".footer").should("be.visible")
 })
@@ -736,11 +736,14 @@ Cypress.Commands.add("c_enterValidEmail", (sign_up_mail) => {
         win.localStorage.setItem("config.app_id", Cypress.env("configAppId"))
       },
     })
+    //Wait for the signup page to load completely
+    cy.findByRole("button", { name: "whatsapp icon" }).should("be.visible", {
+      timeout: 30000,
+    })
     cy.findByPlaceholderText("Email").as("email").should("be.visible")
     cy.get("@email").type(sign_up_mail)
     cy.findByRole("checkbox").click()
     cy.get(".error").should("not.exist")
-    //cy.findByRole('button', { name: 'Create demo account' }).should('not.be.disbaled')
     cy.findByRole("button", { name: "Create demo account" }).click()
     cy.findByRole("heading", { name: "Check your email" }).should("be.visible")
   }
@@ -761,7 +764,7 @@ Cypress.Commands.add("c_selectCitizenship", (Citizenship) => {
 
 Cypress.Commands.add("c_enterPassword", () => {
   cy.findByLabelText("Create a password").should("be.visible")
-  cy.findByLabelText("Create a password").type(Cypress.env("user_password"))
+  cy.findByLabelText("Create a password").type(Cypress.env("user_password"),{log:false})
   cy.findByRole("button", { name: "Start trading" }).click()
 })
 
@@ -957,5 +960,5 @@ Cypress.Commands.add("c_addAccountMF", () => {
     cy.contains("button", "Next").click()
   }
   cy.findByRole("button", { name: "OK" }).click()
-  
+
 })
