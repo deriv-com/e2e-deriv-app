@@ -27,18 +27,17 @@ function addcryptowallet(){
         //To verify newly added wallet widgets are expanded in dashboard
         cy.findByTestId('dt-wallets-add-more').scrollIntoView()
         cy.wait(3000)
-        for (let j = buttoncount; i>j; i++){
+        for (let j = buttoncount; i>j; j++){
           cy.get('[data-testid="dt-wallets-add-more"]').within(()=>{
             cy.get('div[class="wallets-icon-button__icon"]').eq(1).click({ force: true })
           })
         }
-        cy.get('[class*="wallets-add-more__card"]')
-          .contains(walletname).find('button')
+        cy.get('[class*="wallets-add-more__content"]')
+          .contains(walletname).parent().parent().find('button')
           .then((button) => {
             expect(button).to.contain('Added')
           })
         })
-            // })
           }
     } else {
       cy.log('All wallets are already added')
