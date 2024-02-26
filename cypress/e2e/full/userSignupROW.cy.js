@@ -4,9 +4,7 @@ function generate_epoch(){
     return Math.floor(new Date().getTime() / 100000)
 }
 function createDemoAccount(CoR,Cit,epoch) {
-  let verification_code
-  cy.wait(5000) //TODO - To be replaced by a loop within the emailVerification below.
-  cy.c_emailVerificationSignUp(verification_code,Cypress.env("event_email_url"), epoch)
+  cy.c_emailVerificationSignUp(epoch)
   cy.then(() => {
   cy.c_visitResponsive('/endpoint',"desktop").then(() => {
       cy.window().then((win) => {
@@ -14,10 +12,7 @@ function createDemoAccount(CoR,Cit,epoch) {
       win.localStorage.setItem("config.app_id", Cypress.env('stdConfigAppId'))
       })
     })
-  verification_code = Cypress.env("emailVerificationCode")
-  const today = new Date()
-  const signupUrl = `${Cypress.config("baseUrl")}/redirect?action=signup&lang=EN_US&code=${verification_code}&date_first_contact=${today.toISOString().split('T')[0]}&signup_device=desktop`
-  cy.c_visitResponsive(signupUrl, "desktop")
+  cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop")
   cy.get('h1').contains('Select your country and').should('be.visible')
   cy.c_selectCountryOfResidence(CoR)
   cy.c_selectCitizenship(Cit) 

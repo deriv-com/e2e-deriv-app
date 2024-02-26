@@ -7,7 +7,6 @@ function generate_epoch() {
 describe("QATEST-5569: Verify MF Signup flow", () => {
   const epoch = generate_epoch()
   const sign_up_mail = `sanity${epoch}MF@deriv.com`
-  let verification_code
 
   beforeEach(() => {
     localStorage.setItem("config.server_url", Cypress.env("stdConfigServer"))
@@ -17,12 +16,7 @@ describe("QATEST-5569: Verify MF Signup flow", () => {
     cy.c_enterValidEmail(sign_up_mail)
   })
   it("Verify I can signup for an MF demo and real account", () => {
-    cy.wait(5000) //TODO - To be replaced by a loop within the emailVerification below.
-    cy.c_emailVerificationSignUp(
-      verification_code,
-      Cypress.env("event_email_url"),
-      epoch
-    )
+    cy.c_emailVerificationSignUp(epoch)
     cy.then(() => {
       cy.c_visitResponsive("/endpoint", "desktop").then(() => {
         cy.window().then((win) => {
@@ -37,14 +31,7 @@ describe("QATEST-5569: Verify MF Signup flow", () => {
         })
       })
 
-      verification_code = Cypress.env("emailVerificationCode")
-      const today = new Date()
-      const signupUrl = `${Cypress.config(
-        "baseUrl"
-      )}/redirect?action=signup&lang=EN_US&code=${verification_code}&date_first_contact=${
-        today.toISOString().split("T")[0]
-      }&signup_device=desktop`
-      cy.c_visitResponsive(signupUrl, "desktop")
+      cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop")
       cy.get("h1").contains("Select your country and").should("be.visible")
       cy.c_selectCountryOfResidence(Cypress.env("CoRMF"))
       cy.c_selectCitizenship(Cypress.env("citizenshipMF"))
