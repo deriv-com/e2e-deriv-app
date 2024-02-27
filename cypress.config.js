@@ -72,7 +72,8 @@ module.exports = defineConfig({
     citizenshipOnfidoROW: process.env.E2E_CITIZENSHIP_ROW_ONFIDO,
     citizenshipIDVROW: process.env.E2E_CITIZENSHIP_ROW_IDV,
     citizenshipMF: process.env.E2E_CITIZENSHIP_MF,
-    dielCountry: 'South Africa'
+    dielCountry: 'South Africa',
+    crCountry: 'Indonesia'
   },  
   retries: {
       "runMode": 2,
