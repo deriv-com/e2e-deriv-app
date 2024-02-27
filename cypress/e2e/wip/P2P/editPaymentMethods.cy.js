@@ -42,8 +42,8 @@ function navigateToTab(tabName) {
     cy.findByText(tabName).click()
 }
 
-function setText(fieldName, fieldTest) {
-    cy.findByRole('textbox', { name: fieldName }).clear().type(fieldTest).should('have.value', fieldTest)
+function setText(fieldName, fieldText) {
+    cy.findByRole('textbox', { name: fieldName }).clear().type(fieldText).should('have.value', fieldText)
 }
 
 function generateAccountNumberString(length) {
@@ -64,7 +64,6 @@ function editPaymentMethod(paymentMethod) {
         setText('SWIFT or IFSC code', '9087')
         setText('Bank Name', 'Bank Alfalah TG')
         setText('Branch', 'Branch number 42')
-        cy.get('textarea[name="instructions"]').clear().type('This block is for giving instruction').should('have.value', 'This block is for giving instruction')
         savePaymentDetailsAndVerify(accountNumberString)
 
     } else if (paymentMethod == "E-wallets") {
@@ -73,16 +72,14 @@ function editPaymentMethod(paymentMethod) {
             cy.log('Payment Method: ' + text)
         })
         const accountNumberString = generateAccountNumberString(12)
-        cy.findByRole('textbox', { name: 'Email or phone number' }).clear().type(accountNumberString).should('have.value', accountNumberString)
-        cy.get('textarea[name="instructions"]').clear().type('This block is for giving instruction').should('have.value', 'This block is for giving instruction')
+        cy.get('input[name="account"]').clear().type(accountNumberString).should('have.value', accountNumberString)
         savePaymentDetailsAndVerify(accountNumberString)
 
     } else if (paymentMethod == "Others") {
         cy.log("Others Block")
         const accountNumberString = generateAccountNumberString(12)
-        cy.findByRole('textbox', { name: 'Account ID / phone number / email' }).clear().type(accountNumberString).should('have.value', accountNumberString)
-        cy.get('textarea[name="instructions"]').clear().type('This block is for instruction').should('have.value', 'This block is for instruction')
-        cy.findByRole('textbox', { name: 'Payment method name' }).clear().type('Xenos1').should('have.value', 'Xenos1')
+        setText('Account ID / phone number / email', accountNumberString)
+        setText('Payment method name', 'Xenos Power')
         savePaymentDetailsAndVerify(accountNumberString)
     }
 }
