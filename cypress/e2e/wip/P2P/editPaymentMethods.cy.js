@@ -103,7 +103,7 @@ describe("QATEST-2831 - My Profile page - Edit Payment Method", () => {
             paymentMethod = value.trim() //Will only get either of the three: Bank Transfers, E-wallets, Others
             cy.log("Payment type available: " + paymentMethod)
             cy.contains('div.payment-methods-list__list-container span', paymentMethod).next().within(() => {
-                cy.get('[data-testid="dt_dropdown_display"] svg').eq(0).click()
+                cy.findByTestId('dt_dropdown_display').first().click()
             })
             cy.get('#edit').should('be.visible').click()
             editPaymentMethod(paymentMethod)
