@@ -1,17 +1,17 @@
 import '@testing-library/cypress/add-commands'
 
-let paymentMethod = null;
+let paymentMethod = null
 
 function navigateToDerivP2P() {
     cy.get('#dt_mobile_drawer_toggle').should('be.visible').click()
-    cy.contains('div.dc-mobile-drawer__submenu-toggle h3', "Cashier").should('be.visible').contains('Cashier').click()
-    cy.contains('h3', "Deriv P2P").should('be.visible').contains('Deriv P2P').click()
-    cy.get('.dc-modal-header__title').should('be.visible').then(($title) => {
+    cy.findByRole('heading', { name: 'Cashier' }).should('be.visible').click()
+    cy.findByRole('link', { name: 'Deriv P2P' }).should('be.visible').click()
+    cy.findByRole('heading', { name: 'For your safety:' }).should('be.visible').then(($title) => {
         if ($title.is(':visible')) {
             cy.get('.dc-checkbox__box').should('be.visible').click()
         }
     })
-    cy.get('[data-testid="dt_modal_footer"] > .dc-btn').should('be.visible').click()
+    cy.findByRole('button', { name: 'Confirm' }).should('be.visible').click()
 }
 
 function closeNotificationHeader() {
@@ -22,11 +22,9 @@ function closeNotificationHeader() {
             cy.get('.notification__text-body').invoke('text').then((text) => {
                 cy.log(text)
             })
-            cy.get('.notification__close-button').should('be.visible').click()
-            cy.get('.notification__header').should('not.exist')
+            cy.findByRole('button', { name: 'Close' }).should('be.visible').click().and('not.exist')
             notification = null;
-            cy.wait(2000)
-            closeNotificationHeader()
+            cy.then(() => {closeNotificationHeader()})
         }
         else {
             cy.log('Notification header did not appear')
@@ -34,8 +32,18 @@ function closeNotificationHeader() {
     })
 }
 
+function savePaymentDetailsAndVerify(accountNumberString) {
+    cy.findByRole('button', { name: 'Save changes' }).should('not.be.disabled').click()
+    cy.findByText('Payment methods').should('be.visible')
+    cy.findByText(accountNumberString).should('be.visible')
+}
+
 function navigateToTab(tabName) {
-    cy.contains('div[data-testid="dt_themed_scrollbars"] li', tabName).click({ force: true })
+    cy.findByText(tabName).click()
+}
+
+function setText(fieldName, fieldTest) {
+    cy.findByRole('textbox', { name: fieldName }).clear().type(fieldTest).should('have.value', fieldTest)
 }
 
 function generateAccountNumberString(length) {
@@ -52,15 +60,12 @@ function editPaymentMethod(paymentMethod) {
     if (paymentMethod == "Bank Transfers") {
         cy.log("Bank Transfer Block")
         const accountNumberString = generateAccountNumberString(12)
-        cy.get('input[aria-label="Account Number"]').clear().type(accountNumberString).should('have.value', accountNumberString)
-        cy.get('input[aria-label="SWIFT or IFSC code"]').clear().type('9087').should('have.value', '9087')
-        cy.get('input[aria-label="Bank Name"]').clear().type('Bank Alfalah TG').should('have.value', 'Bank Alfalah TG')
-        cy.get('input[aria-label="Branch"]').clear().type('Branch number 42').should('have.value', 'Branch number 42')
+        setText('Account Number', accountNumberString)
+        setText('SWIFT or IFSC code', '9087')
+        setText('Bank Name', 'Bank Alfalah TG')
+        setText('Branch', 'Branch number 42')
         cy.get('textarea[name="instructions"]').clear().type('This block is for giving instruction').should('have.value', 'This block is for giving instruction')
-        cy.get('button[type="submit"]').should('not.be.disabled').click()
-        cy.contains('p.dc-text', 'Payment methods').should('be.visible')
-        cy.contains('span.dc-text', 'Bank Alfalah TG').should('be.visible')
-        cy.contains('span.dc-text', accountNumberString).should('be.visible')
+        savePaymentDetailsAndVerify(accountNumberString)
 
     } else if (paymentMethod == "E-wallets") {
         cy.log("Wallets Block")
@@ -68,21 +73,17 @@ function editPaymentMethod(paymentMethod) {
             cy.log('Payment Method: ' + text)
         })
         const accountNumberString = generateAccountNumberString(12)
-        cy.get('input[name="account"]').clear().type(accountNumberString).should('have.value', accountNumberString)
+        cy.findByRole('textbox', { name: 'Email or phone number' }).clear().type(accountNumberString).should('have.value', accountNumberString)
         cy.get('textarea[name="instructions"]').clear().type('This block is for giving instruction').should('have.value', 'This block is for giving instruction')
-        cy.get('button[type="submit"]').should('not.be.disabled').click()
-        cy.contains('p.dc-text', 'Payment methods').should('be.visible')
-        cy.contains('span.dc-text', accountNumberString).should('be.visible')
+        savePaymentDetailsAndVerify(accountNumberString)
+
     } else if (paymentMethod == "Others") {
         cy.log("Others Block")
         const accountNumberString = generateAccountNumberString(12)
-        cy.get('input[aria-label="Account ID / phone number / email"]').clear().type(accountNumberString).should('have.value', accountNumberString)
+        cy.findByRole('textbox', { name: 'Account ID / phone number / email' }).clear().type(accountNumberString).should('have.value', accountNumberString)
         cy.get('textarea[name="instructions"]').clear().type('This block is for instruction').should('have.value', 'This block is for instruction')
-        cy.get('input[aria-label="Payment method name"]').clear().type('Xenos1').should('have.value', 'Xenos1')
-        cy.get('button[type="submit"]').should('not.be.disabled').click()
-        cy.contains('p.dc-text', 'Payment methods').should('be.visible')
-        cy.contains('span.dc-text', 'Xenos1').should('be.visible')
-        cy.contains('span.dc-text', accountNumberString).should('be.visible')
+        cy.findByRole('textbox', { name: 'Payment method name' }).clear().type('Xenos1').should('have.value', 'Xenos1')
+        savePaymentDetailsAndVerify(accountNumberString)
     }
 }
 
@@ -90,87 +91,25 @@ describe("QATEST-2831 - My Profile page - Edit Payment Method", () => {
     beforeEach(() => {
         cy.c_login()
         cy.c_visitResponsive('/appstore/traders-hub', 'small')
-        //        cy.fixture('cypress/e2e/wip/P2P/fixture/paymentMethodsWithData.json').as('paymentMethodAndData')
     })
 
-    it('should be able to edit the existing payment methods', () => {
-        navigateToDerivP2P(); //Navigation to P2P Handler
-        closeNotificationHeader();
-        navigateToTab('My profile');
-        cy.contains('div.my-profile-stats__navigation span', 'Payment methods').click()
+    it('should be able to edit the existing payment methods - responsive', () => {
+        navigateToDerivP2P() //Navigation to P2P Handler
+        cy.findByText('Deriv P2P').should('exist')
+        closeNotificationHeader()
+        navigateToTab('My profile')
+        cy.findByText('Available Deriv P2P balance').should('be.visible') //verifes from a page text after navigating to my profile tab
+        cy.findByText('Payment methods').should('be.visible').click()
+        cy.findByText('Payment methods').should('be.visible') //verifies that Payment methods heading page is visible after clicking on Payment Methods
         // Get first payment type available on the screen
         cy.get('span.payment-methods-list__list-header').first().invoke('text').then((value) => {
-            paymentMethod = value.trim(); //Will only get either of the three: Bank Transfers, E-wallets, Others
-            cy.log("Payment type available: " + paymentMethod);
-            //cy.get('span.payment-methods-list__list-header:contains("' + paymentMethod + '") + div > div > div.payment-method-card__header > div > div > div > svg')
-            cy.contains('div.payment-methods-list__list-container span', paymentMethod).next().within(()=>{
+            paymentMethod = value.trim() //Will only get either of the three: Bank Transfers, E-wallets, Others
+            cy.log("Payment type available: " + paymentMethod)
+            cy.contains('div.payment-methods-list__list-container span', paymentMethod).next().within(() => {
                 cy.get('[data-testid="dt_dropdown_display"] svg').eq(0).click()
             })
-        });
-        //editPaymentMethod(paymentMethod)
+            cy.get('#edit').should('be.visible').click()
+            editPaymentMethod(paymentMethod)
+        })
     })
 })
-
-function editPaymentMethod(paymentMethod){
-    //Get Payment Method Type:
-    
-    if(paymentMethod == "Bank Transfers"){
-
-    }
-}
-
-function navigateToDerivP2P() {
-    cy.get('#dt_mobile_drawer_toggle')
-        .should('be.visible')
-        .click()
-
-    cy.contains('div.dc-mobile-drawer__submenu-toggle h3', "Cashier")
-        .should('be.visible')
-        .contains('Cashier')
-        .click()
-
-    cy.contains('h3', "Deriv P2P")
-        .should('be.visible')
-        .contains('Deriv P2P')
-        .click()
-
-    cy.get('.dc-modal-header__title').should('be.visible').then(($title) => {
-        if ($title.is(':visible')) {
-            cy.get('.dc-checkbox__box')
-                .should('be.visible')
-                .click()
-        } else {
-            cy.log('Title is not visible, breaking from the else');
-        }
-    })
-    cy.get('[data-testid="dt_modal_footer"] > .dc-btn')
-        .should('be.visible')
-        .click()
-}
-
-function closeNotificationHeader() {
-    cy.document().then(doc => {
-        let notification = doc.querySelector('.notification__header')
-        if (notification && notification != undefined && notification != null) {
-            cy.log('Notification header appeared')
-            cy.get('.notification__text-body').invoke('text').then((text) => {
-                cy.log(text);
-            });
-            cy.get('.notification__close-button')
-                .should('be.visible')
-                .click()
-            cy.get('.notification__header')
-                .should('not.exist')
-            notification = null;
-            cy.wait(2000)
-            closeNotificationHeader()
-        }
-        else {
-            cy.log('Notification header did not appear')
-        }
-    })
-}
-
-function navigateToTab(tabName) {
-    cy.contains('div[data-testid="dt_themed_scrollbars"] li', tabName).click({force:true})
-}
