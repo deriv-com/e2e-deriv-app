@@ -23,7 +23,7 @@ function closeNotificationHeader() {
                 cy.log(text)
             })
             cy.findByRole('button', { name: 'Close' }).should('be.visible').click().and('not.exist')
-            notification = null;
+            notification = null
             cy.then(() => {closeNotificationHeader()})
         }
         else {
@@ -47,7 +47,7 @@ function setText(fieldName, fieldText) {
 }
 
 function generateAccountNumberString(length) {
-    let result = '';
+    let result = ''
     const characters = '0123456789';
     const charactersLength = characters.length;
     for (let i = 0; i < length; i++) {
