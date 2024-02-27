@@ -3,7 +3,8 @@ import '@testing-library/cypress/add-commands'
 describe('QATEST-22037 IDV verified by Smile Identity provider', () => {
     beforeEach(()=> {
         cy.c_login();
-        cy.navigate_to_poi('Republic of QA');
+        cy.c_visitResponsive('/account/proof-of-identity','small')
+        // cy.navigate_to_poi('Republic of QA');
 
     })
     
