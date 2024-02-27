@@ -7,17 +7,22 @@ describe('QATEST-23015 - IDV POI Name Mismatch', () => {
 
     })
     
-    it('should return Name mismatch', () => {
-        cy.get('input[name="document_type"]').click()
-        cy.contains("Passport").click()
-        cy.get('input[name="document_number"]').type("1234678");
-        cy.contains('button', 'Verify').should('be.disabled');
+    it('Should return Name mismatch', () => {
+        cy.choose_document_type("Passport")
+        cy.fill_data("document_number", "12760978")
+        cy.fill_data("first_name", "Refuted")
+        cy.fill_data("last_name", "Name")
+        cy.fill_date("2000", "9", "20")
+        
+        cy.contains('button', 'Verify').should('be.disabled')
         cy.get('.dc-checkbox__box').click()
-        cy.contains('button', 'Verify').should('be.enabled');
+        cy.contains('button', 'Verify').should('be.enabled')
         cy.contains('button', 'Verify').click()
+        cy.wait(1000)
         cy.reload()
-        cy.wait(100)
-        // making assertions on the expected behavior
-        cy.contains(/Your ID is verified/i).should('exist');
-    });
+
+        cy.contains(/Your identity verification failed/).should('be.visible')
+        cy.contains("The name on your identity document doesn't match your profile.").should('be.visible')
+
+    }); 
 });
