@@ -17,7 +17,7 @@ function navigateToDerivP2P() {
 function closeNotificationHeader() {
     cy.document().then(doc => {
         let notification = doc.querySelector('.notification__header')
-        if (notification && notification != undefined && notification != null) {
+        if (notification) {
             cy.log('Notification header appeared')
             cy.get('.notification__text-body').invoke('text').then((text) => {
                 cy.log(text)
