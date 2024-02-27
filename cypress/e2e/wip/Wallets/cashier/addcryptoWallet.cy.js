@@ -22,14 +22,8 @@ function addcryptowallet(){
         .find('button')
         .click()
         cy.findByRole('button', { name: 'Maybe later' }).click()
-        //To verify newly added wallet widgets are expanded in dashboard
+        cy.findByText(`${walletname}`).should("exist");
         cy.findByTestId('dt-wallets-add-more').scrollIntoView()
-        cy.wait(3000)
-        for (let j = buttoncount; i>j; j++){
-          cy.get('[data-testid="dt-wallets-add-more"]').within(()=>{
-            cy.get('div[class="wallets-icon-button__icon"]').eq(1).click({ force: true })
-          })
-        }
         cy.get('[class*="wallets-add-more__content"]')
           .contains(walletname).parent().parent().find('button')
           .then((button) => {
