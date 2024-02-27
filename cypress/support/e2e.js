@@ -267,7 +267,7 @@ Cypress.Commands.add('c_emailVerificationSignUp', (verification_code,event_email
       cy.contains('p', "sanity"+epoch).should('be.visible')
       cy
         .get("a")
-        .eq(1)
+        .last()
           .invoke("attr", "href")
           .then((href) => {
             const code = href.match(/code=([A-Za-z0-9]{8})/)
