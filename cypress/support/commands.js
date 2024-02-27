@@ -718,15 +718,20 @@ Cypress.Commands.add("navigate_to_poi", (country) => {
 
 Cypress.Commands.add("navigate_to_poi_responsive", (country) => {
   cy.c_visitResponsive("/account/proof-of-identity", "small")
-  cy.get('input[name="country_input"]').click()
-  cy.get('input[name="country_input"]').type(country)
-  cy.contains(country).click()
+  cy.get('button.notification__close-button').click();
+  cy.wait(500)
+  cy.get('button.notification__close-button').click();
+  cy.get('select[name="country_input"]').select(country)
   cy.contains("button", "Next").click()
 })
 
 Cypress.Commands.add("choose_document_type", (document_type) => {
   cy.get('input[name="document_type"]').click()
   cy.contains(document_type).click()
+})
+
+Cypress.Commands.add("choose_document_type_responsive", (document_type) => {
+  cy.get('select[name="document_type"]').select(document_type)
 })
 
 Cypress.Commands.add("fill_data", (input_name, data) => {
