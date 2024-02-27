@@ -3,7 +3,7 @@ import '@testing-library/cypress/add-commands'
 describe('QATEST-23015 - IDV POI Name Mismatch', () => {
     beforeEach(()=> {
         cy.c_login();
-        cy.navigate_to_poi(/Republic of QA/i);
+        cy.navigate_to_poi('Republic of QA');
 
     })
     
