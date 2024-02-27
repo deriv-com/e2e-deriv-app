@@ -90,7 +90,7 @@ describe("QATEST-2831 - My Profile page - Edit Payment Method", () => {
         cy.c_visitResponsive('/appstore/traders-hub', 'small')
     })
 
-    it('should be able to edit the existing payment methods - responsive', () => {
+    it('Should be able to edit the existing payment method in responsive mode.', () => {
         navigateToDerivP2P() //Navigation to P2P Handler
         cy.findByText('Deriv P2P').should('exist')
         closeNotificationHeader()
