@@ -28,9 +28,17 @@ export const commonPageLocators ={
             languageSettingsBtn: () => cy.findByTestId('dt_toggle_language_settings'),
             fullScreenBtn: () => cy.findByTestId('dt_fullscreen_toggle'),
             themeBtn: () => cy.locator('.footer__links--dark-mode'),
+            responsive:{
+
+            },
         },
         loader: ()=> cy.get('div[data-testid="dt_initial_loader"]'),
         responsive:{
-            
+            header:{
+                // We can also use this instead of line 15 to line 18
+            },
+            footer:{
+                // We can also use this instead of line31 to line 33
+            }
         }
 }
