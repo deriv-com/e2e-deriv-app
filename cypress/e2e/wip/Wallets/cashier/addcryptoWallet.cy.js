@@ -22,7 +22,7 @@ function addcryptowallet(){
         .find('button')
         .click()
         cy.findByRole('button', { name: 'Maybe later' }).click()
-        cy.findByText(`${walletname}`).should("exist");
+        cy.findByText(`${walletname}`).should("exist")
         cy.findByTestId('dt-wallets-add-more').scrollIntoView()
         cy.get('[class*="wallets-add-more__content"]')
           .contains(walletname).parent().parent().find('button')
