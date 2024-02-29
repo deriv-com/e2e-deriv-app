@@ -47,9 +47,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: deriv-com/e2e-deriv-app # Replace with your repository name
-    
-    - name: Install pixelmatch
-      run: npm install pixelmatch
       
     - name: Create server URL
       if: ${{github.event.inputs.qabox !='' }}
