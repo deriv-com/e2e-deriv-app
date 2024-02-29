@@ -16,7 +16,8 @@ describe('QATEST-23015 - IDV POI Name Mismatch - Mobile view', () => {
         cy.findByRole('button', { name: 'Verify' }).should('be.disabled')
         cy.get('.dc-checkbox__box').click()
         cy.findByRole('button', { name: 'Verify' }).should('be.enabled')
-        cy.findByRole('button', { name: 'Verify' }).click()
+          .click()
+        cy.wait(4000)
         cy.reload()
 
         cy.contains(/Your identity verification failed/).should('be.visible')
