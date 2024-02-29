@@ -66,14 +66,23 @@ class BotBuilder {
   }
 
   get confirmReset() {
-    return cy.xpath(
+    return cy.get(
       "//span[contains(@class,'dc-btn__text') and text() = 'OK']"
     );
+  }
+
+  get digitEvenLogo () {
+    return cy.xpath('//*[name()="use" and contains(@*, "ic-tradetype-digiteven")]');  
+  }
+
+  get digitOddLogo () {
+    return cy.xpath('//*[name()="use" and contains(@*, "ic-tradetype-digitodd")]');  
   }
 
   openBotBuilderTab = () => {
     this.botBuilderTab.should("be.visible").click();
   };
+
 
   pickDerivedMarket = () => {
     // cy.get('.blocklyEditableText').click();
