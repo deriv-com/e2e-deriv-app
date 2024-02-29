@@ -789,7 +789,7 @@ Cypress.Commands.add("c_selectCitizenship", (Citizenship) => {
 
 Cypress.Commands.add("c_enterPassword", () => {
   cy.findByLabelText("Create a password").should("be.visible")
-  cy.findByLabelText("Create a password").type(Cypress.env("user_password"))
+  cy.findByLabelText("Create a password").type(Cypress.env("user_password"),{log:false})
   cy.findByRole("button", { name: "Start trading" }).click()
 })
 

@@ -15,6 +15,7 @@ describe("QATEST-99420: Import and run custom strategy", () => {
     cy.c_login();
     cy.c_visitResponsive("/appstore/traders-hub", "large");
     tradersHub.openBotButton.click();
+    cy.loading_check();
     common.skipTour();
     common.switchToDemo();
   });
@@ -35,7 +36,7 @@ describe("QATEST-99420: Import and run custom strategy", () => {
 
     //Wait for bot to complete
     common
-      .getElementWithTimeout(common.botRunButtonEl, 3200000)
+      .getElementWithTimeout(common.botRunButtonEl, 120000)
       .should("be.visible");
 
     runPanel.profitLossValue.then(($value) => {
@@ -43,7 +44,7 @@ describe("QATEST-99420: Import and run custom strategy", () => {
     });
 
     common
-      .getElementWithTimeout(runPanel.totalProfitLossEl, 3200000)
+      .getElementWithTimeout(runPanel.totalProfitLossEl, 120000)
       .then(($amt) => {
         if ($amt.hasClass("run-panel__stat-amount--positive")) {
           cy.on("window:alert", (str) => {
