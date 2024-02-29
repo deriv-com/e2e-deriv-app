@@ -20,7 +20,7 @@ describe('QATEST-23015 - IDV POI Name Mismatch - Mobile view', () => {
         cy.wait(4000)
         cy.reload()
 
-        cy.contains(/Your identity verification failed/).should('be.visible')
+        cy.contains("Your identity verification failed").should('be.visible')
         cy.contains("The name on your identity document doesn't match your profile.").should('be.visible')
 
     }); 
