@@ -4,21 +4,19 @@ describe('QATEST-23015 - IDV POI Name Mismatch - Mobile view', () => {
     beforeEach(()=> {
         cy.c_login();
         cy.navigate_to_poi_responsive('Republic of QA');
-
     })
     
     it('Should return Name mismatch', () => {
         cy.choose_document_type_responsive("Passport")
-        cy.fill_data("document_number", "12760978")
+        cy.findByLabelText('Enter your document number').type('12376678');
         cy.fill_data("first_name", "Refuted")
         cy.fill_data("last_name", "Name")
-        cy.fill_date("2000", "9", "20")
+        cy.fill_date("2000", "09", "20")
 
-        cy.contains('button', 'Verify').should('be.disabled')
+        cy.findByRole('button', { name: 'Verify' }).should('be.disabled')
         cy.get('.dc-checkbox__box').click()
-        cy.contains('button', 'Verify').should('be.enabled')
-        cy.contains('button', 'Verify').click()
-        cy.wait(1000)
+        cy.findByRole('button', { name: 'Verify' }).should('be.enabled')
+        cy.findByRole('button', { name: 'Verify' }).click()
         cy.reload()
 
         cy.contains(/Your identity verification failed/).should('be.visible')

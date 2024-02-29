@@ -708,8 +708,7 @@ Cypress.Commands.add("close_notification_banner", () => {
 })
 
 Cypress.Commands.add("navigate_to_poi", (country) => {
-  cy.get('a[href="/account/personal-details"]').click()
-  cy.get('a[href="/account/proof-of-identity"]').click()
+  cy.c_visitResponsive("/account/proof-of-identity", "large")
   cy.get('input[name="country_input"]').click()
   cy.get('input[name="country_input"]').type(country)
   cy.contains(country).click()
@@ -735,14 +734,11 @@ Cypress.Commands.add("choose_document_type_responsive", (document_type) => {
 })
 
 Cypress.Commands.add("fill_data", (input_name, data) => {
-  cy.get(`input[name=${input_name}]`).clear().type(data)
+  cy.findByTestId(`${input_name}`).clear().type(`${data}`);
 })
 
 Cypress.Commands.add("fill_date", (year, month, day) => {
-  cy.get('input[name="date_of_birth"]').click()
-  cy.get(`span[data-year=${year}]`).click()
-  cy.get(`span[data-month=${month - 1}]`).click()
-  cy.get(`span[data-date="2000-09-${day}"]`).click()
+  cy.findByTestId('date_of_birth').type(`${year}-${month}-${day}`)
 })
 
 Cypress.Commands.add("c_checkTradersHubhomePage", () => {
