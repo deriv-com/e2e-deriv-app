@@ -35,7 +35,6 @@ describe("QATEST-5569: Verify MF Signup flow", () => {
         })
       })
 
-      // cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop")
       cy.get("h1").contains("Select your country and").should("be.visible")
       cy.c_selectCountryOfResidence(country)
       cy.c_selectCitizenship(country)
