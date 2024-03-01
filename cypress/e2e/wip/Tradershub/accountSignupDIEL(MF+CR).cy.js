@@ -8,6 +8,10 @@ function generate_epoch() {
 describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
   const epoch = generate_epoch()
   const sign_up_mail = `sanity${epoch}dielmfcr@deriv.com`
+  let country = Cypress.env("countries").ZA
+  let nationalIDNum = Cypress.env("nationalIDNum").ZA
+  let taxIDNum = Cypress.env("taxIDNum").ZA
+  let euCurrency = Cypress.env("accountCurrency").GBP
 
   beforeEach(() => {
     localStorage.setItem("config.server_url", Cypress.env("stdConfigServer"))
@@ -34,8 +38,8 @@ describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
       })
       cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop")
       cy.get("h1").contains("Select your country and").should("be.visible")
-      cy.c_selectCountryOfResidence(Cypress.env("dielCountry"))
-      cy.c_selectCitizenship(Cypress.env("dielCountry"))
+      cy.c_selectCountryOfResidence(country)
+      cy.c_selectCitizenship(country)
       cy.c_enterPassword()
       cy.c_completeOnboarding()
     })
@@ -46,7 +50,14 @@ describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
     cy.get(regulationText).should("have.text", "EU")
     cy.findByRole("button", { name: "Get a Deriv account" }).click()
     cy.c_generateRandomName().then((firstName) => {
-      cy.c_personalDetails(firstName, "DIEL", Cypress.env("dielCountry"))
+      cy.c_personalDetails(
+        firstName,
+        "MF",
+        country,
+        nationalIDNum,
+        taxIDNum,
+        euCurrency
+      )
     })
     cy.c_addressDetails()
     cy.c_completeTradingAssessment()
@@ -57,10 +68,13 @@ describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
     cy.findByRole("button", { name: "Get a Deriv account" }).click()
     cy.findByText("US Dollar").click()
     cy.findByRole("button", { name: "Next" }).click()
-    cy.get(".dc-checkbox__box").click()
+    cy.findByLabelText("Choose the document type").click()
+    cy.findByText("National ID Number").click()
+    cy.findByLabelText("Enter your document number").type(nationalIDNum)
+    cy.get(".dc-checkbox__box").as("checkbox").click({ multiple: true })
     cy.findByRole("button", { name: "Next" }).click()
     cy.findByRole("button", { name: "Next" }).click()
     cy.c_addAccount()
-    cy.c_manageAccountsetting(Cypress.env("dielCountry"))
+    cy.c_manageAccountsetting(country)
   })
 })
