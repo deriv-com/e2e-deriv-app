@@ -10,9 +10,13 @@ describe("WALL-2831 - Crypto deposit and fiat onramp", () => {
   it("should be able to view crypto deposit details", () => {
     cy.log("Crypto Deposit")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().should("exist")
-    cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().click()
-    cy.get(".wallets-accordion__header").contains("Deposit").first().click()
+    cy.get(".wallets-dropdown__button").click()
+    cy.get(".wallets-list-card-dropdown__item-content").contains("BTC Wallet").click()
+    cy.get(".wallets-list-details__content").within(()=>{
+      cy.contains("BTC").should("be.visible")
+    })
+    cy.contains("Deposit").should("be.visible")
+    cy.contains("Deposit").click()
     cy.get("canvas").should("be.visible")
     cy.contains("Transaction status")
     cy.contains(/To avoid loss of funds/)
@@ -25,9 +29,13 @@ describe("WALL-2831 - Crypto deposit and fiat onramp", () => {
   it("should be able to deposit into crypto account through fiat onramp", () => {
     cy.log("Access Fiat OnRamp Provider")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().should("exist")
-    cy.get('.wallets-accordion__header').first().get('.wallets-accordion__dropdown').first().click()
-    cy.get(".wallets-accordion__header").contains("Deposit").first().click()
+    cy.get(".wallets-dropdown__button").click()
+    cy.get(".wallets-list-card-dropdown__item-content").contains("BTC Wallet").click()
+    cy.get(".wallets-list-details__content").within(()=>{
+      cy.contains("BTC").should("be.visible")
+    })
+    cy.contains("Deposit").should("be.visible")
+    cy.contains("Deposit").click()
     cy.findByText("Try Fiat onramp").click()
     cy.contains("Banxa")
     cy.findByRole("button", { name: "Select" }).click()

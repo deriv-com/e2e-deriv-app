@@ -7,6 +7,9 @@ function generate_epoch() {
 describe("QATEST-5972: Create a Derived SVG account", () => {
   const epoch = generate_epoch()
   const sign_up_mail = `sanity${epoch}+mt5derivedsvg@deriv.com`
+  let country = Cypress.env("countries").CO
+  let nationalIDNum = Cypress.env("nationalIDNum").CO
+  let taxIDNum = Cypress.env("taxIDNum").CO
 
   beforeEach(() => {
     localStorage.setItem("config.server_url", Cypress.env("stdConfigServer"))
@@ -15,8 +18,7 @@ describe("QATEST-5972: Create a Derived SVG account", () => {
     cy.findByRole("button", { name: "Sign up" }).should("not.be.disabled")
     cy.c_enterValidEmail(sign_up_mail)
   })
-  it("Verify I can signup for a demo derived CFD account", () => {
-    cy.wait(5000)
+  it("Verify I can signup for a real derived SVG CFD account", () => {
     cy.c_emailVerificationSignUp(epoch)
     cy.then(() => {
       cy.c_visitResponsive("/endpoint", "desktop").then(() => {
@@ -34,8 +36,8 @@ describe("QATEST-5972: Create a Derived SVG account", () => {
 
       cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop")
       cy.get("h1").contains("Select your country and").should("be.visible")
-      cy.c_selectCountryOfResidence(Cypress.env("CoROnfidoROW"))
-      cy.c_selectCitizenship(Cypress.env("citizenshipOnfidoROW"))
+      cy.c_selectCountryOfResidence(country)
+      cy.c_selectCitizenship(country)
       cy.c_enterPassword()
       cy.c_completeOnboarding()
     })
@@ -45,7 +47,13 @@ describe("QATEST-5972: Create a Derived SVG account", () => {
     //Create real account
     cy.findByRole("button", { name: "Get a Deriv account" }).click()
     cy.c_generateRandomName().then((firstName) => {
-      cy.c_personalDetails(firstName, "Onfido", Cypress.env("CoROnfidoROW"))
+      cy.c_personalDetails(
+        firstName,
+        "Onfido",
+        country,
+        nationalIDNum,
+        taxIDNum
+      )
     })
     cy.contains(
       "Only use an address for which you have proof of residence"

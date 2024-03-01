@@ -36,7 +36,6 @@ describe("WALL-2858 - Fiat transfer and transactions", () => {
   it("should be able to perform transfer from fiat account", () => {
     cy.log("Transfer from Fiat account")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.findAllByText(/USD Wallet/).first().scrollIntoView()
     cy.contains("Transfer").first().click()
     fiat_transfer("BTC")
     fiat_transfer("ETH")
@@ -46,7 +45,6 @@ describe("WALL-2858 - Fiat transfer and transactions", () => {
   it("should be able to view transactions of fiat account", () => {
     cy.log("View Transactions of Fiat account")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.findAllByText(/USD Wallet/).first().scrollIntoView()
     cy.contains("Transactions").first().click()
     cy.get("#downshift-0-toggle-button").findByRole("button").click()
     cy.findByRole("option", { name: "Deposit" }).click()

@@ -65,6 +65,7 @@ module.exports = defineConfig({
     doughflowOAuthToken: process.env.E2E_DOUGHFLOW_OAUTH_TOKEN,
     walletsWithdrawalUrl: process.env.E2E_WALLETS_WITHDRAWAL_URL,
     walletsWithdrawalCode: process.env.E2E_WALLETS_WITHDRAWAL_CODE,
+    verificationdUrl:  process.env.E2E_WALLETS_PASSWORD_URL,
     HMACKey: process.env.E2E_HMAC_KEY,
     username_cr_unauthenticated: process.env.E2E_USENAME_BOT,
     password: process.env.E2E_PASS_BOT,
@@ -89,6 +90,30 @@ module.exports = defineConfig({
     citizenshipIDVROW: process.env.E2E_CITIZENSHIP_ROW_IDV,
     citizenshipMF: process.env.E2E_CITIZENSHIP_MF,
     dielCountry: "South Africa",
+    countries: {
+      ZA: "South Africa",
+      CO: "Colombia",
+      ID: "Indonesia",
+      ES: "Spain",
+      KE: "Kenya",
+    },
+    nationalIDNum: {
+      ID: "1010101010101010",
+      KE: "10101010",
+      ZA: "1234567890111",
+    },
+    taxIDNum: {
+      CO: "1234567890",
+      KE: "P000111111A",
+      ZA: "1234567890",
+      ES: "12345678A",
+    },
+    accountCurrency: {
+      USD: "US Dollar",
+      EUR: "Euro",
+      GBP: "Pound Sterling",
+      AUD: "Australian Dollar",
+    },
   },
   retries: {
     runMode: 2,

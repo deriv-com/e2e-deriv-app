@@ -114,7 +114,6 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
       cy.findByRole('button', { name: 'Ok' }).click();
     }
   })
-
   cy.get('#modal_root, .modal-root', { timeout: 10000 })
     .then(($element) => {
       if ($element.children().length > 0) {
@@ -178,7 +177,45 @@ Cypress.Commands.add('c_emailVerification', (verification_code, base_url) => {
     }
   )
 })
-
+Cypress.Commands.add('c_emailVerificationMT5', (verification_code, base_url) => {
+  cy.visit(
+    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+      "qaBoxLoginPassword"
+    )}@${base_url}`
+  )
+  cy.origin(
+    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+      "qaBoxLoginPassword"
+    )}@${base_url}`, () => {
+      cy.scrollTo("bottom")
+      const date = new Date()
+      let day = date.getDate()
+      let month = date.getMonth() + 1
+      let year = date.getFullYear()
+      let currentDate = `${year}${month}${day}`
+      const emailTitlePrefix = `${currentDate}-New DMT5 password request`
+      cy.contains('a', (text, element) => {
+        // Check if the text contains the emailTitlePrefix
+        return element.textContent.includes(emailTitlePrefix);
+      }).click()
+      cy
+        .get("a")
+        .eq(1)
+        .invoke("attr", "href")
+        .then((href) => {
+          Cypress.env("verificationdUrl", href)
+          const code = href.match(/code=([A-Za-z0-9]{8})/)
+          if (code) {
+            verification_code = code[1]
+            Cypress.env("walletsWithdrawalCode", verification_code)
+            cy.log(verification_code)
+          } else {
+            cy.log("Unable to find code in the URL")
+          }
+        })
+    }
+  )
+})
 //To be added on hotspots as an edge case only when constantly hitting rate limits
 Cypress.Commands.add("c_rateLimit", () => {
   cy.get("#modal_root, .modal-root", { timeout: 10000 }).then(($element) => {

@@ -764,7 +764,9 @@ Cypress.Commands.add("c_selectCitizenship", (Citizenship) => {
 
 Cypress.Commands.add("c_enterPassword", () => {
   cy.findByLabelText("Create a password").should("be.visible")
-  cy.findByLabelText("Create a password").type(Cypress.env("user_password"),{log:false})
+  cy.findByLabelText("Create a password").type(Cypress.env("user_password"), {
+    log: false,
+  })
   cy.findByRole("button", { name: "Start trading" }).click()
 })
 
@@ -796,77 +798,80 @@ Cypress.Commands.add("c_generateRandomName", () => {
   return "cypress " + randomText
 })
 
-Cypress.Commands.add("c_personalDetails", (firstName, identity, taxResi) => {
-  cy.findByText("US Dollar").click()
-  cy.findByRole("button", { name: "Next" }).click()
-  if (identity == "Onfido") {
-    cy.contains("Any information you provide is confidential").should(
-      "be.visible"
-    )
-  } else if (identity == "IDV") {
-    cy.findByLabelText("Choose the document type").click()
-    cy.findByText("National ID Number").click()
-    cy.findByLabelText("Enter your document number").type("10101010")
-  } else {
-    cy.log("Not IDV or Onfido")
-    cy.get('[type="radio"]').first().click({ force: true })
-  }
-  cy.findByTestId("first_name").type(firstName)
-  cy.findByTestId("last_name").type("automation acc")
-  cy.findByTestId("date_of_birth").click()
-  cy.findByText("2006").click()
-  cy.findByText("Feb").click()
-  cy.findByText("9", { exact: true }).click()
-  if (identity == "IDV") {
-    cy.get(".dc-checkbox__box").click()
-  }
-  cy.findByTestId("phone").type("12345678")
-  cy.findByTestId("place_of_birth").type(taxResi)
-  cy.findByText(taxResi).click()
-  if (identity == "MF" || identity == "DIEL") {
-    cy.findByTestId("citizenship").clear().type(taxResi)
+Cypress.Commands.add(
+  "c_personalDetails",
+  (
+    firstName,
+    identity,
+    taxResi,
+    nationalIDNum,
+    taxIDNum,
+    currency = Cypress.env("accountCurrency").USD
+  ) => {
+    cy.findByText(currency).click()
+    cy.findByRole("button", { name: "Next" }).click()
+    if (identity == "Onfido") {
+      cy.contains("Any information you provide is confidential").should(
+        "be.visible"
+      )
+    } else if (identity == "IDV") {
+      cy.findByLabelText("Choose the document type").click()
+      cy.findByText("National ID Number").click()
+      cy.findByLabelText("Enter your document number").type(nationalIDNum)
+    } else {
+      cy.log("Not IDV or Onfido")
+      cy.get('[type="radio"]').first().click({ force: true })
+    }
+    cy.findByTestId("first_name").type(firstName)
+    cy.findByTestId("last_name").type("automation acc")
+    cy.findByTestId("date_of_birth").click()
+    cy.findByText("2006").click()
+    cy.findByText("Feb").click()
+    cy.findByText("9", { exact: true }).click()
+    if (identity == "IDV") {
+      cy.get(".dc-checkbox__box").click()
+    }
+    cy.findByTestId("phone").type("12345678")
+    cy.findByTestId("place_of_birth").type(taxResi)
     cy.findByText(taxResi).click()
+    if (identity == "MF") {
+      cy.findByTestId("citizenship").clear().type(taxResi)
+      cy.findByText(taxResi).click()
+    }
+    cy.findByTestId("tax_residence").clear().type(taxResi)
+    cy.findByText(taxResi).click()
+    cy.findByTestId("tax_identification_number").type(taxIDNum)
+    if (identity == "MF") {
+      cy.findByTestId("dt_personal_details_container")
+        .findAllByTestId("dt_dropdown_display")
+        .eq(0)
+        .click()
+      cy.get("#Employed").click()
+      cy.findByTestId("dt_personal_details_container")
+        .findAllByTestId("dt_dropdown_display")
+        .eq(1)
+        .click()
+      cy.get("#Hedging").click()
+    } else {
+      cy.findByTestId("dt_personal_details_container")
+        .findByTestId("dt_dropdown_display")
+        .click()
+      cy.get("#Hedging").click()
+    }
+    if (identity == "Onfido") {
+      cy.get(".dc-checkbox__box").click()
+    } else if (identity == "IDV") {
+      cy.get(".dc-checkbox__box").eq(1).click()
+    } else {
+      cy.log("Not IDV or Onfido") //for MF account check
+      cy.get(".dc-checkbox__box").click()
+    }
+    //below check is to make sure previous button is working.
+    cy.findByRole("button", { name: "Previous" }).click()
+    cy.findByRole("button", { name: "Next" }).click()
+    cy.findByRole("button", { name: "Next" }).click()
   }
-  cy.findByTestId("tax_residence").clear().type(taxResi)
-  cy.findByText(taxResi).click()
-  if (identity == "Onfido" || identity == "DIEL") {
-    cy.findByTestId("tax_identification_number").type("1234567890")
-  } else if (identity == "IDV") {
-    cy.findByTestId("tax_identification_number").type("P000111111A")
-  } else {
-    cy.log("Not IDV or Onfido") //for MF account check
-    cy.findByTestId("tax_identification_number").type("12345678A")
-  }
-  if (identity == "MF" || identity == "DIEL") {
-    cy.findByTestId("dt_personal_details_container")
-      .findAllByTestId("dt_dropdown_display")
-      .eq(0)
-      .click()
-    cy.get("#Employed").click()
-    cy.findByTestId("dt_personal_details_container")
-      .findAllByTestId("dt_dropdown_display")
-      .eq(1)
-      .click()
-    cy.get("#Hedging").click()
-  } else {
-    cy.findByTestId("dt_personal_details_container")
-      .findByTestId("dt_dropdown_display")
-      .click()
-    cy.get("#Hedging").click()
-  }
-  if (identity == "Onfido") {
-    cy.get(".dc-checkbox__box").click()
-  } else if (identity == "IDV") {
-    cy.get(".dc-checkbox__box").eq(1).click()
-  } else {
-    cy.log("Not IDV or Onfido") //for MF account check
-    cy.get(".dc-checkbox__box").click()
-  }
-  //below check is to make sure previous button is working.
-  cy.findByRole("button", { name: "Previous" }).click()
-  cy.findByRole("button", { name: "Next" }).click()
-  cy.findByRole("button", { name: "Next" }).click()
-})
+)
 
 Cypress.Commands.add("c_addressDetails", () => {
   cy.findByLabelText("First line of address*").type("myaddress 1")
@@ -885,7 +890,9 @@ Cypress.Commands.add("c_addAccount", () => {
   cy.findByRole("heading", { name: "Your account is ready" }).should(
     "be.visible"
   )
-  cy.get('#real_account_signup_modal').findByRole("button", { name: "Deposit" }).should("be.visible")
+  cy.get("#real_account_signup_modal")
+    .findByRole("button", { name: "Deposit" })
+    .should("be.visible")
   cy.findByRole("button", { name: "Maybe later" }).should("be.visible").click()
   cy.url().should(
     "be.equal",
@@ -960,5 +967,4 @@ Cypress.Commands.add("c_addAccountMF", () => {
     cy.contains("button", "Next").click()
   }
   cy.findByRole("button", { name: "OK" }).click()
-
 })
