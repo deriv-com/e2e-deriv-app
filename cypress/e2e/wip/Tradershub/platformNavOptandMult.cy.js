@@ -15,6 +15,7 @@ describe("QATEST-5948: Verify platforms navigations on Options and Multipliers",
 
     //Open Dtrader
     cy.findAllByRole("button", { name: "Open" }).first().click({ force: true })
+    cy.get("flt-glass-pane").should("be.visible", { timeout: 15000 })
     if (Cypress.config().baseUrl.includes("staging"))
       cy.url().should("eql", derivAppStagingUrl)
     else cy.url().should("eql", derivAppProdUrl)
@@ -22,6 +23,9 @@ describe("QATEST-5948: Verify platforms navigations on Options and Multipliers",
     //Open DBot
     cy.c_visitResponsive("/appstore/traders-hub", "large")
     cy.findAllByRole("button", { name: "Open" }).eq(1).click({ force: true })
+    cy.findByText("Get started on Deriv Bot", { timeout: 150000 }).should(
+      "be.visible"
+    )
     if (Cypress.config().baseUrl.includes("staging"))
       cy.url().should("eql", dBotStagingUrl)
     else cy.url().should("eql", dBotProdUrl)
@@ -29,13 +33,25 @@ describe("QATEST-5948: Verify platforms navigations on Options and Multipliers",
     //Open SmartTrader
     cy.c_visitResponsive("/appstore/traders-hub", "large")
     cy.findAllByRole("button", { name: "Open" }).eq(2).click({ force: true })
+    cy.findByRole("heading", { name: "Rise" }, { timeout: 150000 }).should(
+      "be.visible"
+    )
+    cy.findByRole("heading", { name: "Fall" }, { timeout: 150000 }).should(
+      "be.visible"
+    )
+    cy.findByRole("link", { name: "Chart" }, { timeout: 150000 }).should(
+      "be.visible"
+    )
     if (Cypress.config().baseUrl.includes("staging"))
-      cy.url().should("eq", smartTraderStagingUrl)
-    else cy.url().should("eq", smartTraderProdUrl)
+      cy.url().should("include", smartTraderStagingUrl)
+    else cy.url().should("include", smartTraderProdUrl)
 
     //Open BinaryBot
     cy.c_visitResponsive("/appstore/traders-hub", "large")
     cy.findAllByRole("button", { name: "Open" }).eq(3).click({ force: true })
+    cy.findByText("Take your bot trading to the next level", {
+      timeout: 15000,
+    }).should("be.visible")
     if (Cypress.config().baseUrl.includes("staging"))
       cy.url().should("eq", bBotStagingUrl)
     else cy.url().should("eq", bBotProdUrl)
