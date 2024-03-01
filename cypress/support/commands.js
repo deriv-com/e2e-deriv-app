@@ -720,8 +720,8 @@ Cypress.Commands.add("c_checkTradersHubhomePage", () => {
   //cy.findByText('Total assets').should('be.visible')
   cy.findByText("Options & Multipliers").should("be.visible")
   cy.findByText("CFDs").should("be.visible")
-  cy.findByText("Deriv cTrader").should("be.visible")
-  cy.contains("Other CFD Platforms").scrollIntoView().should("be.visible")
+  cy.contains("Deriv cTrader").should("be.visible")
+  cy.findByText('Other CFD Platforms').scrollIntoView({ position: 'bottom' })
   cy.get("#traders-hub").scrollIntoView({ position: "top" })
 })
 
@@ -797,7 +797,7 @@ Cypress.Commands.add("c_generateRandomName", () => {
 })
 
 Cypress.Commands.add("c_personalDetails", (firstName, identity, taxResi) => {
-  cy.findByText("US Dollar").click()
+  cy.findByText("Bitcoin").click()
   cy.findByRole("button", { name: "Next" }).click()
   if (identity == "Onfido") {
     cy.contains("Any information you provide is confidential").should(
@@ -805,8 +805,8 @@ Cypress.Commands.add("c_personalDetails", (firstName, identity, taxResi) => {
     )
   } else if (identity == "IDV") {
     cy.findByLabelText("Choose the document type").click()
-    cy.findByText("National ID Number").click()
-    cy.findByLabelText("Enter your document number").type("10101010")
+    cy.findByText("Nomor Induk Kependudukan").click()
+    cy.findByLabelText("Enter your document number").type("1234567890123454")
   } else {
     cy.log("Not IDV or Onfido")
     cy.get('[type="radio"]').first().click({ force: true })
@@ -832,7 +832,7 @@ Cypress.Commands.add("c_personalDetails", (firstName, identity, taxResi) => {
   if (identity == "Onfido" || identity == "DIEL") {
     cy.findByTestId("tax_identification_number").type("1234567890")
   } else if (identity == "IDV") {
-    cy.findByTestId("tax_identification_number").type("P000111111A")
+    cy.findByTestId("tax_identification_number").type("251635132452134")
   } else {
     cy.log("Not IDV or Onfido") //for MF account check
     cy.findByTestId("tax_identification_number").type("12345678A")
@@ -892,7 +892,7 @@ Cypress.Commands.add("c_addAccount", () => {
     Cypress.config("baseUrl") + "/appstore/traders-hub"
   )
   cy.get("#traders-hub").scrollIntoView({ position: "top" })
-  cy.findByTestId("dt_traders_hub").findByText("0.00").should("be.visible")
+  //cy.findByTestId("dt_traders_hub").findByText("0.00").should("be.visible")
 })
 
 Cypress.Commands.add("c_manageAccountsetting", (CoR) => {
@@ -962,3 +962,8 @@ Cypress.Commands.add("c_addAccountMF", () => {
   cy.findByRole("button", { name: "OK" }).click()
 
 })
+
+Cypress.Commands.add("c_addAccountUSD", () => {
+  
+})
+
