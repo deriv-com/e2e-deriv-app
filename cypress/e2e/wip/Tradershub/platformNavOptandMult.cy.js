@@ -15,7 +15,7 @@ describe("QATEST-5948: Verify platforms navigations on Options and Multipliers",
 
     //Open Dtrader
     cy.findAllByRole("button", { name: "Open" }).first().click({ force: true })
-    cy.get("flt-glass-pane").should("be.visible", { timeout: 15000 })
+    cy.get("flt-glass-pane", { timeout: 15000 }).should("be.visible")
     if (Cypress.config().baseUrl.includes("staging"))
       cy.url().should("eql", derivAppStagingUrl)
     else cy.url().should("eql", derivAppProdUrl)
@@ -23,7 +23,7 @@ describe("QATEST-5948: Verify platforms navigations on Options and Multipliers",
     //Open DBot
     cy.c_visitResponsive("/appstore/traders-hub", "large")
     cy.findAllByRole("button", { name: "Open" }).eq(1).click({ force: true })
-    cy.findByText("Get started on Deriv Bot", { timeout: 150000 }).should(
+    cy.findByText("Get started on Deriv Bot", { timeout: 15000 }).should(
       "be.visible"
     )
     if (Cypress.config().baseUrl.includes("staging"))
@@ -33,13 +33,13 @@ describe("QATEST-5948: Verify platforms navigations on Options and Multipliers",
     //Open SmartTrader
     cy.c_visitResponsive("/appstore/traders-hub", "large")
     cy.findAllByRole("button", { name: "Open" }).eq(2).click({ force: true })
-    cy.findByRole("heading", { name: "Rise" }, { timeout: 150000 }).should(
+    cy.findByRole("heading", { name: "Rise" }, { timeout: 15000 }).should(
       "be.visible"
     )
-    cy.findByRole("heading", { name: "Fall" }, { timeout: 150000 }).should(
+    cy.findByRole("heading", { name: "Fall" }, { timeout: 15000 }).should(
       "be.visible"
     )
-    cy.findByRole("link", { name: "Chart" }, { timeout: 150000 }).should(
+    cy.findByRole("link", { name: "Chart" }, { timeout: 15000 }).should(
       "be.visible"
     )
     if (Cypress.config().baseUrl.includes("staging"))
