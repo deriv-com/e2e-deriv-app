@@ -330,3 +330,48 @@ Cypress.Commands.add("c_emailVerificationSignUp", (epoch, retryCount = 0, maxRet
       }  
   })  
 })
+Cypress.Commands.add("c_emailVerification2", (base_url,request_type,account_email,retryCount = 0, maxRetries = 3) => {
+  cy.visit(
+    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+      "qaBoxLoginPassword"
+    )}@${base_url}`
+  )
+  const sentArgs = { request_type, account_email }
+  cy.origin(
+    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+      "qaBoxLoginPassword"
+    )}@${base_url}`,{args: [request_type, account_email]}, ([request_type, account_email]) => {
+    cy.document().then((doc) => {
+      const allRelatedEmails = Array.from(doc.querySelectorAll(`a[href*="${request_type}"]`));
+          if (allRelatedEmails.length) {
+            const signUpEmail = allRelatedEmails.pop()          
+            cy.wrap(signUpEmail).click()
+            cy.contains('p', `${account_email}`).should('be.visible')
+            cy.get('a').eq(2).invoke('attr', 'href').then((href) => {
+                  if (href) {
+                    Cypress.env("verificationdUrl", href)
+                    cy.log( Cypress.env("verificationdUrl"))
+                    const code = href.match(/code=([A-Za-z0-9]{8})/)
+                    verification_code = code[1]
+                      cy.log('Verification link found')
+                  } else {
+                    cy.log('Verification link not found')
+                  }
+              })
+          } else {
+            cy.log('email not found')
+          }
+      })
+  })
+  cy.then(()=>{
+      //Retry finding email after 1 second interval
+      if (retryCount <= maxRetries && !Cypress.env("verificationdUrl")) {
+        cy.log(`Retrying... Attempt number: ${retryCount + 1}`);
+        cy.wait(1000);
+        cy.c_emailVerification2(base_url,request_type,account_email, ++retryCount)
+      } 
+      if (retryCount > maxRetries) {
+        throw new Error(`Signup URL extraction failed after ${maxRetries} attempts.`)
+      }  
+  })  
+})
