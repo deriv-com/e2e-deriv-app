@@ -8,26 +8,28 @@ function addcryptowallet(){
     if (buttoncount >0) {
      cy.log ('Button with text "Add" found') 
      for (let i = buttoncount; i>0; i--) {
+      cy.findByTestId('dt-wallets-add-more').scrollIntoView()
+      let walletname
+      cy.get('.wallets-add-more__content')
+        .eq(0)
+        .find('span')
+        .eq(0)
+        .invoke('text')
+        .then((text) => {
+          walletname = text.trim()
       cy.get('.wallets-add-more__card')
         .eq(0)
         .find('button')
         .click()
-
-        let walletname
-        //To verify newly added wallet widgets are expanded in dashboard
-        cy.get('.wallets-card__details__bottom')
-          .find('span')
-          .eq(1)
-          .invoke('text')
-          .then((text) => {
-            walletname = text.trim()
-            cy.log({wallet: walletname})
-            cy.findByRole('button', { name: 'Maybe later' }).click()
-        
-        cy.get('[class*="wallets-accordion wallets-accordion"]')
-          .contains(walletname) 
-          .should('not.have.class', 'class="wallets-accordion__dropdown"')
-            })
+        cy.findByRole('button', { name: 'Maybe later' }).click()
+        cy.findByText(`${walletname}`).should("exist")
+        cy.findByTestId('dt-wallets-add-more').scrollIntoView()
+        cy.get('[class*="wallets-add-more__content"]')
+          .contains(walletname).parent().parent().find('button')
+          .then((button) => {
+            expect(button).to.contain('Added')
+          })
+        })
           }
     } else {
       cy.log('All wallets are already added')

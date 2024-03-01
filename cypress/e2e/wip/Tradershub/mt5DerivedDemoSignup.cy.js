@@ -7,6 +7,7 @@ function generate_epoch() {
 describe("QATEST-5695: Create a Derived Demo CFD account", () => {
   const epoch = generate_epoch()
   const sign_up_mail = `sanity${epoch}+mt5deriveddemo@deriv.com`
+  let country = Cypress.env("countries").CO
 
   beforeEach(() => {
     localStorage.setItem("config.server_url", Cypress.env("stdConfigServer"))
@@ -33,8 +34,8 @@ describe("QATEST-5695: Create a Derived Demo CFD account", () => {
 
       cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop")
       cy.get("h1").contains("Select your country and").should("be.visible")
-      cy.c_selectCountryOfResidence(Cypress.env("CoROnfidoROW"))
-      cy.c_selectCitizenship(Cypress.env("citizenshipOnfidoROW"))
+      cy.c_selectCountryOfResidence(country)
+      cy.c_selectCitizenship(country)
       cy.c_enterPassword()
       cy.c_completeOnboarding()
     })
