@@ -10,7 +10,7 @@ describe("WALL-2830 - Fiat withdrawal send email", () => {
   it("should be able to send withdrawal verification link", () => {
     cy.log("Access Fiat Withdrawal Iframe")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.get(".wallets-accordion__header").contains("Withdraw").first().click()
+    cy.contains("Withdraw").click()
     cy.contains("Please help us verify").should("be.visible")
     if(cy.findByRole('button', { name: 'Send email' }).should("be.visible")){
       cy.findByRole('button', { name: 'Send email' }).click()
@@ -29,7 +29,7 @@ describe("WALL-2830 - Crypto withdrawal content access from email", () => {
       cy.c_login("doughflow")
       cy.c_visitResponsive("/wallets", "large")
       cy.contains("Wallet", { timeout: 10000 }).should("exist")
-      cy.get(".wallets-accordion__header").contains("Withdraw").first().click()
+      cy.contains("Withdraw").click()
     })
   
     it("should be able to access doughflow iframe", () => {

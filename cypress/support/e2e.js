@@ -114,7 +114,6 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
       cy.findByRole('button', { name: 'Ok' }).click();
     }
   })
-
   cy.get('#modal_root, .modal-root', { timeout: 10000 })
     .then(($element) => {
       if ($element.children().length > 0) {
