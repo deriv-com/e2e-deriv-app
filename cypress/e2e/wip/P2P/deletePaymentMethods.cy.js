@@ -13,14 +13,11 @@ function deletePaymentMethod() {
     cy.get('div.payment-method-card__body span').each(($span, index) => {
         const value = $span.text().trim()
 
-        if (index === 0 && value !== '' && !paymentName) {
+        if ((index === 0 || index === 1) && value !== '' && !paymentName) {
             paymentName = value
             return
         }
-        else if (index === 1 && value !== '' && !paymentName) {
-            paymentName = value
-            return
-        }
+        
         if (value !== '') {
             paymentID = $span.first().text().trim()
             if (paymentName && paymentID) {
