@@ -12,20 +12,18 @@ function navigateToTab(tabName) {
 function deletePaymentMethod() {
     cy.get('div.payment-method-card__body span').each(($span, index) => {
         const value = $span.text().trim()
-
         if ((index === 0 || index === 1) && value !== '' && !paymentName) {
             paymentName = value
             return
         }
-        
         if (value !== '') {
-            paymentID = $span.first().text().trim()
-            if (paymentName && paymentID) {
+            paymentID = $span.text().trim()
+            if (paymentName && paymentName != '' && paymentID) {
                 cy.findAllByTestId('dt_dropdown_display').first().click()
                 cy.get('#delete').should('be.visible').click()
                 cy.get('div[class="dc-modal-header"]', { withinSubject: null }).should('be.visible').and('exist').contains(`Delete ${paymentName}?`)
-                cy.get('div.dc-modal-footer button', { withinSubject: null}).first().should('be.visible').and('have.text', 'Yes, remove').click()
-                cy.findByText(paymentID).should('not.visible')
+                cy.get('div.dc-modal-footer button', { withinSubject: null }).first().should('be.visible').and('have.text', 'Yes, remove').click()
+                cy.get(`span:contains(${paymentID})`, { withinSubject: null }).should('not.exist')
             }
             return false
         }
