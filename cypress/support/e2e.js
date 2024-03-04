@@ -296,6 +296,7 @@ Cypress.Commands.add("c_selectDemoAccount", () => {
 
 Cypress.Commands.add("c_emailVerificationSignUp", (epoch, retryCount = 0, maxRetries = 3) => {
   const authUrl = `https://${Cypress.env("emailUser")}:${Cypress.env("emailPassword")}@${Cypress.env("event_email_url")}`
+  cy.log(authUrl)
   cy.visit(authUrl, {log: false})
 
   cy.origin(`https://${Cypress.env("event_email_url")}`, { args: { epoch} }, ({ epoch}) => {
