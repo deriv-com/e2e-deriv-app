@@ -43,6 +43,7 @@ function generate_epoch() {
       cy.c_completeOnboarding()
       cy.findByTestId("dt_dropdown_display").click()
       cy.get("#real").click()
+      cy.findByRole("button", { name: "Get a Deriv account" }).click()
       cy.c_generateRandomName().then((firstName) => {
         cy.c_personalDetails(
           firstName,
