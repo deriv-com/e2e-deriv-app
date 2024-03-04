@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-import {navigateToDerivP2P, closeNotificationHeader} from '../P2P/support/common'
+import '../../../support/p2p'
 
 let paymentMethod = null
 
@@ -62,9 +62,9 @@ describe("QATEST-2831 - My Profile page - Edit Payment Method", () => {
     })
 
     it('Should be able to edit the existing payment method in responsive mode.', () => {
-        navigateToDerivP2P() //Navigation to P2P Handler
+        cy.c_navigateToDerivP2P() //Navigation to P2P Handler
         cy.findByText('Deriv P2P').should('exist')
-        closeNotificationHeader()
+        cy.c_closeNotificationHeader()
         navigateToTab('My profile')
         cy.findByText('Available Deriv P2P balance').should('be.visible') //verifes from a page text after navigating to my profile tab
         cy.findByText('Payment methods').should('be.visible').click()

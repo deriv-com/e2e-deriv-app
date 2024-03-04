@@ -1,6 +1,4 @@
-import '@testing-library/cypress/add-commands'
-
-export function navigateToDerivP2P() {
+Cypress.Commands.add('c_navigateToDerivP2P', () => {
     cy.get('#dt_mobile_drawer_toggle').should('be.visible').click()
     cy.findByRole('heading', { name: 'Cashier' }).should('be.visible').click()
     cy.findByRole('link', { name: 'Deriv P2P' }).should('be.visible').click()
@@ -10,9 +8,9 @@ export function navigateToDerivP2P() {
         }
     })
     cy.findByRole('button', { name: 'Confirm' }).should('be.visible').click()
-}
+})
 
-export function closeNotificationHeader() {
+Cypress.Commands.add('c_closeNotificationHeader', () => {
     cy.document().then(doc => {
         let notification = doc.querySelector('.notification__header')
         if (notification) {
@@ -22,10 +20,10 @@ export function closeNotificationHeader() {
             })
             cy.findByRole('button', { name: 'Close' }).should('be.visible').click().and('not.exist')
             notification = null
-            cy.then(() => {closeNotificationHeader()})
+            cy.then(() => { cy.c_closeNotificationHeader() })
         }
         else {
             cy.log('Notification header did not appear')
         }
     })
-}
+})

@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-import { navigateToDerivP2P, closeNotificationHeader } from '../P2P/support/common'
+import '../../../support/p2p'
 
 let paymentMethod = null
 let paymentName = null
@@ -37,9 +37,9 @@ describe("QATEST-2839 - My Profile page - Delete Payment Method", () => {
     })
 
     it('Should be able to delete the existing payment method in responsive mode.', () => {
-        navigateToDerivP2P()
+        cy.c_navigateToDerivP2P()
         cy.findByText('Deriv P2P').should('exist')
-        closeNotificationHeader()
+        cy.c_closeNotificationHeader()
         navigateToTab('My profile')
         cy.findByText('Available Deriv P2P balance').should('be.visible')
         cy.findByText('Payment methods').should('be.visible').click()
