@@ -18,7 +18,7 @@ function deletePaymentMethod() {
         }
         if (value !== '') {
             paymentID = $span.text().trim()
-            if (paymentName && paymentName != '' && paymentID) {
+            if (paymentName && paymentID) {
                 cy.findAllByTestId('dt_dropdown_display').first().click()
                 cy.get('#delete').should('be.visible').click()
                 cy.get('div[class="dc-modal-header"]', { withinSubject: null }).should('be.visible').and('exist').contains(`Delete ${paymentName}?`)
