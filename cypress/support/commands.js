@@ -20,6 +20,14 @@ Cypress.Commands.add('c_navigateToPOIResponsive', (country) => {
   cy.findByRole('button', { name: 'Next' }).click()
 })
 
+Cypress.Commands.add("c_fillDate", (year, month, day) => {
+  cy.get('input[name="date_of_birth"]').click()
+  cy.get(`span[data-year="${year}"]`).click()
+  cy.get(`span[data-month="${month - 1}"]`).click()
+  cy.get(`span[data-date="2000-09-${day}"]`).click()
+})
+
+Cypress.Commands.add("c_checkTradersHubhomePage", () => {
 Cypress.Commands.add('c_checkTradersHubhomePage', () => {
   //cy.findByText('Total assets').should('be.visible')
   cy.findByText('Options & Multipliers').should('be.visible')
