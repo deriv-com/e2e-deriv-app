@@ -1,5 +1,6 @@
 import './commands'
 import './dtrader'
+import './p2p'
 require('cypress-xpath')
 
 const { getLoginToken } = require("./common")

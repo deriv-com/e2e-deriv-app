@@ -1,5 +1,4 @@
 import '@testing-library/cypress/add-commands'
-import '../../../support/p2p'
 
 let paymentMethod = null
 
