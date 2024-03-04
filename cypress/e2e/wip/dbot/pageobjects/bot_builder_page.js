@@ -72,11 +72,11 @@ class BotBuilder {
   }
 
   get digitEvenLogo () {
-    return cy.xpath('//*[name()="use" and contains(@*, "ic-tradetype-digiteven")]');  
+    return cy.get('svg.dc-icon.dc-icon--brand#ic-tradetype-digiteven'); 
   }
 
   get digitOddLogo () {
-    return cy.xpath('//*[name()="use" and contains(@*, "ic-tradetype-digitodd")]');  
+    return cy.get('svg.dc-icon.dc-icon--brand#ic-tradetype-digitodd');   
   }
 
   openBotBuilderTab = () => {
