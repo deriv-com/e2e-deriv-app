@@ -62,7 +62,7 @@ describe("QATEST-2821 My Profile page : User add their first payment method", ()
         cy.c_visitResponsive('/appstore/traders-hub', 'small')
     })
     it('Should be able to add first payment method in responsive mode.', () => {
-        navigateToDerivP2P() //Navigation to P2P Handler
+        navigateToDerivP2P()
         cy.findByText('Deriv P2P').should('exist')
         closeNotificationHeader()
         navigateToTab('My profile')
