@@ -72,11 +72,13 @@ class BotBuilder {
   }
 
   get digitEvenLogo () {
-    return cy.get('svg.dc-icon.dc-icon--brand#ic-tradetype-digiteven'); 
+    return cy.xpath ("//*[name()='use' and contains(@*,'ic-tradetype-digiteven')]"
+    );
   }
 
   get digitOddLogo () {
-    return cy.get('svg.dc-icon.dc-icon--brand#ic-tradetype-digitodd');   
+    return cy.xpath ("//*[name()='use' and contains(@*,'ic-tradetype-digitodd')]"
+    );
   }
 
   openBotBuilderTab = () => {

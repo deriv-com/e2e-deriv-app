@@ -23,35 +23,21 @@ describe("QATEST-109419: Run custom strategy Even Odd", () => {
   it("Run Even and Odd Purchase", () => {
     botDashboard.importStrategy("EvenOdd");
     common.skipTour();
-    cy.reload();
-    cy.wait(2000)
+    cy.reload(); // adding this until bug BOT-1147 is fixed 
+    cy.loading_check();
     common.runBot();
     common.stopBot(10000);
     runPanel.transactionsTab.click(); //Switch to transactions tab
-    
-    // Check if the even and odd purchased alternately
-    botBuilder.digitEvenLogo.should('be.visible');
-    botBuilder.digitOddLogo.should('be.visible');
-
-  //   botBuilder.digitEvenLogo.should('be.visible').then($elem2 => {
-  //     botBuilder.digitOddLogo.should('be.visible').then($elem1 => {
-  //       const rect1 = $elem1[0].getBoundingClientRect();
-  //       const rect2 = $elem2[0].getBoundingClientRect();
-  //       expect(rect1.top).to.be.greaterThan(rect2.top);
-  //     });
-  // });
-});
-
-    // cy.xpath('(//*[name()="use" and contains(@*, "ic-tradetype-digiteven")])')
-    // .should('be.visible')
-    // .then($elem2 => {
-    // cy.xpath('(//*[name()="use" and contains(@*, "ic-tradetype-digitodd")])')
-    //   .should('be.visible')
-    //   .then($elem1 => {
-  
-
-
-    after(() => {
-        //botDashboard.deleteStrategy();
-    });
+      botBuilder.digitEvenLogo.should('exist').then($elem2 => {
+        botBuilder.digitOddLogo.should('exist').then($elem1 => {
+          const icon1 = $elem1[0].getBoundingClientRect();
+          const icon2 = $elem2[0].getBoundingClientRect();
+          expect(icon1.top).to.be.lessThan(icon2.top); // Ensure that odd is purchased after even
+        });
+      });
   });
+  
+  after(() => {
+        botDashboard.deleteStrategy();
+    });
+});
