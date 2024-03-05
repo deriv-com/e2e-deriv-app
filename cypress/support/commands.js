@@ -818,7 +818,7 @@ Cypress.Commands.add(
       cy.findByLabelText("Choose the document type").click()
       cy.findByText("National ID Number").click()
       cy.findByLabelText("Enter your document number").type(nationalIDNum)
-    } else if (identity == "MF" || identity == "DIEL") {
+    } else {
       cy.log("Not IDV or Onfido")
       cy.get('[type="radio"]').first().click({ force: true })
     }
@@ -901,7 +901,8 @@ Cypress.Commands.add("c_addAccount", () => {
     Cypress.config("baseUrl") + "/appstore/traders-hub"
   )
   cy.get("#traders-hub").scrollIntoView({ position: "top" })
-  cy.close_notification_banner()
+  //TODO change the below command name for closing notification banner after the code is merged
+  cy.close_notification_banner()  
   cy.findAllByTestId("dt_balance_text_container").eq(0).should("be.visible")
 })
 

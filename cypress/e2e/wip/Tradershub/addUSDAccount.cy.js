@@ -47,7 +47,7 @@ function generate_epoch() {
       cy.c_generateRandomName().then((firstName) => {
         cy.c_personalDetails(
           firstName,
-          "CR",
+          "Onfido",
           country,
           nationalIDNum,
           taxIDNum,
