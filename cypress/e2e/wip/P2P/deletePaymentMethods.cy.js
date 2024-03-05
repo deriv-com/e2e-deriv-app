@@ -8,13 +8,11 @@ function navigateToTab(tabName) {
 }
 
 function deletePaymentMethod() {
-    cy.contains('div.payment-method-card__body span', paymentID).should('exist').then(() => {
-        cy.contains('div.payment-method-card__body span', paymentID).should('exist').parent().prev().find('.dc-dropdown-container').and('exist').click()
-        cy.get('#delete').should('be.visible').click()
-        cy.get('div[class="dc-modal-header"]', { withinSubject: null }).should('be.visible').and('exist').contains(`Delete ${paymentName}?`)
-        cy.get('div.dc-modal-footer button', { withinSubject: null }).first().should('be.visible').and('have.text', 'Yes, remove').click()
-        cy.get(`span:contains(${paymentID})`, { withinSubject: null }).should('not.exist')
-    })
+    cy.findByText(paymentID).should('exist').parent().prev().find('.dc-dropdown-container').and('exist').click()
+    cy.get('#delete').should('be.visible').click()
+    cy.findByText(`Delete ${paymentName}?`).should('be.visible')
+    cy.findByRole('button', { name: 'Yes, remove' }).should('be.visible').click()
+    cy.findByText(paymentID).should('not.exist')
 }
 
 function generateAccountNumberString(length) {
