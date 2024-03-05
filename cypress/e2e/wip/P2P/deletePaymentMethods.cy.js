@@ -1,31 +1,19 @@
 import '@testing-library/cypress/add-commands'
 
-let paymentMethod = null
-let paymentName = null
-let paymentID = null
+let paymentName = 'Bank Alfalah TG'
+let paymentID = generateAccountNumberString(12)
 
 function navigateToTab(tabName) {
     cy.findByText(tabName).click()
 }
 
 function deletePaymentMethod() {
-    cy.get('div.payment-method-card__body span').each(($span, index) => {
-        const value = $span.text().trim()
-        if ((index === 0 || index === 1) && value !== '' && !paymentName) {
-            paymentName = value
-            return
-        }
-        if (value !== '') {
-            paymentID = $span.text().trim()
-            if (paymentName && paymentID) {
-                cy.findAllByTestId('dt_dropdown_display').first().click()
-                cy.get('#delete').should('be.visible').click()
-                cy.get('div[class="dc-modal-header"]', { withinSubject: null }).should('be.visible').and('exist').contains(`Delete ${paymentName}?`)
-                cy.get('div.dc-modal-footer button', { withinSubject: null }).first().should('be.visible').and('have.text', 'Yes, remove').click()
-                cy.get(`span:contains(${paymentID})`, { withinSubject: null }).should('not.exist')
-            }
-            return false
-        }
+    cy.contains('div.payment-method-card__body span', paymentID).should('exist').then(() => {
+        cy.contains('div.payment-method-card__body span', paymentID).should('exist').parent().prev().find('.dc-dropdown-container').and('exist').click()
+        cy.get('#delete').should('be.visible').click()
+        cy.get('div[class="dc-modal-header"]', { withinSubject: null }).should('be.visible').and('exist').contains(`Delete ${paymentName}?`)
+        cy.get('div.dc-modal-footer button', { withinSubject: null }).first().should('be.visible').and('have.text', 'Yes, remove').click()
+        cy.get(`span:contains(${paymentID})`, { withinSubject: null }).should('not.exist')
     })
 }
 
@@ -44,18 +32,17 @@ function setText(fieldName, fieldText) {
 }
 
 function addPaymentMethod() {
-    const accountNumberString = generateAccountNumberString(12)
     cy.findByRole('button').should('be.visible').and('contain.text', 'Add').click()
     setText('Payment method', 'Bank Transfer')
     cy.findByText('Bank Transfer').click()
-    setText('Account Number', accountNumberString)
+    setText('Account Number', paymentID)
     setText('SWIFT or IFSC code', '9087')
     setText('Bank Name', 'Bank Alfalah TG')
     setText('Branch', 'Branch number 42')
     cy.get('textarea[name="instructions"]').type('Follow instructions.').should('have.value', 'Follow instructions.')
     cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
     cy.findByText('Payment methods').should('be.visible')
-    cy.findByText(accountNumberString).should('be.visible')
+    cy.findByText(paymentID).should('be.visible')
 }
 
 describe("QATEST-2839 - My Profile page - Delete Payment Method", () => {
@@ -73,12 +60,6 @@ describe("QATEST-2839 - My Profile page - Delete Payment Method", () => {
         cy.findByText('Payment methods').should('be.visible').click()
         cy.findByText('Payment methods').should('be.visible')
         addPaymentMethod()
-        cy.get('span.payment-methods-list__list-header').first().invoke('text').then((value) => {
-            paymentMethod = value.trim()
-            cy.log("Payment type available: " + paymentMethod)
-            cy.contains('div.payment-methods-list__list-container span', paymentMethod).next().within(() => {
-                deletePaymentMethod()
-            })
-        })
+        deletePaymentMethod()
     })
 })
