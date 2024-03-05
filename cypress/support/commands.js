@@ -707,7 +707,7 @@ Cypress.Commands.add("close_notification_banner", () => {
   })
 })
 
-Cypress.Commands.add("navigate_to_poi", (country) => {
+Cypress.Commands.add("c_navigate_to_poi", (country) => {
   cy.c_visitResponsive("/account/proof-of-identity", "large")
   cy.get('input[name="country_input"]').click()
   cy.get('input[name="country_input"]').type(country)
@@ -715,29 +715,28 @@ Cypress.Commands.add("navigate_to_poi", (country) => {
   cy.contains("button", "Next").click()
 })
 
-Cypress.Commands.add("navigate_to_poi_responsive", (country) => {
+Cypress.Commands.add("c_navigate_to_poi_responsive", (country) => {
   cy.c_visitResponsive("/account/proof-of-identity", "small")
-  cy.get('button.notification__close-button').click();
-  cy.wait(500)
-  cy.get('button.notification__close-button').click();
+  cy.close_notification_banner()
+  cy.close_notification_banner()
   cy.get('select[name="country_input"]').select(country)
   cy.contains("button", "Next").click()
 })
 
-Cypress.Commands.add("choose_document_type", (document_type) => {
+Cypress.Commands.add("c_choose_document_type", (document_type) => {
   cy.get('input[name="document_type"]').click()
   cy.contains(document_type).click()
 })
 
-Cypress.Commands.add("choose_document_type_responsive", (document_type) => {
+Cypress.Commands.add("c_choose_document_type_responsive", (document_type) => {
   cy.get('select[name="document_type"]').select(document_type)
 })
 
-Cypress.Commands.add("fill_data", (input_name, data) => {
+Cypress.Commands.add("c_fill_data", (input_name, data) => {
   cy.findByTestId(`${input_name}`).clear().type(`${data}`);
 })
 
-Cypress.Commands.add("fill_date", (year, month, day) => {
+Cypress.Commands.add("c_fill_date", (year, month, day) => {
   cy.findByTestId('date_of_birth').type(`${year}-${month}-${day}`)
 })
 
