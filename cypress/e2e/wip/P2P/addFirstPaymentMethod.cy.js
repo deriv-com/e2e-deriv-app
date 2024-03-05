@@ -1,6 +1,5 @@
 import '@testing-library/cypress/add-commands'
 
-let paymentMethod = 'Bank Transfer'
 let paymentName = 'Bank Alfalah TG'
 let paymentID = generateAccountNumberString(12)
 
