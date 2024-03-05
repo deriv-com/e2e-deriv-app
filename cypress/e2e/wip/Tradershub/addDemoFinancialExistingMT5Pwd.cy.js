@@ -17,7 +17,7 @@ describe("QATEST-5724: CFDs - Create a demo Financial account using existing MT5
       cy.c_enterValidEmail(sign_up_mail)
     })
 
- it("Verify I can signup for a demo derived CFD account", () => {
+ it("Verify I can add a demo financial account using exisiting MT5 derieved account password", () => {
     cy.c_emailVerificationSignUp(epoch)
     cy.then(() => {
         cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop").then(() => {
