@@ -344,8 +344,8 @@ Cypress.Commands.add("c_emailVerification2", (base_url,request_type,account_emai
     cy.document().then((doc) => {
       const allRelatedEmails = Array.from(doc.querySelectorAll(`a[href*="${request_type}"]`));
           if (allRelatedEmails.length) {
-            const signUpEmail = allRelatedEmails.pop()          
-            cy.wrap(signUpEmail).click()
+            const verificationEmail = allRelatedEmails.pop()          
+            cy.wrap(verificationEmail).click()
             cy.contains('p', `${account_email}`).should('be.visible')
             cy.get('a').eq(2).invoke('attr', 'href').then((href) => {
                   if (href) {
