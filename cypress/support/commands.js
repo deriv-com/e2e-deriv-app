@@ -4,9 +4,9 @@ Cypress.Commands.add('c_loadingCheck', () => {
 
 Cypress.Commands.add('navigate_to_poi', (country) => {
   cy.get('a[href="/account/personal-details"]').click()
-  cy.get('a[href="/account/proof-of-identity"]').click()
-  cy.get('input[name="country_input"]').click()
-  cy.get('input[name="country_input"]').type(country)
+  cy.findByRole('link', { name: 'Proof of identity' }).click()
+  cy.findByLabel('Country').click()
+  cy.findByText(country).click()
   cy.contains(country).click()
   cy.contains('button', 'Next').click()
 })

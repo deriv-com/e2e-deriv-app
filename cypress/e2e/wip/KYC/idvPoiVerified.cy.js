@@ -3,13 +3,13 @@ import '@testing-library/cypress/add-commands'
 describe('QATEST-22037 IDV verified by Smile Identity provider', () => {
     beforeEach(()=> {
         cy.c_login();
-        cy.c_navigateToPOIResponsive('Republic of QA');
+        //cy.c_navigateToPOIResponsive('Republic of QA')
+        cy.c_navigateToPOIDesktop('Republic of QA');
 
     })
     
     it('Should Return IDV Verified', () => {
-        //cy.get('select[name="document_type"]').select('Passport')
-        cy.findByLabelText("Choose the document type").select('Passport')
+        cy.get('select[name="document_type"]').select('Passport')
         cy.findByLabelText('Enter your document number').type('12376678')
         cy.findByTestId('first_name').clear().type('Verifiede')
         cy.findByTestId('last_name').clear().type('Namee')
