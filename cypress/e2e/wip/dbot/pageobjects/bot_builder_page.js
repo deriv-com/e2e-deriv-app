@@ -73,12 +73,12 @@ class BotBuilder {
 
   get digitEvenLogo () {
     return cy.xpath ("//*[name()='use' and contains(@*,'ic-tradetype-digiteven')]"
-    );
+    )
   }
 
   get digitOddLogo () {
     return cy.xpath ("//*[name()='use' and contains(@*,'ic-tradetype-digitodd')]"
-    );
+    )
   }
 
   openBotBuilderTab = () => {
