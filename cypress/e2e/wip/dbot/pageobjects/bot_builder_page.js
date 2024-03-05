@@ -66,7 +66,7 @@ class BotBuilder {
   }
 
   get confirmReset() {
-    return cy.get(
+    return cy.xpath(
       "//span[contains(@class,'dc-btn__text') and text() = 'OK']"
     );
   }
