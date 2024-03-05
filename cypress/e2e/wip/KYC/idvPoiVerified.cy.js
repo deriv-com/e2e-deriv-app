@@ -4,8 +4,6 @@ describe('QATEST-22037 IDV verified by Smile Identity provider', () => {
     beforeEach(()=> {
         cy.c_login();
         cy.c_navigateToPOIResponsive('Republic of QA')
-    
-
     })
     
     it('Should Return IDV Verified', () => {
