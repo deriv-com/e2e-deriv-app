@@ -18,6 +18,7 @@ on:
         - full
         - smoke
         - wip/CFD/testcases/MT5
+        - wip/dbot/
         - wip/dbot/sanity-tests
         - wip/Wallets/cashier
         - wip/dtrader

@@ -30,6 +30,20 @@ class BotDashboard {
     );
   }
 
+  get botBuilderActiveTab() {
+    return cy.xpath(
+      `//li[contains(@class, "dc-tabs__item dc-tabs__active") and text()="Bot Builder"]`
+      );
+  }
+
+  get botBuilderDash() {
+    return cy.get("#IcBotBuilder");
+  }
+  
+  get quickStrategyDash() {
+    return cy.get("#IcQuickStrategy");
+  }
+
   /**
   * Import custom strategy from dashboard
   * @param strategyFileName File Name
@@ -53,6 +67,14 @@ class BotDashboard {
   goToDashboard = () => {
     this.dashboardTab.click();
   };
+
+  openBotBuilderQaction = () => {
+    this.botBuilderDash.should("be.visible").click();
+  }
+
+  openQsQaction = () => {
+    this.quickStrategyDash.should("be.visible").click();
+  }
 }
 
 export default BotDashboard;
