@@ -33,7 +33,7 @@ class BotDashboard {
   get botBuilderActiveTab() {
     return cy.xpath(
       `//li[contains(@class, "dc-tabs__item dc-tabs__active") and text()="Bot Builder"]`
-      );
+    );
   }
 
   get botBuilderDash() {
@@ -70,11 +70,11 @@ class BotDashboard {
 
   openBotBuilderQaction = () => {
     this.botBuilderDash.should("be.visible").click();
-  }
+  };
 
   openQsQaction = () => {
     this.quickStrategyDash.should("be.visible").click();
-  }
+  };
 }
 
 export default BotDashboard;
