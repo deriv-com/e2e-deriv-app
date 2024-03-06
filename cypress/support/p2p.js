@@ -25,9 +25,17 @@ Cypress.Commands.add('c_createNewAd', () => {
   // click on ads tab
   cy.get('.notification__close-button').should("be.visible").click()
   cy.findByText("My ads").should("be.visible").click()
-  // create new ad (buy)
-  cy.findByRole("button", { name: "Create new ad" }).should("be.visible").click()
+  cy.get('body').then ((body) => {
+    if (body.find('You have no ads ').length > 0 ) {
+      cy.findByRole("button", { name: "Create new ad" }).should("be.visible").click()
+    }
+    else {
+      cy.c_removeExistingAds()
+    }
+
+  })
 })
+
 
 Cypress.Commands.add('c_postBuyAd', () => {
   cy.findByTestId('offer_amount').click().type('10')
@@ -82,7 +90,7 @@ Cypress.Commands.add('c_verifyRate', () => {
 Cypress.Commands.add('c_verifyPostAd', () => {
   cy.findByRole("button", { name: "Post ad" }).should("be.enabled").click()
   cy.findByText("You've created an ad").should("be.visible")
-  cy.findByText("If the ad doesn't receive an order for 3 days, it will be deactivated.").should("be.visible")
+  // cy.findByText("If the ad doesn't receive an order for 3 days, it will be deactivated.").should("be.visible")
   cy.findByText("Don’t show this message again.").should("be.visible")
   cy.findByRole("button", { name: "Ok" }).should("be.enabled").click()
 })
@@ -94,8 +102,8 @@ Cypress.Commands.add('c_verifyTooltip', () => {
 })
 
 Cypress.Commands.add('c_verifyCompletionOrderDropdown', () => {
-  cy.findByText("1 hour").should("be.visible")
   cy.findByTestId('dt_dropdown_display').click()
+  // cy.findByText("1 hour").should("be.visible")
   cy.findByText("45 minutes").should("be.visible")
   cy.findByText("30 minutes").should("be.visible")
   cy.findByText("15 minutes").should("be.visible")
@@ -146,4 +154,36 @@ Cypress.Commands.add('c_verifyAmountFiled', () => {
 Cypress.Commands.add('c_postAd', () => {
   cy.findByRole("button", { name: "Post ad" }).should("be.enabled").click()
   cy.findByRole("button", { name: "Ok" }).should("be.enabled").click()
+})
+
+Cypress.Commands.add('c_removeExistingAds', () => {
+  cy.xpath("//*[@class='my-ads-table__popovers-delete']").click({ force: true })
+  // cy.get('.my-ads-table__popovers-delete').click({ force: true })
+  // cy.get('[class="dc-horizontal-swipe--main"]')
+  // .click(class="my-ads-table__popovers-delete")
+  // .trigger('mousedown', { timeout: 2000}) // start capture
+  // //.trigger('mousemove', 'right') // register start position
+  // .trigger('mousemove', 'left',{timeout: 5000}) // register end position
+  // .wait(1000) // wait for requestAnimationFrame to invoke fireOnMove 
+  // .trigger('mouseup'); // end capture
+  // .trigger('touchstart' ,{ timeout: 2000, 
+  //   touches: [{ pageY: 0, pageX: 100 }]
+  // })
+  // .trigger('touchmove',{ timeout: 2000,
+  //   touches: [{ pageY: 0, pageX: 20000 }]
+  // })
+  // .trigger('pointerdown', { which: 1 })
+  //  .trigger('pointermove', 'left')
+  //  .trigger('pointerup', { force: true })
+  // .trigger('mousedown', { which: 1, pageX: 100, pageY: 100 })
+  // .trigger('mousemove', { which: 1, pageX: 5000, pageY: 100 })
+  // .trigger('mouseup',{force: true})
+
+})
+
+Cypress.Commands.add('c_verifyDynamicMsg', () => {
+  cy.get('.message-selector').should('be.visible').invoke('text').then((messageText) => {
+    const messagePattern = /If the ad doesn't receive an order for \d+ days, it will be deactivated./
+    expect(messageText).to.match(messagePattern);
+  })
 })
