@@ -12,11 +12,11 @@ function savePaymentDetailsAndVerify(newAccountNumberString) {
 }
 
 function editPaymentMethod() {
-        cy.findByRole('textbox', { name: 'Account Number' }).clear().type(newAccountNumberString).should('have.value', newAccountNumberString);
-        cy.findByRole('textbox', { name: 'SWIFT or IFSC code' }).clear().type('23435').should('have.value', '23435');
-        cy.findByRole('textbox', { name: 'Bank Name' }).clear().type('Bank Alfalah TG').should('have.value', 'Bank Alfalah TG');
-        cy.findByRole('textbox', { name: 'Branch' }).clear().type('Branch number 42').should('have.value', 'Branch number 42');
-        savePaymentDetailsAndVerify(newAccountNumberString)
+    cy.findByRole('textbox', { name: 'Account Number' }).clear().type(newAccountNumberString).should('have.value', newAccountNumberString);
+    cy.findByRole('textbox', { name: 'SWIFT or IFSC code' }).clear().type('23435').should('have.value', '23435');
+    cy.findByRole('textbox', { name: 'Bank Name' }).clear().type('Bank Alfalah TG').should('have.value', 'Bank Alfalah TG');
+    cy.findByRole('textbox', { name: 'Branch' }).clear().type('Branch number 42').should('have.value', 'Branch number 42');
+    savePaymentDetailsAndVerify(newAccountNumberString)
 }
 
 describe("QATEST-2831 - My Profile page - Edit Payment Method", () => {
