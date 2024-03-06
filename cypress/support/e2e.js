@@ -111,7 +111,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
   cy.document().then((doc)=>{
     const launchModal = doc.querySelector('[data-test-id="launch-modal"]')
     if(launchModal){
-      cy.findByRole('button', { name: 'Ok' }).click();
+      cy.findByRole('button', { name: 'Ok' }).click()
     }
   })
   cy.get('#modal_root, .modal-root', { timeout: 10000 })
@@ -243,7 +243,7 @@ Cypress.on('uncaught:exception', (err, runnable, promise) => {
 Cypress.Commands.add("c_selectRealAccount", () => {
   cy.findByTestId('dt_acc_info').should('be.visible').click()
   cy.findByText('Real').should('be.visible').click()
-  cy.get('acc-switcher__new-account').should('not.exist');
+  cy.get('acc-switcher__new-account').should('not.exist')
   cy.get('.dc-content-expander__content').should('be.visible').click()
   cy.findByTestId('dt_acc_info').should('be.visible')
 })
@@ -269,7 +269,7 @@ Cypress.Commands.add("c_emailVerificationSignUp", (epoch, retryCount = 0, maxRet
             cy.contains('p', `sanity${epoch}`).should('be.visible')
             cy.get('a').last().invoke('attr', 'href').then((href) => {
                   if (href) {
-                      Cypress.env('signUpUrl', href);
+                      Cypress.env('signUpUrl', href)
                       cy.log('Sign up URL found')
                   } else {
                     cy.log('Sign up URL not found')
@@ -283,8 +283,8 @@ Cypress.Commands.add("c_emailVerificationSignUp", (epoch, retryCount = 0, maxRet
   cy.then(()=>{
       //Retry finding email after 1 second interval
       if (retryCount <= maxRetries && !Cypress.env("signUpUrl")) {
-        cy.log(`Retrying... Attempt number: ${retryCount + 1}`);
-        cy.wait(1000);
+        cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
+        cy.wait(1000)
         cy.c_emailVerificationSignUp(epoch, ++retryCount)
       } 
       if (retryCount > maxRetries) {
