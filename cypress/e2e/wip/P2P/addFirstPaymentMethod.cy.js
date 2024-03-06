@@ -4,7 +4,7 @@ import { generateAccountNumberString } from '../../../support/p2p'
 let paymentName = 'Bank Alfalah TG'
 let paymentID = generateAccountNumberString(12)
 
-describe("QATEST-2821 My Profile page : User add their first payment method", () => {
+describe("QATEST-2821 - My Profile page : User add their first payment method", () => {
     beforeEach(() => {
         cy.c_login()
         cy.c_visitResponsive('/appstore/traders-hub', 'small')
