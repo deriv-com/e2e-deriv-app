@@ -20,6 +20,7 @@ on:
         - wip/CFD/testcases/MT5
         - wip/dbot/sanity-tests
         - wip/Wallets/cashier
+        - wip/Wallets/cfd
         - wip/dtrader
       testlink:
         type: string
