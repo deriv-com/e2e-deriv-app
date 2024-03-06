@@ -34,7 +34,7 @@ function addPaymentMethod() {
     cy.findByText('Bank Transfer').click()
     setText('Account Number', paymentID)
     setText('SWIFT or IFSC code', '9087')
-    setText('Bank Name', 'Bank Alfalah TG')
+    setText('Bank Name', paymentName)
     setText('Branch', 'Branch number 42')
     cy.get('textarea[name="instructions"]').type('Follow instructions.').should('have.value', 'Follow instructions.')
     cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
