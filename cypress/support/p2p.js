@@ -27,3 +27,34 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
         }
     })
 })
+
+Cypress.Commands.add('c_addPaymentMethod', (paymentID, paymentName) => {
+    cy.findByRole('textbox', { name: 'Payment method' }).clear().type('Bank').should('have.value', 'Bank')
+    cy.findByText('Bank Transfer').click()
+    cy.findByRole('textbox', { name: 'Account Number' }).clear().type(paymentID).should('have.value', paymentID)
+    cy.findByRole('textbox', { name: 'SWIFT or IFSC code' }).clear().type('9087').should('have.value', '9087')
+    cy.findByRole('textbox', { name: 'Bank Name' }).clear().type(paymentName).should('have.value', paymentName)
+    cy.findByRole('textbox', { name: 'Branch' }).clear().type('Branch number 42').should('have.value', 'Branch number 42')
+    cy.get('textarea[name="instructions"]').type('Follow instructions.').should('have.value', 'Follow instructions.')
+    cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
+    cy.findByText('Payment methods').should('be.visible')
+    cy.findByText(paymentID).should('be.visible')
+})
+
+Cypress.Commands.add('c_deletePaymentMethod', (paymentID, paymentName) => {
+    cy.findByText(paymentID).should('exist').parent().prev().find('.dc-dropdown-container').and('exist').click()
+    cy.get('#delete').should('be.visible').click()
+    cy.findByText(`Delete ${paymentName}?`).should('be.visible')
+    cy.findByRole('button', { name: 'Yes, remove' }).should('be.visible').click()
+    cy.findByText(paymentID).should('not.exist')
+})
+
+export const generateAccountNumberString = (length) => {
+    let result = ''
+    const characters = '0123456789'
+    const charactersLength = characters.length
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    }
+    return result
+}
