@@ -14,8 +14,17 @@ module.exports = defineConfig({
     chromeWebSecurity: false,
   },
   env: {
+    stagingUrl: "https://staging-app.deriv.com/",
     prodURL: "https://app.deriv.com/",
     derivComProdURL: "https://deriv.com/",
+    smartTraderUrl: {
+      staging: "https://staging-smarttrader.deriv.com/en/trading",
+      prod: "https://smarttrader.deriv.com/en/trading",
+    },
+    binaryBotUrl: {
+      staging: "https://staging-bot.deriv.com/?l=en",
+      prod: "https://bot.deriv.com/?l=en",
+    },
     RegionEU: "/?region=at",
     RegionROW: "/?region=za",
     skipROWTests: false,
