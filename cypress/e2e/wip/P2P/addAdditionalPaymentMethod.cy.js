@@ -1,18 +1,14 @@
 import '@testing-library/cypress/add-commands'
 
-let paymentName = 'Bank Alfalah TG'
+let paymentName = 'Bank Al Habeeb'
 let paymentID = generateAccountNumberString(12)
 
 function navigateToTab(tabName) {
     cy.findByText(tabName).click()
 }
 
-function deletePaymentMethod() {
-    cy.findByText(paymentID).should('exist').parent().prev().find('.dc-dropdown-container').and('exist').click()
-    cy.get('#delete').should('be.visible').click()
-    cy.findByText(`Delete ${paymentName}?`).should('be.visible')
-    cy.findByRole('button', { name: 'Yes, remove' }).should('be.visible').click()
-    cy.findByText(paymentID).should('not.exist')
+function setText(fieldName, fieldText) {
+    cy.findByRole('textbox', { name: fieldName }).clear().type(fieldText).should('have.value', fieldText)
 }
 
 function generateAccountNumberString(length) {
@@ -25,13 +21,16 @@ function generateAccountNumberString(length) {
     return result
 }
 
-function setText(fieldName, fieldText) {
-    cy.findByRole('textbox', { name: fieldName }).clear().type(fieldText).should('have.value', fieldText)
+function deletePaymentMethod() {
+    cy.findByText(paymentID).should('exist').parent().prev().find('.dc-dropdown-container').and('exist').click()
+    cy.get('#delete').should('be.visible').click()
+    cy.findByText(`Delete ${paymentName}?`).should('be.visible')
+    cy.findByRole('button', { name: 'Yes, remove' }).should('be.visible').click()
+    cy.findByText(paymentID).should('not.exist')
 }
 
 function addPaymentMethod() {
-    cy.findByRole('button').should('be.visible').and('contain.text', 'Add').click()
-    setText('Payment method', 'Bank Transfer')
+    setText('Payment method', 'Bank')
     cy.findByText('Bank Transfer').click()
     setText('Account Number', paymentID)
     setText('SWIFT or IFSC code', '9087')
@@ -43,13 +42,12 @@ function addPaymentMethod() {
     cy.findByText(paymentID).should('be.visible')
 }
 
-describe("QATEST-2839 - My Profile page - Delete Payment Method", () => {
+describe("QATEST-2811 My profile page : User with existing payment method add new payment method", () => {
     beforeEach(() => {
         cy.c_login()
         cy.c_visitResponsive('/appstore/traders-hub', 'small')
     })
-
-    it('Should be able to delete the existing payment method in responsive mode.', () => {
+    it('Should be able to add additional payment method in responsive mode.', () => {
         cy.c_navigateToDerivP2P()
         cy.findByText('Deriv P2P').should('exist')
         cy.c_closeNotificationHeader()
@@ -57,6 +55,7 @@ describe("QATEST-2839 - My Profile page - Delete Payment Method", () => {
         cy.findByText('Available Deriv P2P balance').should('be.visible')
         cy.findByText('Payment methods').should('be.visible').click()
         cy.findByText('Payment methods').should('be.visible')
+        cy.findByRole('button', { name: 'Add new' }).should('be.visible').click()
         addPaymentMethod()
         deletePaymentMethod()
     })
