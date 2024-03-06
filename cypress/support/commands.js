@@ -11,6 +11,14 @@ Cypress.Commands.add('navigate_to_poi', (country) => {
   cy.contains('button', 'Next').click()
 })
 
+Cypress.Commands.add('c_navigateToPOIResponsive', (country) => {
+  cy.c_visitResponsive('/account/proof-of-identity', 'small')
+  cy.findByText('Proof of identity').should('exist')
+  cy.c_closeNotificationHeader()
+  cy.get('select[name="country_input"]').select(country)
+  cy.findByRole('button', { name: 'Next' }).click()
+})
+
 Cypress.Commands.add('c_checkTradersHubhomePage', () => {
   //cy.findByText('Total assets').should('be.visible')
   cy.findByText('Options & Multipliers').should('be.visible')
