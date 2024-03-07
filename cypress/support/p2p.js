@@ -22,20 +22,25 @@ Cypress.Commands.add('c_redirectToP2P', () => {
 })
 
 Cypress.Commands.add('c_createNewAd', () => {
-  // click on ads tab
-  cy.get('.notification__close-button').should("be.visible").click()
-  cy.findByText("My ads").should("be.visible").click()
-  cy.get('body').then ((body) => {
-    if (body.find('You have no ads ').length > 0 ) {
+  cy.findByTestId('dt_initial_loader').should('not.exist')
+  cy.get('body', { timeout: 10000 }).then((body) => {
+    // if (body.find('You have no ads').length > 0) {
+      if (body.find('.no-ads__message',{ timeout: 10000 }).length > 0){
       cy.findByRole("button", { name: "Create new ad" }).should("be.visible").click()
     }
-    else {
+    else if (body.find('#toggle-my-ads',{ timeout: 10000 }).length > 0) {
+    // else  {
       cy.c_removeExistingAds()
-    }
+      cy.c_createNewAd()
+    } 
 
-  })
+  }) 
 })
 
+Cypress.Commands.add('c_ClickMyAdTab', () => {
+  cy.get('.notification__close-button').should("be.visible").click()
+  cy.findByText("My ads").should("be.visible").click()
+})
 
 Cypress.Commands.add('c_postBuyAd', () => {
   cy.findByTestId('offer_amount').click().type('10')
@@ -103,11 +108,12 @@ Cypress.Commands.add('c_verifyTooltip', () => {
 
 Cypress.Commands.add('c_verifyCompletionOrderDropdown', () => {
   cy.findByTestId('dt_dropdown_display').click()
-  // cy.findByText("1 hour").should("be.visible")
-  cy.findByText("45 minutes").should("be.visible")
-  cy.findByText("30 minutes").should("be.visible")
-  cy.findByText("15 minutes").should("be.visible")
-  cy.xpath('//*[@id=900]').click()
+  cy.get('#3600').should("be.visible")
+  cy.get('#2700').should("be.visible")
+  cy.get('#1800').should("be.visible")
+  cy.get('#900').should("be.visible").click()
+  
+  // cy.xpath('//*[@id=900]').click()
 })
 
 Cypress.Commands.add('c_verifyMaxMin', (selector, expectedValue, expectedValidation) => {
@@ -157,28 +163,11 @@ Cypress.Commands.add('c_postAd', () => {
 })
 
 Cypress.Commands.add('c_removeExistingAds', () => {
-  cy.xpath("//*[@class='my-ads-table__popovers-delete']").click({ force: true })
-  // cy.get('.my-ads-table__popovers-delete').click({ force: true })
-  // cy.get('[class="dc-horizontal-swipe--main"]')
-  // .click(class="my-ads-table__popovers-delete")
-  // .trigger('mousedown', { timeout: 2000}) // start capture
-  // //.trigger('mousemove', 'right') // register start position
-  // .trigger('mousemove', 'left',{timeout: 5000}) // register end position
-  // .wait(1000) // wait for requestAnimationFrame to invoke fireOnMove 
-  // .trigger('mouseup'); // end capture
-  // .trigger('touchstart' ,{ timeout: 2000, 
-  //   touches: [{ pageY: 0, pageX: 100 }]
-  // })
-  // .trigger('touchmove',{ timeout: 2000,
-  //   touches: [{ pageY: 0, pageX: 20000 }]
-  // })
-  // .trigger('pointerdown', { which: 1 })
-  //  .trigger('pointermove', 'left')
-  //  .trigger('pointerup', { force: true })
-  // .trigger('mousedown', { which: 1, pageX: 100, pageY: 100 })
-  // .trigger('mousemove', { which: 1, pageX: 5000, pageY: 100 })
-  // .trigger('mouseup',{force: true})
-
+  cy.get('.my-ads-table__row').trigger('touchstart', 'right', { timeout: 1000 }).trigger('touchmove', 'left').trigger('touchend')
+  cy.get('.my-ads-table__popovers-delete>svg').click({ force: true })
+  cy.findByText("Do you want to delete this ad?").should("be.visible")
+  cy.findByText("You will NOT be able to restore it.").should("be.visible")
+  cy.findByRole("button", { name: "Delete" }).should("be.enabled").click()
 })
 
 Cypress.Commands.add('c_verifyDynamicMsg', () => {
