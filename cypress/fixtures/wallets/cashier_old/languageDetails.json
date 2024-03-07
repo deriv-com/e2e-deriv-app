@@ -1,0 +1,77 @@
+{
+    "spanish": {
+        "urlCode": "es",
+        "shortCode": "ES",
+        "header":"Retirar",
+        "beforeContent": {
+            "summary": "Por favor, ayúdenos a verificar su solicitud de retiro.",
+            "description":"Pulse el botón de abajo y le enviaremos un correo electrónico con un enlace. Haga clic en ese enlace para verificar su solicitud de retiro.Esto es para proteger su cuenta de retiros no autorizados.",
+            "buttonText": "Enviar correo electrónico"
+        },
+        "afterContent": {
+            "summary": "Le hemos enviado un correo electrónico.",
+            "description": "Por favor, revise su correo electrónico para obtener el enlace de verificación y completar el proceso.",
+            "linkText": "¿No recibió el correo electrónico?"
+        }
+    },
+    "portugese": {
+        "urlCode": "pt",
+        "shortCode": "PT",
+        "header":"Levantamento",
+        "beforeContent": {
+            "summary": "Ajude-nos a validar o seu pedido de levantamento.",
+            "description":"Ao clicar no botão abaixo, iremos enviar-lhe um e-mail com um link. Clique nesse link para validar o seu pedido de levantamento.Esta medida destina-se a proteger a sua conta contra levantamentos não autorizados.",
+            "buttonText": "Enviar e-mail"
+        },
+        "afterContent": {
+            "summary": "Enviámos-lhe um e-mail.",
+            "description": "Verifique no seu e-mail o link de validação para concluir o processo.",
+            "linkText": "Não recebeu o e-mail?"
+        }
+    },
+    "russian": {
+        "urlCode": "ru",
+        "shortCode": "RU",
+        "header":"Вывод",
+        "beforeContent": {
+            "summary": "Помогите нам верифицировать ваш запрос на вывод средств.",
+            "description":"Нажмите кнопку ниже, и мы вышлем Вам письмо со ссылкой. Щелкните по этой ссылке, чтобы проверить Ваш запрос на вывод средств.Это нужно для того, чтобы защитить ваш счет от несанкционированного вывода средств.",
+            "buttonText": "Отправить письмо"
+        },
+        "afterContent": {
+            "summary": "Мы отправили вам письмо.",
+            "description": "Проверьте эл. почту. Вам должна прийти проверочная ссылка, необходимая для успешного завершения процесса.",
+            "linkText": "Не получили письмо?"
+        }
+    },
+    "french": {
+        "urlCode": "fr",
+        "shortCode": "FR",
+        "header":"Retrait",
+        "beforeContent": {
+            "summary": "Veuillez nous aider à vérifier votre demande de retrait.",
+            "description":"Cliquez sur le bouton ci-dessous et nous vous enverrons un e-mail contenant un lien. Cliquez sur ce lien pour vérifier votre demande de retrait.Ceci afin de protéger votre compte contre les retraits non autorisés.",
+            "buttonText": "Envoyer l'email"
+        },
+        "afterContent": {
+            "summary": "Nous vous avons envoyé un e-mail.",
+            "description": "Veuillez vérifier votre email pour le lien de vérification afin de terminer l'opération.",
+            "linkText": "Vous n'avez pas reçu d'email ?"
+        }
+    },
+    "english": {
+        "urlCode": "en",
+        "shortCode": "EN",
+        "header": "Withdrawal",
+        "beforeContent": {
+            "summary": "Please help us verify your withdrawal request.",
+            "description": "Click the button below and we'll send you an email with a link. Click that link to verify your withdrawal request.This is to protect your account from unauthorised withdrawals.",
+            "buttonText": "Send email"
+        },
+        "afterContent": {
+            "summary": "We've sent you an email.",
+            "description": "Please check your email for the verification link to complete the process.",
+            "linkText": "Didn't receive the email?"
+        }
+    }
+}

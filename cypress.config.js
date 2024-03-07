@@ -10,6 +10,7 @@ module.exports = defineConfig({
     baseUrl: "https://staging-app.deriv.com",
     defaultCommandTimeout: 15000,
     supportFile: "cypress/support/e2e.js",
+    fixturesFolder: "cypress/fixtures",
     experimentalWebKitSupport: true,
     chromeWebSecurity: false,
   },
