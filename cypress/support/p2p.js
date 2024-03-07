@@ -6,12 +6,12 @@ Cypress.Commands.add('c_navigateToDerivP2P', () => {
 
 Cypress.Commands.add('c_deleteAllPM', () => {
     cy.document().then(doc => {
-        let notification = doc.querySelector('.dc-dropdown__container')
-        if (notification) {
+        let paymentCard = doc.querySelector('.dc-dropdown__container')
+        if (paymentCard) {
             cy.get('.dc-dropdown__container').first().click()
             cy.get('#delete').should('be.visible').click()
             cy.findByRole('button', { name: 'Yes, remove' }).should('be.visible').click().and('not.exist')
-            notification = null
+            paymentCard = null
             cy.then(() => { cy.c_deleteAllPM() })
         }
         else {
