@@ -8,7 +8,7 @@ describe('QATEST-23015 - IDV POI Name Mismatch - Mobile view', () => {
     
     it('Should return Name mismatch', () => {
         cy.get('select[name="document_type"]').select('Passport')
-        cy.findByLabelText('Enter your document number').type('12376678')
+        cy.findByLabelText('Enter your document number').type('12345678')
         cy.findByTestId('first_name').clear().type('Refuted')
         cy.findByTestId('last_name').clear().type('Name')
         cy.findByTestId('date_of_birth').type('2000-09-20')
@@ -17,6 +17,7 @@ describe('QATEST-23015 - IDV POI Name Mismatch - Mobile view', () => {
         cy.get('.dc-checkbox__box').click()
         cy.findByRole('button', { name: 'Verify' }).should('be.enabled').click()
         cy.contains("Your documents were submitted successfully").should('be.visible')
+        cy.findByText("Proof of address required").should('exist')
         cy.reload()
 
         cy.contains("Your identity verification failed").should('be.visible')
