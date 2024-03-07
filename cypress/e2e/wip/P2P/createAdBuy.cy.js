@@ -18,7 +18,7 @@ describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
     cy.c_verifyMaxMin('max_transaction', 10, 'Max')
     cy.c_verifyTooltip()
     cy.c_verifyCompletionOrderDropdown()
-    cy.c_addPaymentMethod()
+    cy.c_PaymentMethod()
     cy.c_verifyPostAd() 
 
   })

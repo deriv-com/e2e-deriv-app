@@ -29,7 +29,7 @@ Cypress.Commands.add('c_createNewAd', () => {
     else if (body.find('#toggle-my-ads',{ timeout: 10000 }).length > 0) {
     // else  {
       cy.c_removeExistingAds()
-      cy.c_createNewAd()
+      cy.findByRole("button", { name: "Create new ad" }).should("be.visible").click()
     } 
 
   }) 
@@ -45,7 +45,7 @@ Cypress.Commands.add('c_postBuyAd', () => {
   cy.findByTestId('float_rate_type').click().clear().type(rate, { parseSpecialCharSequences: false })
   cy.findByTestId('min_transaction').click().clear().type('5')
   cy.findByTestId('max_transaction').click().clear().type('10')
-  cy.c_addPaymentMethod()
+  cy.c_PaymentMethod()
   cy.c_postAd()
 
 })
@@ -131,7 +131,7 @@ Cypress.Commands.add('c_verifyMaxMin', (selector, expectedValue, expectedValidat
   cy.findByTestId(selector).click().clear().type(expectedValue)
 })
 
-Cypress.Commands.add('c_addPaymentMethod', () => {
+Cypress.Commands.add('c_PaymentMethod', () => {
   cy.findByPlaceholderText('Add').click()
   cy.findByText('Other').click()
   cy.findByPlaceholderText('Add').click()
@@ -166,6 +166,8 @@ Cypress.Commands.add('c_removeExistingAds', () => {
   cy.findByText("Do you want to delete this ad?").should("be.visible")
   cy.findByText("You will NOT be able to restore it.").should("be.visible")
   cy.findByRole("button", { name: "Delete" }).should("be.enabled").click()
+  cy.findByRole("button", { name: "Delete" }).should('not.exist',{ timeout: 10000 })
+
 })
 
 Cypress.Commands.add('c_verifyDynamicMsg', () => {
@@ -174,7 +176,7 @@ Cypress.Commands.add('c_verifyDynamicMsg', () => {
     expect(messageText).to.match(messagePattern);
   })
 })
-=======
+
 Cypress.Commands.add('c_navigateToDerivP2P', () => {
     cy.get('#dt_mobile_drawer_toggle').should('be.visible').click()
     cy.findByRole('heading', { name: 'Cashier' }).should('be.visible').click()
