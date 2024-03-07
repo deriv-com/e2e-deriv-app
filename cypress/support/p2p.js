@@ -5,20 +5,6 @@ let calculatedValue
 let regexPattern
 const decimalPlacesToSkip = 1
 
-
-Cypress.Commands.add('c_redirectToP2P', () => {
-  // click on hamburger menu
-  cy.get("#dt_mobile_drawer_toggle").should("be.visible")
-  cy.get("#dt_mobile_drawer_toggle").click()
-  // click on cashier 
-  cy.get('.dc-mobile-drawer__body > :nth-child(4)').should("be.visible").click()
-  // click on P2P 
-  cy.findByText("Deriv P2P").should("be.visible").click()
-  // confirm warning message
-  cy.get('.dc-checkbox__box').should("be.visible").click()
-  cy.findByRole("button", { name: "Confirm" }).click()
-})
-
 Cypress.Commands.add('c_createNewAd', () => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
   cy.get('body', { timeout: 10000 }).then((body) => {
@@ -36,7 +22,6 @@ Cypress.Commands.add('c_createNewAd', () => {
 })
 
 Cypress.Commands.add('c_clickMyAdTab', () => {
-  cy.get('.notification__close-button').should("be.visible").click()
   cy.findByText("My ads").should("be.visible").click()
 })
 
