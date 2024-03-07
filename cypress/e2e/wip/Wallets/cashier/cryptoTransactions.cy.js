@@ -31,9 +31,12 @@ describe("WALL-2858 - Crypto transfer and transactions", () => {
   it("should be able to perform transfer from crypto account", () => {
     cy.log("Transfer from Crypto account")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
-    cy.findAllByText(/BTC Wallet/).first().scrollIntoView()
-    cy.get('.wallets-accordion__dropdown > svg > path').first().click({force: true})
-    cy.contains("Transfer").first().click()
+    cy.get(".wallets-dropdown__button").click()
+    cy.get(".wallets-list-card-dropdown__item-content").contains("BTC Wallet").click()
+    cy.get(".wallets-list-details__content").within(()=>{
+      cy.contains("BTC").should("be.visible")
+    })
+    cy.contains("Transfer").click()
     crypto_transfer("USD")
     crypto_transfer("ETH")
     crypto_transfer("LTC")

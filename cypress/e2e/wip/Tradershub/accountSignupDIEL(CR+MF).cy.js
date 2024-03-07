@@ -8,6 +8,9 @@ function generate_epoch() {
 describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
   const epoch = generate_epoch()
   const sign_up_mail = `sanity${epoch}diel@deriv.com`
+  let country = Cypress.env("countries").ZA
+  let nationalIDNum = Cypress.env("nationalIDNum").ZA
+  let taxIDNum = Cypress.env("taxIDNum").ZA
 
   beforeEach(() => {
     localStorage.setItem("config.server_url", Cypress.env("stdConfigServer"))
@@ -17,7 +20,7 @@ describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
     cy.c_enterValidEmail(sign_up_mail)
   })
   it("Verify I can signup for a DIEL demo and real account", () => {
-    Cypress.env("citizenship", Cypress.env("dielCountry"))
+    Cypress.env("citizenship", country)
     cy.c_emailVerificationSignUp(epoch)
     cy.then(() => {
       cy.c_visitResponsive("/endpoint", "desktop").then(() => {
@@ -35,8 +38,8 @@ describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
 
       cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop")
       cy.get("h1").contains("Select your country and").should("be.visible")
-      cy.c_selectCountryOfResidence(Cypress.env("dielCountry"))
-      cy.c_selectCitizenship(Cypress.env("dielCountry"))
+      cy.c_selectCountryOfResidence(country)
+      cy.c_selectCitizenship(country)
       cy.c_enterPassword()
       cy.c_completeOnboarding()
     })
@@ -46,7 +49,7 @@ describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
     cy.get(regulationText).should("have.text", "Non-EU")
     cy.findByRole("button", { name: "Get a Deriv account" }).click()
     cy.c_generateRandomName().then((firstName) => {
-      cy.c_personalDetails(firstName, "Onfido", Cypress.env("dielCountry"))
+      cy.c_personalDetails(firstName, "IDV", country, nationalIDNum, taxIDNum)
     })
     cy.contains(
       "Only use an address for which you have proof of residence"
@@ -70,6 +73,6 @@ describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
     cy.c_completeTradingAssessment()
     cy.c_completeFinancialAssessment()
     cy.c_addAccountMF()
-    cy.c_manageAccountsetting(Cypress.env("dielCountry"))
+    cy.c_manageAccountsetting(country)
   })
 })
