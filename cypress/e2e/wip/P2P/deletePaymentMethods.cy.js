@@ -12,6 +12,7 @@ describe("QATEST-2839 - My Profile page - Delete Payment Method", () => {
 
     it('Should be able to delete the existing payment method in responsive mode.', () => {
         cy.c_navigateToDerivP2P()
+        cy.c_closeSafetyInstructions()
         cy.findByText('Deriv P2P').should('exist')
         cy.c_closeNotificationHeader()
         cy.findByText('My profile').click()
