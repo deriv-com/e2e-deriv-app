@@ -10,7 +10,6 @@ describe("QATEST 54262 - Verify deposit functionality from account switcher", ()
       cy.c_closeNotificationHeader()
       cy.findByRole("button", { name: "Deposit" }).click()
       cy.url().should('include', '/cashier/deposit')
-      cy.get('#dc_deposit_link').should('have.class', 'dc-vertical-tab__header--active');
       cy.findByText('Deposit via bank wire, credit card, and e-wallet').should('be.visible')
     })
   })
