@@ -78,7 +78,7 @@ Cypress.Commands.add('c_verifyRate', () => {
 Cypress.Commands.add('c_verifyPostAd', () => {
   cy.findByRole("button", { name: "Post ad" }).should("be.enabled").click()
   cy.findByText("You've created an ad").should("be.visible")
-  // cy.findByText("If the ad doesn't receive an order for 3 days, it will be deactivated.").should("be.visible")
+  cy.findByText("If the ad doesn't receive an order for 3 days, it will be deactivated.").should("be.visible")
   cy.findByText("Don’t show this message again.").should("be.visible")
   cy.findByRole("button", { name: "Ok" }).should("be.enabled").click()
 })
