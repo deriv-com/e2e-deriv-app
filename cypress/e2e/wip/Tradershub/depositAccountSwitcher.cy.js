@@ -7,9 +7,11 @@ describe("QATEST 54262 - Verify deposit functionality from account switcher", ()
       cy.c_checkTradersHubhomePage()
       cy.findByTestId("dt_dropdown_display").click()
       cy.get("#real").click()
-      cy.close_notification_banner()
+      cy.c_closeNotificationHeader()
       cy.findByRole("button", { name: "Deposit" }).click()
       cy.url().should('include', '/cashier/deposit')
+      cy.get('#dc_deposit_link').should('have.class', 'dc-vertical-tab__header--active');
+      cy.findByText('Deposit via bank wire, credit card, and e-wallet').should('be.visible')
     })
   })
   

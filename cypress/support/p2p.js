@@ -37,7 +37,7 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
             cy.get('.notification__text-body').invoke('text').then((text) => {
                 cy.log(text)
             })
-            cy.findByRole('button', { name: 'Close' }).should('be.visible').click().and('not.exist')
+            cy.findAllByRole('button', { name: 'Close' }).first().should('be.visible').click().and('not.exist')
             notification = null
             cy.then(() => { cy.c_closeNotificationHeader() })
         }
