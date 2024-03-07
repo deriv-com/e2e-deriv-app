@@ -1,87 +1,22 @@
 import '@testing-library/cypress/add-commands'
+import { generateAccountNumberString } from '../../../support/p2p'
 
-let paymentMethod = null
+let paymentName = 'Bank Alfalah TG'
+let paymentID = generateAccountNumberString(12)
+let newAccountNumberString = generateAccountNumberString(12)
 
-function navigateToDerivP2P() {
-    cy.get('#dt_mobile_drawer_toggle').should('be.visible').click()
-    cy.findByRole('heading', { name: 'Cashier' }).should('be.visible').click()
-    cy.findByRole('link', { name: 'Deriv P2P' }).should('be.visible').click()
-    cy.findByRole('heading', { name: 'For your safety:' }).should('be.visible').then(($title) => {
-        if ($title.is(':visible')) {
-            cy.get('.dc-checkbox__box').should('be.visible').click()
-        }
-    })
-    cy.findByRole('button', { name: 'Confirm' }).should('be.visible').click()
-}
-
-function closeNotificationHeader() {
-    cy.document().then(doc => {
-        let notification = doc.querySelector('.notification__header')
-        if (notification) {
-            cy.log('Notification header appeared')
-            cy.get('.notification__text-body').invoke('text').then((text) => {
-                cy.log(text)
-            })
-            cy.findByRole('button', { name: 'Close' }).should('be.visible').click().and('not.exist')
-            notification = null
-            cy.then(() => {closeNotificationHeader()})
-        }
-        else {
-            cy.log('Notification header did not appear')
-        }
-    })
-}
-
-function savePaymentDetailsAndVerify(accountNumberString) {
+function savePaymentDetailsAndVerify(newAccountNumberString) {
     cy.findByRole('button', { name: 'Save changes' }).should('not.be.disabled').click()
     cy.findByText('Payment methods').should('be.visible')
-    cy.findByText(accountNumberString).should('be.visible')
+    cy.findByText(newAccountNumberString).should('be.visible')
 }
 
-function navigateToTab(tabName) {
-    cy.findByText(tabName).click()
-}
-
-function setText(fieldName, fieldText) {
-    cy.findByRole('textbox', { name: fieldName }).clear().type(fieldText).should('have.value', fieldText)
-}
-
-function generateAccountNumberString(length) {
-    let result = ''
-    const characters = '0123456789'
-    const charactersLength = characters.length
-    for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength))
-    }
-    return result
-}
-
-function editPaymentMethod(paymentMethod) {
-    if (paymentMethod == "Bank Transfers") {
-        cy.log("Bank Transfer Block")
-        const accountNumberString = generateAccountNumberString(12)
-        setText('Account Number', accountNumberString)
-        setText('SWIFT or IFSC code', '9087')
-        setText('Bank Name', 'Bank Alfalah TG')
-        setText('Branch', 'Branch number 42')
-        savePaymentDetailsAndVerify(accountNumberString)
-
-    } else if (paymentMethod == "E-wallets") {
-        cy.log("Wallets Block")
-        cy.get('input[name="choose_payment_method"]').invoke('val').then((text) => {
-            cy.log('Payment Method: ' + text)
-        })
-        const accountNumberString = generateAccountNumberString(12)
-        cy.get('input[name="account"]').clear().type(accountNumberString).should('have.value', accountNumberString)
-        savePaymentDetailsAndVerify(accountNumberString)
-
-    } else if (paymentMethod == "Others") {
-        cy.log("Others Block")
-        const accountNumberString = generateAccountNumberString(12)
-        setText('Account ID / phone number / email', accountNumberString)
-        setText('Payment method name', 'Xenos Power')
-        savePaymentDetailsAndVerify(accountNumberString)
-    }
+function editPaymentMethod() {
+    cy.findByRole('textbox', { name: 'Account Number' }).clear().type(newAccountNumberString).should('have.value', newAccountNumberString);
+    cy.findByRole('textbox', { name: 'SWIFT or IFSC code' }).clear().type('23435').should('have.value', '23435');
+    cy.findByRole('textbox', { name: 'Bank Name' }).clear().type('Bank Alfalah TG').should('have.value', 'Bank Alfalah TG');
+    cy.findByRole('textbox', { name: 'Branch' }).clear().type('Branch number 42').should('have.value', 'Branch number 42');
+    savePaymentDetailsAndVerify(newAccountNumberString)
 }
 
 describe("QATEST-2831 - My Profile page - Edit Payment Method", () => {
@@ -91,22 +26,18 @@ describe("QATEST-2831 - My Profile page - Edit Payment Method", () => {
     })
 
     it('Should be able to edit the existing payment method in responsive mode.', () => {
-        navigateToDerivP2P() //Navigation to P2P Handler
+        cy.c_navigateToDerivP2P()
         cy.findByText('Deriv P2P').should('exist')
-        closeNotificationHeader()
-        navigateToTab('My profile')
-        cy.findByText('Available Deriv P2P balance').should('be.visible') //verifes from a page text after navigating to my profile tab
+        cy.c_closeNotificationHeader()
+        cy.findByText('My profile').click()
+        cy.findByText('Available Deriv P2P balance').should('be.visible')
         cy.findByText('Payment methods').should('be.visible').click()
-        cy.findByText('Payment methods').should('be.visible') //verifies that Payment methods heading page is visible after clicking on Payment Methods
-        // Get first payment type available on the screen
-        cy.get('span.payment-methods-list__list-header').first().invoke('text').then((value) => {
-            paymentMethod = value.trim() //Will only get either of the three: Bank Transfers, E-wallets, Others
-            cy.log("Payment type available: " + paymentMethod)
-            cy.contains('div.payment-methods-list__list-container span', paymentMethod).next().within(() => {
-                cy.findByTestId('dt_dropdown_display').first().click()
-            })
-            cy.get('#edit').should('be.visible').click()
-            editPaymentMethod(paymentMethod)
-        })
+        cy.findByText('Payment methods').should('be.visible')
+        cy.findByRole('button').should('be.visible').and('contain.text', 'Add').click()
+        cy.c_addPaymentMethod(paymentID, paymentName)
+        cy.findByText(paymentID).should('exist').parent().prev().find('.dc-dropdown-container').and('exist').click()
+        cy.get('#edit').should('be.visible').click()
+        editPaymentMethod()
+        cy.c_deletePaymentMethod(newAccountNumberString, paymentName)
     })
 })
