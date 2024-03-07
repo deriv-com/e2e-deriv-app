@@ -1,5 +1,4 @@
 import '@testing-library/cypress/add-commands'
-import { } from '../../../support/p2p'
 
 
 describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
