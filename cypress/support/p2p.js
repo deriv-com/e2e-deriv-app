@@ -35,7 +35,7 @@ Cypress.Commands.add('c_createNewAd', () => {
   }) 
 })
 
-Cypress.Commands.add('c_ClickMyAdTab', () => {
+Cypress.Commands.add('c_clickMyAdTab', () => {
   cy.get('.notification__close-button').should("be.visible").click()
   cy.findByText("My ads").should("be.visible").click()
 })
@@ -73,15 +73,15 @@ Cypress.Commands.add('c_verifyRate', () => {
     const match = text.match(/of the market rate1 USD = (\d+(\.\d+)?)/)
     marketRate = parseFloat(match[1])
     if (match) {
-      cy.verifyExchangeRate
+      cy.c_verifyExchangeRate
       // Verify clicking plus button twice 
       cy.get('#floating_rate_input_add').click({ force: true }).click({ force: true })
       rate = rate + 0.02
-      cy.verifyExchangeRate
+      cy.c_verifyExchangeRate
       // // verify minus button once  
       cy.get('#floating_rate_input_sub').click({ force: true })
       rate = rate - 0.01
-      cy.verifyExchangeRate
+      cy.c_verifyExchangeRate
     }
     else {
       throw new Error('Text does not match the expected pattern');
@@ -110,9 +110,7 @@ Cypress.Commands.add('c_verifyCompletionOrderDropdown', () => {
   cy.get('#2700').should("be.visible")
   cy.get('#1800').should("be.visible")
   cy.get('#900').should("be.visible").click()
-  
-  // cy.xpath('//*[@id=900]').click()
-})
+  })
 
 Cypress.Commands.add('c_verifyMaxMin', (selector, expectedValue, expectedValidation) => {
   cy.findByTestId(selector).click().type('abc')
