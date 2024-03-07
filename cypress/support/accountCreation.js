@@ -1,17 +1,28 @@
 const puppeteer = require('puppeteer');
+const { getOAuthUrl } = require("./common")
 const WebSocket = require('ws');
 require('dotenv').config();
 const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI');
 const app_id = process.env.APP_ID
 const websocketURL = process.env.WEBSOCKET_URL
-const auth_url = process.env.E2E_OAUTH_URL
 const connection  = new WebSocket(`${websocketURL}?l=EN&app_id=${app_id}&brand=deriv`);
 const api         = new DerivAPI({ connection })
-// basic.ping().then(console.log); // Testing for connection
 
 const emailGenerator = () => {
   const vowels = 'aeiou';    
   return `qa+test${vowels[Math.floor(Math.random() * 5)]}${Math.floor(Math.random() * 1000)}@deriv.com`
+}
+
+const generateRandomName = () => {
+  const vowels = 'aeiou';
+  const consonants = 'bcdfghjklmnpqrstvwxyz';
+  let name = '';
+
+  for (let i = 0; i < 8; i++) {
+    name += i < 2 ? vowels[Math.floor(Math.random() * 5)] : consonants[Math.floor(Math.random() * 21)];
+  }
+
+  return [...name].sort(() => Math.random() - 0.5).join('');
 }
 
 const randomEmail = emailGenerator();
@@ -82,8 +93,8 @@ const createAccountReal = (async () => {
       "new_account_real": 1,
       "address_line_1": "20 Broadway Av",
       "date_of_birth": "1980-01-31",
-      "first_name": "Auto",
-      "last_name": `${randomEmail.split('@')[0].replace(/[0-9+]/g, '')}`,
+      "first_name": "AutoGen",
+      "last_name": generateRandomName(),
       "currency": "USD",
       "residence": "id"
     })
@@ -93,32 +104,10 @@ const createAccountReal = (async () => {
     return results
 } catch(e) {
     console.log(e)
-}  // commented finally
+}  finally {
+  connection.close()
+}
 })
 
-createAccountReal()
-
-// const authoriseApp =  (async () => {
-//   try {
-//     const accountData = await createAccountReal()
-//     const browser = await puppeteer.launch({headless: false});
-//     const page = await browser.newPage();
-//     await page.goto(`${auth_url}?app_id=${app_id}`);
-//     await page.type('#txtEmail', accountData[0]);
-//     await page.type('#txtPass','Abcd1234');
-//     await page.click('[name="login"]');
-//     await page.waitForSelector('#btnGrant', {visible: true});
-//     await page.click('#btnGrant');
-//     console.log('done!!')
-//     await browser.close();
-    
-//   } catch (e) {
-//     console.log(e)  
-//   } finally {
-//     connection.close()
-//   }
-
-
-// });
-
-// authoriseApp()
+// createAccountReal()
+getOAuthUrl((oauth) =>  console.log(oauth))

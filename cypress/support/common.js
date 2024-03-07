@@ -113,11 +113,39 @@ function getLoginToken(callback) {
           'csrf_token': csrfToken
         }
       }).then((response) => {
-          const oAuthUrl = response.headers['location'];
-          cy.log('oAuthUrl: ' + oAuthUrl);
-          callback(oAuthUrl);
-
-          expect(response.status).to.eq(302); //302 means success on this occasion!
+        cy.log('status: ' + response.headers.location);
+        if (response.status === 200 && typeof response.data === 'string' && response.data.includes('Authorise this app')) {
+            console.log('we are here')
+            options.headers.Cookie = response.headers['set-cookie'];
+            const csrfToken2 = extractCsrfToken(response.data)
+            const payload = {
+              csrf_token: csrfToken2,
+              confirm_scopes: 'read,admin,trade,payments'
+            }
+            options.headers.csrf_token = csrfToken2
+            // const res = await performHttpRequest(url, options, payload);
+            // extractOauthToken(res) 
+            cy.request({
+              method: 'POST',
+              url: 'https://' + Cypress.env('configServer') + '/oauth2/authorize?app_id=' + Cypress.env('configAppId') + '&l=en&brand=deriv&date_first_contact=',
+              form: false, 
+              // followRedirect: false, //This ensures we get a 302 status.
+              body: payload,
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Origin': 'https://oauth.deriv.com',
+                'Cookie': cookie,
+                'csrf_token': csrfToken2
+              }
+            })
+          } else {
+            const regex = /token1=([^&]+)/;
+            const oAuthUrl = response.headers.location.match(regex);
+            cy.log('oAuthUrl: ' + oAuthUrl);
+            callback(oAuthUrl);
+  
+            // expect(response.status).to.eq(302); //302 means success on this occasion!
+          }
       });
     });
   }
@@ -133,3 +161,15 @@ function getLoginToken(callback) {
 
   module.exports = { getLoginToken };
   module.exports = { getOAuthUrl };
+
+  // if (response.statusCode == 200 && response.data.includes('Authorise this app')) {
+  //   options.headers.Cookie = response.headers['set-cookie'];
+  //   const csrfToken2 = extractCsrfToken(response.data)
+  //   const payload = {
+  //     csrf_token: csrfToken2,
+  //     confirm_scopes: 'read,admin,trade,payments'
+  //   }
+  //   options.headers.csrf_token = csrfToken2
+  //   const res = await performHttpRequest(url, options, payload);
+  //   extractOauthToken(res) 
+  // }
