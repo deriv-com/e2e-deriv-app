@@ -717,27 +717,9 @@ Cypress.Commands.add("c_navigateToPoi", (country) => {
 
 Cypress.Commands.add("c_navigateToPoiResponsive", (country) => {
   cy.c_visitResponsive("/account/proof-of-identity", "small")
-  cy.close_notification_banner()
-  cy.close_notification_banner()
-  cy.get('select[name="country_input"]').select(country)
+  cy.c_closeNotificationHeader()
+  // cy.get('select[name="country_input"]').select(country)
   cy.contains("button", "Next").click()
-})
-
-Cypress.Commands.add("c_chooseDocumentType", (document_type) => {
-  cy.get('input[name="document_type"]').click()
-  cy.contains(document_type).click()
-})
-
-Cypress.Commands.add("c_chooseDocumentTypeResponsive", (document_type) => {
-  cy.get('select[name="document_type"]').select(document_type)
-})
-
-Cypress.Commands.add("c_fillData", (input_name, data) => {
-  cy.findByTestId(`${input_name}`).clear().type(`${data}`)
-})
-
-Cypress.Commands.add("c_fillDate", (year, month, day) => {
-  cy.findByTestId('date_of_birth').type(`${year}-${month}-${day}`)
 })
 
 Cypress.Commands.add("c_checkTradersHubhomePage", () => {
