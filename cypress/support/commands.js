@@ -716,14 +716,6 @@ Cypress.Commands.add("navigate_to_poi", (country) => {
   cy.contains("button", "Next").click()
 })
 
-Cypress.Commands.add("c_checkTradersHubhomePage", () => {
-  //cy.findByText('Total assets').should('be.visible')
-  cy.findByText("Options & Multipliers").should("be.visible")
-  cy.findByText("CFDs").should("be.visible")
-  cy.findAllByText("Deriv cTrader").eq(0).should("be.visible")
-  cy.findByText('Other CFD Platforms').scrollIntoView({ position: 'bottom' })
-  cy.get("#traders-hub").scrollIntoView({ position: "top" })
-})
 
 Cypress.Commands.add("c_enterValidEmail", (sign_up_mail) => {
   {
@@ -971,4 +963,30 @@ Cypress.Commands.add("c_addAccountMF", () => {
     cy.contains("button", "Next").click()
   }
   cy.findByRole("button", { name: "OK" }).click()
+})
+
+
+Cypress.Commands.add("c_verificationLinkSignUp", (epoch, country) => {
+  cy.c_emailVerificationSignUp(epoch)
+  cy.then(() => {
+    cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop").then(() => {
+      cy.window().then((win) => {
+        win.localStorage.setItem(
+          "config.server_url",
+          Cypress.env("stdConfigServer")
+        )
+        win.localStorage.setItem(
+          "config.app_id",
+          Cypress.env("stdConfigAppId")
+        )
+      })
+    })
+
+    cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop")
+    cy.get("h1").contains("Select your country and").should("be.visible")
+    cy.c_selectCountryOfResidence(country)
+    cy.c_selectCitizenship(country)
+    cy.c_enterPassword()
+    cy.c_completeOnboarding()
+  })
 })

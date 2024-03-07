@@ -1,11 +1,8 @@
 import "@testing-library/cypress/add-commands"
-
-function generate_epoch() {
-  return Math.floor(new Date().getTime() / 100000)
-}
+import {generateEpoch} from '../../../support/tradersHub'
 
 describe("QATEST-5699: Create a Financial Demo CFD account", () => {
-  const epoch = generate_epoch()
+  const epoch = generateEpoch()
   const sign_up_mail = `sanity${epoch}+mt5financialdemo@deriv.com`
   let country = Cypress.env("countries").CO
 
@@ -17,27 +14,7 @@ describe("QATEST-5699: Create a Financial Demo CFD account", () => {
     cy.c_enterValidEmail(sign_up_mail)
   })
   it("Verify I can signup for a demo financial CFD account", () => {
-    cy.c_emailVerificationSignUp(epoch)
-    cy.then(() => {
-      cy.c_visitResponsive("/endpoint", "desktop").then(() => {
-        cy.window().then((win) => {
-          win.localStorage.setItem(
-            "config.server_url",
-            Cypress.env("stdConfigServer")
-          )
-          win.localStorage.setItem(
-            "config.app_id",
-            Cypress.env("stdConfigAppId")
-          )
-        })
-      })
-      cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop")
-      cy.get("h1").contains("Select your country and").should("be.visible")
-      cy.c_selectCountryOfResidence(country)
-      cy.c_selectCitizenship(country)
-      cy.c_enterPassword()
-      cy.c_completeOnboarding()
-    })
+    cy.c_verificationLinkSignUp(epoch, country)
     cy.c_checkTradersHubhomePage()
     cy.findAllByRole("button", { name: "Get" }).eq(1).click()
     cy.findByText("Create a Deriv MT5 password").should("be.visible")

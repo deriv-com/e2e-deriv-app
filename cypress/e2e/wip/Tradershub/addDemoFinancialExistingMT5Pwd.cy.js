@@ -1,12 +1,9 @@
 import "@testing-library/cypress/add-commands"
-
-function generate_epoch() {
-    return Math.floor(new Date().getTime() / 100000)
-  }
+import {generateEpoch} from '../../../support/tradersHub'
 
 describe("QATEST-5724: CFDs - Create a demo Financial account using existing MT5 account password", () => {
-    const epoch = generate_epoch()
-    const sign_up_mail = `sanity${epoch}mt5derived@deriv.com`
+    const epoch = generateEpoch()
+    const sign_up_mail = `sanity${epoch}mail@deriv.com`
     let country = Cypress.env("countries").CO
 
     beforeEach(() => {
@@ -18,28 +15,7 @@ describe("QATEST-5724: CFDs - Create a demo Financial account using existing MT5
     })
 
  it("Verify I can add a demo financial account using exisiting MT5 derieved account password", () => {
-    cy.c_emailVerificationSignUp(epoch)
-    cy.then(() => {
-        cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop").then(() => {
-        cy.window().then((win) => {
-          win.localStorage.setItem(
-            "config.server_url",
-            Cypress.env("stdConfigServer")
-          )
-          win.localStorage.setItem(
-            "config.app_id",
-            Cypress.env("stdConfigAppId")
-          )
-        })
-      })
-
-      cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop")
-      cy.get("h1").contains("Select your country and").should("be.visible")
-      cy.c_selectCountryOfResidence(country)
-      cy.c_selectCitizenship(country)
-      cy.c_enterPassword()
-      cy.c_completeOnboarding()
-    })
+    cy.c_verificationLinkSignUp(epoch, country)
     cy.c_checkTradersHubhomePage()
     cy.findAllByRole("button", { name: "Get" }).first().click()
     cy.findByText("Create a Deriv MT5 password").should("be.visible")
