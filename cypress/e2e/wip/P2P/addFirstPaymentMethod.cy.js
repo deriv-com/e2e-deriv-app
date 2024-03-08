@@ -7,11 +7,10 @@ let paymentID = generateAccountNumberString(12)
 describe("QATEST-2821 - My Profile page : User add their first payment method", () => {
     beforeEach(() => {
         cy.c_login()
-        cy.c_visitResponsive('/appstore/traders-hub', 'small')
+        cy.c_visitResponsive('/cashier/p2p', 'small')
     })
 
     it('Should be able to add first payment method in responsive mode.', () => {
-        cy.c_navigateToDerivP2P()
         cy.c_closeSafetyInstructions()
         cy.findByText('Deriv P2P').should('exist')
         cy.c_closeNotificationHeader()
