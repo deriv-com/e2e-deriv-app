@@ -18,17 +18,41 @@ const validateLink = (linkName, expectedUrl, contentCheck) => {
     cy.go('back')
   }
 
-describe("QATEST 5930 - Validate the hyperlinks on Trader's hub", () => {
+function checkHyperLinks(deviceType)
+{
+  linkValidations.forEach(({ linkName, expectedUrl, contentCheck }) => {
+    if (!(deviceType === 'mobile' && linkName === 'Learn more')) {
+    validateLink(linkName, expectedUrl, contentCheck)
+    }
+
+    else if (deviceType === 'mobile' && linkName === 'Learn more') {
+      cy.findByRole('button', { name: "CFDs" }).click()
+      validateLink(linkName, expectedUrl, contentCheck)
+    }
+  })
+
+  if (deviceType === 'mobile') {
+    cy.findByRole('button', { name: "CFDs" }).click()
+  }
   
-it("Should navigate to all links in traders hub home page and validate its redirection", () => {
+  cy.findByText('Compare accounts').click()
+  cy.url().should('contain', 'appstore/cfd-compare-acccounts')
+  cy.findByText('Compare CFDs accounts').should('be.visible')
+  cy.go('back')
+}
+
+describe("QATEST 5930 - Validate the hyperlinks on Trader's hub", () => {
+
+it("Should navigate to all links in traders hub home page and validate its redirection in mobile", () => {
+    cy.c_login()
+    cy.c_closeNotificationHeader()
+    cy.c_visitResponsive("/appstore/traders-hub", "small")
+    checkHyperLinks('mobile')
+  })
+
+it("Should navigate to all links in traders hub home page and validate its redirection in desktop", () => {
     cy.c_login()
     cy.c_visitResponsive("/appstore/traders-hub", "large")
-    linkValidations.forEach(({ linkName, expectedUrl, contentCheck }) => {
-        validateLink(linkName, expectedUrl, contentCheck);
-      })
-    cy.findByText('Compare accounts').click()
-    cy.url().should('contain', 'appstore/cfd-compare-acccounts')
-    cy.findByText('Compare CFDs accounts').should('be.visible')
+    checkHyperLinks('desktop')
   })
- 
 })
