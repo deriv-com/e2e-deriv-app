@@ -4,7 +4,7 @@ import { generateAccountNumberString } from '../../../support/p2p'
 let paymentID = generateAccountNumberString(12)
 let additionalpaymentID = generateAccountNumberString(12)
 
-describe("QATEST-2811 My profile page : User with existing payment method add new payment method", () => {
+describe("QATEST-2811 - My profile page - User with existing payment method add new payment method", () => {
     beforeEach(() => {
         cy.c_login()
         cy.c_visitResponsive('/appstore/traders-hub', 'small')
