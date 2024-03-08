@@ -21,6 +21,6 @@ describe("QATEST-2821 - My Profile page : User add their first payment method", 
         cy.c_deleteAllPM()
         cy.findByText('You haven’t added any payment methods yet').should('be.visible')
         cy.findByRole('button', { name: 'Add payment methods' }).should('be.visible').click()
-        cy.c_addPaymentMethod('PayPal', paymentID)
+        cy.c_addPaymentMethod(paymentID, 'PayPal')
     })
 })

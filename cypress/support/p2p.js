@@ -47,8 +47,8 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
     })
 })
 
-Cypress.Commands.add('c_addPaymentMethod', (paymentMethod, paymentID) => {
-    if (paymentMethod == "Bank Transfer") {
+Cypress.Commands.add('c_addPaymentMethod', (paymentID, paymentMethod) => {
+    if (paymentMethod == 'Bank Transfer') {
         cy.findByRole('textbox', { name: 'Payment method' }).clear().type(paymentMethod).should('have.value', paymentMethod)
         cy.findByText(paymentMethod).click()
         cy.findByRole('textbox', { name: 'Account Number' }).clear().type(paymentID).should('have.value', paymentID)
@@ -59,7 +59,7 @@ Cypress.Commands.add('c_addPaymentMethod', (paymentMethod, paymentID) => {
         cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
         cy.findByText('Payment methods').should('be.visible')
         cy.findByText(paymentID).should('be.visible')
-    } else if (paymentMethod === "PayPal" || paymentMethod === "WeChat Pay" || paymentMethod === "Skrill" || paymentMethod === "Alipay") {
+    } else if (paymentMethod === 'PayPal' || paymentMethod === 'WeChat Pay' || paymentMethod === 'Skrill' || paymentMethod === 'Alipay') {
         cy.findByRole('textbox', { name: 'Payment method' }).clear().type(paymentMethod).should('have.value', paymentMethod)
         cy.findByText(paymentMethod).click()
         cy.get('input[name="account"]').clear().type(paymentID).should('have.value', paymentID)
@@ -67,7 +67,7 @@ Cypress.Commands.add('c_addPaymentMethod', (paymentMethod, paymentID) => {
         cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
         cy.findByText('Payment methods').should('be.visible')
         cy.findByText(paymentID).should('be.visible')
-    } else if (paymentMethod == "Other") {
+    } else if (paymentMethod == 'Other') {
         cy.findByRole('textbox', { name: 'Payment method' }).clear().type(paymentMethod).should('have.value', paymentMethod)
         cy.findByText(paymentMethod).click()
         cy.findByRole('textbox', { name: 'Account ID / phone number / email' }).clear().type(paymentID).should('have.value', paymentID)

@@ -1,7 +1,6 @@
 import '@testing-library/cypress/add-commands'
 import { generateAccountNumberString } from '../../../support/p2p'
 
-let paymentName = 'Bank Alfalah TG'
 let paymentID = generateAccountNumberString(12)
 let newAccountNumberString = generateAccountNumberString(12)
 
@@ -35,10 +34,10 @@ describe("QATEST-2831 - My Profile page - Edit Payment Method", () => {
         cy.findByText('Payment methods').should('be.visible').click()
         cy.findByText('Payment methods').should('be.visible')
         cy.findByRole('button').should('be.visible').and('contain.text', 'Add').click()
-        cy.c_addPaymentMethod(paymentID, paymentName)
+        cy.c_addPaymentMethod(paymentID, 'Bank Transfer')
         cy.findByText(paymentID).should('exist').parent().prev().find('.dc-dropdown-container').and('exist').click()
         cy.get('#edit').should('be.visible').click()
         editPaymentMethod()
-        cy.c_deletePaymentMethod(newAccountNumberString, paymentName)
+        cy.c_deletePaymentMethod(newAccountNumberString, 'Bank Alfalah TG')
     })
 })
