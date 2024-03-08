@@ -47,17 +47,36 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
     })
 })
 
-Cypress.Commands.add('c_addPaymentMethod', (paymentID, paymentName) => {
-    cy.findByRole('textbox', { name: 'Payment method' }).clear().type('Bank').should('have.value', 'Bank')
-    cy.findByText('Bank Transfer').click()
-    cy.findByRole('textbox', { name: 'Account Number' }).clear().type(paymentID).should('have.value', paymentID)
-    cy.findByRole('textbox', { name: 'SWIFT or IFSC code' }).clear().type('9087').should('have.value', '9087')
-    cy.findByRole('textbox', { name: 'Bank Name' }).clear().type(paymentName).should('have.value', paymentName)
-    cy.findByRole('textbox', { name: 'Branch' }).clear().type('Branch number 42').should('have.value', 'Branch number 42')
-    cy.get('textarea[name="instructions"]').type('Follow instructions.').should('have.value', 'Follow instructions.')
-    cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
-    cy.findByText('Payment methods').should('be.visible')
-    cy.findByText(paymentID).should('be.visible')
+Cypress.Commands.add('c_addPaymentMethod', (paymentMethod, paymentID) => {
+    if (paymentMethod == "Bank Transfer") {
+        cy.findByRole('textbox', { name: 'Payment method' }).clear().type(paymentMethod).should('have.value', paymentMethod)
+        cy.findByText(paymentMethod).click()
+        cy.findByRole('textbox', { name: 'Account Number' }).clear().type(paymentID).should('have.value', paymentID)
+        cy.findByRole('textbox', { name: 'SWIFT or IFSC code' }).clear().type('9087').should('have.value', '9087')
+        cy.findByRole('textbox', { name: 'Bank Name' }).clear().type('Banking Name').should('have.value', 'Banking Name')
+        cy.findByRole('textbox', { name: 'Branch' }).clear().type('Branch number 42').should('have.value', 'Branch number 42')
+        cy.get('textarea[name="instructions"]').type('Follow instructions.').should('have.value', 'Follow instructions.')
+        cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
+        cy.findByText('Payment methods').should('be.visible')
+        cy.findByText(paymentID).should('be.visible')
+    } else if (paymentMethod === "PayPal" || paymentMethod === "WeChat Pay" || paymentMethod === "Skrill" || paymentMethod === "Alipay") {
+        cy.findByRole('textbox', { name: 'Payment method' }).clear().type(paymentMethod).should('have.value', paymentMethod)
+        cy.findByText(paymentMethod).click()
+        cy.get('input[name="account"]').clear().type(paymentID).should('have.value', paymentID)
+        cy.get('textarea[name="instructions"]').type('Follow instructions.').should('have.value', 'Follow instructions.')
+        cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
+        cy.findByText('Payment methods').should('be.visible')
+        cy.findByText(paymentID).should('be.visible')
+    } else if (paymentMethod == "Other") {
+        cy.findByRole('textbox', { name: 'Payment method' }).clear().type(paymentMethod).should('have.value', paymentMethod)
+        cy.findByText(paymentMethod).click()
+        cy.findByRole('textbox', { name: 'Account ID / phone number / email' }).clear().type(paymentID).should('have.value', paymentID)
+        cy.findByRole('textbox', { name: 'Payment method name' }).clear().type('EasyMoney').should('have.value', 'EasyMoney')
+        cy.get('textarea[name="instructions"]').type('Follow instructions.').should('have.value', 'Follow instructions.')
+        cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
+        cy.findByText('Payment methods').should('be.visible')
+        cy.findByText(paymentID).should('be.visible')
+    }
 })
 
 Cypress.Commands.add('c_deletePaymentMethod', (paymentID, paymentName) => {
