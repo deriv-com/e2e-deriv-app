@@ -1,6 +1,7 @@
 import '@testing-library/cypress/add-commands'
 import { generateAccountNumberString } from '../../../support/p2p'
 
+let paymentName = 'Skrill'
 let paymentID = generateAccountNumberString(12)
 
 describe("QATEST-2839 - My Profile page - Delete Payment Method", () => {
@@ -19,7 +20,7 @@ describe("QATEST-2839 - My Profile page - Delete Payment Method", () => {
         cy.findByText('Payment methods').should('be.visible').click()
         cy.findByText('Payment methods').should('be.visible')
         cy.findByRole('button').should('be.visible').and('contain.text', 'Add').click()
-        cy.c_addPaymentMethod(paymentID, 'Skrill')
-        cy.c_deletePaymentMethod(paymentID, 'Skrill')
+        cy.c_addPaymentMethod(paymentID, paymentName)
+        cy.c_deletePaymentMethod(paymentID, paymentName)
     })
 })

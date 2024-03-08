@@ -71,7 +71,7 @@ Cypress.Commands.add('c_addPaymentMethod', (paymentID, paymentMethod) => {
         cy.findByRole('textbox', { name: 'Payment method' }).clear().type(paymentMethod).should('have.value', paymentMethod)
         cy.findByText(paymentMethod).click()
         cy.findByRole('textbox', { name: 'Account ID / phone number / email' }).clear().type(paymentID).should('have.value', paymentID)
-        cy.findByRole('textbox', { name: 'Payment method name' }).clear().type('EasyMoney').should('have.value', 'EasyMoney')
+        cy.findByRole('textbox', { name: 'Payment method name' }).clear().type(paymentMethod).should('have.value', paymentMethod)
         cy.get('textarea[name="instructions"]').type('Follow instructions.').should('have.value', 'Follow instructions.')
         cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
         cy.findByText('Payment methods').should('be.visible')
