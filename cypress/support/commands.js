@@ -720,8 +720,8 @@ Cypress.Commands.add("c_checkTradersHubhomePage", () => {
   //cy.findByText('Total assets').should('be.visible')
   cy.findByText("Options & Multipliers").should("be.visible")
   cy.findByText("CFDs").should("be.visible")
-  cy.findByText("Deriv cTrader").should("be.visible")
-  cy.contains("Other CFD Platforms").scrollIntoView().should("be.visible")
+  cy.findAllByText("Deriv cTrader").eq(0).should("be.visible")
+  cy.findByText('Other CFD Platforms').scrollIntoView({ position: 'bottom' })
   cy.get("#traders-hub").scrollIntoView({ position: "top" })
 })
 
@@ -883,6 +883,8 @@ Cypress.Commands.add("c_addressDetails", () => {
 
 Cypress.Commands.add("c_addAccount", () => {
   cy.findByRole("button", { name: "Add account" }).should("be.disabled")
+  cy.get(".fatca-declaration__agreement").click()
+  cy.findAllByTestId("dti_list_item").eq(0).click()
   cy.get(".dc-checkbox__box").eq(0).click()
   cy.findByRole("button", { name: "Add account" }).should("be.disabled")
   cy.get(".dc-checkbox__box").eq(1).click()
@@ -899,7 +901,9 @@ Cypress.Commands.add("c_addAccount", () => {
     Cypress.config("baseUrl") + "/appstore/traders-hub"
   )
   cy.get("#traders-hub").scrollIntoView({ position: "top" })
-  cy.findByTestId("dt_traders_hub").findByText("0.00").should("be.visible")
+  //TODO change the below command name for closing notification banner after the code is merged
+  cy.close_notification_banner()  
+  cy.findAllByTestId("dt_balance_text_container").eq(0).should("be.visible")
 })
 
 Cypress.Commands.add("c_manageAccountsetting", (CoR) => {

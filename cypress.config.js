@@ -113,6 +113,7 @@ module.exports = defineConfig({
       EUR: "Euro",
       GBP: "Pound Sterling",
       AUD: "Australian Dollar",
+      BTC: "Bitcoin",
     },
   },
   retries: {
