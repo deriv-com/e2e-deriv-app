@@ -8,12 +8,10 @@ const decimalPlacesToSkip = 1
 Cypress.Commands.add('c_createNewAd', () => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
   cy.get('body', { timeout: 10000 }).then((body) => {
-    // if (body.find('You have no ads').length > 0) {
       if (body.find('.no-ads__message',{ timeout: 10000 }).length > 0){
       cy.findByRole("button", { name: "Create new ad" }).should("be.visible").click()
     }
     else if (body.find('#toggle-my-ads',{ timeout: 10000 }).length > 0) {
-    // else  {
       cy.c_removeExistingAds()
       cy.findByRole("button", { name: "Create new ad" }).should("be.visible").click()
     } 
