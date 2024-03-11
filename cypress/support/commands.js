@@ -2,7 +2,7 @@ Cypress.Commands.add('c_loadingCheck', () => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
 })
 
-Cypress.Commands.add("c_checkTradersHubhomePage", () => {
+Cypress.Commands.add('c_checkTradersHubhomePage', () => {
   //cy.findByText('Total assets').should('be.visible')
   cy.findByText('Options & Multipliers').should('be.visible')
   cy.findByText('CFDs').should('be.visible')
