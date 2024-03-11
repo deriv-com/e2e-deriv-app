@@ -19,13 +19,13 @@ function unblockProfile(userNickname) {
     cy.findByText(userNickname).should('be.visible')
 }
 
-describe("QATEST-2871 - Block and unblock user from advertisers Profile pag", () => {
+describe("QATEST-2871 - Block and unblock user from advertisers profile page", () => {
     beforeEach(() => {
         cy.c_login()
         cy.c_visitResponsive('/cashier/p2p', 'small')
     })
 
-    it('Should be able to block the advertiser from profile page.', () => {
+    it('Should be able to block and unblock the advertiser from profile page in responsive mode.', () => {
         cy.c_closeSafetyInstructions()
         cy.findByText('Deriv P2P').should('exist')
         cy.c_closeNotificationHeader()
