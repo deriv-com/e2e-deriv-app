@@ -2,7 +2,7 @@ import './commands'
 import './dtrader'
 require('cypress-xpath')
 
-const { getLoginToken } = require("./common")
+const { getLoginToken, authorizeApp } = require("./common")
 const { getOAuthUrl } = require("./common")
 
 Cypress.prevAppId = 0
@@ -91,12 +91,14 @@ Cypress.Commands.add("c_login", (app) => {
 
   cy.log("getOAuthUrl - value before: " + Cypress.env("oAuthUrl"))
   if (Cypress.env("oAuthUrl") == "<empty>") {
+      authorizeApp()
       getOAuthUrl(
         (oAuthUrl) => {
           Cypress.env("oAuthUrl", oAuthUrl)
           cy.log("getOAuthUrl - value after: " + Cypress.env("oAuthUrl"))
           cy.c_doOAuthLogin(app)
         })
+
   } else
   {
     cy.c_doOAuthLogin(app)

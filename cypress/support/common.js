@@ -96,99 +96,115 @@ function getOAuthUrl(callback) {
     cy.log('Cookie Test:' + response.headers['set-cookie']);
     
     // Step 3: Make a POST request with the CSRF token and cookie.
-    // cy.request({
-    //   method: 'POST',
-    //   url: 'https://' + Cypress.env('configServer') + '/oauth2/authorize?app_id=' + Cypress.env('configAppId') + '&l=en&brand=deriv&date_first_contact=',
-    //   form: false, 
-    //   followRedirect: false, //This ensures we get a 302 status.
-    //   body: {
-    //     email: loginEmail,
-    //     password: loginPassword,
-    //     login: 'Log in',
-    //     csrf_token: csrfToken
-    //   },
-    //   headers: {
-    //     'Content-Type': 'application/x-www-form-urlencoded',
-    //     'Origin': 'https://oauth.deriv.com',
-    //     'Cookie': cookie,
-    //     'csrf_token': csrfToken
-    //   }
-    // }).then((response) => {
-    //     const oAuthUrl = response.headers['location'];
-    //     cy.log('oAuthUrl: ' + oAuthUrl);
-    //     callback(oAuthUrl);
+    cy.request({
+      method: 'POST',
+      url: URL,
+      form: false, 
+      followRedirect: false, //This ensures we get a 302 status.
+      body: {
+        email: loginEmail,
+        password: loginPassword,
+        login: 'Log in',
+        csrf_token: csrfToken
+      },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Origin': 'https://oauth.deriv.com',
+        'Cookie': cookie,
+        'csrf_token': csrfToken
+      }
+    }).then((response) => {
+        const oAuthUrl = response.headers['location'];
+        cy.log('oAuthUrl: ' + oAuthUrl);
+        callback(oAuthUrl);
         
-    //     expect(response.status).to.eq(302); //302 means success on this occasion!
-    // });
-
-    // First, perform the initial POST request
-    // cy.request({
-    //   method: 'POST',
-    //   url: URL,
-    //   form: false,
-    //   followRedirect: false, // This ensures we get a 302 status.
-    //   body: {
-    //     email: loginEmail,
-    //     password: loginPassword,
-    //     login: 'Log in',
-    //     csrf_token: csrfToken
-    //   },
-    //   headers: {
-    //     'Content-Type': 'application/x-www-form-urlencoded',
-    //     'Origin': 'https://oauth.deriv.com',
-    //     'Cookie': cookie,
-    //     'csrf_token': csrfToken
-    //   }
-    // }).then((response) => {
-
-    //   // If the status is 200, proceed to perform the second request
-    //   if (response.status === 200 && response.body.includes('Authorise this app')) {
-    //     cy.log('heree-----------' + response.headers['Location'])
-    //     // Prepare for the second request
-    //     // Note: You may need to adjust this to fit how cookies are handled in your context
-    //     const newCookie = response.headers['set-cookie'];
-    //     const csrfToken2 = extractCsrfToken(response); // Ensure you have a way to extract the CSRF token from the body
-
-    //     const options = {
-    //       method: 'POST', // or 'GET', adjust according to your needs
-    //       url: URL, // Assuming this is the correct URL for the next request
-    //       form: true, // or false, adjust based on how you need to send the data
-    //       headers: {
-    //         'Content-Type': 'application/x-www-form-urlencoded',
-    //         'Cookie': newCookie,
-    //         'csrf_token': csrfToken2
-    //       },
-    //       body: {
-    //         csrf_token: csrfToken2,
-    //         confirm_scopes: 'read,admin,trade,payments'
-    //       },
-    //       followRedirect: false // Adjust based on your requirements
-    //     };
-
-    //     // Perform the second request based on the previous response
-    //     cy.request(options).then((response)=> {
-    //       cy.log('the status' + response.headers)
-    //       const oAuthUrl = response.headers['Location']
-    //       cy.log('between ----' + oAuthUrl)
-    //       callback(oAuthUrl);
-    //     })
-    //     // expect(response.status).to.eq(302);
-
-    //   } else if(response.status === 302) {
-
-    //     const oAuthUrl = response.headers['Location'];
-    //     cy.log('oAuthUrl: ' + response.headers['Location']);
-    //     callback(oAuthUrl);
-
-        
-    //     expect(response.status).to.eq(302);
-    //   }
-    // });
-
+        expect(response.status).to.eq(302); //302 means success on this occasion!
+    });
   });
 // Note: Ensure that `extractCsrfToken` and `extractOauthToken` are defined and compatible with Cypress's execution.
 // If they perform synchronous operations, you might need to wrap their logic in Cypress commands or use `.then()`.
 
+}
+
+function authorizeApp() {
+  const URL = 'https://' + Cypress.env('configServer') + '/oauth2/authorize?app_id=' + Cypress.env('configAppId') + '&l=en&brand=deriv&date_first_contact='
+  let loginEmail
+  let loginPassword
+  /* User production credentials if base url is production
+  Else use test credentials */
+  if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
+    loginEmail = Cypress.env('loginEmailProd')
+    loginPassword = Cypress.env('loginPasswordProd')
+  } else
+  { 
+    loginEmail = Cypress.env('loginEmail')
+    loginPassword = Cypress.env('loginPassword')      
+  }
+  // Step 1: Perform a GET on the OAuth Url in order to generate a CSRF token.
+  cy.request({
+    method: 'GET',
+    url: URL,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Origin': 'https://oauth.deriv.com'
+    }
+  }).then((response) => {
+ 
+    // Step 2: Extract CSRF token and set-cookie value from the response
+    // This will depend on how the token is presented in the response.
+    // For example, it might be in a cookie, a header, or in the HTML body.
+    const csrfToken = extractCsrfToken(response);
+    cy.log('csrfToken>>' + csrfToken);
+    const cookie = response.headers['set-cookie'];
+    cy.log('Cookie Test:' + response.headers['set-cookie']);
+
+    // Step 3: Make second POST request to authorize app
+    cy.request({
+      method: 'POST',
+      url: URL,
+      form: false,
+      followRedirect: false,
+      body: {
+        email: loginEmail,
+        password: loginPassword,
+        login: 'Log in',
+        csrf_token: csrfToken
+      },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Origin': 'https://oauth.deriv.com',
+        'Cookie': cookie,
+        'csrf_token': csrfToken
+      }
+    }).then((response) => {
+
+      // If the status is 200, proceed to perform the second request
+      if (response.status === 200 && response.body.includes('Authorise this app')) {
+        const newCookie = response.headers['set-cookie'];
+        const csrfToken2 = extractCsrfToken(response);
+
+        const options = {
+          method: 'POST',
+          url: URL,
+          form: true,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Cookie': newCookie,
+            'csrf_token': csrfToken2
+          },
+          body: {
+            csrf_token: csrfToken2,
+            confirm_scopes: 'read,admin,trade,payments'
+          },
+          followRedirect: true
+        };
+        cy.request(options).then(()=> cy.log('Authorized'))
+      } else {
+        return
+      }
+    });
+
+  });
 }
 
 function extractCsrfToken(response) {
@@ -201,5 +217,5 @@ function extractCsrfToken(response) {
 
 
 module.exports = { getLoginToken };
-module.exports = { getOAuthUrl };
+module.exports = { getOAuthUrl, authorizeApp };
 
