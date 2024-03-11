@@ -13,7 +13,8 @@ Cypress.Commands.add('navigate_to_poi', (country) => {
 
 Cypress.Commands.add('c_navigateToPOIResponsive', (country) => {
   cy.c_visitResponsive('/account/proof-of-identity', 'small')
-  cy.findByText('Proof of identity').should('exist')
+  //cy.findByText('Proof of identity').should('exist')
+  cy.findByText("Pending action required").should('exist')
   cy.c_closeNotificationHeader()
   cy.get('select[name="country_input"]').select(country)
   cy.findByRole('button', { name: 'Next' }).click()
