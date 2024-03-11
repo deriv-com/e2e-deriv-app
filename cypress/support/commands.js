@@ -763,6 +763,8 @@ Cypress.Commands.add("c_enterPassword", () => {
 })
 
 Cypress.Commands.add("c_completeOnboarding", () => {
+  const onboarding = Cypress.$("button:contains('Next'):visible").length > 0
+  if (onboarding) {
   for (let next_button_count = 0; next_button_count < 5; next_button_count++) {
     cy.contains("button", "Next").should("be.visible")
     cy.contains("button", "Next").click()
@@ -776,7 +778,7 @@ Cypress.Commands.add("c_completeOnboarding", () => {
     cy.contains("button", "Next").click()
   }
   cy.contains("Trader's Hub tour").should("be.visible")
-  cy.contains("button", "OK").click()
+  cy.contains("button", "OK").click() }
 })
 
 Cypress.Commands.add("c_generateRandomName", () => {
@@ -875,8 +877,6 @@ Cypress.Commands.add("c_addressDetails", () => {
 
 Cypress.Commands.add("c_addAccount", () => {
   cy.findByRole("button", { name: "Add account" }).should("be.disabled")
-  cy.get(".fatca-declaration__agreement").click()
-  cy.findAllByTestId("dti_list_item").eq(0).click()
   cy.get(".dc-checkbox__box").eq(0).click()
   cy.findByRole("button", { name: "Add account" }).should("be.disabled")
   cy.get(".dc-checkbox__box").eq(1).click()
@@ -942,6 +942,11 @@ Cypress.Commands.add("c_completeFinancialAssessment", () => {
   cy.findByRole("button", { name: "Next" }).click()
 })
 
+Cypress.Commands.add("c_completeFatcaDeclarationAgreement", () =>{ 
+  cy.get(".fatca-declaration__agreement").click()
+  cy.findAllByTestId("dti_list_item").eq(0).click()
+})
+
 Cypress.Commands.add("c_addAccountMF", () => {
   cy.findByRole("button", { name: "Add account" }).should("be.disabled")
   cy.get(".dc-checkbox__box").eq(0).click()
@@ -966,7 +971,7 @@ Cypress.Commands.add("c_addAccountMF", () => {
 })
 
 
-Cypress.Commands.add("c_verificationLinkSignUp", (epoch, country) => {
+Cypress.Commands.add("c_demoAccountSignup", (epoch, country) => {
   cy.c_emailVerificationSignUp(epoch)
   cy.then(() => {
     cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop").then(() => {

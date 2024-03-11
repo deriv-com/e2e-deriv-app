@@ -18,7 +18,7 @@ describe("QATEST-5569: Verify MF Signup flow", () => {
     cy.c_enterValidEmail(sign_up_mail)
   })
   it("Verify I can signup for an MF demo and real account", () => {
-    cy.c_verificationLinkSignUp(epoch, country)
+    cy.c_demoAccountSignup(epoch, country)
     cy.c_generateRandomName().then((firstName) => {
       cy.c_personalDetails(
         firstName,
@@ -32,6 +32,7 @@ describe("QATEST-5569: Verify MF Signup flow", () => {
     cy.c_addressDetails()
     cy.c_completeTradingAssessment()
     cy.c_completeFinancialAssessment()
+    cy.c_completeFatcaDeclarationAgreement()
     cy.c_addAccountMF()
     cy.get("#traders-hub").scrollIntoView({ position: "top" })
     cy.findByText("Total assets").should("be.visible")

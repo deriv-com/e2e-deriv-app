@@ -20,7 +20,7 @@ describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
   })
   it("Verify I can signup for a DIEL demo and real account", () => {
     Cypress.env("citizenship", country)
-    cy.c_verificationLinkSignUp(epoch, country)
+    cy.c_demoAccountSignup(epoch, country)
     cy.c_checkTradersHubhomePage()
     cy.findByTestId("dt_dropdown_display").click()
     cy.get("#real").click()
@@ -33,6 +33,7 @@ describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
       "Only use an address for which you have proof of residence"
     ).should("be.visible")
     cy.c_addressDetails()
+    cy.c_completeFatcaDeclarationAgreement()
     cy.c_addAccount()
     cy.findByText("EU", { exact: true }).click()
     cy.get(regulationText).should("have.text", "EU")

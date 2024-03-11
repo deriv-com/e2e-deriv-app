@@ -16,7 +16,7 @@ describe("QATEST-5972: Create a Derived SVG account", () => {
     cy.c_enterValidEmail(sign_up_mail)
   })
   it("Verify I can signup for a real derived SVG CFD account", () => {
-    cy.c_verificationLinkSignUp(epoch, country)
+    cy.c_demoAccountSignup(epoch, country)
     cy.c_checkTradersHubhomePage()
     cy.findByTestId("dt_dropdown_display").click()
     cy.get("#real").click()
@@ -35,6 +35,7 @@ describe("QATEST-5972: Create a Derived SVG account", () => {
       "Only use an address for which you have proof of residence"
     ).should("be.visible")
     cy.c_addressDetails()
+    cy.c_completeFatcaDeclarationAgreement()
     cy.c_addAccount()
     //Create real Mt5 derived SVG account
     cy.findAllByRole("button", { name: "Get" }).first().click()
@@ -53,8 +54,7 @@ describe("QATEST-5972: Create a Derived SVG account", () => {
     cy.findByRole("button", { name: "Create Deriv MT5 password" }).click()
     cy.get(".dc-modal-body").should(
       "contain.text",
-      "Success!Congratulations, you have successfully created your real  Deriv MT5 Derived SVG account. To start trading, top-up funds from your Deriv account into this account."
-    )
+      "Success!Congratulations, you have successfully created your real Deriv MT5 Derived SVG account. To start trading, transfer funds from your Deriv account into this account.")
     cy.findByRole("button", { name: "Transfer now" }).should("exist")
     cy.findByRole("button", { name: "Maybe later" }).click()
     cy.findByText("0.00 USD").should("be.visible")

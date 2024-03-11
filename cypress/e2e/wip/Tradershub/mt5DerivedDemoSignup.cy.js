@@ -14,7 +14,7 @@ describe("QATEST-5695: Create a Derived Demo CFD account", () => {
     cy.c_enterValidEmail(sign_up_mail)
   })
   it("Verify I can signup for a demo derived CFD account", () => {
-    cy.c_verificationLinkSignUp(epoch, country)
+    cy.c_demoAccountSignup(epoch, country)
     cy.c_checkTradersHubhomePage()
     cy.findAllByRole("button", { name: "Get" }).first().click()
     cy.findByText("Create a Deriv MT5 password").should("be.visible")
@@ -30,8 +30,7 @@ describe("QATEST-5695: Create a Derived Demo CFD account", () => {
     cy.findByRole("button", { name: "Create Deriv MT5 password" }).click()
     cy.get(".dc-modal-body").should(
       "contain.text",
-      "Success!Congratulations, you have successfully created your demo MT5 Derived account"
-    )
+      "Success!Congratulations, you have successfully created your demo Deriv MT5 Derived account")
     cy.findByRole("button", { name: "Continue" }).click()
     cy.findByText("10,000.00 USD").should("be.visible")
     cy.findByRole("button", { name: "Top up" }).should("exist")
