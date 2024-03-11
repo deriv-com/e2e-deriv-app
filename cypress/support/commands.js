@@ -2,23 +2,6 @@ Cypress.Commands.add('c_loadingCheck', () => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
 })
 
-Cypress.Commands.add('navigate_to_poi', (country) => {
-  cy.get('a[href="/account/personal-details"]').click()
-  cy.get('a[href="/account/proof-of-identity"]').click()
-  cy.get('input[name="country_input"]').click()
-  cy.get('input[name="country_input"]').type(country)
-  cy.contains(country).click()
-  cy.contains('button', 'Next').click()
-})
-
-Cypress.Commands.add("c_navigateToPoiResponsive", (country) => {
-  cy.c_visitResponsive("/account/proof-of-identity", "small")
-  cy.findByText("Pending action required").should('exist')
-  cy.c_closeNotificationHeader()
-  cy.get('select[name="country_input"]').select(country)
-  cy.contains("button", "Next").click()
-})
-
 Cypress.Commands.add("c_checkTradersHubhomePage", () => {
   //cy.findByText('Total assets').should('be.visible')
   cy.findByText('Options & Multipliers').should('be.visible')
