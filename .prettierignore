@@ -6,3 +6,4 @@ screenshots
 cypress/downloads
 *.config.js
 *.json
+.eslintrc.js
