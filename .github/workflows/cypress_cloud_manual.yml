@@ -21,7 +21,6 @@ on:
         - wip/dbot
         - wip/dbot/sanity-tests
         - wip/Wallets/cashier
-        - wip/Wallets/cfd
         - wip/dtrader
       testlink:
         type: string

@@ -38,8 +38,6 @@ describe("WALL-2830 - Crypto withdrawal content access from email", () => {
 
       cy.then(() => {
         verification_code = Cypress.env("walletsWithdrawalCode")
-        cy.log(Cypress.env("walletsWithdrawalCode"))
-        cy.log('wait')
         cy.log(verification_code)
         Cypress.config("baseUrl")
         cy.c_visitResponsive(
