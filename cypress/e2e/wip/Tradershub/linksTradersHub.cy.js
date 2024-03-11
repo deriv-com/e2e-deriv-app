@@ -25,7 +25,7 @@ function checkHyperLinks(deviceType)
     validateLink(linkName, expectedUrl, contentCheck)
     }
 
-    else if (deviceType === 'mobile' && linkName === 'Learn more') {
+    else {
       cy.findByRole('button', { name: "CFDs" }).click()
       validateLink(linkName, expectedUrl, contentCheck)
     }
@@ -43,15 +43,17 @@ function checkHyperLinks(deviceType)
 
 describe("QATEST 5930 - Validate the hyperlinks on Trader's hub", () => {
 
+beforeEach(() => {
+  cy.c_login()
+})
+
 it("Should navigate to all links in traders hub home page and validate its redirection in mobile", () => {
-    cy.c_login()
     cy.c_closeNotificationHeader()
     cy.c_visitResponsive("/appstore/traders-hub", "small")
     checkHyperLinks('mobile')
   })
 
 it("Should navigate to all links in traders hub home page and validate its redirection in desktop", () => {
-    cy.c_login()
     cy.c_visitResponsive("/appstore/traders-hub", "large")
     checkHyperLinks('desktop')
   })
