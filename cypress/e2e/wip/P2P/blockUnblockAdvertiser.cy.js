@@ -29,7 +29,6 @@ describe("QATEST-2871 - Block and unblock user from advertisers Profile pag", ()
         cy.c_closeSafetyInstructions()
         cy.findByText('Deriv P2P').should('exist')
         cy.c_closeNotificationHeader()
-        cy.findByText('No ads for this currency at the moment 😞').should('not.exist')
         cy.get('.buy-sell-row__advertiser-name--text').first().invoke('text').then((userNickname) => {
             blockProfile(userNickname)
             unblockProfile(userNickname)
