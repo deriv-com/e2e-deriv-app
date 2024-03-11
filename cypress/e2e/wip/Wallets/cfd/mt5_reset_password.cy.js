@@ -1,7 +1,7 @@
 import "@testing-library/cypress/add-commands"
 
 function changeMT5Password(){
-  cy.findByRole('button', { name: 'Open' }).eq(0).click()
+  cy.findAllByRole('button', { name: 'Open' }).eq(0).click()
   cy.findByText('DerivSVG-Server').should("be.visible")
   cy.findByText("Password").parent().within(()=>{
     cy.get(".wallets-tooltip").click()
@@ -15,7 +15,6 @@ function changeMT5Password(){
   cy.findByText('We’ve sent you an email').should("exist")
   cy.findByRole('button', { name: 'Didn\'t receive the email?' }).should("exist")
   cy.findByRole('button', { name: 'Investor Password' }).should("exist")
-
 }
 describe("WALL-3255 - Reset MT5 password", () => {
   let verification_code = Cypress.env("walletsWithdrawalCode")
@@ -30,6 +29,7 @@ describe("WALL-3255 - Reset MT5 password", () => {
     cy.findByText("CFDs", { exact: true }).should("be.visible")
     changeMT5Password()
     cy.c_emailVerification2(Cypress.env("mainQaBoxBaseUrl"),"New%20DMT5%20password%20request.html","QA script")
+    // cy.c_emailVerification2(Cypress.env("mainQaBoxBaseUrl"),"New DMT5 password request.html","QA script")
     cy.then(() => {
       Cypress.config("baseUrl")
       cy.log('verif is')
