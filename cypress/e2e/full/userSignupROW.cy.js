@@ -21,7 +21,7 @@ function createDemoAccount(CoR, Cit, epoch) {
     cy.c_selectCitizenship(Cit)
     cy.c_enterPassword()
     cy.c_completeOnboarding()
-    cy.c_checkTradersHubhomePage()
+    cy.c_checkTradersHubHomePage()
   })
 }
 function addRealAccount(identity, taxResi, nationalIDNum, taxIDNum) {

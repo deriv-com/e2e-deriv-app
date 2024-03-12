@@ -1,6 +1,7 @@
 import './commands'
 import './dtrader'
 import './p2p'
+import './tradersHub'
 
 require('cypress-xpath')
 

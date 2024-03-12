@@ -1,11 +1,8 @@
 import "@testing-library/cypress/add-commands"
-
-function generate_epoch() {
-  return Math.floor(new Date().getTime() / 100000)
-}
+import {generateEpoch} from '../../../support/tradersHub'
 
 describe("QATEST-6000: Create a Financial SVG account", () => {
-  const epoch = generate_epoch()
+  const epoch = generateEpoch()
   const sign_up_mail = `sanity${epoch}+mt5financialsvg@deriv.com`
   let country = Cypress.env("countries").CO
   let nationalIDNum = Cypress.env("nationalIDNum").CO
@@ -19,6 +16,7 @@ describe("QATEST-6000: Create a Financial SVG account", () => {
     cy.c_enterValidEmail(sign_up_mail)
   })
   it("Verify I can signup for a real Financial SVG CFD account", () => {
+<<<<<<< HEAD
     cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"account_opening_new.html","sanity" + `${epoch}` + "@binary.com") 
     cy.then(() => {
       cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop").then(() => {
@@ -41,6 +39,10 @@ describe("QATEST-6000: Create a Financial SVG account", () => {
       cy.c_completeOnboarding()
     })
     cy.c_checkTradersHubhomePage()
+=======
+    cy.c_demoAccountSignup(epoch, country)
+    cy.c_checkTradersHubHomePage()
+>>>>>>> 829a3cb66cecc14568eb29549a2ea3fb398ea937
     cy.findByTestId("dt_dropdown_display").click()
     cy.get("#real").click()
     //Create real account
@@ -58,6 +60,7 @@ describe("QATEST-6000: Create a Financial SVG account", () => {
       "Only use an address for which you have proof of residence"
     ).should("be.visible")
     cy.c_addressDetails()
+    cy.c_completeFatcaDeclarationAgreement()
     cy.c_addAccount()
     //Create real Mt5 derived SVG account
     cy.findAllByRole("button", { name: "Get" }).eq(1).click()
@@ -76,7 +79,7 @@ describe("QATEST-6000: Create a Financial SVG account", () => {
     cy.findByRole("button", { name: "Create Deriv MT5 password" }).click()
     cy.get(".dc-modal-body").should(
       "contain.text",
-      "Success!Congratulations, you have successfully created your real  Deriv MT5 Financial SVG account. To start trading, top-up funds from your Deriv account into this account."
+      "Success!Congratulations, you have successfully created your real Deriv MT5 Financial SVG account. To start trading, transfer funds from your Deriv account into this account."
     )
     cy.findByRole("button", { name: "Transfer now" }).should("exist")
     cy.findByRole("button", { name: "Maybe later" }).click()

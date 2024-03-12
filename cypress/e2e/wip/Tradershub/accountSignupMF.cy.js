@@ -1,11 +1,9 @@
 import "@testing-library/cypress/add-commands"
+import {generateEpoch} from '../../../support/tradersHub'
 
-function generate_epoch() {
-  return Math.floor(new Date().getTime() / 100000)
-}
 
 describe("QATEST-5569: Verify MF Signup flow", () => {
-  const epoch = generate_epoch()
+  const epoch = generateEpoch()
   const sign_up_mail = `sanity${epoch}MF@deriv.com`
   let country = Cypress.env("countries").ES
   let nationalIDNum = Cypress.env("nationalIDNum").ES
@@ -20,6 +18,7 @@ describe("QATEST-5569: Verify MF Signup flow", () => {
     cy.c_enterValidEmail(sign_up_mail)
   })
   it("Verify I can signup for an MF demo and real account", () => {
+<<<<<<< HEAD
     cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"account_opening_new.html",`sanity${epoch}dielmfcr@deriv.com`) 
     cy.then(() => {
       cy.c_visitResponsive(Cypress.env("verificationUrl"), "desktop").then(() => {
@@ -40,6 +39,9 @@ describe("QATEST-5569: Verify MF Signup flow", () => {
       cy.c_selectCitizenship(country)
       cy.c_enterPassword()
     })
+=======
+    cy.c_demoAccountSignup(epoch, country)
+>>>>>>> 829a3cb66cecc14568eb29549a2ea3fb398ea937
     cy.c_generateRandomName().then((firstName) => {
       cy.c_personalDetails(
         firstName,
@@ -53,6 +55,7 @@ describe("QATEST-5569: Verify MF Signup flow", () => {
     cy.c_addressDetails()
     cy.c_completeTradingAssessment()
     cy.c_completeFinancialAssessment()
+    cy.c_completeFatcaDeclarationAgreement()
     cy.c_addAccountMF()
     cy.get("#traders-hub").scrollIntoView({ position: "top" })
     cy.findByText("Total assets").should("be.visible")

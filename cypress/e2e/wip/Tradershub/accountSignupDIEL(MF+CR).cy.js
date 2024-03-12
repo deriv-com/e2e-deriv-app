@@ -1,12 +1,10 @@
 import "@testing-library/cypress/add-commands"
+import {generateEpoch} from '../../../support/tradersHub'
 
 const regulationText = ".regulators-switcher__switch div.item.is-selected"
-function generate_epoch() {
-  return Math.floor(new Date().getTime() / 100000)
-}
 
 describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
-  const epoch = generate_epoch()
+  const epoch = generateEpoch()
   const sign_up_mail = `sanity${epoch}dielmfcr@deriv.com`
   let country = Cypress.env("countries").ZA
   let nationalIDNum = Cypress.env("nationalIDNum").ZA
@@ -22,6 +20,7 @@ describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
   })
   it("Verify I can signup for a DIEL demo and real account", () => {
     Cypress.env("citizenship", Cypress.env("dielCountry"))
+<<<<<<< HEAD
     cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"account_opening_new.html",`sanity${epoch}dielmfcr@deriv.com`) 
     cy.then(() => {
       cy.c_visitResponsive("/endpoint", "desktop").then(() => {
@@ -44,6 +43,10 @@ describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
       cy.c_completeOnboarding()
     })
     cy.c_checkTradersHubhomePage()
+=======
+    cy.c_demoAccountSignup(epoch, country)
+    cy.c_checkTradersHubHomePage()
+>>>>>>> 829a3cb66cecc14568eb29549a2ea3fb398ea937
     cy.findByTestId("dt_dropdown_display").click()
     cy.get("#real").click()
     cy.findByText("EU", { exact: true }).click()
@@ -62,6 +65,7 @@ describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
     cy.c_addressDetails()
     cy.c_completeTradingAssessment()
     cy.c_completeFinancialAssessment()
+    cy.c_completeFatcaDeclarationAgreement()
     cy.c_addAccountMF()
     cy.findByText("Non-EU", { exact: true }).click()
     cy.get(regulationText).should("have.text", "Non-EU")
