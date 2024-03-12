@@ -19,7 +19,7 @@ describe("QATEST-5972: Create a Derived SVG account", () => {
     cy.c_enterValidEmail(sign_up_mail)
   })
   it("Verify I can signup for a real derived SVG CFD account", () => {
-    cy.c_emailVerificationSignUp(epoch)
+    cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"account_opening_new.html","sanity" + `${epoch}` + "@binary.com") 
     cy.then(() => {
       cy.c_visitResponsive("/endpoint", "desktop").then(() => {
         cy.window().then((win) => {

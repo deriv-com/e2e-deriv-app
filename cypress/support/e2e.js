@@ -280,7 +280,7 @@ Cypress.Commands.add("c_emailVerificationSignUp", (epoch, retryCount = 0, maxRet
             cy.contains('p', `sanity${epoch}`).should('be.visible')
             cy.get('a').last().invoke('attr', 'href').then((href) => {
                   if (href) {
-                      Cypress.env('signUpUrl', href)
+                      Cypress.env('signUpUrl', href);
                       cy.log('Sign up URL found')
                   } else {
                     cy.log('Sign up URL not found')
@@ -294,8 +294,8 @@ Cypress.Commands.add("c_emailVerificationSignUp", (epoch, retryCount = 0, maxRet
   cy.then(()=>{
       //Retry finding email after 1 second interval
       if (retryCount <= maxRetries && !Cypress.env("signUpUrl")) {
-        cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
-        cy.wait(1000)
+        cy.log(`Retrying... Attempt number: ${retryCount + 1}`);
+        cy.wait(1000);
         cy.c_emailVerificationSignUp(epoch, ++retryCount)
       } 
       if (retryCount > maxRetries) {

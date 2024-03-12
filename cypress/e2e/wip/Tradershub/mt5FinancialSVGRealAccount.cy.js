@@ -19,7 +19,7 @@ describe("QATEST-6000: Create a Financial SVG account", () => {
     cy.c_enterValidEmail(sign_up_mail)
   })
   it("Verify I can signup for a real Financial SVG CFD account", () => {
-    cy.c_emailVerificationSignUp(epoch)
+    cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"account_opening_new.html","sanity" + `${epoch}` + "@binary.com") 
     cy.then(() => {
       cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop").then(() => {
         cy.window().then((win) => {
