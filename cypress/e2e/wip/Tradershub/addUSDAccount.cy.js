@@ -22,7 +22,7 @@ describe('QATEST 5813 - Add USD account for existing BTC account', () => {
   it('Create a new crypto account and add USD account', () => {
     cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"account_opening_new.html","sanity" + `${epoch}` + "@binary.com") 
     cy.then(() => {
-      cy.c_visitResponsive(Cypress.env('signUpUrl'), 'desktop').then(() => {
+      cy.c_visitResponsive(Cypress.env('verificationdUrl'), 'desktop').then(() => {
         cy.window().then((win) => {
           win.localStorage.setItem(
             'config.server_url',

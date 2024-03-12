@@ -21,7 +21,7 @@ describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
   })
   it("Verify I can signup for a DIEL demo and real account", () => {
     Cypress.env("citizenship", country)
-    cy.c_emailVerificationSignUp(epoch)
+    cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"account_opening_new.html",`sanity${epoch}dielmfcr@deriv.com`) 
     cy.then(() => {
       cy.c_visitResponsive("/endpoint", "desktop").then(() => {
         cy.window().then((win) => {
@@ -36,7 +36,7 @@ describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
         })
       })
 
-      cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop")
+      cy.c_visitResponsive(Cypress.env("verificationdUrl"), "desktop")
       cy.get("h1").contains("Select your country and").should("be.visible")
       cy.c_selectCountryOfResidence(country)
       cy.c_selectCitizenship(country)

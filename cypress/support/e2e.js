@@ -268,10 +268,10 @@ Cypress.Commands.add("c_selectDemoAccount", () => {
 })
 
 Cypress.Commands.add("c_emailVerificationSignUp", (epoch, retryCount = 0, maxRetries = 3) => {
-  const authUrl = `https://${Cypress.env("emailUser")}:${Cypress.env("emailPassword")}@${Cypress.env("event_email_url")}`
+  const authUrl = `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env("qaBoxLoginPassword")}@${Cypress.env("qaBoxBaseUrl")}`
   cy.visit(authUrl)
 
-  cy.origin(`https://${Cypress.env("event_email_url")}`, { args: { epoch} }, ({ epoch}) => {
+  cy.origin(`https://${Cypress.env("qaBoxBaseUrl")}`, { args: { epoch} }, ({ epoch}) => {
     cy.document().then((doc) => {
       const allSignupEmails = Array.from(doc.querySelectorAll('a[href*="account_opening_new"]'))
           if (allSignupEmails.length) {

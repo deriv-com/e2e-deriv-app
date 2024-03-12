@@ -20,9 +20,9 @@ describe("QATEST-5569: Verify MF Signup flow", () => {
     cy.c_enterValidEmail(sign_up_mail)
   })
   it("Verify I can signup for an MF demo and real account", () => {
-    cy.c_emailVerificationSignUp(epoch)
+    cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"account_opening_new.html",`sanity${epoch}dielmfcr@deriv.com`) 
     cy.then(() => {
-      cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop").then(() => {
+      cy.c_visitResponsive(Cypress.env("verificationdUrl"), "desktop").then(() => {
         cy.window().then((win) => {
           win.localStorage.setItem(
             "config.server_url",
