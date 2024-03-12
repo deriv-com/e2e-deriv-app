@@ -15,7 +15,7 @@ describe('QATEST-99420: Import and run custom strategy', () => {
     cy.c_login()
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     tradersHub.openBotButton.click()
-    cy.loading_check()
+    cy.c_loadingCheck()
     common.skipTour()
     common.switchToDemo()
   })
@@ -24,7 +24,7 @@ describe('QATEST-99420: Import and run custom strategy', () => {
     botDashboard.importStrategy('MartingaleOld')
     common.skipTour()
     cy.reload() // adding this until bug BOT-1147 is fixed
-    cy.loading_check()
+    cy.c_loadingCheck()
 
     //Enter Expected profit, expected Loss, and Trade Amount
     cy.window().then((win) => {
