@@ -31,10 +31,6 @@ describe('QATEST-707 - Create crypto account', () => {
     const cryptocurrencies = ["Bitcoin", "Ethereum", "Litecoin", "Tether TRC20", "USD Coin"];
     cryptocurrencies.forEach(crypto => {
       validatecrypto(crypto);
-      // Now you can use `selectedCrypto` in further assertions or operations
-      // For example:
-      // cy.findByText(selectedCrypto).should('be.visible');
-      // cy.get('#modal_root').click();
     });
   });
   })
