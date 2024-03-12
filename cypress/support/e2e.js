@@ -303,11 +303,6 @@ Cypress.Commands.add("c_emailVerificationSignUp", (epoch, retryCount = 0, maxRet
       }  
   })  
 })
-Cypress.Commands.add('getElementsContainingText', (text) => {
-  return cy.get('div').filter((index, element) => {
-    return Cypress.$(element).text().includes(text)
-  })
-})
 Cypress.Commands.add("c_emailVerification", (base_url,request_type,account_email,retryCount = 0, maxRetries = 3) => {
   cy.visit(
     `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
