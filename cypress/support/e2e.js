@@ -4,7 +4,7 @@ require('cypress-xpath')
 // const {createAccountReal } = require('./accountCreation')
 // import './accountCreation'
 
-const { getLoginToken, authorizeApp } = require("./common")
+const { getLoginToken } = require("./common")
 const { getOAuthUrl } = require("./common")
 
 Cypress.prevAppId = 0
@@ -94,7 +94,6 @@ Cypress.Commands.add("c_login", (app) => {
   cy.log("getOAuthUrl - value before: " + Cypress.env("oAuthUrl"))
   if (Cypress.env("oAuthUrl") == "<empty>") {
       // createAccountReal()
-      authorizeApp()
       getOAuthUrl(
         (oAuthUrl) => {
           Cypress.env("oAuthUrl", oAuthUrl)
