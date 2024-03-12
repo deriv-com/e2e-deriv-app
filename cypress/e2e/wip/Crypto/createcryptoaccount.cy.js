@@ -18,19 +18,29 @@ describe('QATEST-707 - Create crypto account', () => {
     cy.c_login()
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
   })
-  const validatecrypto = (crypto) => {
-    cy.close_notification_banner();
+  const addcryptoaccount = (crypto) => {
     cyrpto.elements.currency_switcher().should('be.visible').click();
     cyrpto.elements.manage_account().should('be.visible').click();
     cy.findByText(crypto).click();
     cyrpto.elements.crypto_add_account().should('be.visible').click();
     cyrpto.elements.maybe_later().should('be.visible').click();
+    cy.close_notification_banner();
     return crypto;
   };
+  const checkaccountbalance = () => {
+    cyrpto.elements.currency_switcher().should('be.visible').click();
+  };
   it('should be able to create crypto account from Traders Hub.', () => {
+    cy.wait(1000).close_notification_banner();
     const cryptocurrencies = ["Bitcoin", "Ethereum", "Litecoin", "Tether TRC20", "USD Coin"];
     cryptocurrencies.forEach(crypto => {
-      validatecrypto(crypto);
-    });
-  });
+      addcryptoaccount(crypto);
+ });
+      checkaccountbalance();
+      cy.findByText("0.00000000 BTC").should("be.visible")
+      cy.findByText("0.00000000 ETH").should("be.visible")
+      cy.findByText("0.00000000 LTC").should("be.visible")
+      cy.findByText("0.00 tUSDT").should("be.visible")
+      cy.findByText("0.00 USDC").should("be.visible") 
+});
   })
