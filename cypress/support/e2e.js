@@ -113,7 +113,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
   cy.document().then((doc)=>{
     const launchModal = doc.querySelector('[data-test-id="launch-modal"]')
     if(launchModal){
-      cy.findByRole('button', { name: 'Ok' }).click();
+      cy.findByRole('button', { name: 'Ok' }).click()
     }
   })
   cy.get('#modal_root, .modal-root', { timeout: 10000 })
@@ -169,7 +169,7 @@ Cypress.Commands.add('c_emailVerificationMT5', (verification_code, base_url) => 
       const emailTitlePrefix = `${currentDate}-New DMT5 password request`
       cy.contains('a', (text, element) => {
         // Check if the text contains the emailTitlePrefix
-        return element.textContent.includes(emailTitlePrefix);
+        return element.textContent.includes(emailTitlePrefix)
     }).click()
       cy
         .get("a")
@@ -254,7 +254,7 @@ Cypress.on('uncaught:exception', (err, runnable, promise) => {
 Cypress.Commands.add("c_selectRealAccount", () => {
   cy.findByTestId('dt_acc_info').should('be.visible').click()
   cy.findByText('Real').should('be.visible').click()
-  cy.get('acc-switcher__new-account').should('not.exist');
+  cy.get('acc-switcher__new-account').should('not.exist')
   cy.get('.dc-content-expander__content').should('be.visible').click()
   cy.findByTestId('dt_acc_info').should('be.visible')
 })
@@ -280,7 +280,7 @@ Cypress.Commands.add("c_emailVerificationSignUp", (epoch, retryCount = 0, maxRet
             cy.contains('p', `sanity${epoch}`).should('be.visible')
             cy.get('a').last().invoke('attr', 'href').then((href) => {
                   if (href) {
-                      Cypress.env('signUpUrl', href);
+                      Cypress.env('signUpUrl', href)
                       cy.log('Sign up URL found')
                   } else {
                     cy.log('Sign up URL not found')
@@ -294,8 +294,8 @@ Cypress.Commands.add("c_emailVerificationSignUp", (epoch, retryCount = 0, maxRet
   cy.then(()=>{
       //Retry finding email after 1 second interval
       if (retryCount <= maxRetries && !Cypress.env("signUpUrl")) {
-        cy.log(`Retrying... Attempt number: ${retryCount + 1}`);
-        cy.wait(1000);
+        cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
+        cy.wait(1000)
         cy.c_emailVerificationSignUp(epoch, ++retryCount)
       } 
       if (retryCount > maxRetries) {
@@ -305,9 +305,9 @@ Cypress.Commands.add("c_emailVerificationSignUp", (epoch, retryCount = 0, maxRet
 })
 Cypress.Commands.add('getElementsContainingText', (text) => {
   return cy.get('div').filter((index, element) => {
-    return Cypress.$(element).text().includes(text);
-  });
-});
+    return Cypress.$(element).text().includes(text)
+  })
+})
 Cypress.Commands.add("c_emailVerification", (base_url,request_type,account_email,retryCount = 0, maxRetries = 3) => {
   cy.visit(
     `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
@@ -320,7 +320,7 @@ Cypress.Commands.add("c_emailVerification", (base_url,request_type,account_email
       "qaBoxLoginPassword"
     )}@${base_url}`,{args: [request_type, account_email]}, ([request_type, account_email ]) => {
     cy.document().then((doc) => {
-      const allRelatedEmails = Array.from(doc.querySelectorAll(`a[href*="${request_type}"]`));
+      const allRelatedEmails = Array.from(doc.querySelectorAll(`a[href*="${request_type}"]`))
       if (allRelatedEmails.length) {
             const verificationEmail = allRelatedEmails.pop()          
             cy.wrap(verificationEmail).click()
@@ -345,8 +345,8 @@ Cypress.Commands.add("c_emailVerification", (base_url,request_type,account_email
   cy.then(()=>{
       //Retry finding email after 1 second interval
       if (retryCount <= maxRetries && !Cypress.env("verificationdUrl")) {
-        cy.log(`Retrying... Attempt number: ${retryCount + 1}`);
-        cy.wait(1000);
+        cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
+        cy.wait(1000)
         cy.c_emailVerification(base_url,request_type,account_email, ++retryCount)
       } 
       if (retryCount > maxRetries) {
