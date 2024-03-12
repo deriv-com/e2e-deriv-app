@@ -12,7 +12,7 @@ describe('QATEST-4128: Dashboard quick action to Quick Strategy and Bot Builder'
     cy.c_login()
     cy.c_visitResponsive('/bot', 'large')
     common.skipTour()
-    cy.closeNotificationHeader()
+    cy.c_closeNotificationHeader()
   })
 
   it('Go to bot builder page', () => {
