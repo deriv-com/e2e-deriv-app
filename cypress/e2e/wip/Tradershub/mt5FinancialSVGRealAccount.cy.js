@@ -17,7 +17,7 @@ describe("QATEST-6000: Create a Financial SVG account", () => {
   })
   it("Verify I can signup for a real Financial SVG CFD account", () => {
     cy.c_demoAccountSignup(epoch, country)
-    cy.c_checkTradersHubhomePage()
+    cy.c_checkTradersHubHomePage()
     cy.findByTestId("dt_dropdown_display").click()
     cy.get("#real").click()
     //Create real account

@@ -16,7 +16,7 @@ describe("QATEST-5724: CFDs - Create a demo Financial account using existing MT5
 
  it("Verify I can add a demo financial account using exisiting MT5 derieved account password", () => {
     cy.c_demoAccountSignup(epoch, country)
-    cy.c_checkTradersHubhomePage()
+    cy.c_checkTradersHubHomePage()
     cy.findAllByRole("button", { name: "Get" }).first().click()
     cy.findByText("Create a Deriv MT5 password").should("be.visible")
     cy.findByText(

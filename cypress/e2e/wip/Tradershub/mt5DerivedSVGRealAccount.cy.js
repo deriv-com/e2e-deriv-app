@@ -17,7 +17,7 @@ describe("QATEST-5972: Create a Derived SVG account", () => {
   })
   it("Verify I can signup for a real derived SVG CFD account", () => {
     cy.c_demoAccountSignup(epoch, country)
-    cy.c_checkTradersHubhomePage()
+    cy.c_checkTradersHubHomePage()
     cy.findByTestId("dt_dropdown_display").click()
     cy.get("#real").click()
     //Create real account

@@ -2,7 +2,7 @@ export function generateEpoch() {
     return Math.floor(new Date().getTime() / 100000)
   }
 
-Cypress.Commands.add("c_checkTradersHubhomePage", () => {
+Cypress.Commands.add("c_checkTradersHubHomePage", () => {
     cy.findByText("Options & Multipliers").should("be.visible")
     cy.findByText("CFDs").should("be.visible")
     cy.findAllByText("Deriv cTrader").eq(0).should("be.visible")
