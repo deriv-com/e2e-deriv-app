@@ -1,7 +1,7 @@
 import '@testing-library/cypress/add-commands'
 import { generateAccountNumberString } from '../../../support/p2p'
 
-let nickname = `nickWithAcc${generateAccountNumberString(5)}`
+let nickname = `NickWithAcc${generateAccountNumberString(5)}`
 
 describe("QATEST-2292 - Register a new client as an Advertiser in Deriv P2P - Nickname checks", () => {
     beforeEach(() => {
@@ -9,7 +9,7 @@ describe("QATEST-2292 - Register a new client as an Advertiser in Deriv P2P - Ni
         cy.c_visitResponsive('/cashier/p2p', 'small')
     })
 
-    it('Should be able to create a nickname for P2P and redirect to my ads screen in responsive mode.', () => {
+    it('Should be able to set a nickname for P2P in responsive mode.', () => {
         cy.c_closeSafetyInstructions()
         cy.findByText('Deriv P2P').should('exist')
         cy.c_closeNotificationHeader()
@@ -20,5 +20,6 @@ describe("QATEST-2292 - Register a new client as an Advertiser in Deriv P2P - Ni
         cy.findByRole('textbox', { name: 'Your nickname' }).should('exist').type(nickname)
         cy.findByRole('button', { name: 'Confirm' }).should('be.enabled').click()
         cy.findByText('Nickname added successfully!').should('be.visible').click().should('not.be.visible')
+        cy.findByText(nickname).should('be.visible')
     })
 })
