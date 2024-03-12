@@ -150,45 +150,6 @@ Cypress.Commands.add('c_mt5login', () => {
     cy.findByRole('button', { name: 'Connect to account' }).click()
 })
 
-Cypress.Commands.add('c_emailVerificationMT5', (verification_code, base_url) => {
-  cy.visit(
-    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
-      "qaBoxLoginPassword"
-    )}@${base_url}`
-  )
-  cy.origin(
-    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
-      "qaBoxLoginPassword"
-    )}@${base_url}`, () => {
-      cy.scrollTo("bottom")
-      const date = new Date()
-      let day = date.getDate()
-      let month = date.getMonth() + 1
-      let year = date.getFullYear()
-      let currentDate = `${year}${month}${day}`
-      const emailTitlePrefix = `${currentDate}-New DMT5 password request`
-      cy.contains('a', (text, element) => {
-        // Check if the text contains the emailTitlePrefix
-        return element.textContent.includes(emailTitlePrefix)
-    }).click()
-      cy
-        .get("a")
-        .eq(1)
-        .invoke("attr", "href")
-        .then((href) => {
-          Cypress.env("verificationdUrl", href)
-          const code = href.match(/code=([A-Za-z0-9]{8})/)
-          if (code) {
-            verification_code = code[1]
-            Cypress.env("walletsWithdrawalCode", verification_code)
-            cy.log(verification_code)
-          } else {
-            cy.log("Unable to find code in the URL")
-          }
-        })
-    }
-  )
-})
 //To be added on hotspots as an edge case only when constantly hitting rate limits
 Cypress.Commands.add("c_rateLimit", () => {
   cy.get("#modal_root, .modal-root", { timeout: 10000 }).then(($element) => {
@@ -267,42 +228,7 @@ Cypress.Commands.add("c_selectDemoAccount", () => {
   cy.findByTestId('dt_acc_info').should('be.visible')
 })
 
-Cypress.Commands.add("c_emailVerificationSignUp", (epoch, retryCount = 0, maxRetries = 3) => {
-  const authUrl = `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env("qaBoxLoginPassword")}@${Cypress.env("qaBoxBaseUrl")}`
-  cy.visit(authUrl)
 
-  cy.origin(`https://${Cypress.env("qaBoxBaseUrl")}`, { args: { epoch} }, ({ epoch}) => {
-    cy.document().then((doc) => {
-      const allSignupEmails = Array.from(doc.querySelectorAll('a[href*="account_opening_new"]'))
-          if (allSignupEmails.length) {
-            const signUpEmail = allSignupEmails.pop()          
-            cy.wrap(signUpEmail).click()
-            cy.contains('p', `sanity${epoch}`).should('be.visible')
-            cy.get('a').last().invoke('attr', 'href').then((href) => {
-                  if (href) {
-                      Cypress.env('signUpUrl', href);
-                      cy.log('Sign up URL found')
-                  } else {
-                    cy.log('Sign up URL not found')
-                  }
-              })
-          } else {
-            cy.log('Sign up email not found')
-          }
-      })
-  })
-  cy.then(()=>{
-      //Retry finding email after 1 second interval
-      if (retryCount <= maxRetries && !Cypress.env("signUpUrl")) {
-        cy.log(`Retrying... Attempt number: ${retryCount + 1}`);
-        cy.wait(1000);
-        cy.c_emailVerificationSignUp(epoch, ++retryCount)
-      } 
-      if (retryCount > maxRetries) {
-        throw new Error(`Signup URL extraction failed after ${maxRetries} attempts.`)
-      }  
-  })  
-})
 Cypress.Commands.add("c_emailVerification", (base_url,request_type,account_email, language='EN', retryCount = 0, maxRetries = 3) => {
   cy.visit(
     `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
@@ -323,8 +249,8 @@ Cypress.Commands.add("c_emailVerification", (base_url,request_type,account_email
             cy.contains('p',`lang: ${language}`).parent().within(()=>{
               cy.contains('a',Cypress.config('baseUrl')).invoke('attr', 'href').then((href) => {
                 if (href) {
-                  Cypress.env("verificationdUrl", href)
-                  cy.log( Cypress.env("verificationdUrl"))
+                  Cypress.env("verificationUrl", href)
+                  cy.log( Cypress.env("verificationUrl"))
                   const code = href.match(/code=([A-Za-z0-9]{8})/)
                   verification_code = code[1]
                   cy.log('Verification link found')
@@ -341,7 +267,7 @@ Cypress.Commands.add("c_emailVerification", (base_url,request_type,account_email
   })
   cy.then(()=>{
       //Retry finding email after 1 second interval
-      if (retryCount <= maxRetries && !Cypress.env("verificationdUrl")) {
+      if (retryCount <= maxRetries && !Cypress.env("verificationUrl")) {
         cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
         cy.wait(1000)
         cy.c_emailVerification(base_url,request_type,account_email, ++retryCount)

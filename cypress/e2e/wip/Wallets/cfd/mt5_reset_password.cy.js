@@ -18,7 +18,7 @@ function changeMT5Password(){
 }
 describe("WALL-3255 - Reset MT5 password", () => {
   let verification_code = Cypress.env("walletsWithdrawalCode")
-  const verification_url = Cypress.env("verificationdUrl")
+  const verification_url = Cypress.env("verificationUrl")
   beforeEach(() => {
     cy.c_login("wallets")
     cy.c_visitResponsive("/wallets", "large")
@@ -30,7 +30,7 @@ describe("WALL-3255 - Reset MT5 password", () => {
     changeMT5Password()
     cy.c_emailVerification(Cypress.env("mainQaBoxBaseUrl"),"New%20DMT5%20password%20request.html","QA script")
     cy.then(() => {
-      cy.c_visitResponsive(Cypress.env("verificationdUrl"),
+      cy.c_visitResponsive(Cypress.env("verificationUrl"),
         "large"
       )})
       cy.get('div').contains('Create a new Deriv MT5 Password').should("be.visible")

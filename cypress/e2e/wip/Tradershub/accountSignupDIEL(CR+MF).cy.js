@@ -36,7 +36,7 @@ describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
         })
       })
 
-      cy.c_visitResponsive(Cypress.env("verificationdUrl"), "desktop")
+      cy.c_visitResponsive(Cypress.env("verificationUrl"), "desktop")
       cy.get("h1").contains("Select your country and").should("be.visible")
       cy.c_selectCountryOfResidence(country)
       cy.c_selectCitizenship(country)
