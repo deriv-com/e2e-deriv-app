@@ -1,3 +1,5 @@
+// require('./accountCreation')
+
 function getLoginToken(callback) {
   cy.request({
     method: 'POST',

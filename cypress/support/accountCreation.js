@@ -1,7 +1,6 @@
-const puppeteer = require('puppeteer');
-const { getOAuthUrl } = require("./common")
-const WebSocket = require('ws');
 require('dotenv').config();
+const puppeteer = require('puppeteer');
+const WebSocket = require('ws');
 const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI');
 const app_id = process.env.APP_ID
 const websocketURL = process.env.WEBSOCKET_URL
@@ -100,6 +99,8 @@ const createAccountReal = (async () => {
     })
     const { new_account_real: { client_id }, echo_req: { residence } } = response;
     const results = [randomEmail, client_id, residence]
+    Cypress.env('loginEmailProd', randomEmail);
+    Cypress.env('loginPassword', 'Abcd1234')
     console.log(results);
     return results
 } catch(e) {
@@ -109,5 +110,4 @@ const createAccountReal = (async () => {
 }
 })
 
-// createAccountReal()
-getOAuthUrl((oauth) =>  console.log(oauth))
+module.exports = { createAccountReal };
