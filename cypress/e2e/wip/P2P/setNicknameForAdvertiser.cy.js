@@ -17,7 +17,7 @@ describe("QATEST-2292 - Register a new client as an Advertiser in Deriv P2P - Ni
         cy.findByRole('heading', { name: 'What’s your nickname?' }).should('be.visible')
         cy.findByText('Others will see this on your profile, ads, and chats.').should('be.visible')
         cy.findByText('Your nickname cannot be changed later.').should('be.visible')
-        cy.findByRole('textbox', { name: 'Your nickname' }).should('exist').type(nickname)
+        cy.findByRole('textbox', { name: 'Your nickname' }).type(nickname).should('have.value', nickname).and('have.length.below', 25)
         cy.findByRole('button', { name: 'Confirm' }).should('be.enabled').click()
         cy.findByText(nickname).should('be.visible')
     })
