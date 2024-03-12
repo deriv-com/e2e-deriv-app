@@ -20,33 +20,8 @@ describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
   })
   it("Verify I can signup for a DIEL demo and real account", () => {
     Cypress.env("citizenship", Cypress.env("dielCountry"))
-<<<<<<< HEAD
-    cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"account_opening_new.html",`sanity${epoch}dielmfcr@deriv.com`) 
-    cy.then(() => {
-      cy.c_visitResponsive("/endpoint", "desktop").then(() => {
-        cy.window().then((win) => {
-          win.localStorage.setItem(
-            "config.server_url",
-            Cypress.env("stdConfigServer")
-          )
-          win.localStorage.setItem(
-            "config.app_id",
-            Cypress.env("stdConfigAppId")
-          )
-        })
-      })
-      cy.c_visitResponsive(Cypress.env("verificationUrl"), "desktop")
-      cy.get("h1").contains("Select your country and").should("be.visible")
-      cy.c_selectCountryOfResidence(country)
-      cy.c_selectCitizenship(country)
-      cy.c_enterPassword()
-      cy.c_completeOnboarding()
-    })
-    cy.c_checkTradersHubhomePage()
-=======
     cy.c_demoAccountSignup(epoch, country)
     cy.c_checkTradersHubHomePage()
->>>>>>> 829a3cb66cecc14568eb29549a2ea3fb398ea937
     cy.findByTestId("dt_dropdown_display").click()
     cy.get("#real").click()
     cy.findByText("EU", { exact: true }).click()

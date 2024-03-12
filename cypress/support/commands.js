@@ -267,7 +267,7 @@ Cypress.Commands.add("c_addAccountMF", () => {
 
 
 Cypress.Commands.add("c_demoAccountSignup", (epoch, country) => {
-  cy.c_emailVerificationSignUp(epoch)
+  cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"account_opening_new.html",`sanity${epoch}dielmfcr@deriv.com`) 
   cy.then(() => {
     cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop").then(() => {
       cy.window().then((win) => {
