@@ -46,4 +46,3 @@ import {generateEpoch} from '../../../support/tradersHub'
     cy.findByRole('button', { name: 'Maybe later' }).click()
     })
   })
-  
