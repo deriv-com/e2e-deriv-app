@@ -7,11 +7,7 @@ describe("QATEST-5724: CFDs - Create a demo Financial account using existing MT5
     let country = Cypress.env("countries").CO
 
     beforeEach(() => {
-      localStorage.setItem("config.server_url", Cypress.env("stdConfigServer"))
-      localStorage.setItem("config.app_id", Cypress.env("stdConfigAppId"))
-      cy.c_visitResponsive("/endpoint", "desktop")
-      cy.findByRole("button", { name: "Sign up" }).should("not.be.disabled")
-      cy.c_enterValidEmail(signUpMail)
+      cy.c_setEndpoint(signUpMail)
     })
 
  it("Verify I can add a demo financial account using exisiting MT5 derieved account password", () => {

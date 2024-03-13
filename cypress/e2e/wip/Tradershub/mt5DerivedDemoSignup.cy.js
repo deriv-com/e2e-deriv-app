@@ -7,11 +7,7 @@ describe("QATEST-5695: Create a Derived Demo CFD account", () => {
   let country = Cypress.env("countries").CO
 
   beforeEach(() => {
-    localStorage.setItem("config.server_url", Cypress.env("stdConfigServer"))
-    localStorage.setItem("config.app_id", Cypress.env("stdConfigAppId"))
-    cy.c_visitResponsive("/endpoint", "desktop")
-    cy.findByRole("button", { name: "Sign up" }).should("not.be.disabled")
-    cy.c_enterValidEmail(signUpMail)
+    cy.c_setEndpoint(signUpMail)
   })
   it("Verify I can signup for a demo derived CFD account", () => {
     cy.c_demoAccountSignup(epoch, country)
