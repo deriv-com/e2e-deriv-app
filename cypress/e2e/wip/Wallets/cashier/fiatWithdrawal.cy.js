@@ -37,9 +37,10 @@ describe("WALL-2830 - Crypto withdrawal content access from email", () => {
       cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"request_payment_withdraw.html",Cypress.env("loginEmail"))
 
       cy.then(() => {
-        cy.c_visitResponsive(Cypress.env("verificationUrl"),
-        "large")
-        cy.get('#app_contents iframe').should("exist")
+        cy.c_visitResponsive(
+          `${withdrawal_url}?verification=${verification_code}`,
+          "large"
+        )
       })
     })
   })

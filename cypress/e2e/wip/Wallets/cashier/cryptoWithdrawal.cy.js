@@ -47,8 +47,10 @@ describe("WALL-2830 - Crypto withdrawal content access from email", () => {
     cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"request_payment_withdraw.html",Cypress.env("loginEmail"))
 
     cy.then(() => {
-      cy.c_visitResponsive(Cypress.env("verificationUrl"),
-      "large")
+      cy.c_visitResponsive(
+        `${withdrawal_url}?verification=${verification_code}`,
+        "large"
+      )
       cy.contains("Transaction status")
       cy.contains("Your Bitcoin cryptocurrency wallet address").click().type(
         "1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71" //Example bitcoin wallet address

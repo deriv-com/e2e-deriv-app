@@ -253,16 +253,14 @@ Cypress.Commands.add("c_emailVerification", (request_type,account_email , option
             const verificationEmail = allRelatedEmails.pop()          
             cy.wrap(verificationEmail).click()
             cy.contains('p', `${account_email}`).should('be.visible')
-            cy.contains('p',`lang: ${language}`).parent().within(()=>{
-              cy.contains('a',Cypress.config('baseUrl')).invoke('attr', 'href').then((href) => {
-                if (href) {
-                  Cypress.env("verificationUrl", href)
-                  cy.log('Verification link found')
-                } else {
-                  cy.log('Verification link not found')
-                }
-            })
-            })
+            cy.contains('a',Cypress.config('baseUrl')).invoke('attr', 'href').then((href) => {
+              if (href) {
+                Cypress.env("verificationUrl", href)
+                cy.log('Verification link found')
+              } else {
+                cy.log('Verification link not found')
+              }
+          })
           } else {
             cy.log('email not found')
           }
