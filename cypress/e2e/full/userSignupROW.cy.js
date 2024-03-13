@@ -4,7 +4,7 @@ function generate_epoch() {
   return Math.floor(new Date().getTime() / 100000)
 }
 function createDemoAccount(CoR, Cit, epoch) {
-  cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"account_opening_new.html","sanity" + `${epoch}` + "@binary.com") 
+  cy.c_emailVerification("account_opening_new.html","sanity" + `${epoch}` + "@binary.com") 
    cy.then(() => {
     cy.c_visitResponsive("/endpoint", "desktop").then(() => {
       cy.window().then((win) => {

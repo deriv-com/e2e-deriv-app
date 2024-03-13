@@ -230,29 +230,28 @@ Cypress.Commands.add("c_selectDemoAccount", () => {
 })
 
 
-Cypress.Commands.add("c_emailVerification", (request_type,account_email , options={}) => {
+Cypress.Commands.add("c_emailVerification", (requestType,accountEmail , options={}) => {
   const {
-    language='EN',
      retryCount = 0, 
      maxRetries = 3,
-     base_url = Cypress.env("qaBoxBaseUrl")
+     baseUrl = Cypress.env("qaBoxBaseUrl")
   } = options
   cy.visit(
     `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
       "qaBoxLoginPassword"
-    )}@${base_url}`
+    )}@${baseUrl}`
   )
-  const sentArgs = { request_type, account_email}
+  const sentArgs = { requestType, accountEmail}
   cy.origin(
     `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
       "qaBoxLoginPassword"
-    )}@${base_url}`,{args: [request_type, account_email, language]}, ([request_type, account_email, language ]) => {
+    )}@${baseUrl}`,{args: [requestType, accountEmail]}, ([requestType, accountEmail]) => {
     cy.document().then((doc) => {
-      const allRelatedEmails = Array.from(doc.querySelectorAll(`a[href*="${request_type}"]`))
+      const allRelatedEmails = Array.from(doc.querySelectorAll(`a[href*="${requestType}"]`))
       if (allRelatedEmails.length) {
             const verificationEmail = allRelatedEmails.pop()          
             cy.wrap(verificationEmail).click()
-            cy.contains('p', `${account_email}`).should('be.visible')
+            cy.contains('p', `${accountEmail}`).should('be.visible')
             cy.contains('a',Cypress.config('baseUrl')).invoke('attr', 'href').then((href) => {
               if (href) {
                 Cypress.env("verificationUrl", href)
@@ -273,7 +272,7 @@ Cypress.Commands.add("c_emailVerification", (request_type,account_email , option
       if (retryCount <= maxRetries && !Cypress.env("verificationUrl")) {
         cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
         cy.wait(1000)
-        cy.c_emailVerification(request_type,account_email, ++retryCount)
+        cy.c_emailVerification(requestType,accountEmail, ++retryCount)
       } 
       if (retryCount > maxRetries) {
         throw new Error(`Signup URL extraction failed after ${maxRetries} attempts.`)
