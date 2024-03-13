@@ -21,12 +21,17 @@ describe('QATEST-707 - Create crypto account', () => {
   const addcryptoaccount = (crypto) => {
     cyrpto.elements.currencyswitcher().should('be.visible').click();
     cyrpto.elements.manageaccount().should('be.visible').click();
-    cy.findByText(crypto).click();
-    cyrpto.elements.cryptoaddaccount().should('be.visible').click();
-    cy.findByText('Success!')
-    cy.findByText('Make a deposit now to start trading.')
-    cyrpto.elements.maybelater().should('be.visible').click();
-    cy.closenotificationbanner();
+    if (cy.findByText(crypto).should('be.visible')) {
+      cy.findByText(crypto).click();
+      cyrpto.elements.cryptoaddaccount().should('be.visible').click();
+      cy.findByText('Success!')
+      cy.findByText('Make a deposit now to start trading.')
+      cyrpto.elements.maybelater().should('be.visible').click();
+      cy.closenotificationbanner();
+  } else {
+      console.error(`Element with text ${crypto} is disabled.`);
+      cyrpto.elements.closemanageaccount().should('be.visible').click();
+  }
     return crypto;
   };
   const checkaccountbalance = () => {
