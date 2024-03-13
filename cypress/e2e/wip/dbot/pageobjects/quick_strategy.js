@@ -33,6 +33,10 @@ class QuickStrategy {
     return cy.xpath('//input[@name="size"]')
   }
 
+  get quickStrategyTradeType() {
+    return cy.get('[data-testid="qs_autocomplete_tradetype"]')
+  }
+
   runBotQuickStrategy = () => {
     this.quickStrategyRunBtn.should('exist').click()
   }
@@ -48,6 +52,15 @@ class QuickStrategy {
   clickOnStrategyTab = (qstrategyName) => {
     this.quickstrategyName1 = qstrategyName
     this.quickStrategyTab.should('be.visible').click()
+  }
+
+  chooseTradeType = () => {
+    this.quickStrategyTradeType.click()
+    cy.contains('Matches/Differs')
+      .scrollIntoView()
+      .then(($element) => {
+        cy.wrap($element).click()
+      })
   }
 
   fillUpContractSize = () => {
