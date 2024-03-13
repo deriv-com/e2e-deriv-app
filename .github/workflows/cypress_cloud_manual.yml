@@ -59,7 +59,7 @@ jobs:
         env:
           TEST_LINK: ${{github.event.inputs.testlink}}
         if: ${{github.event.inputs.testlink !='' }}
-        run: echo TEST_URL=$TEST_LINK >> $GITHUB_ENV
+        run: echo TEST_URL="$TEST_LINK" >> $GITHUB_ENV
 
       - name: Cypress run
         # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
@@ -73,7 +73,7 @@ jobs:
           # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
           record: true
           parallel: false # Runs test in parallel using settings above
-          spec: cypress/e2e/$TEST_SUITE/*.js
+          spec: cypress/e2e/"$TEST_SUITE"/*.js
           # group: 'e2e Tests'
 
         env:
