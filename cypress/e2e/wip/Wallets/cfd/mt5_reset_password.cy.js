@@ -28,7 +28,7 @@ describe("WALL-3255 - Reset MT5 password", () => {
     cy.log("change mt5 password")
     cy.findByText("CFDs", { exact: true }).should("be.visible")
     changeMT5Password()
-    cy.c_emailVerification(Cypress.env("mainQaBoxBaseUrl"),"New%20DMT5%20password%20request.html","QA script")
+    cy.c_emailVerification("New%20DMT5%20password%20request.html","QA script",{base_url:Cypress.env("mainQaBoxBaseUrl")})
     cy.then(() => {
       cy.c_visitResponsive(Cypress.env("verificationUrl"),
         "large"

@@ -230,7 +230,13 @@ Cypress.Commands.add("c_selectDemoAccount", () => {
 })
 
 
-Cypress.Commands.add("c_emailVerification", (base_url,request_type,account_email, language='EN', retryCount = 0, maxRetries = 3) => {
+Cypress.Commands.add("c_emailVerification", (request_type,account_email , options={}) => {
+  const {
+    language='EN',
+     retryCount = 0, 
+     maxRetries = 3,
+     base_url = Cypress.env("qaBoxBaseUrl")
+  } = options
   cy.visit(
     `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
       "qaBoxLoginPassword"
@@ -251,11 +257,7 @@ Cypress.Commands.add("c_emailVerification", (base_url,request_type,account_email
               cy.contains('a',Cypress.config('baseUrl')).invoke('attr', 'href').then((href) => {
                 if (href) {
                   Cypress.env("verificationUrl", href)
-                  cy.log( Cypress.env("verificationUrl"))
-                  const code = href.match(/code=([A-Za-z0-9]{8})/)
-                  verification_code = code[1]
                   cy.log('Verification link found')
-                  Cypress.env('walletsWithdrawalCode',verification_code)
                 } else {
                   cy.log('Verification link not found')
                 }
@@ -271,7 +273,7 @@ Cypress.Commands.add("c_emailVerification", (base_url,request_type,account_email
       if (retryCount <= maxRetries && !Cypress.env("verificationUrl")) {
         cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
         cy.wait(1000)
-        cy.c_emailVerification(base_url,request_type,account_email, ++retryCount)
+        cy.c_emailVerification(request_type,account_email, ++retryCount)
       } 
       if (retryCount > maxRetries) {
         throw new Error(`Signup URL extraction failed after ${maxRetries} attempts.`)
