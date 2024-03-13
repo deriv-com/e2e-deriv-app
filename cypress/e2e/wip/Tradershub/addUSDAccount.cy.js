@@ -20,6 +20,7 @@ import {generateEpoch} from '../../../support/tradersHub'
       
       cy.c_demoAccountSignup(epoch, country)
       cy.c_switchToReal()
+      cy.c_completeTradersHubTour()
       cy.findByRole("button", { name: "Get a Deriv account" }).click()
       cy.c_generateRandomName().then((firstName) => {
         cy.c_personalDetails(
