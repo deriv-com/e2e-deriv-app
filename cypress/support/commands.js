@@ -11,7 +11,7 @@ Cypress.Commands.add('navigate_to_poi', (country) => {
   cy.contains('button', 'Next').click()
 })
 
-Cypress.Commands.add('c_enterValidEmail', (sign_up_mail) => {
+Cypress.Commands.add('c_enterValidEmail', (signUpMail) => {
   {
     cy.visit('https://deriv.com/signup/', {
       onBeforeLoad(win) {
@@ -27,7 +27,7 @@ Cypress.Commands.add('c_enterValidEmail', (sign_up_mail) => {
       timeout: 30000,
     })
     cy.findByPlaceholderText('Email').as('email').should('be.visible')
-    cy.get('@email').type(sign_up_mail)
+    cy.get('@email').type(signUpMail)
     cy.findByRole('checkbox').click()
     cy.get('.error').should('not.exist')
     cy.findByRole('button', { name: 'Create demo account' }).click()

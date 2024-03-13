@@ -6,7 +6,7 @@ const regulationText = ".regulators-switcher__switch div.item.is-selected"
 
 describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
   const epoch = generateEpoch()
-  const sign_up_mail = `sanity${epoch}diel@deriv.com`
+  const signUpMail = `sanity${epoch}diel@deriv.com`
   let country = Cypress.env("countries").ZA
   let nationalIDNum = Cypress.env("nationalIDNum").ZA
   let taxIDNum = Cypress.env("taxIDNum").ZA
@@ -16,7 +16,7 @@ describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
     localStorage.setItem("config.app_id", Cypress.env("stdConfigAppId"))
     cy.c_visitResponsive("/endpoint", "desktop")
     cy.findByRole("button", { name: "Sign up" }).should("not.be.disabled")
-    cy.c_enterValidEmail(sign_up_mail)
+    cy.c_enterValidEmail(signUpMail)
   })
   it("Verify I can signup for a DIEL demo and real account", () => {
     Cypress.env("citizenship", country)
