@@ -1,9 +1,6 @@
 import '@testing-library/cypress/add-commands'
 
-const screenSizes = [
-  'small',
-  //'large',
-]
+const screenSizes = ['small', 'large']
 
 const isLanguageTest = true
 
