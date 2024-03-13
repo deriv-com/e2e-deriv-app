@@ -266,10 +266,10 @@ Cypress.Commands.add("c_addAccountMF", () => {
 })
 
 
-Cypress.Commands.add("c_demoAccountSignup", (epoch, country) => {
-  cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"account_opening_new.html",`sanity${epoch}dielmfcr@deriv.com`) 
+Cypress.Commands.add("c_demoAccountSignup", (epoch, country , account_email) => {
+  cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"account_opening_new.html",`${account_email}`) 
   cy.then(() => {
-    cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop").then(() => {
+    cy.c_visitResponsive(Cypress.env("verificationUrl"), "desktop").then(() => {
       cy.window().then((win) => {
         win.localStorage.setItem(
           "config.server_url",
@@ -282,7 +282,7 @@ Cypress.Commands.add("c_demoAccountSignup", (epoch, country) => {
       })
     })
 
-    cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop")
+    cy.c_visitResponsive(Cypress.env("verificationUrl"), "desktop")
     cy.get("h1").contains("Select your country and").should("be.visible")
     cy.c_selectCountryOfResidence(country)
     cy.c_selectCitizenship(country)

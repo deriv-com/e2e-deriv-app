@@ -20,7 +20,7 @@ describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
   })
   it("Verify I can signup for a DIEL demo and real account", () => {
     Cypress.env("citizenship", country)
-    cy.c_demoAccountSignup(epoch, country)
+    cy.c_demoAccountSignup(epoch, country , sign_up_mail)
     cy.c_checkTradersHubHomePage()
     cy.findByTestId("dt_dropdown_display").click()
     cy.get("#real").click()

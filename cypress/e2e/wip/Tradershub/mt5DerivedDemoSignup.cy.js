@@ -14,7 +14,7 @@ describe("QATEST-5695: Create a Derived Demo CFD account", () => {
     cy.c_enterValidEmail(sign_up_mail)
   })
   it("Verify I can signup for a demo derived CFD account", () => {
-    cy.c_demoAccountSignup(epoch, country)
+    cy.c_demoAccountSignup(epoch, country, sign_up_mail)
     cy.c_checkTradersHubHomePage()
     cy.findAllByRole("button", { name: "Get" }).first().click()
     cy.findByText("Create a Deriv MT5 password").should("be.visible")

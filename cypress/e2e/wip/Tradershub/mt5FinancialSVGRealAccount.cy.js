@@ -16,33 +16,8 @@ describe("QATEST-6000: Create a Financial SVG account", () => {
     cy.c_enterValidEmail(sign_up_mail)
   })
   it("Verify I can signup for a real Financial SVG CFD account", () => {
-<<<<<<< HEAD
-    cy.c_emailVerification(Cypress.env("qaBoxBaseUrl"),"account_opening_new.html","sanity" + `${epoch}` + "@binary.com") 
-    cy.then(() => {
-      cy.c_visitResponsive(Cypress.env("signUpUrl"), "desktop").then(() => {
-        cy.window().then((win) => {
-          win.localStorage.setItem(
-            "config.server_url",
-            Cypress.env("stdConfigServer")
-          )
-          win.localStorage.setItem(
-            "config.app_id",
-            Cypress.env("stdConfigAppId")
-          )
-        })
-      })
-
-      cy.get("h1").contains("Select your country and").should("be.visible")
-      cy.c_selectCountryOfResidence(country)
-      cy.c_selectCitizenship(country)
-      cy.c_enterPassword()
-      cy.c_completeOnboarding()
-    })
-    cy.c_checkTradersHubhomePage()
-=======
-    cy.c_demoAccountSignup(epoch, country)
+    cy.c_demoAccountSignup(epoch, country, sign_up_mail)
     cy.c_checkTradersHubHomePage()
->>>>>>> 829a3cb66cecc14568eb29549a2ea3fb398ea937
     cy.findByTestId("dt_dropdown_display").click()
     cy.get("#real").click()
     //Create real account

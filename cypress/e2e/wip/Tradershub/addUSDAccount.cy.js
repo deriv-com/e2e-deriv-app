@@ -18,7 +18,7 @@ import {generateEpoch} from '../../../support/tradersHub'
     })
     it("Create a new crypto account and add USD account", () => {
       
-      cy.c_demoAccountSignup(epoch, country)
+      cy.c_demoAccountSignup(epoch, country, sign_up_mail)
       cy.c_switchToReal()
       cy.findByRole("button", { name: "Get a Deriv account" }).click()
       cy.c_generateRandomName().then((firstName) => {

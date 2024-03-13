@@ -36,9 +36,7 @@ function verifyTransferFundsMessage(accountType) {
 function expandDemoWallet(){
   cy.get(".wallets-dropdown__button").click()
   cy.get(".wallets-list-card-dropdown__item-content").contains("USD Demo Wallet").click()
-  cy.get(".wallets-list-details__content").within(()=>{
-    cy.contains("USD Demo Wallet").should("be.visible")
-  })
+  cy.contains("USD Demo Wallet").should("be.visible")
 }
 
 describe("WALL-3252 - Add derivx account", () => {
