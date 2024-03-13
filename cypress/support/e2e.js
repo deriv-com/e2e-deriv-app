@@ -256,6 +256,8 @@ Cypress.Commands.add("c_emailVerification", (request_type,account_email , option
             cy.contains('a',Cypress.config('baseUrl')).invoke('attr', 'href').then((href) => {
               if (href) {
                 Cypress.env("verificationUrl", href)
+                const code = href.match(/code=([A-Za-z0-9]{8})/)
+                verification_code = code[1]
                 cy.log('Verification link found')
               } else {
                 cy.log('Verification link not found')
