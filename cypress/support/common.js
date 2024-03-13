@@ -1,5 +1,3 @@
-// require('./accountCreation')
-
 function getLoginToken(callback) {
   cy.request({
     method: 'POST',
@@ -185,4 +183,3 @@ function extractCsrfToken(response) {
 
 module.exports = { getLoginToken };
 module.exports = { getOAuthUrl };
-

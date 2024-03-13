@@ -1,8 +1,10 @@
 import '@testing-library/cypress/add-commands'
+import { createAccountReal } from '../../../support/accountCreation';
 
 describe('QATEST-23015 - IDV POI Name Mismatch - Mobile view', () => {
     beforeEach(()=> {
         cy.c_login();
+        createAccountReal()
         // cy.navigate_to_poi_responsive('Republic of QA');
 
     })

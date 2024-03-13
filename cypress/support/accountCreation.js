@@ -1,5 +1,5 @@
-require('dotenv').config();
 const puppeteer = require('puppeteer');
+require('dotenv').config()
 const WebSocket = require('ws');
 const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI');
 const app_id = process.env.APP_ID
@@ -33,7 +33,7 @@ const getVerificationCode = (async () => {
       "type": "account_opening"
     })
   // Visit /events to extract the email verification code
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({headless: true});
   const page = await browser.newPage();
 
   await page.authenticate({
@@ -99,9 +99,9 @@ const createAccountReal = (async () => {
     })
     const { new_account_real: { client_id }, echo_req: { residence } } = response;
     const results = [randomEmail, client_id, residence]
-    Cypress.env('loginEmailProd', randomEmail);
-    Cypress.env('loginPassword', 'Abcd1234')
     console.log(results);
+    // Cypress.env('loginEmailProd', randomEmail);
+    // Cypress.env('loginPassword', 'Abcd1234')
     return results
 } catch(e) {
     console.log(e)
@@ -109,5 +109,7 @@ const createAccountReal = (async () => {
   connection.close()
 }
 })
+
+createAccountReal()
 
 module.exports = { createAccountReal };
