@@ -1,0 +1,350 @@
+let rate = 0.01
+let marketRate
+let rateCalculation
+let calculatedValue
+let regexPattern
+const decimalPlacesToSkip = 1
+
+Cypress.Commands.add('c_createNewAd', () => {
+  cy.findByTestId('dt_initial_loader').should('not.exist')
+  cy.get('body', { timeout: 10000 }).then((body) => {
+    if (body.find('.no-ads__message', { timeout: 10000 }).length > 0) {
+      cy.findByRole('button', { name: 'Create new ad' })
+        .should('be.visible')
+        .click()
+    } else if (body.find('#toggle-my-ads', { timeout: 10000 }).length > 0) {
+      cy.c_removeExistingAds()
+      cy.findByRole('button', { name: 'Create new ad' })
+        .should('be.visible')
+        .click()
+    }
+  })
+})
+
+Cypress.Commands.add('c_clickMyAdTab', () => {
+  cy.findByText('My ads').should('be.visible').click()
+})
+
+Cypress.Commands.add('c_postBuyAd', () => {
+  cy.findByTestId('offer_amount').click().type('10')
+  cy.findByTestId('float_rate_type')
+    .click()
+    .clear()
+    .type(rate, { parseSpecialCharSequences: false })
+  cy.findByTestId('min_transaction').click().clear().type('5')
+  cy.findByTestId('max_transaction').click().clear().type('10')
+  cy.c_PaymentMethod()
+  cy.c_postAd()
+})
+
+Cypress.Commands.add('c_verifyExchangeRate', () => {
+  rateCalculation = rate * 0.01
+  calculatedValue = rateCalculation * marketRate + marketRate
+  regexPattern = new RegExp(
+    `Your rate is = ${calculatedValue.toFixed(6 - decimalPlacesToSkip)}\\d{${decimalPlacesToSkip}} NZD`
+  )
+  cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
+})
+
+Cypress.Commands.add('c_verifyRate', () => {
+  cy.findByTestId('float_rate_type').click().clear()
+  cy.findByText('Floating rate is required').should('be.visible')
+  cy.findByTestId('float_rate_type').click().clear().type('abc')
+  cy.findByText('Floating rate is required').should('be.visible')
+  cy.findByTestId('float_rate_type').click().clear().type('10abc')
+  cy.findByTestId('float_rate_type').invoke('val').should('eq', '10')
+  cy.findByTestId('float_rate_type').click().clear().type('!@#')
+  cy.findByText('Floating rate is required').should('be.visible')
+  cy.findByTestId('float_rate_type').click().clear().type('1234')
+  cy.findByText("Enter a value that's within -10.00% to +10.00%").should(
+    'be.visible'
+  )
+  cy.findByTestId('float_rate_type')
+    .click()
+    .clear()
+    .type(rate, { parseSpecialCharSequences: false })
+  cy.get('.floating-rate__mkt-rate')
+    .invoke('text')
+    .then((text) => {
+      const match = text.match(/of the market rate1 USD = (\d+(\.\d+)?)/)
+      marketRate = parseFloat(match[1])
+      if (match) {
+        cy.c_verifyExchangeRate
+        // Verify clicking plus button twice
+        cy.get('#floating_rate_input_add')
+          .click({ force: true })
+          .click({ force: true })
+        rate = rate + 0.02
+        cy.c_verifyExchangeRate
+        // // verify minus button once
+        cy.get('#floating_rate_input_sub').click({ force: true })
+        rate = rate - 0.01
+        cy.c_verifyExchangeRate
+      } else {
+        throw new Error('Text does not match the expected pattern')
+      }
+    })
+})
+
+Cypress.Commands.add('c_verifyPostAd', () => {
+  cy.findByRole('button', { name: 'Post ad' }).should('be.enabled').click()
+  cy.findByText("You've created an ad").should('be.visible')
+  cy.findByText(
+    "If the ad doesn't receive an order for 3 days, it will be deactivated."
+  ).should('be.visible')
+  cy.findByText('Don’t show this message again.').should('be.visible')
+  cy.findByRole('button', { name: 'Ok' }).should('be.enabled').click()
+})
+
+Cypress.Commands.add('c_verifyTooltip', () => {
+  cy.findByTestId('dt_order_time_selection_info_icon').click()
+  cy.contains('Orders will expire if they aren’t completed within this time.')
+  cy.findByRole('button', { name: 'Ok' }).click()
+})
+
+Cypress.Commands.add('c_verifyCompletionOrderDropdown', () => {
+  cy.findByTestId('dt_dropdown_display').click()
+  cy.get('#3600').should('be.visible')
+  cy.get('#2700').should('be.visible')
+  cy.get('#1800').should('be.visible')
+  cy.get('#900').should('be.visible').click()
+})
+
+Cypress.Commands.add(
+  'c_verifyMaxMin',
+  (selector, expectedValue, expectedValidation) => {
+    cy.findByTestId(selector).click().type('abc')
+    cy.findByText('Only numbers are allowed.').should('be.visible')
+    cy.findByTestId(selector).click().clear().type('123abc')
+    cy.findByText('Only numbers are allowed.').should('be.visible')
+    cy.findByTestId(selector).click().clear().type('!@#')
+    cy.findByText('Only numbers are allowed.').should('be.visible')
+    cy.findByTestId(selector).click().clear().type('1234567890123456')
+    cy.findByTestId(selector).should('have.value', '123456789012345')
+    cy.findByTestId(selector).click().clear()
+    cy.findByText(`${expectedValidation} limit is required`).should(
+      'be.visible'
+    )
+    cy.findByTestId(selector).click().type('11')
+    cy.findByText(
+      `Amount should not be below ${expectedValidation} limit`
+    ).should('be.visible')
+    cy.findByText(
+      `${expectedValidation} limit should not exceed Amount`
+    ).should('be.visible')
+    cy.findByTestId(selector).click().clear().type(expectedValue)
+  }
+)
+
+Cypress.Commands.add('c_PaymentMethod', () => {
+  cy.findByPlaceholderText('Add').click()
+  cy.findByText('Other').click()
+  cy.findByPlaceholderText('Add').click()
+  cy.findByText('Bank Transfer').click()
+  cy.findByPlaceholderText('Add').click()
+  cy.findByText('Skrill').click()
+  cy.findByPlaceholderText('Add').should('not.be.exist')
+})
+
+Cypress.Commands.add('c_verifyAmountFiled', () => {
+  cy.findByTestId('offer_amount').click().type('abc')
+  cy.findByText('Enter a valid amount').should('be.visible')
+  cy.findByTestId('offer_amount').click().clear().type('123abc')
+  cy.findByText('Enter a valid amount').should('be.visible')
+  cy.findByTestId('offer_amount').click().clear().type('!@#')
+  cy.findByText('Enter a valid amount').should('be.visible')
+  cy.findByTestId('offer_amount').click().clear().type('1234567890123456')
+  cy.findByTestId('offer_amount').should('have.value', '123456789012345')
+  cy.findByTestId('offer_amount').click().clear()
+  cy.findByText('Amount is required').should('be.visible')
+  cy.findByTestId('offer_amount').click().type('10')
+})
+
+Cypress.Commands.add('c_postAd', () => {
+  cy.findByRole('button', { name: 'Post ad' }).should('be.enabled').click()
+  cy.findByRole('button', { name: 'Ok' }).should('be.enabled').click()
+})
+
+Cypress.Commands.add('c_removeExistingAds', () => {
+  cy.get('.my-ads-table__row')
+    .trigger('touchstart', 'right', { timeout: 1000 })
+    .trigger('touchmove', 'left')
+    .trigger('touchend')
+  cy.get('.my-ads-table__popovers-delete>svg').click({ force: true })
+  cy.findByText('Do you want to delete this ad?').should('be.visible')
+  cy.findByText('You will NOT be able to restore it.').should('be.visible')
+  cy.findByRole('button', { name: 'Delete' }).should('be.enabled').click()
+  cy.findByRole('button', { name: 'Delete' }).should('not.exist', {
+    timeout: 10000,
+  })
+})
+
+Cypress.Commands.add('c_verifyDynamicMsg', () => {
+  cy.get('.message-selector')
+    .should('be.visible')
+    .invoke('text')
+    .then((messageText) => {
+      const messagePattern =
+        /If the ad doesn't receive an order for \d+ days, it will be deactivated./
+      expect(messageText).to.match(messagePattern)
+    })
+})
+
+Cypress.Commands.add('c_navigateToDerivP2P', () => {
+  cy.get('#dt_mobile_drawer_toggle').should('be.visible').click()
+  cy.findByRole('heading', { name: 'Cashier' }).should('be.visible').click()
+  cy.findByRole('link', { name: 'Deriv P2P' }).should('be.visible').click()
+})
+
+Cypress.Commands.add('c_deleteAllPM', () => {
+  cy.document().then((doc) => {
+    let paymentCard = doc.querySelector('.dc-dropdown__container')
+    if (paymentCard) {
+      cy.get('.dc-dropdown__container').first().click()
+      cy.get('#delete').should('be.visible').click()
+      cy.findByRole('button', { name: 'Yes, remove' })
+        .should('be.visible')
+        .click()
+        .and('not.exist')
+      paymentCard = null
+      cy.then(() => {
+        cy.c_deleteAllPM()
+      })
+    } else {
+      cy.log('No PMs available')
+    }
+  })
+})
+
+Cypress.Commands.add('c_closeSafetyInstructions', () => {
+  cy.findByRole('heading', { name: 'For your safety:' })
+    .should('be.visible')
+    .then(($title) => {
+      if ($title.is(':visible')) {
+        cy.get('.dc-checkbox__box').should('be.visible').click()
+      }
+    })
+  cy.findByRole('button', { name: 'Confirm' }).should('be.visible').click()
+})
+
+Cypress.Commands.add('c_closeNotificationHeader', () => {
+  cy.document().then((doc) => {
+    let notification = doc.querySelector('.notification__header')
+    if (notification) {
+      cy.log('Notification header appeared')
+      cy.get('.notification__text-body')
+        .invoke('text')
+        .then((text) => {
+          cy.log(text)
+        })
+      cy.findAllByRole('button', { name: 'Close' })
+        .first()
+        .should('be.visible')
+        .click()
+        .and('not.exist')
+      notification = null
+      cy.then(() => {
+        cy.c_closeNotificationHeader()
+      })
+    } else {
+      cy.log('Notification header did not appear')
+    }
+  })
+})
+
+Cypress.Commands.add('c_addPaymentMethod', (paymentID, paymentMethod) => {
+  if (paymentMethod == 'Bank Transfer') {
+    cy.findByRole('textbox', { name: 'Payment method' })
+      .clear()
+      .type(paymentMethod)
+      .should('have.value', paymentMethod)
+    cy.findByText(paymentMethod).click()
+    cy.findByRole('textbox', { name: 'Account Number' })
+      .clear()
+      .type(paymentID)
+      .should('have.value', paymentID)
+    cy.findByRole('textbox', { name: 'SWIFT or IFSC code' })
+      .clear()
+      .type('9087')
+      .should('have.value', '9087')
+    cy.findByRole('textbox', { name: 'Bank Name' })
+      .clear()
+      .type('Banking Name')
+      .should('have.value', 'Banking Name')
+    cy.findByRole('textbox', { name: 'Branch' })
+      .clear()
+      .type('Branch number 42')
+      .should('have.value', 'Branch number 42')
+    cy.get('textarea[name="instructions"]')
+      .type('Follow instructions.')
+      .should('have.value', 'Follow instructions.')
+    cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
+    cy.findByText('Payment methods').should('be.visible')
+    cy.findByText(paymentID).should('be.visible')
+  } else if (
+    paymentMethod === 'PayPal' ||
+    paymentMethod === 'WeChat Pay' ||
+    paymentMethod === 'Skrill' ||
+    paymentMethod === 'Alipay'
+  ) {
+    cy.findByRole('textbox', { name: 'Payment method' })
+      .clear()
+      .type(paymentMethod)
+      .should('have.value', paymentMethod)
+    cy.findByText(paymentMethod).click()
+    cy.get('input[name="account"]')
+      .clear()
+      .type(paymentID)
+      .should('have.value', paymentID)
+    cy.get('textarea[name="instructions"]')
+      .type('Follow instructions.')
+      .should('have.value', 'Follow instructions.')
+    cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
+    cy.findByText('Payment methods').should('be.visible')
+    cy.findByText(paymentID).should('be.visible')
+  } else if (paymentMethod == 'Other') {
+    cy.findByRole('textbox', { name: 'Payment method' })
+      .clear()
+      .type(paymentMethod)
+      .should('have.value', paymentMethod)
+    cy.findByText(paymentMethod).click()
+    cy.findByRole('textbox', { name: 'Account ID / phone number / email' })
+      .clear()
+      .type(paymentID)
+      .should('have.value', paymentID)
+    cy.findByRole('textbox', { name: 'Payment method name' })
+      .clear()
+      .type(paymentMethod)
+      .should('have.value', paymentMethod)
+    cy.get('textarea[name="instructions"]')
+      .type('Follow instructions.')
+      .should('have.value', 'Follow instructions.')
+    cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
+    cy.findByText('Payment methods').should('be.visible')
+    cy.findByText(paymentID).should('be.visible')
+  }
+})
+
+Cypress.Commands.add('c_deletePaymentMethod', (paymentID, paymentName) => {
+  cy.findByText(paymentID)
+    .should('exist')
+    .parent()
+    .prev()
+    .find('.dc-dropdown-container')
+    .and('exist')
+    .click()
+  cy.get('#delete').should('be.visible').click()
+  cy.findByText(`Delete ${paymentName}?`).should('be.visible')
+  cy.findByRole('button', { name: 'Yes, remove' }).should('be.visible').click()
+  cy.findByText(paymentID).should('not.exist')
+})
+
+export const generateAccountNumberString = (length) => {
+  let result = ''
+  const characters = '0123456789'
+  const charactersLength = characters.length
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return result
+}

@@ -54,19 +54,19 @@
 # (in case no pattern matches a path in a PR - this should be treated as a bug and result in adding the path to CODEOWNERS)
 # ==============================================================
 
-*                                                               @markodonnell-deriv
+*                                                               @markodonnell-deriv @meeyun-deriv
 
 
 # ==============================================================
 #  deriv-com/config
 # ==============================================================
 
-/.github/**/*                                                   @markodonnell-deriv
+/.github/**/*                                                   @markodonnell-deriv @meeyun-deriv
 
 
 # ==============================================================
 #  deriv-com/smoke tests
 # ==============================================================
 
-/cypress/e2e/smoke/**/*                                         @markodonnell-deriv
+/cypress/e2e/smoke/**/*                                         @markodonnell-deriv @meeyun-deriv
 
