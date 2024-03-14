@@ -31,19 +31,8 @@ jobs:
     - name: Cypress run
       # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
       uses: cypress-io/github-action@v6
-      with:
-        # Starts web server for E2E tests - replace with your own server invocation
-        # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
-        # start: npm start
-        # wait-on: 'http://localhost:3000' # Waits for above
-        # Records to Cypress Cloud 
-        # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
-        record: true
-        parallel: false # Runs test in parallel using settings above
-        spec: cypress/e2e/${{ github.event.inputs.suite }}/*.js
-        # group: 'e2e Tests'
-        
       env:
+        SUITE: ${{ github.event.inputs.suite }}
         # For recording and parallelization to work you must set your CYPRESS_RECORD_KEY
         # in GitHub repo → Settings → Secrets → Actions
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -52,7 +41,7 @@ jobs:
         # Set Base Url from client_payload.
         CYPRESS_BASE_URL: "${{ github.event.inputs.environment }}"
         # Send PR details to Cypress test run
-        COMMIT_INFO_MESSAGE: Manual Run of "${{ github.event.inputs.suite }} tests" on "${{ github.event.inputs.environment }}"
+        COMMIT_INFO_MESSAGE: Manual Run of "$SUITE" tests on "${{ github.event.inputs.environment }}"
         # Set test env variables
         E2E_DERIV_LOGIN: ${{ secrets.E2E_WALLETS_LOGIN }}
         E2E_DERIV_PASSWORD: ${{ secrets.E2E_WALLETS_PASSWORD }}
@@ -70,5 +59,18 @@ jobs:
         E2E_MAIN_QABOX_URL: ${{ secrets.E2E_MAIN_QABOX_URL }}
         E2E_QABOX_LOGIN: ${{ secrets.E2E_QABOX_LOGIN }}
         E2E_QABOX_PASSWORD: ${{ secrets.E2E_QABOX_PASSWORD }}
+      with:
+        # Starts web server for E2E tests - replace with your own server invocation
+        # https://docs.cypress.io/guides/continuous-integration/introduction#Boot-your-server
+        # start: npm start
+        # wait-on: 'http://localhost:3000' # Waits for above
+        # Records to Cypress Cloud 
+        # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
+        record: true
+        parallel: false # Runs test in parallel using settings above
+        spec: cypress/e2e/"$SUITE"/*.js
+        # group: 'e2e Tests'
+        
+      
         
         
