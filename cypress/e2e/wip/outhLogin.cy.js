@@ -24,8 +24,8 @@ describe('API Request with CSRF Token', () => {
           form: false, // indicates the body should be form-urlencoded
           followRedirect: false,
           body: {
-            email: Cypress.env('loginEmail'),
-            password: Cypress.env('loginPassword'),
+            email: Cypress.env('loginDielEmail'),
+            password: Cypress.env('loginDielPassword'),
             login: 'Log in',
             csrf_token: csrfToken
           },
