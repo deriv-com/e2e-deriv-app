@@ -45,8 +45,8 @@ function getLoginToken(callback) {
             body: {
               "app_id": Cypress.env('configAppId'),
               "type": "system",
-              "email": Cypress.env('loginEmail'),
-              "password": Cypress.env('loginPassword')
+              "email": Cypress.env('loginDielEmail'),
+              "password": Cypress.env('loginDielPassword')
             }
           }).then((response) => {
             const token = response.body.tokens[0].token;
@@ -72,8 +72,8 @@ function getLoginToken(callback) {
       loginPassword = Cypress.env('loginPasswordProd')
     } else
     { 
-      loginEmail = Cypress.env('loginEmail')
-      loginPassword = Cypress.env('loginPassword')      
+      loginEmail = Cypress.env('loginDielEmail')
+      loginPassword = Cypress.env('loginDielPassword')      
     }
 
     // Step 1: Perform a GET on the OAuth Url in order to generate a CSRF token.
