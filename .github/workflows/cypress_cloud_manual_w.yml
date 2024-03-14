@@ -41,7 +41,7 @@ jobs:
         # Set Base Url from client_payload.
         CYPRESS_BASE_URL: "${{ github.event.inputs.environment }}"
         # Send PR details to Cypress test run
-        COMMIT_INFO_MESSAGE: Manual Run of "$SUITE" tests on "${{ github.event.inputs.environment }}"
+        COMMIT_INFO_MESSAGE: Manual Run of "$SUITE" tests on "$CYPRESS_BASE_URL"
         # Set test env variables
         E2E_DERIV_LOGIN: ${{ secrets.E2E_WALLETS_LOGIN }}
         E2E_DERIV_PASSWORD: ${{ secrets.E2E_WALLETS_PASSWORD }}
