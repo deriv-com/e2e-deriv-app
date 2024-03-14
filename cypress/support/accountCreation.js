@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+const { chromium } = require('playwright');
 require('dotenv').config()
 const WebSocket = require('ws');
 const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI');
@@ -32,41 +32,49 @@ const getVerificationCode = (async () => {
       "verify_email": `${randomEmail}`,
       "type": "account_opening"
     })
-  // Visit /events to extract the email verification code
-  const browser = await puppeteer.launch({headless: true});
-  const page = await browser.newPage();
 
-  await page.authenticate({
+  // Launch a Chromium browser instance
+  const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext({
+    // Add HTTP credentials for basic authentication
+    httpCredentials: {
       username: process.env.EMAIL,
-      password: process.env.PASSWORD
-    });
+      password: process.env.PASSWORD,
+    },
+  });
+  const page = await context.newPage();
+
+  // Navigate to the /events page
   await page.goto(`${process.env.BASIC_AUTH_URL}/events`);
-  
+
+  // Scroll to the bottom of the page
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+
   // Click on the last link on the page
   await page.evaluate(() => {
-      const links = document.querySelectorAll('a');
-      links[links.length - 1].click();
-    });
+    const links = document.querySelectorAll('a');
+    links[links.length - 1].click();
+  });
 
+  // Wait for navigation to complete
   await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
 
   // Extract the href attribute of the last link and process it
   const href = await page.evaluate(() => {
-      const links = document.querySelectorAll('a');
-      const targetLink = links[links.length - 1].getAttribute('href');
-      return targetLink
-    });
+    const links = document.querySelectorAll('a');
+    const targetLink = links[links.length - 1].getAttribute('href');
+    return targetLink;
+  });
 
   const codeMatch = href.match(/code=([A-Za-z0-9]{8})/);
   if (codeMatch) {
-      const verification_code = codeMatch[1];
-      await browser.close();
-      return verification_code;
-    } else {
-      console.log('Unable to find code in the URL');
-      await browser.close();
-    }
+    const verification_code = codeMatch[1];
+    await browser.close();
+    return verification_code;
+  } else {
+    console.log('Unable to find code in the URL');
+    await browser.close();
+  }
 })
 
 const createAccountVirtual = (async () => {
@@ -100,8 +108,6 @@ const createAccountReal = (async () => {
     const { new_account_real: { client_id }, echo_req: { residence } } = response;
     const results = [randomEmail, client_id, residence]
     console.log(results);
-    // Cypress.env('loginEmailProd', randomEmail);
-    // Cypress.env('loginPassword', 'Abcd1234')
     return results
 } catch(e) {
     console.log(e)
@@ -109,7 +115,5 @@ const createAccountReal = (async () => {
   connection.close()
 }
 })
-
-createAccountReal()
 
 module.exports = { createAccountReal };
