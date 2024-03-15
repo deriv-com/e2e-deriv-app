@@ -28,6 +28,8 @@ function loading_check() {
   }
 
   function reset_password () {
+    const verification_url = Cypress.env("verificationdUrl")  
+    let verification_code = Cypress.env("walletsWithdrawalCode")
     mt5.elements.mt5DerivedTxt().scrollIntoView().should('be.visible')
     mt5.elements.mt5DerivedOpenBtn().should('be.visible').click()
     cy.findByText('Derived SVG').should('be.visible')
@@ -36,10 +38,21 @@ function loading_check() {
     mt5.elements.mt5ChangePassword().should('be.visible').click()
     cy.findByText('This will change the password to all of your Deriv MT5 accounts.').should('be.visible')
     mt5.elements.mt5ConfirmChangePassword().click()
+
+    cy.c_emailVerificationMT5(verification_code, Cypress.env("mainQaBoxBaseUrl"))
+    cy.then(() => {
+      Cypress.config("baseUrl")
+      cy.c_visitResponsive(
+        `${verification_url }`,
+        "large"
+      )})
+      cy.get('div').contains('Create a new Deriv MT5 Password').should("be.visible")
+      cy.findByPlaceholderText('Deriv MT5 password').click().type(Cypress.env('mt5Password'))
+      cy.findByRole('button', { name: 'Create' }).click()
   }
 
 describe("QATEST-37180 - Reset Password", () => {
-    beforeEach(() => {
+  beforeEach(() => {
         cy.clearCookies()
         cy.clearLocalStorage()
         cy.c_login()

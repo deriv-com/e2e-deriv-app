@@ -167,6 +167,7 @@ Cypress.Commands.add('c_emailVerification', (verification_code, base_url) => {
         .invoke("attr", "href")
         .then((href) => {
           const code = href.match(/code=([A-Za-z0-9]{8})/)
+          Cypress.env("verificationdUrl", href)//
           if (code) {
             verification_code = code[1]
             Cypress.env("walletsWithdrawalCode", verification_code)
@@ -178,45 +179,46 @@ Cypress.Commands.add('c_emailVerification', (verification_code, base_url) => {
     }
   )
 })
-Cypress.Commands.add('c_emailVerificationMT5', (verification_code, base_url) => {
-  cy.visit(
-    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
-      "qaBoxLoginPassword"
-    )}@${base_url}`
-  )
-  cy.origin(
-    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
-      "qaBoxLoginPassword"
-    )}@${base_url}`, () => {
-      cy.scrollTo("bottom")
-      const date = new Date()
-      let day = date.getDate()
-      let month = date.getMonth() + 1
-      let year = date.getFullYear()
-      let currentDate = `${year}${month}${day}`
-      const emailTitlePrefix = `${currentDate}-New DMT5 password request`
-      cy.contains('a', (text, element) => {
-        // Check if the text contains the emailTitlePrefix
-        return element.textContent.includes(emailTitlePrefix);
-      }).click()
-      cy
-        .get("a")
-        .eq(1)
-        .invoke("attr", "href")
-        .then((href) => {
-          Cypress.env("verificationdUrl", href)
-          const code = href.match(/code=([A-Za-z0-9]{8})/)
-          if (code) {
-            verification_code = code[1]
-            Cypress.env("walletsWithdrawalCode", verification_code)
-            cy.log(verification_code)
-          } else {
-            cy.log("Unable to find code in the URL")
-          }
-        })
-    }
-  )
-})
+
+// Cypress.Commands.add('c_emailVerificationMT5', (verification_code, base_url) => {
+//   cy.visit(
+//     `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+//       "qaBoxLoginPassword"
+//     )}@${base_url}`
+//   )
+//   cy.origin(
+//     `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+//       "qaBoxLoginPassword"
+//     )}@${base_url}`, () => {
+//       cy.scrollTo("bottom")
+//       // const date = new Date()
+//       // let day = date.getDate()
+//       // let month = date.getMonth() + 1
+//       // let year = date.getFullYear()
+//       // let currentDate = `${year}${month}${day}`
+//       // cy.log(currentDate)
+//       // const emailTitlePrefix = `${currentDate}-New DMT5 password request`
+//       cy.contains('a', (text, element) => {
+//         // Check if the text contains the emailTitlePrefix
+//         return element.textContent.includes(emailTitlePrefix);
+//       }).click()
+//       cy.get("a")
+//         .eq(1)
+//         .invoke("attr", "href")
+//         .then((href) => {
+//           Cypress.env("verificationdUrl", href)
+//           const code = href.match(/code=([A-Za-z0-9]{8})/)
+//           if (code) {
+//             verification_code = code[1]
+//             Cypress.env("walletsWithdrawalCode", verification_code)
+//             cy.log(verification_code)
+//           } else {
+//             cy.log("Unable to find code in the URL")
+//           }
+//         })
+//     }
+//   )
+// })
 //To be added on hotspots as an edge case only when constantly hitting rate limits
 Cypress.Commands.add("c_rateLimit", () => {
   cy.get("#modal_root, .modal-root", { timeout: 10000 }).then(($element) => {
@@ -325,6 +327,54 @@ Cypress.Commands.add("c_emailVerificationSignUp", (epoch, retryCount = 0, maxRet
         cy.log(`Retrying... Attempt number: ${retryCount + 1}`);
         cy.wait(1000);
         cy.c_emailVerificationSignUp(epoch, ++retryCount)
+      } 
+      if (retryCount > maxRetries) {
+        throw new Error(`Signup URL extraction failed after ${maxRetries} attempts.`)
+      }  
+  })  
+})
+cy.c_emailVerification2(verification_code, Cypress.env("mainQaBoxBaseUrl"))
+
+
+Cypress.Commands.add("c_emailVerification2", (base_url,request_type,account_email,retryCount = 0, maxRetries = 3) => {
+  cy.visit(
+    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+      "qaBoxLoginPassword"
+    )}@${base_url}`
+  )
+  const sentArgs = { request_type, account_email }
+  cy.origin(
+    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+      "qaBoxLoginPassword"
+    )}@${base_url}`,{args: [request_type, account_email]}, ([request_type, account_email]) => {
+    cy.document().then((doc) => {
+      const allRelatedEmails = Array.from(doc.querySelectorAll(`a[href*="${request_type}"]`));
+          if (allRelatedEmails.length) {
+            const verificationEmail = allRelatedEmails.pop()          
+            cy.wrap(verificationEmail).click()
+            cy.contains('p', `${account_email}`).should('be.visible')
+            cy.get('a').eq(2).invoke('attr', 'href').then((href) => {
+                  if (href) {
+                    Cypress.env("verificationdUrl", href)
+                    cy.log( Cypress.env("verificationdUrl"))
+                    const code = href.match(/code=([A-Za-z0-9]{8})/)
+                    verification_code = code[1]
+                      cy.log('Verification link found')
+                  } else {
+                    cy.log('Verification link not found')
+                  }
+              })
+          } else {
+            cy.log('email not found')
+          }
+      })
+  })
+  cy.then(()=>{
+      //Retry finding email after 1 second interval
+      if (retryCount <= maxRetries && !Cypress.env("verificationdUrl")) {
+        cy.log(`Retrying... Attempt number: ${retryCount + 1}`);
+        cy.wait(1000);
+        cy.c_emailVerification2(base_url,request_type,account_email, ++retryCount)
       } 
       if (retryCount > maxRetries) {
         throw new Error(`Signup URL extraction failed after ${maxRetries} attempts.`)
