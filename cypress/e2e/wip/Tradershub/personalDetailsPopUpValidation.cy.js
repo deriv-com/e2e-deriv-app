@@ -2,8 +2,7 @@ import "@testing-library/cypress/add-commands"
 import {generateEpoch} from '../../../support/tradersHub'
 
   describe("QATEST-24444 - Verify the user is able to close the personal details pop up during sign up", () => {
-    const epoch = generateEpoch()
-    const signUpMail = `sanity${epoch}account@deriv.com`
+    const signUpMail = `sanity${generateEpoch()}account@deriv.com`
     let country = Cypress.env("countries").CO
   
     beforeEach(() => {
@@ -11,7 +10,7 @@ import {generateEpoch} from '../../../support/tradersHub'
     })
     
     it("Should validate the pop up functionality when user closes the personal details section", () => {
-      cy.c_demoAccountSignup(epoch, country)
+      cy.c_demoAccountSignup(country, signUpMail)
       cy.c_switchToReal()
       cy.c_completeTradersHubTour()
       cy.findByRole("button", { name: "Get a Deriv account" }).click({force: true})
