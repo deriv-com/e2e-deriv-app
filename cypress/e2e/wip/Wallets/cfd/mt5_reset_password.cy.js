@@ -17,8 +17,6 @@ function changeMT5Password(){
   cy.findByRole('button', { name: 'Investor Password' }).should("exist")
 }
 describe("WALL-3255 - Reset MT5 password", () => {
-  let verification_code = Cypress.env("walletsWithdrawalCode")
-  const verification_url = Cypress.env("verificationUrl")
   beforeEach(() => {
     cy.c_login("wallets")
     cy.c_visitResponsive("/wallets", "large")

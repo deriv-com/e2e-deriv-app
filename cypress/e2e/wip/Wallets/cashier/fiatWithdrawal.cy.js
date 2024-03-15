@@ -22,7 +22,6 @@ describe("WALL-2830 - Fiat withdrawal send email", () => {
 })
 
 describe("WALL-2830 - Crypto withdrawal content access from email", () => {
-    let verification_code = Cypress.env("walletsWithdrawalCode")
     const withdrawal_url = Cypress.env("walletsWithdrawalUrl")
   
     beforeEach(() => {
@@ -35,7 +34,7 @@ describe("WALL-2830 - Crypto withdrawal content access from email", () => {
     it("should be able to access doughflow iframe", () => {
       cy.log("Access Fiat Withdrawal Iframe Through Email Link")
       cy.c_emailVerification("request_payment_withdraw.html",Cypress.env("loginEmail"))
-
+      let verification_code = Cypress.env("walletsWithdrawalCode")
       cy.then(() => {
         cy.c_visitResponsive(
           `${withdrawal_url}?verification=${verification_code}`,

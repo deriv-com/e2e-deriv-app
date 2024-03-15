@@ -3,8 +3,7 @@ import {generateEpoch} from '../../../support/tradersHub'
 
 
 describe("QATEST-5569: Verify MF Signup flow", () => {
-  const epoch = generateEpoch()
-  const sign_up_mail = `sanity${epoch}mf@deriv.com`
+  const sign_up_mail = `sanity${generateEpoch()}mf@deriv.com`
   let country = Cypress.env("countries").ES
   let nationalIDNum = Cypress.env("nationalIDNum").ES
   let taxIDNum = Cypress.env("taxIDNum").ES
@@ -18,7 +17,7 @@ describe("QATEST-5569: Verify MF Signup flow", () => {
     cy.c_enterValidEmail(sign_up_mail)
   })
   it("Verify I can signup for an MF demo and real account", () => {
-    cy.c_demoAccountSignup(epoch, country,sign_up_mail)
+    cy.c_demoAccountSignup(country,sign_up_mail)
     cy.c_generateRandomName().then((firstName) => {
       cy.c_personalDetails(
         firstName,

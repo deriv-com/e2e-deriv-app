@@ -257,6 +257,7 @@ Cypress.Commands.add("c_emailVerification", (requestType,accountEmail , options=
                 Cypress.env("verificationUrl", href)
                 const code = href.match(/code=([A-Za-z0-9]{8})/)
                 verification_code = code[1]
+                Cypress.env("walletsWithdrawalCode",  verification_code)
                 cy.log('Verification link found')
               } else {
                 cy.log('Verification link not found')

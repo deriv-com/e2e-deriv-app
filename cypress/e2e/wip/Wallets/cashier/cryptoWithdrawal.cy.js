@@ -47,6 +47,7 @@ describe("WALL-2830 - Crypto withdrawal content access from email", () => {
     cy.c_emailVerification("request_payment_withdraw.html",Cypress.env("loginEmail"))
 
     cy.then(() => {
+      let verification_code = Cypress.env("walletsWithdrawalCode")
       cy.c_visitResponsive(
         `${withdrawal_url}?verification=${verification_code}`,
         "large"

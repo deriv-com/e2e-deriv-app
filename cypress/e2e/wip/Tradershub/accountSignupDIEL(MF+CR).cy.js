@@ -4,8 +4,7 @@ import {generateEpoch} from '../../../support/tradersHub'
 const regulationText = ".regulators-switcher__switch div.item.is-selected"
 
 describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
-  const epoch = generateEpoch()
-  const sign_up_mail = `sanity${epoch}dielmfcr@deriv.com`
+  const sign_up_mail = `sanity${generateEpoch()}dielmfcr@deriv.com`
   let country = Cypress.env("countries").ZA
   let nationalIDNum = Cypress.env("nationalIDNum").ZA
   let taxIDNum = Cypress.env("taxIDNum").ZA
@@ -20,7 +19,7 @@ describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
   })
   it("Verify I can signup for a DIEL demo and real account", () => {
     Cypress.env("citizenship", Cypress.env("dielCountry"))
-    cy.c_demoAccountSignup(epoch, country,sign_up_mail)
+    cy.c_demoAccountSignup(country,sign_up_mail)
     cy.c_checkTradersHubHomePage()
     cy.findByTestId("dt_dropdown_display").click()
     cy.get("#real").click()
