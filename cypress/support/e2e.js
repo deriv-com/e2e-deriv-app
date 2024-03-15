@@ -280,3 +280,11 @@ Cypress.Commands.add("c_emailVerification", (requestType,accountEmail , options=
       }  
   })  
 })
+
+Cypress.Commands.add("c_setEndpoint", (signUpMail) => {
+  localStorage.setItem("config.server_url", Cypress.env("stdConfigServer"))
+  localStorage.setItem("config.app_id", Cypress.env("stdConfigAppId"))
+  cy.c_visitResponsive("/endpoint", "desktop")
+  cy.findByRole("button", { name: "Sign up" }).should("not.be.disabled")
+  cy.c_enterValidEmail(signUpMail)
+})

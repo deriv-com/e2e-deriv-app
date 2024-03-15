@@ -10,11 +10,7 @@ describe("QATEST-5569: Verify MF Signup flow", () => {
   let currency = Cypress.env("accountCurrency").GBP
 
   beforeEach(() => {
-    localStorage.setItem("config.server_url", Cypress.env("stdConfigServer"))
-    localStorage.setItem("config.app_id", Cypress.env("stdConfigAppId"))
-    cy.c_visitResponsive("/endpoint", "desktop")
-    cy.findByRole("button", { name: "Sign up" }).should("not.be.disabled")
-    cy.c_enterValidEmail(sign_up_mail)
+    cy.c_setEndpoint(signUpMail)
   })
   it("Verify I can signup for an MF demo and real account", () => {
     cy.c_demoAccountSignup(country,sign_up_mail)

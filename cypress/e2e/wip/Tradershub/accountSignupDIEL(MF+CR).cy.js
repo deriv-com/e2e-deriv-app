@@ -11,11 +11,7 @@ describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
   let euCurrency = Cypress.env("accountCurrency").GBP
 
   beforeEach(() => {
-    localStorage.setItem("config.server_url", Cypress.env("stdConfigServer"))
-    localStorage.setItem("config.app_id", Cypress.env("stdConfigAppId"))
-    cy.c_visitResponsive("/endpoint", "desktop")
-    cy.findByRole("button", { name: "Sign up" }).should("not.be.disabled")
-    cy.c_enterValidEmail(sign_up_mail)
+    cy.c_setEndpoint(signUpMail)
   })
   it("Verify I can signup for a DIEL demo and real account", () => {
     Cypress.env("citizenship", Cypress.env("dielCountry"))
