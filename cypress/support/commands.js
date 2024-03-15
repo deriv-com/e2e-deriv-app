@@ -4,11 +4,29 @@ Cypress.Commands.add('c_loadingCheck', () => {
 
 Cypress.Commands.add('navigate_to_poi', (country) => {
   cy.get('a[href="/account/personal-details"]').click()
-  cy.get('a[href="/account/proof-of-identity"]').click()
-  cy.get('input[name="country_input"]').click()
-  cy.get('input[name="country_input"]').type(country)
+  cy.findByRole('link', { name: 'Proof of identity' }).click()
+  cy.findByLabel('Country').click()
+  cy.findByText(country).click()
   cy.contains(country).click()
   cy.contains('button', 'Next').click()
+})
+
+Cypress.Commands.add('c_navigateToPOIResponsive', (country) => {
+  cy.c_visitResponsive('/account/proof-of-identity', 'small')
+  //cy.findByText('Proof of identity').should('exist')
+  cy.findByText("Pending action required").should('exist')
+  cy.c_closeNotificationHeader()
+  cy.get('select[name="country_input"]').select(country)
+  cy.findByRole('button', { name: 'Next' }).click()
+})
+
+Cypress.Commands.add('c_checkTradersHubhomePage', () => {
+  //cy.findByText('Total assets').should('be.visible')
+  cy.findByText('Options & Multipliers').should('be.visible')
+  cy.findByText('CFDs').should('be.visible')
+  cy.findAllByText('Deriv cTrader').eq(0).should('be.visible')
+  cy.findByText('Other CFD Platforms').scrollIntoView({ position: 'bottom' })
+  cy.get('#traders-hub').scrollIntoView({ position: 'top' })
 })
 
 Cypress.Commands.add('c_enterValidEmail', (sign_up_mail) => {
