@@ -62,8 +62,8 @@ function getLoginToken(callback) {
     });
   }
 
-  function getOAuthUrl(callback) {
-    let loginEmail
+  function getOAuthUrl(loginEmail, callback) {
+    //let loginEmail
     let loginPassword
     /* User production credentials if base url is production
     Else use test credentials */
@@ -72,7 +72,7 @@ function getLoginToken(callback) {
       loginPassword = Cypress.env('loginPasswordProd')
     } else
     { 
-      loginEmail = Cypress.env('loginEmail')
+      //loginEmail = Cypress.env('loginEmail')
       loginPassword = Cypress.env('loginPassword')      
     }
 

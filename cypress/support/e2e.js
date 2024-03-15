@@ -47,7 +47,7 @@ Cypress.Commands.add("c_visitResponsive", (path, size) => {
   }
 })
 
-Cypress.Commands.add("c_login", (app) => {
+Cypress.Commands.add("c_login", (app, loginEmail) => {
 
   cy.c_visitResponsive("/endpoint", "large")
 
@@ -95,6 +95,7 @@ Cypress.Commands.add("c_login", (app) => {
   cy.log("getOAuthUrl - value before: " + Cypress.env("oAuthUrl"))
   if (Cypress.env("oAuthUrl") == "<empty>") {
       getOAuthUrl(
+        loginEmail,
         (oAuthUrl) => {
           Cypress.env("oAuthUrl", oAuthUrl)
           cy.log("getOAuthUrl - value after: " + Cypress.env("oAuthUrl"))

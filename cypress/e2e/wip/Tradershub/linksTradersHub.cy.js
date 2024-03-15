@@ -44,7 +44,8 @@ function checkHyperLinks(deviceType)
 describe("QATEST 5930 - Validate the hyperlinks on Trader's hub", () => {
 
 beforeEach(() => {
-  cy.c_login()
+  const loginEmail = Cypress.env('loginEmail')
+  cy.c_login('',loginEmail)
 })
 
 it("Should navigate to all links in traders hub home page and validate its redirection in mobile", () => {

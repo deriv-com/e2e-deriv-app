@@ -2,7 +2,8 @@ import "@testing-library/cypress/add-commands"
 
 describe("QATEST-5948: Verify platforms navigations on Options and Multipliers", () => {
   it("Should navigate to correct platform on clicking Open button", () => {
-    cy.c_login()
+    const loginEmail = Cypress.env('loginEmail')
+    cy.c_login('',loginEmail)
     cy.c_visitResponsive("/appstore/traders-hub", "large")
     const derivAppProdUrl = Cypress.env("prodURL")
     const derivAppStagingUrl = Cypress.env("stagingUrl")
