@@ -191,5 +191,6 @@ describe('QATEST-123240: Verify Mt5 Terms and Conditions for English and non-eng
     cy.log(cy.log('Verifying Tnc in English language'))
     verifyTncLinks(tncObjectEnglish, 'English')
     verifyTncLinks(tncObjectNonEnglish, key)
+    changeLanguage('English')
   })
 })
