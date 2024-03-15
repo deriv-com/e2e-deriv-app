@@ -20,16 +20,7 @@ Cypress.Commands.add('c_navigateToPOIResponsive', (country) => {
   cy.findByRole('button', { name: 'Next' }).click()
 })
 
-Cypress.Commands.add('c_checkTradersHubhomePage', () => {
-  //cy.findByText('Total assets').should('be.visible')
-  cy.findByText('Options & Multipliers').should('be.visible')
-  cy.findByText('CFDs').should('be.visible')
-  cy.findAllByText('Deriv cTrader').eq(0).should('be.visible')
-  cy.findByText('Other CFD Platforms').scrollIntoView({ position: 'bottom' })
-  cy.get('#traders-hub').scrollIntoView({ position: 'top' })
-})
-
-Cypress.Commands.add('c_enterValidEmail', (sign_up_mail) => {
+Cypress.Commands.add('c_enterValidEmail', (signUpMail) => {
   {
     cy.visit('https://deriv.com/signup/', {
       onBeforeLoad(win) {
@@ -45,7 +36,7 @@ Cypress.Commands.add('c_enterValidEmail', (sign_up_mail) => {
       timeout: 30000,
     })
     cy.findByPlaceholderText('Email').as('email').should('be.visible')
-    cy.get('@email').type(sign_up_mail)
+    cy.get('@email').type(signUpMail)
     cy.findByRole('checkbox').click()
     cy.get('.error').should('not.exist')
     cy.findByRole('button', { name: 'Create demo account' }).click()

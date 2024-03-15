@@ -3,15 +3,11 @@ import {generateEpoch} from '../../../support/tradersHub'
 
 describe("QATEST-5724: CFDs - Create a demo Financial account using existing MT5 account password", () => {
     const epoch = generateEpoch()
-    const sign_up_mail = `sanity${epoch}mail@deriv.com`
+    const signUpMail = `sanity${epoch}mail@deriv.com`
     let country = Cypress.env("countries").CO
 
     beforeEach(() => {
-      localStorage.setItem("config.server_url", Cypress.env("stdConfigServer"))
-      localStorage.setItem("config.app_id", Cypress.env("stdConfigAppId"))
-      cy.c_visitResponsive("/endpoint", "desktop")
-      cy.findByRole("button", { name: "Sign up" }).should("not.be.disabled")
-      cy.c_enterValidEmail(sign_up_mail)
+      cy.c_setEndpoint(signUpMail)
     })
 
  it("Verify I can add a demo financial account using exisiting MT5 derieved account password", () => {
