@@ -50,12 +50,16 @@ jobs:
           repository: deriv-com/e2e-deriv-app # Replace with your repository name
 
       - name: Create server URL
+        env:
+          QA_BOX: ${{github.event.inputs.qabox}}
         if: ${{github.event.inputs.qabox !='' }}
-        run: echo QA_SERVER=qa"${{github.event.inputs.qabox}}".deriv.dev >> $GITHUB_ENV
+        run: echo QA_SERVER=qa"$QA_BOX".deriv.dev >> $GITHUB_ENV
 
       - name: Update baseURL if using test URL
+        env:
+          TEST_LINK: ${{github.event.inputs.testlink}}
         if: ${{github.event.inputs.testlink !='' }}
-        run: echo TEST_URL=${{github.event.inputs.testlink}} >> $GITHUB_ENV
+        run: echo TEST_URL="$TEST_LINK" >> $GITHUB_ENV
 
       - name: Cypress run
         # Uses the official Cypress GitHub action https://github.com/cypress-io/github-action
@@ -69,10 +73,11 @@ jobs:
           # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
           record: true
           parallel: false # Runs test in parallel using settings above
-          spec: cypress/e2e/${{ github.event.inputs.suite }}/*.js
+          spec: cypress/e2e/${{env.TEST_SUITE}}/*.js
           # group: 'e2e Tests'
 
         env:
+          TEST_SUITE: ${{ github.event.inputs.suite }}
           # For recording and parallelization to work you must set your CYPRESS_RECORD_KEY
           # in GitHub repo → Settings → Secrets → Actions
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

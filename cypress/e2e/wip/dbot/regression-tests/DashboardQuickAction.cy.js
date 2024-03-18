@@ -1,7 +1,6 @@
 import '@testing-library/cypress/add-commands'
 import Common from '../pageobjects/common'
 import BotDashboard from '../pageobjects/bot_dashboard_page'
-import BotBuilder from '../pageobjects/bot_builder_page'
 import quickStrategy from '../pageobjects/quick_strategy'
 
 describe('QATEST-4128: Dashboard quick action to Quick Strategy and Bot Builder', () => {
