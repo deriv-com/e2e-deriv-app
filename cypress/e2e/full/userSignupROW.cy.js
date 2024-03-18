@@ -74,8 +74,8 @@ describe("QATEST-24427,5533,5827 - Cypress test for ROW account sign up", () => 
     counter++
     epoch = generate_epoch() + counter
     cy.log("time is  =" + epoch)
-    const sign_up_mail = "sanity" + `${epoch}` + "@binary.com"
-    cy.c_enterValidEmail(sign_up_mail)
+    const signUpMail = "sanity" + `${epoch}` + "@binary.com"
+    cy.c_enterValidEmail(signUpMail)
   })
   it("New account sign up ROW - Onfido supported country", () => {
     createDemoAccount(countryOnfido, countryOnfido, epoch)
