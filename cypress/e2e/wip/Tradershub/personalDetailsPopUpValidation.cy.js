@@ -1,5 +1,5 @@
-import "@testing-library/cypress/add-commands"
-import {generateEpoch} from '../../../support/tradersHub'
+import '@testing-library/cypress/add-commands'
+import { generateEpoch } from '../../../support/tradersHub'
 
   describe("QATEST-24444 - Verify the user is able to close the personal details pop up during sign up", () => {
     const signUpMail = `sanity${generateEpoch()}account@deriv.com`
@@ -26,4 +26,3 @@ import {generateEpoch} from '../../../support/tradersHub'
       cy.c_checkTradersHubHomePage()
     })
 
-})

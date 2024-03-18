@@ -1,5 +1,5 @@
-import "@testing-library/cypress/add-commands"
-import {generateEpoch} from '../../../support/tradersHub'
+import '@testing-library/cypress/add-commands'
+import { generateEpoch } from '../../../support/tradersHub'
 
   describe("QATEST 5813 - Add USD account for existing BTC account", () => {
     const signUpEmail = `sanity${generateEpoch()}crypto@deriv.com`
@@ -27,6 +27,7 @@ import {generateEpoch} from '../../../support/tradersHub'
           currency
         )
       })
+
     cy.c_addressDetails()
     cy.c_completeFatcaDeclarationAgreement()
     cy.c_addAccount()
@@ -37,8 +38,10 @@ import {generateEpoch} from '../../../support/tradersHub'
     cy.findByText('Fiat currencies').click()
     cy.findByText('US Dollar').click()
     cy.findByRole('button', { name: 'Add account' }).click()
-    cy.findByRole('heading', { name: 'Success!' }).should('be.visible', { timeout: 30000 }) 
-    cy.findByText('You have added a USD account.').should("be.visible")
-    cy.findByRole('button', { name: 'Maybe later' }).click()
+    cy.findByRole('heading', { name: 'Success!' }).should('be.visible', {
+      timeout: 30000,
     })
+    cy.findByText('You have added a USD account.').should('be.visible')
+    cy.findByRole('button', { name: 'Maybe later' }).click()
   })
+})
