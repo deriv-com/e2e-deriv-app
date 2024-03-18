@@ -2,15 +2,6 @@ Cypress.Commands.add('c_loadingCheck', () => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
 })
 
-Cypress.Commands.add('navigate_to_poi', (country) => {
-  cy.get('a[href="/account/personal-details"]').click()
-  cy.get('a[href="/account/proof-of-identity"]').click()
-  cy.get('input[name="country_input"]').click()
-  cy.get('input[name="country_input"]').type(country)
-  cy.contains(country).click()
-  cy.contains('button', 'Next').click()
-})
-
 Cypress.Commands.add('c_checkTradersHubhomePage', () => {
   //cy.findByText('Total assets').should('be.visible')
   cy.findByText('Options & Multipliers').should('be.visible')
@@ -36,7 +27,7 @@ Cypress.Commands.add('c_enterValidEmail', (sign_up_mail) => {
       timeout: 30000,
     })
     cy.findByPlaceholderText('Email').as('email').should('be.visible')
-    cy.get('@email').type(sign_up_mail)
+    cy.get('@email').type(signUpMail)
     cy.findByRole('checkbox').click()
     cy.get('.error').should('not.exist')
     cy.findByRole('button', { name: 'Create demo account' }).click()
@@ -66,20 +57,27 @@ Cypress.Commands.add('c_enterPassword', () => {
 })
 
 Cypress.Commands.add('c_completeOnboarding', () => {
-  for (let next_button_count = 0; next_button_count < 5; next_button_count++) {
-    cy.contains('button', 'Next').should('be.visible')
+  const onboarding = Cypress.$("button:contains('Next'):visible").length > 0
+  if (onboarding) {
+    for (
+      let next_button_count = 0;
+      next_button_count < 5;
+      next_button_count++
+    ) {
+      cy.contains('button', 'Next').should('be.visible')
+      cy.contains('button', 'Next').click()
+    }
+    cy.contains('Start trading').should('be.visible')
+    cy.contains('button', 'Start trading').click()
+    cy.contains('Switch accounts').should('be.visible')
     cy.contains('button', 'Next').click()
+    if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
+      cy.contains('Choice of regulation').should('be.visible')
+      cy.contains('button', 'Next').click()
+    }
+    cy.contains("Trader's Hub tour").should('be.visible')
+    cy.contains('button', 'OK').click()
   }
-  cy.contains('Start trading').should('be.visible')
-  cy.contains('button', 'Start trading').click()
-  cy.contains('Switch accounts').should('be.visible')
-  cy.contains('button', 'Next').click()
-  if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
-    cy.contains('Choice of regulation').should('be.visible')
-    cy.contains('button', 'Next').click()
-  }
-  cy.contains("Trader's Hub tour").should('be.visible')
-  cy.contains('button', 'OK').click()
 })
 
 Cypress.Commands.add('c_generateRandomName', () => {
@@ -178,8 +176,6 @@ Cypress.Commands.add('c_addressDetails', () => {
 
 Cypress.Commands.add('c_addAccount', () => {
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
-  cy.get('.fatca-declaration__agreement').click()
-  cy.findAllByTestId('dti_list_item').eq(0).click()
   cy.get('.dc-checkbox__box').eq(0).click()
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
   cy.get('.dc-checkbox__box').eq(1).click()
@@ -241,7 +237,13 @@ Cypress.Commands.add('c_completeFinancialAssessment', () => {
     cy.findAllByTestId('dti_list_item').eq(1).click()
     count++
   }
+
   cy.findByRole('button', { name: 'Next' }).click()
+})
+
+Cypress.Commands.add('c_completeFatcaDeclarationAgreement', () => {
+  cy.get('.fatca-declaration__agreement').click()
+  cy.findAllByTestId('dti_list_item').eq(0).click()
 })
 
 Cypress.Commands.add('c_addAccountMF', () => {
@@ -255,6 +257,7 @@ Cypress.Commands.add('c_addAccountMF', () => {
   cy.findByRole('heading', { name: 'Account added' }).should('be.visible')
   cy.findByRole('button', { name: 'Verify now' }).should('be.visible')
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
+
   cy.url().should(
     'be.equal',
     Cypress.config('baseUrl') + '/appstore/traders-hub'
@@ -265,4 +268,26 @@ Cypress.Commands.add('c_addAccountMF', () => {
     cy.contains('button', 'Next').click()
   }
   cy.findByRole('button', { name: 'OK' }).click()
+})
+
+Cypress.Commands.add('c_demoAccountSignup', (epoch, country) => {
+  cy.c_emailVerificationSignUp(epoch)
+  cy.then(() => {
+    cy.c_visitResponsive(Cypress.env('signUpUrl'), 'desktop').then(() => {
+      cy.window().then((win) => {
+        win.localStorage.setItem(
+          'config.server_url',
+          Cypress.env('stdConfigServer')
+        )
+        win.localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
+      })
+    })
+
+    cy.c_visitResponsive(Cypress.env('signUpUrl'), 'desktop')
+    cy.get('h1').contains('Select your country and').should('be.visible')
+    cy.c_selectCountryOfResidence(country)
+    cy.c_selectCitizenship(country)
+    cy.c_enterPassword()
+    cy.c_completeOnboarding()
+  })
 })
