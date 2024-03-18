@@ -74,6 +74,8 @@ module.exports = defineConfig({
     emailUser: process.env.E2E_AUTH_EMAIL_USER,
     emailPassword: process.env.E2E_AUTH_EMAIL_PASSWORD,
     event_email_url: process.env.E2E_EVENTS_EMAIL,
+    apiToken: process.env.E2E_API_TOKEN,
+    websocketUrl: process.env.WEBSOCKET_URL,
     diel_country_list: [
       "Ecuador",
       "South Africa",
