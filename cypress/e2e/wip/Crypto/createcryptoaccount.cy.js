@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands';
-import cyrpto from '/Users/vimalanrajakumar/e2e-deriv-app/cypress/e2e/wip/Crypto/Pageobject/common.js';
+import cryptoconfig from '/Users/vimalanrajakumar/e2e-deriv-app/cypress/e2e/wip/Crypto/Pageobject/common.js';
 
 Cypress.Commands.add("closenotificationbanner", () => {
   cy.get('body').then(($body) => {
@@ -18,32 +18,38 @@ describe('QATEST-707 - Create crypto account', () => {
     cy.c_login()
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
   })
-  const addcryptoaccount = (crypto) => {
-    cyrpto.elements.currencyswitcher().should('be.visible').click();
-    cyrpto.elements.manageaccount().should('be.visible').click();
-    if (cy.findByText(crypto).should('be.visible')) {
-      cy.findByText(crypto).click();
-      cyrpto.elements.cryptoaddaccount().should('be.visible').click();
-      cy.findByText('Success!')
-      cy.findByText('Make a deposit now to start trading.')
-      cyrpto.elements.maybelater().should('be.visible').click();
-      cy.closenotificationbanner();
-  } else {
-      console.error(`Element with text ${crypto} is disabled.`);
-      cyrpto.elements.closemanageaccount().should('be.visible').click();
-  }
+  const addcryptoaccount = (crypto, code) => {
+    cryptoconfig.elements.currencyswitcher().should('be.visible').click();
+    cryptoconfig.elements.manageaccount().should('be.visible').click();
+    cy.get('.add-crypto-currency').then(($parent) => {
+      const $input = $parent.find(`input[name="currency"][id="${code}"][disabled]`);
+      if ($input.length > 0) {
+        // Element is disabled
+        cy.log(`${code} input element is disabled.`);
+        cy.get('.dc-modal-header__close').click();
+        cy.closenotificationbanner();
+      } else {
+        // Element is not disabled
+        cy.closenotificationbanner();
+        cy.findByText(crypto).click();
+        cryptoconfig.elements.cryptoaddaccount().should('be.visible').click();
+        cy.findByText('Success!')
+        cy.findByText('Make a deposit now to start trading.')
+        cryptoconfig.elements.maybelater().should('be.visible').click();
+      }})
     return crypto;
-  };
-  const checkaccountbalance = () => {
-    cyrpto.elements.currencyswitcher().should('be.visible').click();
   };
   it('should be able to create crypto account from Traders Hub.', () => {
     cy.wait(1000).closenotificationbanner();
     const cryptocurrencies = ["Bitcoin", "Ethereum", "Litecoin", "Tether TRC20", "USD Coin"];
-    cryptocurrencies.forEach(crypto => {
-      addcryptoaccount(crypto);
- });
-      checkaccountbalance();
+    const currency_code = ["BTC", "ETH", "LTC", "tUSDT", "USDC"];
+    // loop to make sure it check for all available currency
+    cryptocurrencies.forEach((crypto, index) => {
+        const code = currency_code[index];
+        addcryptoaccount(crypto, code);
+    });
+    // to check for the account balance after creation
+      cryptoconfig.elements.currencyswitcher().should('be.visible').click();
       cy.findByText("0.00000000 BTC").should("be.visible")
       cy.findByText("0.00000000 ETH").should("be.visible")
       cy.findByText("0.00000000 LTC").should("be.visible")

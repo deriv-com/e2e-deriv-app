@@ -1,4 +1,4 @@
-class cyrpto {
+class cryptoconfig {
     elements = {
         currencyswitcher: () => cy.findByTestId('dt_currency-switcher__arrow'),
         manageaccount: () => cy.get('[class*="dc-btn dc-btn--secondary dc-btn__large block-button"]'),
@@ -9,5 +9,5 @@ class cyrpto {
  }
 }
 
-module.exports = new cyrpto();
+module.exports = new cryptoconfig();
 
