@@ -11,7 +11,7 @@ Cypress.Commands.add('c_checkTradersHubhomePage', () => {
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
 })
 
-Cypress.Commands.add('c_enterValidEmail', (sign_up_mail) => {
+Cypress.Commands.add('c_enterValidEmail', (signUpMail) => {
   {
     cy.visit('https://deriv.com/signup/', {
       onBeforeLoad(win) {
