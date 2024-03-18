@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-import { generateEpoch } from '../../../support/tradersHub'
+import { generateEpoch } from '../../../support/helper/utility'
 
 describe('QATEST-5695: Create a Derived Demo CFD account', () => {
   const epoch = generateEpoch()

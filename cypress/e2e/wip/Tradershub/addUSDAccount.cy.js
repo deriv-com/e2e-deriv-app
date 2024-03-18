@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-import { generateEpoch } from '../../../support/tradersHub'
+import { generateEpoch } from '../../../support/helper/utility'
 
 describe('QATEST 5813 - Add USD account for existing BTC account', () => {
   const epoch = generateEpoch()

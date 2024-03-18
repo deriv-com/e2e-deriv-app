@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-import { generateEpoch } from '../../../support/tradersHub'
+import { generateEpoch } from '../../../support/helper/utility'
 
 describe('QATEST-5724: CFDs - Create a demo Financial account using existing MT5 account password', () => {
   const epoch = generateEpoch()
