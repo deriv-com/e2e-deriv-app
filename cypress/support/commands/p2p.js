@@ -338,13 +338,3 @@ Cypress.Commands.add('c_deletePaymentMethod', (paymentID, paymentName) => {
   cy.findByRole('button', { name: 'Yes, remove' }).should('be.visible').click()
   cy.findByText(paymentID).should('not.exist')
 })
-
-export const generateAccountNumberString = (length) => {
-  let result = ''
-  const characters = '0123456789'
-  const charactersLength = characters.length
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength))
-  }
-  return result
-}
