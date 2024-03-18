@@ -1,3 +1,7 @@
+const pixelmatch = require('pixelmatch')
+const { PNG } = require('pngjs')
+
+//TODO move variables to either test files.
 export const stakeAmount = '10.00'
 export const tickDuration = 4
 
@@ -157,9 +161,6 @@ Cypress.Commands.add(
       })
   }
 )
-
-const pixelmatch = require('pixelmatch')
-const { PNG } = require('pngjs')
 
 Cypress.Commands.add(
   'c_compareElementScreenshots',

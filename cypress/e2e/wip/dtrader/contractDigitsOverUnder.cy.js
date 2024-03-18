@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-import { stakeAmount } from '../../../support/dtrader'
+import { stakeAmount } from '../../../support/commands/dTrader'
 
 describe('QATEST-5040 -  Verify contract for Digits', () => {
   beforeEach(() => {
