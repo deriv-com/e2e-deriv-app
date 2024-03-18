@@ -1,28 +1,6 @@
-import './commands'
-import './dtrader'
-import './p2p'
-import './kyc'
-import './tradersHub'
-import './commands/index'
-import { getLoginToken, getOAuthUrl, getWalletOAuthUrl } from './common'
-
-require('cypress-xpath')
+import {getOAuthUrl, getWalletOAuthUrl} from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
-
-const setLoginUser = (user = 'masterUser') => {
-  if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
-    return {
-      loginEmail: Cypress.env('credentials').production[`${user}`].ID,
-      loginPassword: Cypress.env('credentials').production[`${user}`].PSWD,
-    }
-  } else {
-    return {
-      loginEmail: Cypress.env('credentials').test[`${user}`].ID,
-      loginPassword: Cypress.env('credentials').test[`${user}`].PSWD,
-    }
-  }
-}
 
 Cypress.Commands.add('c_visitResponsive', (path, size) => {
   //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
@@ -57,9 +35,7 @@ Cypress.Commands.add('c_visitResponsive', (path, size) => {
   }
 })
 
-Cypress.Commands.add('c_login', (options = {}) => {
-  const { user = 'masterUser', app = '' } = options
-  const { loginEmail, loginPassword } = setLoginUser(user)
+Cypress.Commands.add('c_login', (app) => {
   cy.c_visitResponsive('/endpoint', 'large')
 
   if (app == 'doughflow') {
@@ -98,30 +74,27 @@ Cypress.Commands.add('c_login', (options = {}) => {
       }
     })
   }
+
   cy.log('getOAuthUrl - value before: ' + Cypress.env('oAuthUrl'))
   if (Cypress.env('oAuthUrl') == '<empty>' && app != 'wallets') {
-    getOAuthUrl(
-      (oAuthUrl) => {
-        Cypress.env('oAuthUrl', oAuthUrl)
-        cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
-        cy.c_doOAuthLogin(app)
-      },
-      loginEmail,
-      loginPassword
-    )
-  } 
-  else if (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') {
+    getOAuthUrl((oAuthUrl) => {
+      cy.log('came inside normal getOauth')
+      Cypress.env('oAuthUrl', oAuthUrl)
+      cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
+      cy.c_doOAuthLogin(app)
+    })
+  } else if (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') {
     getWalletOAuthUrl((oAuthUrl) => {
-    cy.log('came inside wallet getOauth')
-    Cypress.env('oAuthUrl', oAuthUrl)
-    cy.log('getOAuthUrlWallet - value after: ' + Cypress.env('oAuthUrl'))
-    cy.c_doOAuthLogin(app)
-  })
-}
+      cy.log('came inside wallet getOauth')
+      Cypress.env('oAuthUrl', oAuthUrl)
+      cy.log('getOAuthUrlWallet - value after: ' + Cypress.env('oAuthUrl'))
+      cy.c_doOAuthLogin(app)
+    })
+  }
   else {
     cy.c_doOAuthLogin(app)
   }
-})
+  })
 
 Cypress.Commands.add('c_doOAuthLogin', (app) => {
   cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
@@ -129,7 +102,6 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
   cy.get('.cq-symbol-select-btn', { timeout: 10000 }).should('exist')
   cy.document().then((doc) => {
     const launchModal = doc.querySelector('[data-test-id="launch-modal"]')
-
     if (launchModal) {
       cy.findByRole('button', { name: 'Ok' }).click()
     }
@@ -251,7 +223,6 @@ Cypress.Commands.add(
     )
   }
 )
-
 //To be added on hotspots as an edge case only when constantly hitting rate limits
 Cypress.Commands.add('c_rateLimit', () => {
   cy.get('#modal_root, .modal-root', { timeout: 10000 }).then(($element) => {
@@ -329,62 +300,51 @@ Cypress.Commands.add('c_selectDemoAccount', () => {
   cy.findByTestId('dt_acc_info').should('be.visible')
 })
 
-Cypress.Commands.add(
-  'c_emailVerification',
-  (requestType, accountEmail, options = {}) => {
-    let {
-      retryCount = 0,
-      maxRetries = 3,
-      baseUrl = Cypress.env('qaBoxBaseUrl'),
-    } = options
-    cy.visit(
-      `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
-        'qaBoxLoginPassword'
-      )}@${baseUrl}`
-    )
-    const sentArgs = { requestType, accountEmail }
-    cy.origin(
-      `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
-        'qaBoxLoginPassword'
-      )}@${baseUrl}`,
-      { args: [requestType, accountEmail] },
-      ([requestType, accountEmail]) => {
-        cy.document().then((doc) => {
-          const allRelatedEmails = Array.from(
-            doc.querySelectorAll(`a[href*="${requestType}"]`)
-          )
-          if (allRelatedEmails.length) {
-            const verificationEmail = allRelatedEmails.pop()
+Cypress.Commands.add("c_emailVerification", (requestType,accountEmail , options={}) => {
+  let {
+     retryCount = 0, 
+     maxRetries = 3,
+     baseUrl = Cypress.env("qaBoxBaseUrl")
+  } = options
+  cy.visit(
+    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+      "qaBoxLoginPassword"
+    )}@${baseUrl}`
+  )
+  const sentArgs = { requestType, accountEmail}
+  cy.origin(
+    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
+      "qaBoxLoginPassword"
+    )}@${baseUrl}`,{args: [requestType, accountEmail]}, ([requestType, accountEmail]) => {
+    cy.document().then((doc) => {
+      const allRelatedEmails = Array.from(doc.querySelectorAll(`a[href*="${requestType}"]`))
+      if (allRelatedEmails.length) {
+            const verificationEmail = allRelatedEmails.pop()          
             cy.wrap(verificationEmail).click()
             cy.contains('p', `${accountEmail}`).should('be.visible')
-            cy.contains('a', Cypress.config('baseUrl'))
-              .invoke('attr', 'href')
-              .then((href) => {
-                if (href) {
-                  Cypress.env('verificationUrl', href)
-                  const code = href.match(/code=([A-Za-z0-9]{8})/)
-                  verification_code = code[1]
-                  Cypress.env('walletsWithdrawalCode', verification_code)
-                  cy.log('Verification link found')
-                } else {
-                  cy.log('Verification link not found')
-                }
-              })
+            cy.contains('a',Cypress.config('baseUrl')).invoke('attr', 'href').then((href) => {
+              if (href) {
+                Cypress.env("verificationUrl", href)
+                const code = href.match(/code=([A-Za-z0-9]{8})/)
+                verification_code = code[1]
+                Cypress.env("walletsWithdrawalCode",  verification_code)
+                cy.log('Verification link found')
+              } else {
+                cy.log('Verification link not found')
+              }
+          })
           } else {
             cy.log('email not found')
           }
         })
-      }
-    )
+      })
     cy.then(() => {
       //Retry finding email after 1 second interval
-      if (retryCount <= maxRetries && !Cypress.env('verificationUrl')) {
+      if (retryCount <= maxRetries && !Cypress.env("verificationUrl")) {
         cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
         cy.wait(1000)
-        cy.c_emailVerification(requestType, accountEmail, {
-          retryCount: ++retryCount,
-        })
-      }
+        cy.c_emailVerification(requestType,accountEmail, {retryCount: ++retryCount})
+      } 
       if (retryCount > maxRetries) {
         throw new Error(
           `Signup URL extraction failed after ${maxRetries} attempts.`
@@ -394,10 +354,6 @@ Cypress.Commands.add(
   }
 )
 
-Cypress.Commands.add('c_setEndpoint', (signUpMail) => {
-  localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
-  localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
-  cy.c_visitResponsive('/endpoint', 'desktop')
-  cy.findByRole('button', { name: 'Sign up' }).should('not.be.disabled')
-  cy.c_enterValidEmail(signUpMail)
+Cypress.Commands.add('c_loadingCheck', () => {
+  cy.findByTestId('dt_initial_loader').should('not.exist')
 })
