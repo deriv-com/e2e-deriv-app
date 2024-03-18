@@ -102,11 +102,8 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
   cy.get('.cq-symbol-select-btn', { timeout: 10000 }).should('exist')
   cy.document().then((doc) => {
     const launchModal = doc.querySelector('[data-test-id="launch-modal"]')
-<<<<<<< HEAD
+
     if(launchModal){
-=======
-    if (launchModal) {
->>>>>>> 537d9dbabc2de1711844711e8f3cbcda0f6f281a
       cy.findByRole('button', { name: 'Ok' }).click()
     }
   })
@@ -156,6 +153,7 @@ Cypress.Commands.add('c_mt5login', () => {
   cy.findByRole('button', { name: 'Connect to account' }).click()
 })
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 Cypress.Commands.add('c_emailVerification', (verification_code, base_url) => {
@@ -230,6 +228,8 @@ Cypress.Commands.add(
   }
 )
 >>>>>>> 537d9dbabc2de1711844711e8f3cbcda0f6f281a
+=======
+>>>>>>> 686aa61ae832488626152448705564295a1c1157
 //To be added on hotspots as an edge case only when constantly hitting rate limits
 Cypress.Commands.add('c_rateLimit', () => {
   cy.get('#modal_root, .modal-root', { timeout: 10000 }).then(($element) => {
@@ -307,7 +307,10 @@ Cypress.Commands.add('c_selectDemoAccount', () => {
   cy.findByTestId('dt_acc_info').should('be.visible')
 })
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 686aa61ae832488626152448705564295a1c1157
 Cypress.Commands.add("c_emailVerification", (requestType,accountEmail , options={}) => {
   const {
      retryCount = 0, 
@@ -345,8 +348,7 @@ Cypress.Commands.add("c_emailVerification", (requestType,accountEmail , options=
             cy.log('email not found')
           }
         })
-      }
-    )
+      })
     cy.then(() => {
       //Retry finding email after 1 second interval
       if (retryCount <= maxRetries && !Cypress.env("verificationUrl")) {

@@ -6,6 +6,10 @@ describe("QATEST-5972: Create a Derived SVG account", () => {
   let country = Cypress.env("countries").CO
   let nationalIDNum = Cypress.env("nationalIDNum").CO
   let taxIDNum = Cypress.env("taxIDNum").CO
+<<<<<<< HEAD
+=======
+
+>>>>>>> 686aa61ae832488626152448705564295a1c1157
 
   beforeEach(() => {
     cy.c_setEndpoint(signUpMail)

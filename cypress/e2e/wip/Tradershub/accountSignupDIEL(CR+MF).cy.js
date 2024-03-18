@@ -3,7 +3,6 @@ import { generateEpoch } from '../../../support/tradersHub'
 
 const regulationText = '.regulators-switcher__switch div.item.is-selected'
 
-
 describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
   const signUpEmail = `sanity${generateEpoch()}diel@deriv.com`
   let country = Cypress.env("countries").ZA

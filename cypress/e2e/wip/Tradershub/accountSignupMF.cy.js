@@ -1,7 +1,6 @@
 import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/tradersHub'
 
-
 describe("QATEST-5569: Verify MF Signup flow", () => {
   const signUpEmail = `sanity${generateEpoch()}mf@deriv.com`
   let country = Cypress.env("countries").ES
