@@ -3,11 +3,10 @@ import './dtrader'
 import './p2p'
 import './kyc'
 import './tradersHub'
+import {getLoginToken, getOAuthUrl, getWalletOAuthUrl} from './common' 
 
 require('cypress-xpath')
 
-const { getLoginToken } = require('./common')
-const { getOAuthUrl } = require('./common')
 
 Cypress.prevAppId = 0
 
@@ -83,17 +82,25 @@ Cypress.Commands.add('c_login', (app) => {
       }
     })
   }
-
   cy.log('getOAuthUrl - value before: ' + Cypress.env('oAuthUrl'))
-  if (Cypress.env('oAuthUrl') == '<empty>') {
-    getOAuthUrl((oAuthUrl) => {
-      Cypress.env('oAuthUrl', oAuthUrl)
-      cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
-      cy.c_doOAuthLogin(app)
-    })
-  } else {
+if (Cypress.env('oAuthUrl') == '<empty>' && app != 'wallets') {
+  getOAuthUrl((oAuthUrl) => {
+    cy.log('came inside normal getOauth')
+    Cypress.env('oAuthUrl', oAuthUrl)
+    cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
     cy.c_doOAuthLogin(app)
-  }
+  })
+} else if (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') {
+  getWalletOAuthUrl((oAuthUrl) => {
+    cy.log('came inside wallet getOauth')
+    Cypress.env('oAuthUrl', oAuthUrl)
+    cy.log('getOAuthUrlWallet - value after: ' + Cypress.env('oAuthUrl'))
+    cy.c_doOAuthLogin(app)
+  })
+}
+else {
+  cy.c_doOAuthLogin(app)
+}
 })
 
 Cypress.Commands.add('c_doOAuthLogin', (app) => {
