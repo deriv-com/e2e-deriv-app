@@ -310,7 +310,7 @@ Cypress.Commands.add('c_selectDemoAccount', () => {
 })
 
 Cypress.Commands.add("c_emailVerification", (requestType,accountEmail , options={}) => {
-  const {
+  let {
      retryCount = 0, 
      maxRetries = 3,
      baseUrl = Cypress.env("qaBoxBaseUrl")
@@ -352,7 +352,7 @@ Cypress.Commands.add("c_emailVerification", (requestType,accountEmail , options=
       if (retryCount <= maxRetries && !Cypress.env("verificationUrl")) {
         cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
         cy.wait(1000)
-        cy.c_emailVerification(requestType,accountEmail, ++retryCount)
+        cy.c_emailVerification(requestType,accountEmail, {retryCount: ++retryCount})
       } 
       if (retryCount > maxRetries) {
         throw new Error(
