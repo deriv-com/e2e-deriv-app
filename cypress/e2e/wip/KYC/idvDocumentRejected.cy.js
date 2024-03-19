@@ -21,6 +21,8 @@ describe('QATEST-22853 IDV Document Rejected by Smile Identity provider', () => 
     cy.reload()
 
     cy.contains("Your identity verification failed").should('be.visible')
+    cy.findByText("Proof of address required").should('exist')
+    cy.c_closeNotificationHeader()
     cy.contains("We were unable to verify the identity document with the details provided.").should('be.visible')
 
 })
