@@ -20,6 +20,7 @@ describe('QATEST-5918: Verify Change currency functionality for the account whic
   it('Should be able to change currency', () => {
     cy.c_demoAccountSignup(epoch, country)
     cy.c_switchToReal()
+    cy.c_completeTradersHubTour()
     cy.findByRole('button', { name: 'Get a Deriv account' }).click()
     cy.c_generateRandomName().then((firstName) => {
       cy.c_personalDetails(
