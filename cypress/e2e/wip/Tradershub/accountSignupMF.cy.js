@@ -9,7 +9,7 @@ describe("QATEST-5569: Verify MF Signup flow", () => {
   let currency = Cypress.env("accountCurrency").GBP
 
   beforeEach(() => {
-    cy.c_setEndpoint(signUpMail)
+    cy.c_setEndpoint(signUpEmail)
   })
   it("Verify I can signup for an MF demo and real account", () => {
     cy.c_demoAccountSignup(country,signUpEmail)

@@ -10,7 +10,7 @@ describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
   let taxIDNum = Cypress.env("taxIDNum").ZA
 
   beforeEach(() => {
-    cy.c_setEndpoint(signUpMail)
+    cy.c_setEndpoint(signUpEmail)
   })
   it("Verify I can signup for a DIEL demo and real account", () => {
     Cypress.env("citizenship", country)

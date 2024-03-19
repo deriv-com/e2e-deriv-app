@@ -8,7 +8,7 @@ describe("QATEST-6000: Create a Financial SVG account", () => {
   let taxIDNum = Cypress.env("taxIDNum").CO
 
   beforeEach(() => {
-    cy.c_setEndpoint(signUpMail)
+    cy.c_setEndpoint(signUpEmail)
   })
   it("Verify I can signup for a real Financial SVG CFD account", () => {
     cy.c_demoAccountSignup(country, signUpEmail)
