@@ -51,8 +51,8 @@ it("Create siblings accounts from USD account ", () =>{
   cy.findByTestId('dt_currency-switcher__arrow').click()
   cy.findByRole('button', { name: 'Add or manage account' }).click()
   getCurrencyList().then((labelCount) => {
-  cy.get('.dc-modal-header__close').click()
-    for (let acctCount = 0; acctCount < labelCount; acctCount++) {
+  cy.findByTestId('dt_modal_close_icon').click()
+  for (let acctCount = 0; acctCount < labelCount; acctCount++) {
     createSiblingAcct(acctCount)
     }
   })
