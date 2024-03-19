@@ -94,6 +94,10 @@ function getOAuthUrl(callback) {
     // Step 2: Extract CSRF token and set-cookie value from the response
     // This will depend on how the token is presented in the response.
     // For example, it might be in a cookie, a header, or in the HTML body.
+    const csrfToken = extractCsrfToken(response)
+    cy.log('csrfToken>>' + csrfToken)
+    const cookie = response.headers['set-cookie']
+    cy.log('Cookie Test:' + response.headers['set-cookie'])
     const loginRequestPayload = {
       method: 'POST',
       url: URL,
@@ -112,10 +116,6 @@ function getOAuthUrl(callback) {
         csrf_token: csrfToken,
       },
     }
-    const csrfToken = extractCsrfToken(response)
-    cy.log('csrfToken>>' + csrfToken)
-    const cookie = response.headers['set-cookie']
-    cy.log('Cookie Test:' + response.headers['set-cookie'])
 
     // Step 3: Make a POST request with the CSRF token and cookie.
     cy.request(loginRequestPayload).then((response) => {
