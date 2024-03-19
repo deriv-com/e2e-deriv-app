@@ -11,6 +11,20 @@ const { getOAuthUrl } = require('./common')
 
 Cypress.prevAppId = 0
 
+const setLoginUser = (user = 'masterUser') => {
+  if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
+    return {
+      loginEmail: Cypress.env('credentials').production[`${user}`].ID,
+      loginPassword: Cypress.env('credentials').production[`${user}`].PSWD,
+    }
+  } else {
+    return {
+      loginEmail: Cypress.env('credentials').test[`${user}`].ID,
+      loginPassword: Cypress.env('credentials').test[`${user}`].PSWD,
+    }
+  }
+}
+
 Cypress.Commands.add('c_visitResponsive', (path, size) => {
   //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
   cy.log(path)
@@ -44,7 +58,9 @@ Cypress.Commands.add('c_visitResponsive', (path, size) => {
   }
 })
 
-Cypress.Commands.add('c_login', (app) => {
+Cypress.Commands.add('c_login', (options = {}) => {
+  const { user = 'masterUser', app = '' } = options
+  const { loginEmail, loginPassword } = setLoginUser(user)
   cy.c_visitResponsive('/endpoint', 'large')
 
   if (app == 'doughflow') {
@@ -86,11 +102,15 @@ Cypress.Commands.add('c_login', (app) => {
 
   cy.log('getOAuthUrl - value before: ' + Cypress.env('oAuthUrl'))
   if (Cypress.env('oAuthUrl') == '<empty>') {
-    getOAuthUrl((oAuthUrl) => {
-      Cypress.env('oAuthUrl', oAuthUrl)
-      cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
-      cy.c_doOAuthLogin(app)
-    })
+    getOAuthUrl(
+      (oAuthUrl) => {
+        Cypress.env('oAuthUrl', oAuthUrl)
+        cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
+        cy.c_doOAuthLogin(app)
+      },
+      loginEmail,
+      loginPassword
+    )
   } else {
     cy.c_doOAuthLogin(app)
   }
