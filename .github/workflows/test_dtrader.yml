@@ -1,0 +1,42 @@
+name: Run DTrader Tests
+run-name: Manual run of ${{github.event.inputs.suite}} tests on ${{github.event.inputs.environment}}
+
+on:
+  workflow_call:
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        type: choice
+        description: Select the environment
+        options:
+          - https://test-app.deriv.com
+          - https://staging-app.deriv.com/
+          - https://app.deriv.com/
+        qabox:
+          description: Enter QA box number
+          required: true
+          type: number
+
+jobs:
+    DTrader-cypress-run:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout extrenal repository with Cypress tests
+          uses: actions/checkout@v4
+          with:
+            repository: deriv-com/e2e-deriv-app
+
+      - name: Create server URL
+        env:
+          QA_BOX: ${{ github.events.inputs.qabox }}
+        if: ${{ github.events.inputs.qabox != '' }}
+        run: echo QA_SERVER=qa"QA_BOX".deriv.dev >> $GITHUB_ENV
+
+        - name: DTrader Cypress Run
+          uses: cypress-io/githubaction@v6
+          with:
+            record: true
+            parallel: false
+            spec: cypress/e2e/${{ env.TEST_SUITE }}/*.js
+          if: ${{ github.ref == 'refs/heads/master' || contains(github.ref, 'dtrader') }}
