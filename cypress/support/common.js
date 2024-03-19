@@ -72,7 +72,8 @@ function getLoginToken(callback) {
       loginPassword = Cypress.env('loginPasswordProd')
     } else
     { 
-      loginEmail = Cypress.env('loginEmail')
+      // loginEmail = Cypress.env('loginEmail')
+      loginEmail = Cypress.env('walletloginEmail')
       loginPassword = Cypress.env('loginPassword')      
     }
 
