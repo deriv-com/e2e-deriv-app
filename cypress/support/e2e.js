@@ -81,12 +81,19 @@ Cypress.Commands.add('c_login', (app) => {
       }
     })
   }
-
   cy.log('getOAuthUrl - value before: ' + Cypress.env('oAuthUrl'))
-  if (Cypress.env('oAuthUrl') == '<empty>') {
+  if (Cypress.env('oAuthUrl') == '<empty>' && app != 'wallets') {
     getOAuthUrl((oAuthUrl) => {
+      cy.log('came inside normal getOauth')
       Cypress.env('oAuthUrl', oAuthUrl)
       cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
+      cy.c_doOAuthLogin(app)
+    })
+  } else if (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') {
+    getWalletOAuthUrl((oAuthUrl) => {
+      cy.log('came inside wallet getOauth')
+      Cypress.env('oAuthUrl', oAuthUrl)
+      cy.log('getOAuthUrlWallet - value after: ' + Cypress.env('oAuthUrl'))
       cy.c_doOAuthLogin(app)
     })
   } else {
@@ -222,6 +229,7 @@ Cypress.Commands.add(
     )
   }
 )
+
 //To be added on hotspots as an edge case only when constantly hitting rate limits
 Cypress.Commands.add('c_rateLimit', () => {
   cy.get('#modal_root, .modal-root', { timeout: 10000 }).then(($element) => {
