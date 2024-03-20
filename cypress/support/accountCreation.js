@@ -83,35 +83,42 @@ const getVerificationCode = async () => {
   }
 }
 
-const createAccountVirtual = async () => {
+export const createAccountVirtual = async (
+  password = Cypress.env('loginPassword'),
+  residence = 'id'
+) => {
   try {
     const response = await api.basic.newAccountVirtual({
       new_account_virtual: 1,
       type: 'trading',
-      client_password: 'Abcd1234',
-      residence: 'id',
+      client_password: password,
+      residence: residence,
       verification_code: `${await getVerificationCode()}`,
     })
     const {
       new_account_virtual: { oauth_token },
     } = response
+    console.log('Virtual Account Email: ', randomEmail)
     return oauth_token
   } catch (e) {
     console.log(e)
   }
 }
 
-const createAccountReal = async () => {
+export const createAccountReal = async (
+  clientResidence = 'id',
+  currency = 'USD'
+) => {
   try {
-    await api.account(`${await createAccountVirtual()}`)
+    await api.account(`${await createAccountVirtual(clientResidence)}`)
     const response = await api.basic.newAccountReal({
       new_account_real: 1,
       address_line_1: '20 Broadway Av',
-      date_of_birth: '1980-01-31',
-      first_name: 'AutoGen',
+      date_of_birth: '2000-09-20',
+      first_name: 'Auto Gen',
       last_name: generateRandomName(),
-      currency: 'USD',
-      residence: 'id',
+      currency: currency,
+      residence: clientResidence,
     })
     const {
       new_account_real: { client_id },
@@ -126,5 +133,3 @@ const createAccountReal = async () => {
     connection.close()
   }
 }
-
-module.exports = { createAccountReal }
