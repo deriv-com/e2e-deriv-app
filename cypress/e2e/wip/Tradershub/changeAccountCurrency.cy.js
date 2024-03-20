@@ -2,8 +2,7 @@ import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/tradersHub'
 
 describe('QATEST-5918: Verify Change currency functionality for the account which has no balance', () => {
-  const epoch = generateEpoch()
-  const signUpEmail = `sanity${epoch}crypto@deriv.com`
+  const signUpEmail = `sanity${generateEpoch()}crypto@deriv.com`
   let country = Cypress.env('countries').CO
   let nationalIDNum = Cypress.env('nationalIDNum').CO
   let taxIDNum = Cypress.env('taxIDNum').CO
@@ -18,7 +17,7 @@ describe('QATEST-5918: Verify Change currency functionality for the account whic
     cy.c_enterValidEmail(signUpEmail)
   })
   it('Should be able to change currency', () => {
-    cy.c_demoAccountSignup(epoch, country)
+    cy.c_demoAccountSignup(country, signUpEmail)
     cy.c_switchToReal()
     cy.c_completeTradersHubTour()
     cy.findByRole('button', { name: 'Get a Deriv account' }).click()
