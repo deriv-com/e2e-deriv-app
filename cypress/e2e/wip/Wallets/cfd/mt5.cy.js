@@ -63,11 +63,10 @@ function verifyDemoCreationsMessage(accountType) {
   cy.findByRole('button', { name: 'OK' }).click()
 }
 
-function expandDemoWallet() {
-  cy.findByText('Demo').scrollIntoView()
-  cy.get('[class*="virtual"].wallets-accordion__header--virtual')
-    .find('.wallets-accordion__dropdown > svg')
-    .click()
+function expandDemoWallet(){
+  cy.get(".wallets-dropdown__button").click()
+  cy.get(".wallets-list-card-dropdown__item-content").contains("USD Demo Wallet").click()
+  cy.contains("USD Demo Wallet").should("be.visible")
 }
 function closeModal() {
   cy.findByRole('button', { name: 'Maybe later' }).should('exist')
