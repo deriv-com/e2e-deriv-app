@@ -1,12 +1,7 @@
 import '@testing-library/cypress/add-commands'
 
 Cypress.Commands.add('c_checkRateChanged', (options = {}) => {
-  const {
-    retryCount = 1,
-    maxRetries = 3,
-    waitTimeAfterError = 5000,
-    retryWaitTime = 1000,
-  } = options
+  const { retryCount = 1, maxRetries = 3, retryWaitTime = 1000 } = options
 
   cy.get('#modal_root, .modal-root', { timeout: 10000, log: false }).then(
     ($element) => {
@@ -16,10 +11,6 @@ Cypress.Commands.add('c_checkRateChanged', (options = {}) => {
             '.rate-change-modal__button'
           )
           if (rateChangeError) {
-            cy.log(
-              `Rate change detected, waiting for ${waitTimeAfterError / 1000}s before retrying...`
-            )
-            cy.wait(waitTimeAfterError, { log: false })
             cy.get('.rate-change-modal__button').within(() => {
               cy.get('button[type="submit"]', { log: false }).click({
                 log: false,
@@ -29,7 +20,6 @@ Cypress.Commands.add('c_checkRateChanged', (options = {}) => {
               .should('exist')
               .and('be.enabled')
               .click()
-            cy.c_checkRateChanged({ ...options, retryCount: retryCount + 1 })
             options.retryCount = 1
           }
         })
