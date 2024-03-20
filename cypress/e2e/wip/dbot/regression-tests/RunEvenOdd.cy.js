@@ -21,7 +21,7 @@ describe('QATEST-109419: Run custom strategy Even Odd', () => {
     botDashboard.importStrategy('EvenOdd')
     common.skipTour()
     cy.reload() // adding this until bug BOT-1147 is fixed
-    cy.loading_check()
+    cy.c_loadingCheck()
     common.runBot()
     common.stopBot(10000)
     runPanel.transactionsTab.click() //Switch to transactions tab

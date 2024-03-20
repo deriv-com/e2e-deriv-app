@@ -2,21 +2,16 @@ import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/tradersHub'
 
 describe('QATEST-6000: Create a Financial SVG account', () => {
-  const epoch = generateEpoch()
-  const sign_up_mail = `sanity${epoch}+mt5financialsvg@deriv.com`
+  const signUpEmail = `sanity${generateEpoch()}mt5financialsvg@deriv.com`
   let country = Cypress.env('countries').CO
   let nationalIDNum = Cypress.env('nationalIDNum').CO
   let taxIDNum = Cypress.env('taxIDNum').CO
 
   beforeEach(() => {
-    localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
-    localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
-    cy.c_visitResponsive('/endpoint', 'desktop')
-    cy.findByRole('button', { name: 'Sign up' }).should('not.be.disabled')
-    cy.c_enterValidEmail(sign_up_mail)
+    cy.c_setEndpoint(signUpEmail)
   })
   it('Verify I can signup for a real Financial SVG CFD account', () => {
-    cy.c_demoAccountSignup(epoch, country)
+    cy.c_demoAccountSignup(country, signUpEmail)
     cy.c_checkTradersHubHomePage()
     cy.findByTestId('dt_dropdown_display').click()
     cy.get('#real').click()

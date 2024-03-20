@@ -1,69 +1,46 @@
-function getLoginToken(callback) {
+export function getLoginToken(callback) {
   cy.request({
     method: 'POST',
-    url: 'https://' + Cypress.env('configServer') + '/oauth2/api/v1/verify',
+    url: 'https://' + Cypress.env('configServer') + '/oauth2/api/v1/authorize',
     headers: {
       Origin: 'https://oauth.deriv.com',
       'Content-Type': 'application/json',
     },
     body: {
       app_id: Cypress.env('configAppId'),
+      expire: expire,
+      solution: solution,
     },
   }).then((response) => {
-    const challenge = response.body.challenge
-    const expire = response.body.expire
-    var crypto = require('crypto')
-    const solution = crypto
-      .createHmac('sha256', Cypress.env('HMACKey'))
-      .update(challenge)
-      .digest('hex')
-
-    cy.log('<solution>' + solution)
+    const bearerToken = response.body.token
+    cy.log('<bearer token>' + bearerToken)
+    expect(response.status).to.eq(200)
 
     cy.request({
       method: 'POST',
-      url:
-        'https://' + Cypress.env('configServer') + '/oauth2/api/v1/authorize',
+      url: 'https://' + Cypress.env('configServer') + '/oauth2/api/v1/login',
       headers: {
-        Origin: 'https://oauth.deriv.com',
+        Authorization: 'Bearer ' + bearerToken,
         'Content-Type': 'application/json',
       },
       body: {
         app_id: Cypress.env('configAppId'),
-        expire: expire,
-        solution: solution,
+        type: 'system',
+        email: Cypress.env('loginEmail'),
+        password: Cypress.env('loginPassword'),
       },
     }).then((response) => {
-      const bearerToken = response.body.token
-      cy.log('<bearer token>' + bearerToken)
+      const token = response.body.tokens[0].token
+      cy.log('<login token>' + token)
+
+      callback(token)
+
       expect(response.status).to.eq(200)
-
-      cy.request({
-        method: 'POST',
-        url: 'https://' + Cypress.env('configServer') + '/oauth2/api/v1/login',
-        headers: {
-          Authorization: 'Bearer ' + bearerToken,
-          'Content-Type': 'application/json',
-        },
-        body: {
-          app_id: Cypress.env('configAppId'),
-          type: 'system',
-          email: Cypress.env('loginEmail'),
-          password: Cypress.env('loginPassword'),
-        },
-      }).then((response) => {
-        const token = response.body.tokens[0].token
-        cy.log('<login token>' + token)
-
-        callback(token)
-
-        expect(response.status).to.eq(200)
-      })
     })
   })
 }
 
-function getOAuthUrl(callback) {
+export function getOAuthUrl(callback) {
   const URL =
     'https://' +
     Cypress.env('configServer') +
@@ -168,6 +145,3 @@ function extractCsrfToken(response) {
 
   return found[1]
 }
-
-module.exports = { getLoginToken }
-module.exports = { getOAuthUrl }

@@ -19,15 +19,18 @@ describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
     common.switchToDemo()
     botBuilder.openBotBuilderTab()
     common.skipTour()
-    quickStrategy.clickQuickStrategies()
+    cy.reload() // adding this until bug BOT-1147 is fixed
+    cy.c_loadingCheck() //TODO:remove once bug is fixed
   })
 
   it('Run Martingale Quick Strategy', () => {
+    quickStrategy.clickQuickStrategies()
     quickStrategy.clickOnStrategyTab('Martingale')
     quickStrategy.quickStrategyMarketDropdown.should(
       'have.value',
       'Volatility 100 (1s) Index'
     )
+    quickStrategy.chooseTradeType()
     quickStrategy.fillUpContractSize()
     quickStrategy.fillUpLossProfitTreshold()
     quickStrategy.runBotQuickStrategy()

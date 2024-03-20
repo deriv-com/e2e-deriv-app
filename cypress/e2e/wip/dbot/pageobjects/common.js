@@ -44,7 +44,7 @@ class Common {
   }
 
   get snackBar() {
-    return cy.get('.dc-toast__message-content')
+    return cy.get('.notification-content')
   }
 
   get snackBarCloseIcon() {

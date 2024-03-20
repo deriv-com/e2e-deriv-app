@@ -2,24 +2,6 @@ Cypress.Commands.add('c_loadingCheck', () => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
 })
 
-Cypress.Commands.add('navigate_to_poi', (country) => {
-  cy.get('a[href="/account/personal-details"]').click()
-  cy.findByRole('link', { name: 'Proof of identity' }).click()
-  cy.findByLabel('Country').click()
-  cy.findByText(country).click()
-  cy.contains(country).click()
-  cy.contains('button', 'Next').click()
-})
-
-Cypress.Commands.add('c_navigateToPOIResponsive', (country) => {
-  cy.c_visitResponsive('/account/proof-of-identity', 'small')
-  //cy.findByText('Proof of identity').should('exist')
-  cy.findByText('Pending action required').should('exist')
-  cy.c_closeNotificationHeader()
-  cy.get('select[name="country_input"]').select(country)
-  cy.findByRole('button', { name: 'Next' }).click()
-})
-
 Cypress.Commands.add('c_checkTradersHubhomePage', () => {
   //cy.findByText('Total assets').should('be.visible')
   cy.findByText('Options & Multipliers').should('be.visible')
@@ -29,7 +11,7 @@ Cypress.Commands.add('c_checkTradersHubhomePage', () => {
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
 })
 
-Cypress.Commands.add('c_enterValidEmail', (sign_up_mail) => {
+Cypress.Commands.add('c_enterValidEmail', (signUpMail) => {
   {
     cy.visit('https://deriv.com/signup/', {
       onBeforeLoad(win) {
@@ -45,7 +27,7 @@ Cypress.Commands.add('c_enterValidEmail', (sign_up_mail) => {
       timeout: 30000,
     })
     cy.findByPlaceholderText('Email').as('email').should('be.visible')
-    cy.get('@email').type(sign_up_mail)
+    cy.get('@email').type(signUpMail)
     cy.findByRole('checkbox').click()
     cy.get('.error').should('not.exist')
     cy.findByRole('button', { name: 'Create demo account' }).click()
@@ -288,10 +270,10 @@ Cypress.Commands.add('c_addAccountMF', () => {
   cy.findByRole('button', { name: 'OK' }).click()
 })
 
-Cypress.Commands.add('c_demoAccountSignup', (epoch, country) => {
-  cy.c_emailVerificationSignUp(epoch)
+Cypress.Commands.add('c_demoAccountSignup', (country, accountEmail) => {
+  cy.c_emailVerification('account_opening_new.html', accountEmail)
   cy.then(() => {
-    cy.c_visitResponsive(Cypress.env('signUpUrl'), 'desktop').then(() => {
+    cy.c_visitResponsive(Cypress.env('verificationUrl'), 'desktop').then(() => {
       cy.window().then((win) => {
         win.localStorage.setItem(
           'config.server_url',
@@ -300,8 +282,7 @@ Cypress.Commands.add('c_demoAccountSignup', (epoch, country) => {
         win.localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
       })
     })
-
-    cy.c_visitResponsive(Cypress.env('signUpUrl'), 'desktop')
+    cy.c_visitResponsive(Cypress.env('verificationUrl'), 'desktop')
     cy.get('h1').contains('Select your country and').should('be.visible')
     cy.c_selectCountryOfResidence(country)
     cy.c_selectCitizenship(country)
