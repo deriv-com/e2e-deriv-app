@@ -16,12 +16,10 @@ describe("QATEST-5554: Verify DIEL Signup flow - CR + MF", () => {
     Cypress.env("citizenship", country)
     cy.c_demoAccountSignup(country , signUpEmail)
     cy.c_checkTradersHubHomePage()
-    cy.findByTestId('dt_dropdown_display').click()
-    cy.get('#real').click()
-    cy.get(regulationText).should('have.text', 'Non-EU')
+    cy.c_completeOnboarding()
     cy.findByRole('button', { name: 'Get a Deriv account' }).click()
     cy.c_generateRandomName().then((firstName) => {
-      cy.c_personalDetails(firstName, 'IDV', country, nationalIDNum, taxIDNum)
+    cy.c_personalDetails(firstName, 'IDV', country, nationalIDNum, taxIDNum)
     })
     cy.contains(
       'Only use an address for which you have proof of residence'

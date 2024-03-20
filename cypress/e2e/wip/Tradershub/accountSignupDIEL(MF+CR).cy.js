@@ -11,14 +11,13 @@ describe("QATEST-6211: Verify DIEL Signup flow - MF + CR", () => {
   let euCurrency = Cypress.env("accountCurrency").GBP
 
   beforeEach(() => {
-    cy.c_setEndpoint(signUpMail)
+    cy.c_setEndpoint(signUpEmail)
   })
   it("Verify I can signup for a DIEL demo and real account", () => {
     Cypress.env("citizenship", Cypress.env("dielCountry"))
     cy.c_demoAccountSignup(country,signUpEmail)
     cy.c_checkTradersHubHomePage()
-    cy.findByTestId('dt_dropdown_display').click()
-    cy.get('#real').click()
+    cy.c_completeOnboarding()
     cy.findByText('EU', { exact: true }).click()
     cy.get(regulationText).should('have.text', 'EU')
     cy.findByRole('button', { name: 'Get a Deriv account' }).click()

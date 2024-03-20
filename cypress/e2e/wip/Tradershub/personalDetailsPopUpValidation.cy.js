@@ -26,3 +26,4 @@ import { generateEpoch } from '../../../support/tradersHub'
       cy.c_checkTradersHubHomePage()
     })
 
+  })

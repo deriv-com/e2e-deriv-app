@@ -63,12 +63,7 @@ Cypress.Commands.add('c_completeOnboarding', () => {
       let next_button_count = 0;
       next_button_count < 5;
       next_button_count++
-    ) {
-      cy.contains('button', 'Next').should('be.visible')
-      cy.contains('button', 'Next').click()
-    }
-    cy.contains('Start trading').should('be.visible')
-    cy.contains('button', 'Start trading').click()
+    )
     cy.contains('Switch accounts').should('be.visible')
     cy.contains('button', 'Next').click()
     if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {

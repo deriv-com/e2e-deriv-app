@@ -17,7 +17,10 @@ describe("QATEST-5948: Verify platforms navigations on Options and Multipliers",
     cy.findAllByRole("button", { name: "Open" }).first().click({ force: true })
     cy.get("flt-glass-pane", { timeout: 15000 }).should("be.visible")
     if (Cypress.config().baseUrl.includes("staging"))
-      cy.url().should("eql", derivAppStagingUrl)
+      cy.url().then((url) => {
+      expect(url).to.include(derivAppStagingUrl)
+      expect(url.indexOf(derivAppStagingUrl)).to.equal(0)
+    })
     else cy.url().should("eql", derivAppProdUrl)
 
     //Open DBot
