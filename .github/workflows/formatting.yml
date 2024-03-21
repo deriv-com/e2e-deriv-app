@@ -17,6 +17,8 @@ jobs:
             repository: deriv-com/e2e-deriv-app
         - name: Get changed files
           uses: tj-actions/changed-files@v43
+          with:
+                since_last_remote_commit: true 
         - name: List changed files
           env:
             ALL_CHANGED_FILES: ${{steps.changed-files.outputs.all_changed_files}}
