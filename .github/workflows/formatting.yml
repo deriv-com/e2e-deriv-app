@@ -1,0 +1,26 @@
+name: 'Check formatting'
+on:
+    pull_request:
+        branches: 'master'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+    prettier:
+        name: Prettier
+        runs-on: ubuntu-latest
+        
+        steps:
+        - name: Checkout repo
+          uses: actions/checkout@v4
+          with:
+            repository: deriv-com/e2e-deriv-app
+        - uses: actions/setup-node@v4
+          with: 
+            node-version: lastest
+        - name: Install Depdendencies
+          run: npm i -D
+        - name: Check formatting
+          run: npx prettier . --check
+
+    
