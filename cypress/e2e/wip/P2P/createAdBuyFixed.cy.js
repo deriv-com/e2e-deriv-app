@@ -3,44 +3,8 @@ import '@testing-library/cypress/add-commands'
 let fixedRate = 1.25
 let minOrder = 5
 let maxOrder = 10
-let fiatCurrency
-let localCurrency
 
-function validateMinMaxField(
-  selector,
-  expectedValue,
-  expectedValidation,
-  totalAmount
-) {
-  cy.findByTestId(selector).type('abc').should('have.value', 'abc')
-  cy.findByText('Only numbers are allowed.').should('be.visible')
-  cy.findByTestId(selector)
-    .clear()
-    .type('123abc')
-    .should('have.value', '123abc')
-  cy.findByText('Only numbers are allowed.').should('be.visible')
-  cy.findByTestId(selector).clear().type('!@#').should('have.value', '!@#')
-  cy.findByText('Only numbers are allowed.').should('be.visible')
-  cy.findByTestId(selector)
-    .clear()
-    .type('1234567890123456')
-    .should('have.value', '123456789012345')
-  cy.findByTestId(selector).clear()
-  cy.findByText(`${expectedValidation} limit is required`).should('be.visible')
-  cy.findByTestId(selector).type(11)
-  cy.findByText(
-    `Amount should not be below ${expectedValidation} limit`
-  ).should('be.visible')
-  cy.findByText(`${expectedValidation} limit should not exceed Amount`).should(
-    'be.visible'
-  )
-  cy.findByTestId(selector)
-    .clear()
-    .type(expectedValue)
-    .should('have.value', expectedValue)
-}
-
-function verifyAdOnMyAdsScreen() {
+function verifyAdOnMyAdsScreen(fiatCurrency, localCurrency) {
   cy.findByText('Active').should('be.visible')
   cy.findByText(`Buy ${fiatCurrency}`).should('be.visible')
   cy.findByText(`${fixedRate} ${localCurrency}`)
@@ -66,19 +30,15 @@ describe('QATEST-2403 - Create a Buy type Advert - Floating Rate', () => {
       .next('span.dc-text')
       .invoke('text')
       .then((fiatCurrency) => {
-        const fiat = fiatCurrency.trim()
-        sessionStorage.setItem('c_fiatCurrency', fiat)
+        sessionStorage.setItem('c_fiatCurrency', fiatCurrency.trim())
       })
     cy.findByTestId('fixed_rate_type')
       .next('span.dc-text')
       .invoke('text')
       .then((localCurrency) => {
-        const local = localCurrency.trim()
-        sessionStorage.setItem('c_localCurrency', local)
+        sessionStorage.setItem('c_localCurrency', localCurrency.trim())
       })
     cy.then(() => {
-      cy.log(sessionStorage.getItem('c_fiatCurrency'))
-      cy.log(sessionStorage.getItem('c_localCurrency'))
       cy.c_verifyAmountFiled()
       cy.c_verifyFixedRate(
         10,
@@ -86,13 +46,16 @@ describe('QATEST-2403 - Create a Buy type Advert - Floating Rate', () => {
         sessionStorage.getItem('c_fiatCurrency'),
         sessionStorage.getItem('c_localCurrency')
       )
-      validateMinMaxField('min_transaction', minOrder, 'Min', 10)
-      validateMinMaxField('max_transaction', maxOrder, 'Max', 10)
+      cy.c_verifyMaxMin('min_transaction', minOrder, 'Min')
+      cy.c_verifyMaxMin('max_transaction', maxOrder, 'Max')
       cy.c_verifyTooltip()
       cy.c_verifyCompletionOrderDropdown()
       cy.c_PaymentMethod()
       cy.c_verifyPostAd()
-      verifyAdOnMyAdsScreen()
+      verifyAdOnMyAdsScreen(
+        sessionStorage.getItem('c_fiatCurrency'),
+        sessionStorage.getItem('c_localCurrency')
+      )
     })
   })
 })
