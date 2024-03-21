@@ -48,16 +48,15 @@ describe('WALL-2858 - Crypto transfer and transactions', () => {
     cy.log("View Transactions of Crypto account")
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     cy.findAllByText(/BTC Wallet/).first().scrollIntoView()
-    cy.findByTestId('dt_wallets_textfield_icon_right').findByRole('button').click();
-    cy.findAllByText('BTC Wallet').first().click();
+    cy.get('.wallets-accordion__dropdown > svg > path').first().click({force: true})
     cy.contains("Transactions").first().click()
-   cy.findByTestId('dt_wallets_textfield_box').click();
-   cy.findByRole("option", { name: "Deposit" }).click()
-   cy.contains("+5.00000000 BTC")
-   cy.findByTestId('dt_wallets_textfield_box').click();
-   cy.findByRole("option", { name: "Withdrawal" }).click()
-   cy.contains("No recent transactions")
-   cy.findByTestId('dt_wallets_textfield_box').click();
+    cy.get("#downshift-0-toggle-button").findByRole("button").click()
+    cy.findByRole("option", { name: "Deposit" }).click()
+    cy.contains("+5.00000000 BTC")
+    cy.get("#downshift-0-toggle-button").findByRole("button").click()
+    cy.findByRole("option", { name: "Withdrawal" }).click()
+    cy.contains("No recent transactions")
+    cy.get("#downshift-0-toggle-button").findByRole("button").click()
     cy.findByRole("option", { name: "Transfer" }).click()
     cy.contains("LTC Wallet")
     cy.contains("ETH Wallet")
