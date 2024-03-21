@@ -25,17 +25,18 @@ jobs:
           env:
             ALL_CHANGED_FILES: ${{steps.changed-files.outputs.all_changed_files}}
           run: | 
-            echo CHANGES = $ALL_CHANGED_FILES >> $GITHUB_ENV
+            echo ${{steps.changed-files.outputs.all_changed_files}}
         #     for file in ${ALL_CHANGED_FILES}; do
         #       echo "$file was changed"
+        # echo CHANGES = $ALL_CHANGED_FILES >> $GITHUB_ENV
         #     done
         # - uses: actions/setup-node@v4
         #   with: 
         #     node-version: latest
-        - name: Install Depdendencies
-          run: npm i -D
-        - name: Check formatting
-          run: npx prettier 'cypress/e2e/wip/Tradershub/justatest.cy.js' --check
+        # - name: Install Depdendencies
+        #   run: npm i -D
+        # - name: Check formatting
+        #   run: npx prettier 'cypress/e2e/wip/Tradershub/justatest.cy.js' --check
         # - name: Prettify code
         #   uses: creyD/prettier_action@v4.3
         #   with:
