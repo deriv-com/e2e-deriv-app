@@ -5,4 +5,4 @@
         "cypress_template/**/*.js",
         "cypress_template/**/**/*.js"
     ]
-}
+} 

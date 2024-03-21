@@ -1,18 +1,18 @@
 import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/tradersHub'
 
-describe("QATEST-5569: Verify MF Signup flow", () => {
+describe('QATEST-5569: Verify MF Signup flow', () => {
   const signUpEmail = `sanity${generateEpoch()}mf@deriv.com`
-  let country = Cypress.env("countries").ES
-  let nationalIDNum = Cypress.env("nationalIDNum").ES
-  let taxIDNum = Cypress.env("taxIDNum").ES
-  let currency = Cypress.env("accountCurrency").GBP
+  let country = Cypress.env('countries').ES
+  let nationalIDNum = Cypress.env('nationalIDNum').ES
+  let taxIDNum = Cypress.env('taxIDNum').ES
+  let currency = Cypress.env('accountCurrency').GBP
 
   beforeEach(() => {
     cy.c_setEndpoint(signUpEmail)
   })
-  it("Verify I can signup for an MF demo and real account", () => {
-    cy.c_demoAccountSignup(country,signUpEmail)
+  it('Verify I can signup for an MF demo and real account', () => {
+    cy.c_demoAccountSignup(country, signUpEmail)
     cy.c_generateRandomName().then((firstName) => {
       cy.c_personalDetails(
         firstName,

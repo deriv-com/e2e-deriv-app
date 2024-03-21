@@ -1,25 +1,25 @@
-import { FILEPATH } from "../constants"
+import { FILEPATH } from '../constants'
 class BotDashboard {
   get dashboardTab() {
-    return cy.get("#id-dbot-dashboard", { timeout: 5000 }).contains("Dashboard")
+    return cy.get('#id-dbot-dashboard', { timeout: 5000 }).contains('Dashboard')
   }
 
   get fileInput() {
-    return cy.get(".tab__dashboard__table input[type=file]")
+    return cy.get('.tab__dashboard__table input[type=file]')
   }
 
   get openStrategyButton() {
-    return cy.get("button.load-strategy__button-group--open")
+    return cy.get('button.load-strategy__button-group--open')
   }
 
   get deleteStrategyButton() {
     return cy
-      .get("div.bot-list__item__actions__action-item", { timeout: 5000 })
+      .get('div.bot-list__item__actions__action-item', { timeout: 5000 })
       .last()
   }
 
   get deleteModalConfirm() {
-    return cy.get("button span").contains("Yes, delete")
+    return cy.get('button span').contains('Yes, delete')
   }
 
   strategySaveStatus(strategyName) {
@@ -35,11 +35,11 @@ class BotDashboard {
   }
 
   get botBuilderDash() {
-    return cy.get("#IcBotBuilder")
+    return cy.get('#IcBotBuilder')
   }
 
   get quickStrategyDash() {
-    return cy.get("#IcQuickStrategy")
+    return cy.get('#IcQuickStrategy')
   }
 
   /**
@@ -67,11 +67,11 @@ class BotDashboard {
   }
 
   openBotBuilderQaction = () => {
-    this.botBuilderDash.should("be.visible").click()
+    this.botBuilderDash.should('be.visible').click()
   }
 
   openQsQaction = () => {
-    this.quickStrategyDash.should("be.visible").click()
+    this.quickStrategyDash.should('be.visible').click()
   }
 }
 
