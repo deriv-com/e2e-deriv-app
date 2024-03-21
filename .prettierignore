@@ -6,3 +6,5 @@ screenshots
 cypress/downloads
 *.config.js
 *.json
+*.yml
+*.md

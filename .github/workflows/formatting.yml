@@ -15,25 +15,25 @@ jobs:
           uses: actions/checkout@v4
           with:
             repository: deriv-com/e2e-deriv-app
-        - name: Get changed files
-          uses: tj-actions/changed-files@v43
-          with:
-                since_last_remote_commit: true 
-        - name: List changed files
-          env:
-            ALL_CHANGED_FILES: ${{steps.changed-files.outputs.all_changed_files}}
-          run: | 
-            echo CHANGES = $ALL_CHANGED_FILES >> $GITHUB_ENV
-            for file in ${ALL_CHANGED_FILES}; do
-              echo "$file was changed"
-            done
+        # - name: Get changed files
+        #   uses: tj-actions/changed-files@v43
+        #   with:
+        #         since_last_remote_commit: true 
+        # - name: List changed files
+        #   env:
+        #     ALL_CHANGED_FILES: ${{steps.changed-files.outputs.all_changed_files}}
+        #   run: | 
+        #     echo CHANGES = $ALL_CHANGED_FILES >> $GITHUB_ENV
+        #     for file in ${ALL_CHANGED_FILES}; do
+        #       echo "$file was changed"
+        #     done
         - uses: actions/setup-node@v4
           with: 
             node-version: latest
         - name: Install Depdendencies
           run: npm i -D
         - name: Check formatting
-          run: npx prettier --check "${{steps.changed-files.outputs.all_changed_files}}"
+          run: npx prettier --check $(git diff --name-only --diff-filter d | grep '.js$' | xargs)
 
 
     
