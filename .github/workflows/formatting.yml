@@ -9,6 +9,8 @@ jobs:
     prettier:
         name: Prettier
         runs-on: ubuntu-latest
+        permissions:
+          pull-requests: read
         
         steps:
         - name: Checkout
