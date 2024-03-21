@@ -4,4 +4,4 @@
         "cypress/**/*.js",
         "cypress/**/**/*.js"
     ]
-}
+} 
