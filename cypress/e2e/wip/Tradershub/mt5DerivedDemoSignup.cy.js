@@ -1,14 +1,14 @@
 import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/tradersHub'
 
-describe("QATEST-5695: Create a Derived Demo CFD account", () => {
+describe('QATEST-5695: Create a Derived Demo CFD account', () => {
   const signUpEmail = `sanity${generateEpoch()}mt5deriveddemo@deriv.com`
-  let country = Cypress.env("countries").CO
+  let country = Cypress.env('countries').CO
 
   beforeEach(() => {
     cy.c_setEndpoint(signUpEmail)
   })
-  it("Verify I can signup for a demo derived CFD account", () => {
+  it('Verify I can signup for a demo derived CFD account', () => {
     cy.c_demoAccountSignup(country, signUpEmail)
     cy.c_checkTradersHubHomePage()
     cy.findAllByRole('button', { name: 'Get' }).first().click()

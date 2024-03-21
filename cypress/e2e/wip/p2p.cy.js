@@ -7,15 +7,10 @@ describe('QATEST-9999 - <Clickup description here>', () => {
   })
 
   it('should be able to ...', () => {
-
     cy.log('Tests to go here!')
-  
   })
 
   it('should be able to ...', () => {
-
     cy.log('Tests to go here!')
-  
   })
-
 })
