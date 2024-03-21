@@ -17,7 +17,7 @@ jobs:
             repository: deriv-com/e2e-deriv-app
         - uses: actions/setup-node@v4
           with: 
-            node-version: lastest
+            node-version: latest
         - name: Install Depdendencies
           run: npm i -D
         - name: Check formatting
