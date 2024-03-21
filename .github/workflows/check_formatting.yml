@@ -22,15 +22,10 @@ jobs:
         - name: Get changed files
           id: changed-files
           uses: tj-actions/changed-files@v43
-        - name: List changed files
-          env:
-            ALL_CHANGED_FILES: ${{steps.changed-files.outputs.all_changed_files}}
-          run: | 
-             echo CHANGES = $ALL_CHANGED_FILES >> $GITHUB_ENV
         - name: Install Depdendencies
           run: npm i -D
         - name: Check formatting
-          run: npx prettier ${{env.CHANGES}} --check
+          run: npx prettier ${{steps.changed-files.outputs.all_changed_files}} --check
 
 
     
