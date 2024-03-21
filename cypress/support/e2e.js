@@ -3,10 +3,9 @@ import './dtrader'
 import './p2p'
 import './kyc'
 import './tradersHub'
-import {getLoginToken, getOAuthUrl, getWalletOAuthUrl} from './common' 
+import { getLoginToken, getOAuthUrl, getWalletOAuthUrl } from './common'
 
 require('cypress-xpath')
-
 
 Cypress.prevAppId = 0
 
@@ -130,7 +129,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
   cy.document().then((doc) => {
     const launchModal = doc.querySelector('[data-test-id="launch-modal"]')
 
-    if(launchModal){
+    if (launchModal) {
       cy.findByRole('button', { name: 'Ok' }).click()
     }
   })
@@ -329,51 +328,62 @@ Cypress.Commands.add('c_selectDemoAccount', () => {
   cy.findByTestId('dt_acc_info').should('be.visible')
 })
 
-Cypress.Commands.add("c_emailVerification", (requestType,accountEmail , options={}) => {
-  let {
-     retryCount = 0, 
-     maxRetries = 3,
-     baseUrl = Cypress.env("qaBoxBaseUrl")
-  } = options
-  cy.visit(
-    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
-      "qaBoxLoginPassword"
-    )}@${baseUrl}`
-  )
-  const sentArgs = { requestType, accountEmail}
-  cy.origin(
-    `https://${Cypress.env("qaBoxLoginEmail")}:${Cypress.env(
-      "qaBoxLoginPassword"
-    )}@${baseUrl}`,{args: [requestType, accountEmail]}, ([requestType, accountEmail]) => {
-    cy.document().then((doc) => {
-      const allRelatedEmails = Array.from(doc.querySelectorAll(`a[href*="${requestType}"]`))
-      if (allRelatedEmails.length) {
-            const verificationEmail = allRelatedEmails.pop()          
+Cypress.Commands.add(
+  'c_emailVerification',
+  (requestType, accountEmail, options = {}) => {
+    let {
+      retryCount = 0,
+      maxRetries = 3,
+      baseUrl = Cypress.env('qaBoxBaseUrl'),
+    } = options
+    cy.visit(
+      `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
+        'qaBoxLoginPassword'
+      )}@${baseUrl}`
+    )
+    const sentArgs = { requestType, accountEmail }
+    cy.origin(
+      `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
+        'qaBoxLoginPassword'
+      )}@${baseUrl}`,
+      { args: [requestType, accountEmail] },
+      ([requestType, accountEmail]) => {
+        cy.document().then((doc) => {
+          const allRelatedEmails = Array.from(
+            doc.querySelectorAll(`a[href*="${requestType}"]`)
+          )
+          if (allRelatedEmails.length) {
+            const verificationEmail = allRelatedEmails.pop()
             cy.wrap(verificationEmail).click()
             cy.contains('p', `${accountEmail}`).should('be.visible')
-            cy.contains('a',Cypress.config('baseUrl')).invoke('attr', 'href').then((href) => {
-              if (href) {
-                Cypress.env("verificationUrl", href)
-                const code = href.match(/code=([A-Za-z0-9]{8})/)
-                verification_code = code[1]
-                Cypress.env("walletsWithdrawalCode",  verification_code)
-                cy.log('Verification link found')
-              } else {
-                cy.log('Verification link not found')
-              }
-          })
+            cy.contains('a', Cypress.config('baseUrl'))
+              .invoke('attr', 'href')
+              .then((href) => {
+                if (href) {
+                  Cypress.env('verificationUrl', href)
+                  const code = href.match(/code=([A-Za-z0-9]{8})/)
+                  verification_code = code[1]
+                  Cypress.env('walletsWithdrawalCode', verification_code)
+                  cy.log('Verification link found')
+                } else {
+                  cy.log('Verification link not found')
+                }
+              })
           } else {
             cy.log('email not found')
           }
         })
-      })
+      }
+    )
     cy.then(() => {
       //Retry finding email after 1 second interval
-      if (retryCount <= maxRetries && !Cypress.env("verificationUrl")) {
+      if (retryCount <= maxRetries && !Cypress.env('verificationUrl')) {
         cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
         cy.wait(1000)
-        cy.c_emailVerification(requestType,accountEmail, {retryCount: ++retryCount})
-      } 
+        cy.c_emailVerification(requestType, accountEmail, {
+          retryCount: ++retryCount,
+        })
+      }
       if (retryCount > maxRetries) {
         throw new Error(
           `Signup URL extraction failed after ${maxRetries} attempts.`
