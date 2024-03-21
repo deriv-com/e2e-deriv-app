@@ -2,6 +2,7 @@ import '@testing-library/cypress/add-commands'
 import cryptoconfig from '/Users/vimalanrajakumar/e2e-deriv-app/cypress/e2e/wip/Crypto/Pageobject/common.js'
 
 const addcryptoaccount = (crypto, code) => {
+  cy.c_closeNotificationHeader()
   cryptoconfig.elements.currencyswitcher().should('be.visible').click()
   cryptoconfig.elements.manageaccount().should('be.visible').click()
   cy.get('.add-crypto-currency').then(($parent) => {
@@ -29,8 +30,6 @@ describe('QATEST-707 - Create crypto account', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
   })
   it('should be able to create crypto account from Traders Hub.', () => {
-    cy.wait(1000)
-    cy.c_closeNotificationHeader()
     const cryptocurrencies = ["Bitcoin", "Ethereum", "Litecoin", "Tether TRC20", "USD Coin"]
     const currency_code = ["BTC", "ETH", "LTC", "tUSDT", "USDC"]
     // loop to make sure it check for all available currency
