@@ -30,6 +30,7 @@ describe('QATEST-707 - Create crypto account', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
   })
   it('should be able to create crypto account from Traders Hub.', () => {
+    cy.get('.notification__text-body')
     const cryptocurrencies = ["Bitcoin", "Ethereum", "Litecoin", "Tether TRC20", "USD Coin"]
     const currency_code = ["BTC", "ETH", "LTC", "tUSDT", "USDC"]
     // loop to make sure it check for all available currency
