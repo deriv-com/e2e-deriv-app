@@ -1,8 +1,6 @@
 import '@testing-library/cypress/add-commands'
+import { generateEpoch } from '../../support/helper/utility'
 
-function generate_epoch() {
-  return Math.floor(new Date().getTime() / 100000)
-}
 function createDemoAccount(CoR, Cit, epoch) {
   cy.c_emailVerification(
     'account_opening_new.html',
