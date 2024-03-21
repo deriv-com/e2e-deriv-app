@@ -24,7 +24,7 @@ function crypto_transfer(to_account) {
 describe('WALL-2858 - Crypto transfer and transactions', () => {
   //Prerequisites: Crypto wallet account in any qa box with 1.00000000 BTC balance and USD, ETH and LTC wallets
   beforeEach(() => {
-    cy.c_login('wallets')
+    cy.c_login({ app: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')
   })
 
