@@ -8,3 +8,4 @@ cypress/downloads
 *.yml
 *.md
 .prettierignore
+.prettierrc
