@@ -51,7 +51,7 @@ class FundTransferPageObjects{
                         exact: true,
                 }).should("be.visible")
                 cy.get(locators.fundTransferLocators.closeButton).should('be.visible').contains('Close').click()
-                cy.wait(2000)
+                cy.wait(300)
                 cy.get(locators.fundTransferLocators.mt5AccountHandle)
                     .contains(mt5Account.split(" ")[0])
                     .next()
@@ -71,7 +71,7 @@ class FundTransferPageObjects{
                         exact: true,
                 }).should("be.visible")
                 cy.get(locators.fundTransferLocators.closeButton).should('be.visible').contains('Close').click()
-                cy.wait(2000)
+                cy.wait(300)
                 cy.get(locators.fundTransferLocators.mt5AccountHandle)
                     .contains(mt5Account.split(" ")[0])
                     .next()
@@ -83,7 +83,7 @@ class FundTransferPageObjects{
                         expect(mt5BalanceAfter).to.eq(mt5BalanceBefore+parseFloat(convertedAmount))
                     })           
                                     
-                }) 
+                })
             }
             
             })
@@ -144,7 +144,7 @@ class FundTransferPageObjects{
                         exact: true,
                 }).should("be.visible")
                 cy.get(locators.fundTransferLocators.closeButton).should('be.visible').contains('Close').click()
-                cy.wait(2000)
+                cy.wait(300)
                 cy.get(locators.fundTransferLocators.mt5AccountHandle)
                     .contains(mt5Account.split(" ")[0])
                     .next()
@@ -174,7 +174,7 @@ class FundTransferPageObjects{
                     exact: true,
                 }).should("be.visible")
                 cy.get(locators.fundTransferLocators.closeButton).should('be.visible').contains('Close').click()
-                cy.wait(2000)
+                cy.wait(300)
                 cy.get(locators.fundTransferLocators.mt5AccountHandle)
                 .contains(mt5Account.split(" ")[0])
                 .next()
