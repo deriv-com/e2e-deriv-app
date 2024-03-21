@@ -1,12 +1,13 @@
-import "@testing-library/cypress/add-commands";
+import '@testing-library/cypress/add-commands'
 
 function clickAddDerivxButton() {
-    cy.get('.wallets-other-cfd__content > .wallets-trading-account-card > .wallets-trading-account-card__content > .wallets-button').click()
+  cy.get(
+    '.wallets-other-cfd__content > .wallets-trading-account-card > .wallets-trading-account-card__content > .wallets-button'
+  ).click()
 }
 
-
 function verifyDerixCreation(accountType) {
-  let expectedText;
+  let expectedText
   if (accountType === 'Real') {
     expectedText = 'Create a Deriv X password'
     cy.get('div').contains(expectedText).should("be.visible");
@@ -21,16 +22,17 @@ function verifyDerixCreation(accountType) {
 }
 
 function verifyTransferFundsMessage(accountType) {
-    if (accountType === 'Real'){
-        cy.findByText('Your Deriv X account is ready').should("be.visible");
-        cy.findByRole('button', { name: 'Maybe later' }).should('exist');
-        cy.findByRole('button', { name: 'Transfer funds' }).should('exist');
-        cy.findByRole('button', { name: 'Maybe later' }).click();
-    }
-    else{
-      cy.contains('div', 'Your Deriv X demo account is readyLet\'s').should('be.visible')
-      cy.findByRole('button', { name: 'OK' }).click()
-    }
+  if (accountType === 'Real') {
+    cy.findByText('Your Deriv X account is ready').should('be.visible')
+    cy.findByRole('button', { name: 'Maybe later' }).should('exist')
+    cy.findByRole('button', { name: 'Transfer funds' }).should('exist')
+    cy.findByRole('button', { name: 'Maybe later' }).click()
+  } else {
+    cy.contains('div', "Your Deriv X demo account is readyLet's").should(
+      'be.visible'
+    )
+    cy.findByRole('button', { name: 'OK' }).click()
+  }
 }
 
 function expandDemoWallet(){
@@ -39,22 +41,21 @@ function expandDemoWallet(){
   cy.contains("USD Demo Wallet").should("be.visible")
 }
 
-describe("WALL-3252 - Add derivx account", () => {
-  
+describe('WALL-3252 - Add derivx account', () => {
   beforeEach(() => {
-    cy.c_login("wallets");
-    cy.c_visitResponsive("/wallets", "large");
-  });
+    cy.c_login({ app: 'wallets' })
+    cy.c_visitResponsive('/wallets', 'large')
+  })
 
-  it("should be able to add DerivX USD account", () => {
-    cy.log("add derivx account");
+  it('should be able to add DerivX USD account', () => {
+    cy.log('add derivx account')
     cy.findByRole('heading', { name: 'Other CFD Platforms' }).should('exist')
-    clickAddDerivxButton();
-    verifyDerixCreation('Real');
-    verifyTransferFundsMessage('Real');
+    clickAddDerivxButton()
+    verifyDerixCreation('Real')
+    verifyTransferFundsMessage('Real')
     expandDemoWallet()
-    clickAddDerivxButton();
-    verifyDerixCreation('Demo');
-    verifyTransferFundsMessage('Demo');
-  });
-});
+    clickAddDerivxButton()
+    verifyDerixCreation('Demo')
+    verifyTransferFundsMessage('Demo')
+  })
+})
