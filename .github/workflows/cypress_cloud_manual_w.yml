@@ -71,3 +71,7 @@ jobs:
           E2E_MAIN_QABOX_URL: ${{ secrets.E2E_MAIN_QABOX_URL }}
           E2E_QABOX_LOGIN: ${{ secrets.E2E_QABOX_LOGIN }}
           E2E_QABOX_PASSWORD: ${{ secrets.E2E_QABOX_PASSWORD }}
+          E2E_DIEL_LOGIN: ${{ secrets.E2E_DIEL_LOGIN }}
+          E2E_DIEL_PASSWORD: ${{ secrets.E2E_DIEL_PASSWORD }}
+          E2E_EU_LOGIN: ${{ secrets.E2E_EU_LOGIN }}
+          E2E_EU_PASSWORD: ${{ secrets.E2E_EU_PASSWORD }}
