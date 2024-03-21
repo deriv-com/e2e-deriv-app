@@ -27,7 +27,7 @@ jobs:
         - name: Install Depdendencies
           run: npm i -D
         - name: Check formatting
-          run: npx prettier --check ${{steps.changed-files.outputs.all_changed_files}}
+          run: npx prettier --check "${{steps.changed-files.outputs.all_changed_files}}"
 
 
     
