@@ -48,7 +48,7 @@ describe("WALL-3252 - Add derivx account", () => {
 
   it("should be able to add DerivX USD account", () => {
     cy.log("add derivx account");
-    cy.findByRole('heading', { name: 'Other CFD Platforms' }).should('exist')
+    cy.findByText('CFDs', { exact: true })
     clickAddDerivxButton();
     verifyDerixCreation('Real');
     verifyTransferFundsMessage('Real');
