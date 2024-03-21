@@ -108,16 +108,14 @@ Cypress.Commands.add('c_login', (options = {}) => {
       loginEmail,
       loginPassword
     )
-  } 
-  else if (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') {
+  } else if (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') {
     getWalletOAuthUrl((oAuthUrl) => {
-    cy.log('came inside wallet getOauth')
-    Cypress.env('oAuthUrl', oAuthUrl)
-    cy.log('getOAuthUrlWallet - value after: ' + Cypress.env('oAuthUrl'))
-    cy.c_doOAuthLogin(app)
-  })
-}
-  else {
+      cy.log('came inside wallet getOauth')
+      Cypress.env('oAuthUrl', oAuthUrl)
+      cy.log('getOAuthUrlWallet - value after: ' + Cypress.env('oAuthUrl'))
+      cy.c_doOAuthLogin(app)
+    })
+  } else {
     cy.c_doOAuthLogin(app)
   }
 })
@@ -273,7 +271,7 @@ Cypress.Commands.add('c_rateLimit', () => {
 })
 
 Cypress.Commands.add('c_transferLimit', (transferMessage) => {
-  cy.get('.wallets-cashier-content', { timeout: 10000 })
+  cy.get('.wallets-cashier-content', { timeout: 20000 })
     // IF ADDED ONLY IF CONDITION WORKS, IF REMOVED ONLY ELSE CONDITION WORKS
     // .contains(
     //   `You can only perform up to 10 transfers a day. Please try again tomorrow.` ||
