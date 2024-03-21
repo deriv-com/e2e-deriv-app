@@ -3,7 +3,7 @@ export function getLoginToken(callback) {
     method: 'POST',
     url: 'https://' + Cypress.env('configServer') + '/oauth2/api/v1/verify',
     headers: {
-      Origin: 'https://oauth.deriv.com',
+      'Origin': 'https://oauth.deriv.com',
       'Content-Type': 'application/json',
     },
     body: {
@@ -42,7 +42,7 @@ export function getLoginToken(callback) {
         method: 'POST',
         url: 'https://' + Cypress.env('configServer') + '/oauth2/api/v1/login',
         headers: {
-          Authorization: 'Bearer ' + bearerToken,
+          'Authorization': 'Bearer ' + bearerToken,
           'Content-Type': 'application/json',
         },
         body: {
@@ -63,32 +63,20 @@ export function getLoginToken(callback) {
   })
 }
 
-export function getOAuthUrl(callback) {
+export function getOAuthUrl(callback, loginEmail, loginPassword) {
   const URL =
     'https://' +
     Cypress.env('configServer') +
     '/oauth2/authorize?app_id=' +
     Cypress.env('configAppId') +
     '&l=en&brand=deriv&date_first_contact='
-  let loginEmail
-  let loginPassword
-  /* User production credentials if base url is production
-  Else use test credentials */
-  if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
-    loginEmail = Cypress.env('loginEmailProd')
-    loginPassword = Cypress.env('loginPasswordProd')
-  } else {
-    loginEmail = Cypress.env('loginEmail')
-    loginPassword = Cypress.env('loginPassword')
-  }
-
   // Step 1: Perform a GET on the OAuth Url in order to generate a CSRF token.
   cy.request({
     method: 'GET',
     url: URL,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      Origin: 'https://oauth.deriv.com',
+      'Origin': 'https://oauth.deriv.com',
     },
   }).then((response) => {
     // Step 2: Extract CSRF token and set-cookie value from the response
@@ -111,9 +99,9 @@ export function getOAuthUrl(callback) {
       },
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        Origin: 'https://oauth.deriv.com',
-        Cookie: cookie,
-        csrf_token: csrfToken,
+        'Origin': 'https://oauth.deriv.com',
+        'Cookie': cookie,
+        'csrf_token': csrfToken,
       },
     }
 
@@ -187,7 +175,7 @@ Else use test credentials */
       '&l=en&brand=deriv&date_first_contact=',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      Origin: 'https://oauth.deriv.com',
+      'Origin': 'https://oauth.deriv.com',
     },
   }).then((response) => {
     // Step 2: Extract CSRF token and set-cookie value from the response
@@ -217,9 +205,9 @@ Else use test credentials */
       },
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        Origin: 'https://oauth.deriv.com',
-        Cookie: cookie,
-        csrf_token: csrfToken,
+        'Origin': 'https://oauth.deriv.com',
+        'Cookie': cookie,
+        'csrf_token': csrfToken,
       },
     }).then((response) => {
       const oAuthUrl = response.headers['location']

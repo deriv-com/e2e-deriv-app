@@ -4,7 +4,7 @@ const { getOAuthLogin } = require('../../support/common')
 describe('Get oAuthUrl', () => {
   beforeEach(() => {
     cy.log('<E2EOAuthUrl - beforeEach>' + Cypress.env('oAuthUrl'))
-    cy.c_login('')
+    cy.c_login()
   })
 
   it('should get the oauth url from API', () => {
