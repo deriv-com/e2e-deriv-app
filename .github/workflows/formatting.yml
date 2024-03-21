@@ -39,7 +39,7 @@ jobs:
         - name: Install Depdendencies
           run: npm i -D
         - name: Check formatting
-          run: npx prettier ${{env.ALL_CHANGED_FILES}} --check
+          run: npx prettier ${{steps.changed-files.outputs.all_changed_files}} --check
         # - name: Prettify code
         #   uses: creyD/prettier_action@v4.3
         #   with:
