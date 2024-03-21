@@ -17,10 +17,11 @@ jobs:
             repository: deriv-com/e2e-deriv-app
         - name: Get changed files
           uses: tj-actions/changed-files@v43
+        - name: List changed files
           env:
             ALL_CHANGED_FILES: ${{steps.changed-files.outputs.all_changed_files}}
-        #   run: | 
-        #     echo CHANGES = $ALL_CHANGED_FILES >> $GITHUB_ENV
+          run: | 
+            echo CHANGES = $ALL_CHANGED_FILES >> $GITHUB_ENV
         - uses: actions/setup-node@v4
           with: 
             node-version: latest
