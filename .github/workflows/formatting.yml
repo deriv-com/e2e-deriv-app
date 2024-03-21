@@ -17,15 +17,15 @@ jobs:
             repository: deriv-com/e2e-deriv-app
             ref: ${{ github.head_ref }}
             fetch-depth: 0
-        # - name: Get changed files
-        #   uses: tj-actions/changed-files@v43
-        #   with:
-        #         since_last_remote_commit: true 
-        # - name: List changed files
-        #   env:
-        #     ALL_CHANGED_FILES: ${{steps.changed-files.outputs.all_changed_files}}
-        #   run: | 
-        #     echo CHANGES = $ALL_CHANGED_FILES >> $GITHUB_ENV
+        - name: Get changed files
+          uses: tj-actions/changed-files@v43
+          with:
+                since_last_remote_commit: true 
+        - name: List changed files
+          env:
+            ALL_CHANGED_FILES: ${{steps.changed-files.outputs.all_changed_files}}
+          run: | 
+            echo CHANGES = $ALL_CHANGED_FILES >> $GITHUB_ENV
         #     for file in ${ALL_CHANGED_FILES}; do
         #       echo "$file was changed"
         #     done
@@ -35,7 +35,7 @@ jobs:
         - name: Install Depdendencies
           run: npm i -D
         - name: Check formatting
-          run: npx prettier . --check
+          run: npx prettier ${{env.CHANGES}} --check
         # - name: Prettify code
         #   uses: creyD/prettier_action@v4.3
         #   with:
