@@ -12,7 +12,6 @@ Cypress.prevAppId = 0
 
 Cypress.Commands.add('c_visitResponsive', (path, size) => {
   //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
-  const felink = Cypress.env('FELINK');
   cy.log(path)
   if (size === undefined) size = Cypress.env('viewPortSize')
 

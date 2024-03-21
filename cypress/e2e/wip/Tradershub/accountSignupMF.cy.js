@@ -11,7 +11,7 @@ describe("QATEST-5569: Verify MF Signup flow", () => {
   beforeEach(() => {
     cy.c_setEndpoint(signUpEmail)
   })
-  it("Verify I can signup for an MF demo and real account", () => {
+  it("Verify I can signup for an MF demo and real accoun - testing", () => {
     cy.c_demoAccountSignup(country,signUpEmail)
     cy.c_generateRandomName().then((firstName) => {
       cy.c_personalDetails(
