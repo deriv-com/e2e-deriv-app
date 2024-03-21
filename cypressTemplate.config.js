@@ -53,7 +53,6 @@ module.exports = defineConfig({
     oAuthToken: process.env.E2E_OAUTH_TOKEN,
     doughflowOAuthUrl: process.env.E2E_DOUGHFLOW_OAUTH_URL,
     doughflowOAuthToken: process.env.E2E_DOUGHFLOW_OAUTH_TOKEN,
-    walletsWithdrawalUrl: process.env.E2E_WALLETS_WITHDRAWAL_URL,
     walletsWithdrawalCode: process.env.E2E_WALLETS_WITHDRAWAL_CODE,
     HMACKey: process.env.E2E_HMAC_KEY,
     username_cr_unauthenticated: process.env.E2E_USENAME_BOT,

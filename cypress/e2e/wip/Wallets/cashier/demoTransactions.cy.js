@@ -1,11 +1,14 @@
 import "@testing-library/cypress/add-commands"
 
 function reset_balance_demo() {
-  cy.findByText("Demo").scrollIntoView()
-  cy.get('[class*="virtual"].wallets-accordion__header--virtual')
-    .find(".wallets-accordion__dropdown > svg")
-    .click()
-  cy.get('[class*="virtual"].wallets-accordion__header--virtual').contains('Reset balance').click()
+  cy.get(".wallets-dropdown__button").click()
+  cy.findByText("USD Demo Wallet").scrollIntoView()
+  cy.get(".wallets-list-card-dropdown__item-content").contains("USD Demo Wallet").click()
+  cy.get(".wallets-list-details__content").within(()=>{
+    cy.contains("USD").should("be.visible")
+  })
+  cy.contains("Reset balance").should("be.visible")
+  cy.contains("Reset balance").click()
   cy.get('[class="wallets-cashier-content"]')
     .findByRole("button", { name: "Reset balance" })
     .click()
@@ -57,10 +60,10 @@ describe("WALL-2760 - Transfer and check transactions for Demo wallet", () => {
     cy.contains("Wallet", { timeout: 10000 }).should("exist")
     reset_balance_demo()
     cy.findByRole('button', { name: 'Transactions' }).click()
-    cy.get("#downshift-0-toggle-button").findByRole("button").click()
+    cy.findByTestId('dt_wallets_textfield_icon_right').findByRole('button').click()
     cy.findByRole("option", { name: "Reset balance" }).click()
     cy.contains("+10,000.00 USD")
-    cy.get("[class=wallets-textfield__box").click()
+    cy.findByTestId('dt_wallets_textfield_icon_right').findByRole('button').click()
     cy.findByRole("option", { name: "Transfer" }).click()
     cy.contains("-10.00 USD")
   })
