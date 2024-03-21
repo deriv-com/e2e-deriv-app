@@ -25,7 +25,7 @@ export function getLoginToken(callback) {
       url:
         'https://' + Cypress.env('configServer') + '/oauth2/api/v1/authorize',
       headers: {
-        Origin: 'https://oauth.deriv.com',
+        'Origin': 'https://oauth.deriv.com',
         'Content-Type': 'application/json',
       },
       body: {
@@ -38,6 +38,30 @@ export function getLoginToken(callback) {
       cy.log('<bearer token>' + bearerToken)
       expect(response.status).to.eq(200)
 
+      cy.request({
+        method: 'POST',
+        url: 'https://' + Cypress.env('configServer') + '/oauth2/api/v1/login',
+        headers: {
+          'Authorization': 'Bearer ' + bearerToken,
+          'Content-Type': 'application/json',
+        },
+        body: {
+          app_id: Cypress.env('configAppId'),
+          type: 'system',
+          email: Cypress.env('loginEmail'),
+          password: Cypress.env('loginPassword'),
+        },
+      }).then((response) => {
+        const token = response.body.tokens[0].token
+        cy.log('<login token>' + token)
+
+        callback(token)
+
+        expect(response.status).to.eq(200)
+      })
+    })
+  })
+}
       cy.request({
         method: 'POST',
         url: 'https://' + Cypress.env('configServer') + '/oauth2/api/v1/login',
