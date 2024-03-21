@@ -108,16 +108,14 @@ Cypress.Commands.add('c_login', (options = {}) => {
       loginEmail,
       loginPassword
     )
-  } 
-  else if (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') {
+  } else if (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') {
     getWalletOAuthUrl((oAuthUrl) => {
-    cy.log('came inside wallet getOauth')
-    Cypress.env('oAuthUrl', oAuthUrl)
-    cy.log('getOAuthUrlWallet - value after: ' + Cypress.env('oAuthUrl'))
-    cy.c_doOAuthLogin(app)
-  })
-}
-  else {
+      cy.log('came inside wallet getOauth')
+      Cypress.env('oAuthUrl', oAuthUrl)
+      cy.log('getOAuthUrlWallet - value after: ' + Cypress.env('oAuthUrl'))
+      cy.c_doOAuthLogin(app)
+    })
+  } else {
     cy.c_doOAuthLogin(app)
   }
 })
