@@ -1,17 +1,7 @@
 import '@testing-library/cypress/add-commands';
 import cryptoconfig from '/Users/vimalanrajakumar/e2e-deriv-app/cypress/e2e/wip/Crypto/Pageobject/common.js';
 
-Cypress.Commands.add("closenotificationbanner", () => {
-  cy.get('body').then(($body) => {
-    if ($body.find('.notification--warning').length) {
-      cy.get('.notification--warning')
-        .should('exist')
-        .each(($element) => {
-          cy.wrap($element).find('.notification__close-button').should('be.visible').click({ force: true });
-        });
-    }
-  });
-});
+
 
 describe('QATEST-707 - Create crypto account', () => {
   beforeEach(() => {
@@ -27,10 +17,10 @@ describe('QATEST-707 - Create crypto account', () => {
         // Element is disabled
         cy.log(`${code} input element is disabled.`);
         cy.get('.dc-modal-header__close').click();
-        cy.closenotificationbanner();
+        cy.c_closeNotificationHeader()
       } else {
         // Element is not disabled
-        cy.closenotificationbanner();
+        cy.c_closeNotificationHeader()
         cy.findByText(crypto).click();
         cryptoconfig.elements.cryptoaddaccount().should('be.visible').click();
         cy.findByText('Success!')
@@ -40,7 +30,7 @@ describe('QATEST-707 - Create crypto account', () => {
     return crypto;
   };
   it('should be able to create crypto account from Traders Hub.', () => {
-    cy.wait(1000).closenotificationbanner();
+    cy.c_closeNotificationHeader()
     const cryptocurrencies = ["Bitcoin", "Ethereum", "Litecoin", "Tether TRC20", "USD Coin"];
     const currency_code = ["BTC", "ETH", "LTC", "tUSDT", "USDC"];
     // loop to make sure it check for all available currency
