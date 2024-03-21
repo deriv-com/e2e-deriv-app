@@ -12,6 +12,7 @@ Cypress.prevAppId = 0
 
 Cypress.Commands.add('c_visitResponsive', (path, size) => {
   //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
+  const felink = Cypress.env('FELINK');
   cy.log(path)
   if (size === undefined) size = Cypress.env('viewPortSize')
 
@@ -366,7 +367,8 @@ Cypress.Commands.add("c_emailVerification", (requestType,accountEmail , options=
 Cypress.Commands.add('c_setEndpoint', (signUpMail) => {
   localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
   localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
-  cy.c_visitResponsive('/endpoint', 'desktop')
+  const baseURL = Cypress.env('CYPRESS_BASE_URL') 
+  cy.c_visitResponsive(baseURL+'/endpoint', 'desktop')
   cy.findByRole('button', { name: 'Sign up' }).should('not.be.disabled')
   cy.c_enterValidEmail(signUpMail)
 })
