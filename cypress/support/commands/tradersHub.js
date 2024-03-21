@@ -277,10 +277,10 @@ Cypress.Commands.add('c_addAccountMF', () => {
   cy.findByRole('button', { name: 'OK' }).click()
 })
 
-Cypress.Commands.add("c_demoAccountSignup", (country , accountEmail) => {
-  cy.c_emailVerification("account_opening_new.html",accountEmail) 
+Cypress.Commands.add('c_demoAccountSignup', (country, accountEmail) => {
+  cy.c_emailVerification('account_opening_new.html', accountEmail)
   cy.then(() => {
-    cy.c_visitResponsive(Cypress.env("verificationUrl"), "desktop").then(() => {
+    cy.c_visitResponsive(Cypress.env('verificationUrl'), 'desktop').then(() => {
       cy.window().then((win) => {
         win.localStorage.setItem(
           'config.server_url',
@@ -289,8 +289,8 @@ Cypress.Commands.add("c_demoAccountSignup", (country , accountEmail) => {
         win.localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
       })
     })
-    cy.c_visitResponsive(Cypress.env("verificationUrl"), "desktop")
-    cy.get("h1").contains("Select your country and").should("be.visible")
+    cy.c_visitResponsive(Cypress.env('verificationUrl'), 'desktop')
+    cy.get('h1').contains('Select your country and').should('be.visible')
     cy.c_selectCountryOfResidence(country)
     cy.c_selectCitizenship(country)
     cy.c_enterPassword()
