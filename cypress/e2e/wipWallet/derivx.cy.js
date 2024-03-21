@@ -10,13 +10,17 @@ function verifyDerixCreation(accountType) {
   let expectedText
   if (accountType === 'Real') {
     expectedText = 'Create a Deriv X password'
-    cy.get('div').contains(expectedText).should("be.visible");
-    cy.findByPlaceholderText('Deriv X password').click().type(Cypress.env('mt5Password'));
+    cy.get('div').contains(expectedText).should('be.visible')
+    cy.findByPlaceholderText('Deriv X password')
+      .click()
+      .type(Cypress.env('mt5Password'))
     cy.findByRole('button', { name: 'Create Deriv X password' }).click()
   } else {
-    expectedText = 'Enter your Deriv X password';  // Adjust this text based on your actual requirement
-    cy.get('div').contains(expectedText).should("be.visible");
-    cy.findByPlaceholderText('Deriv X password').click().type(Cypress.env('mt5Password'));
+    expectedText = 'Enter your Deriv X password' // Adjust this text based on your actual requirement
+    cy.get('div').contains(expectedText).should('be.visible')
+    cy.findByPlaceholderText('Deriv X password')
+      .click()
+      .type(Cypress.env('mt5Password'))
     cy.findByRole('button', { name: 'Add account' }).click()
   }
 }
@@ -35,10 +39,12 @@ function verifyTransferFundsMessage(accountType) {
   }
 }
 
-function expandDemoWallet(){
-  cy.get(".wallets-dropdown__button").click()
-  cy.get(".wallets-list-card-dropdown__item-content").contains("USD Demo Wallet").click()
-  cy.contains("USD Demo Wallet").should("be.visible")
+function expandDemoWallet() {
+  cy.get('.wallets-dropdown__button').click()
+  cy.get('.wallets-list-card-dropdown__item-content')
+    .contains('USD Demo Wallet')
+    .click()
+  cy.contains('USD Demo Wallet').should('be.visible')
 }
 
 describe('WALL-3252 - Add derivx account', () => {
