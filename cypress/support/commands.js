@@ -57,27 +57,15 @@ Cypress.Commands.add('c_enterPassword', () => {
 })
 
 Cypress.Commands.add('c_completeOnboarding', () => {
-  const onboarding = Cypress.$("button:contains('Next'):visible").length > 0
-  if (onboarding) {
-    for (
-      let next_button_count = 0;
-      next_button_count < 5;
-      next_button_count++
-    ) {
-      cy.contains('button', 'Next').should('be.visible')
-      cy.contains('button', 'Next').click()
-    }
-    cy.contains('Start trading').should('be.visible')
-    cy.contains('button', 'Start trading').click()
-    cy.contains('Switch accounts').should('be.visible')
+  cy.contains('Switch accounts').should('be.visible')
+  cy.contains('button', 'Next').click()
+  if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
+    cy.contains('Choice of regulation').should('be.visible')
     cy.contains('button', 'Next').click()
-    if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
-      cy.contains('Choice of regulation').should('be.visible')
-      cy.contains('button', 'Next').click()
-    }
-    cy.contains("Trader's Hub tour").should('be.visible')
-    cy.contains('button', 'OK').click()
   }
+  cy.contains("Trader's Hub tour").should('be.visible')
+  cy.contains('button', 'OK').click()
+  //}
 })
 
 Cypress.Commands.add('c_generateRandomName', () => {

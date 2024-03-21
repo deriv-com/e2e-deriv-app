@@ -17,8 +17,3 @@ Cypress.Commands.add('c_switchToReal', () => {
   cy.findByTestId('dt_dropdown_display').click()
   cy.get('#real').click()
 })
-
-Cypress.Commands.add('c_completeTradersHubTour', () => {
-  cy.findByRole('button', { name: 'Next' }).click()
-  cy.findByRole('button', { name: 'OK' }).click()
-})

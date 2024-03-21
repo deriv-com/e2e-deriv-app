@@ -93,6 +93,7 @@ module.exports = defineConfig({
     username_cr_unauthenticated: process.env.E2E_USENAME_BOT,
     password: process.env.E2E_PASS_BOT,
     tradersHubUrl: "appstore/traders-hub",
+    cashierURL: "cashier/deposit",
     emailVerificationCode: process.env.E2E_EMAIL_VERIFICATION_CODE,
     emailUser: process.env.E2E_AUTH_EMAIL_USER,
     emailPassword: process.env.E2E_AUTH_EMAIL_PASSWORD,

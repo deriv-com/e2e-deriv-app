@@ -12,7 +12,6 @@ describe('QATEST-24444 - Verify the user is able to close the personal details p
   it('Should validate the pop up functionality when user closes the personal details section', () => {
     cy.c_demoAccountSignup(country, signUpMail)
     cy.c_switchToReal()
-    cy.c_completeTradersHubTour()
     cy.findByRole('button', { name: 'Get a Deriv account' }).click({
       force: true,
     })

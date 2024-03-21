@@ -6,7 +6,7 @@ describe("QATEST-5699: Create a Financial Demo CFD account", () => {
   let country = Cypress.env("countries").CO
 
   beforeEach(() => {
-    cy.c_setEndpoint(signUpMail)
+    cy.c_setEndpoint(signUpEmail)
   })
   it("Verify I can signup for a demo financial CFD account", () => {
     cy.c_demoAccountSignup(country, signUpEmail)
@@ -30,7 +30,6 @@ describe("QATEST-5699: Create a Financial Demo CFD account", () => {
     cy.findByRole('button', { name: 'Continue' }).click()
     cy.findByText('10,000.00 USD').should('be.visible')
     cy.findByRole('button', { name: 'Top up' }).should('exist')
-    cy.get('button:nth-child(2)').click()
-    cy.get('#modal_root').findByText('Financial Demo').should('be.visible')
+    cy.findByTestId('dt_trading-app-card_demo_financial_svg').findByRole('button', { name: 'Open' }).should('be.visible')
   })
 })
