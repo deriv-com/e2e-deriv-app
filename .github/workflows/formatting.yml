@@ -34,14 +34,14 @@ jobs:
         #     node-version: latest
         - name: Install Depdendencies
           run: npm i -D
-        # - name: Check formatting
-        #   run: npx prettier --check $(git diff --name-only --diff-filter d | grep '.js$' | xargs)
-        - name: Prettify code
-          uses: creyD/prettier_action@v4.3
-          with:
-          # This part is also where you can pass other options, for example:
-            only_changed: true
-            dry: true
+        - name: Check formatting
+          run: npx prettier . --check
+        # - name: Prettify code
+        #   uses: creyD/prettier_action@v4.3
+        #   with:
+        #   # This part is also where you can pass other options, for example:
+        #     only_changed: true
+        #     dry: true
 
 
     
