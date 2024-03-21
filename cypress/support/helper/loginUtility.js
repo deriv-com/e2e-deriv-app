@@ -10,7 +10,7 @@ export function getLoginToken(callback) {
     method: 'POST',
     url: 'https://' + Cypress.env('configServer') + '/oauth2/api/v1/verify',
     headers: {
-      Origin: 'https://oauth.deriv.com',
+      'Origin': 'https://oauth.deriv.com',
       'Content-Type': 'application/json',
     },
     body: {
@@ -32,7 +32,7 @@ export function getLoginToken(callback) {
       url:
         'https://' + Cypress.env('configServer') + '/oauth2/api/v1/authorize',
       headers: {
-        Origin: 'https://oauth.deriv.com',
+        'Origin': 'https://oauth.deriv.com',
         'Content-Type': 'application/json',
       },
       body: {
@@ -49,7 +49,7 @@ export function getLoginToken(callback) {
         method: 'POST',
         url: 'https://' + Cypress.env('configServer') + '/oauth2/api/v1/login',
         headers: {
-          Authorization: 'Bearer ' + bearerToken,
+          'Authorization': 'Bearer ' + bearerToken,
           'Content-Type': 'application/json',
         },
         body: {
@@ -77,31 +77,20 @@ export function getLoginToken(callback) {
  * ...something here
  * })
  */
-export function getOAuthUrl(callback) {
-  let loginEmail
-  let loginPassword
-  /* User production credentials if base url is production
-    Else use test credentials */
-  if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
-    loginEmail = Cypress.env('loginEmailProd')
-    loginPassword = Cypress.env('loginPasswordProd')
-  } else {
-    loginEmail = Cypress.env('loginEmail')
-    loginPassword = Cypress.env('loginPassword')
-  }
-
+export function getOAuthUrl(callback, loginEmail, loginPassword) {
+  const URL =
+    'https://' +
+    Cypress.env('configServer') +
+    '/oauth2/authorize?app_id=' +
+    Cypress.env('configAppId') +
+    '&l=en&brand=deriv&date_first_contact='
   // Step 1: Perform a GET on the OAuth Url in order to generate a CSRF token.
   cy.request({
     method: 'GET',
-    url:
-      'https://' +
-      Cypress.env('configServer') +
-      '/oauth2/authorize?app_id=' +
-      Cypress.env('configAppId') +
-      '&l=en&brand=deriv&date_first_contact=',
+    url: URL,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      Origin: 'https://oauth.deriv.com',
+      'Origin': 'https://oauth.deriv.com',
     },
   }).then((response) => {
     // Step 2: Extract CSRF token and set-cookie value from the response
@@ -111,18 +100,11 @@ export function getOAuthUrl(callback) {
     cy.log('csrfToken>>' + csrfToken)
     const cookie = response.headers['set-cookie']
     cy.log('Cookie Test:' + response.headers['set-cookie'])
-
-    // Step 3: Make a POST request with the CSRF token and cookie.
-    cy.request({
+    const loginRequestPayload = {
       method: 'POST',
-      url:
-        'https://' +
-        Cypress.env('configServer') +
-        '/oauth2/authorize?app_id=' +
-        Cypress.env('configAppId') +
-        '&l=en&brand=deriv&date_first_contact=',
+      url: URL,
       form: false,
-      followRedirect: false, //This ensures we get a 302 status.
+      followRedirect: false,
       body: {
         email: loginEmail,
         password: loginPassword,
@@ -131,18 +113,55 @@ export function getOAuthUrl(callback) {
       },
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        Origin: 'https://oauth.deriv.com',
-        Cookie: cookie,
-        csrf_token: csrfToken,
+        'Origin': 'https://oauth.deriv.com',
+        'Cookie': cookie,
+        'csrf_token': csrfToken,
       },
-    }).then((response) => {
+    }
+
+    // Step 3: Make a POST request with the CSRF token and cookie.
+    cy.request(loginRequestPayload).then((response) => {
+      // If the status is 200, Authorize app first
+      if (
+        response.status === 200 &&
+        response.body.includes('Authorise this app')
+      ) {
+        const newCookie = response.headers['set-cookie']
+        const csrfToken2 = extractCsrfToken(response)
+
+        const options = {
+          method: 'POST',
+          url: URL,
+          form: true,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Cookie': newCookie,
+            'csrf_token': csrfToken2,
+          },
+          body: {
+            csrf_token: csrfToken2,
+            confirm_scopes: 'read,admin,trade,payments',
+          },
+          followRedirect: true,
+        }
+        cy.request(options).then(() => {
+          // Then Log in
+          cy.log('Authorized')
+          cy.request(loginRequestPayload).then((response) => {
+            const oAuthUrl = response.headers['location']
+            cy.log('oAuthUrl: ' + oAuthUrl)
+            callback(oAuthUrl)
+          })
+        })
+      }
+
       const oAuthUrl = response.headers['location']
       cy.log('oAuthUrl: ' + oAuthUrl)
       callback(oAuthUrl)
-
-      expect(response.status).to.eq(302) //302 means success on this occasion!
     })
   })
+  // Note: Ensure that `extractCsrfToken` and `extractOauthToken` are defined and compatible with Cypress's execution.
+  // If they perform synchronous operations, you might need to wrap their logic in Cypress commands or use `.then()`.
 }
 
 /**
@@ -176,7 +195,7 @@ export function getWalletOAuthUrl(callback) {
       '&l=en&brand=deriv&date_first_contact=',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      Origin: 'https://oauth.deriv.com',
+      'Origin': 'https://oauth.deriv.com',
     },
   }).then((response) => {
     // Step 2: Extract CSRF token and set-cookie value from the response
@@ -206,9 +225,9 @@ export function getWalletOAuthUrl(callback) {
       },
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        Origin: 'https://oauth.deriv.com',
-        Cookie: cookie,
-        csrf_token: csrfToken,
+        'Origin': 'https://oauth.deriv.com',
+        'Cookie': cookie,
+        'csrf_token': csrfToken,
       },
     }).then((response) => {
       const oAuthUrl = response.headers['location']
@@ -226,7 +245,7 @@ export function getWalletOAuthUrl(callback) {
  * @returns {csrfToken}
  * @example extractCsrfToken(response)
  */
-export function extractCsrfToken(response) {
+function extractCsrfToken(response) {
   const regex = /name="csrf_token" value="([^"]*)"/
   const found = response.body.match(regex)
 

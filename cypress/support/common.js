@@ -62,30 +62,6 @@ export function getLoginToken(callback) {
     })
   })
 }
-      cy.request({
-        method: 'POST',
-        url: 'https://' + Cypress.env('configServer') + '/oauth2/api/v1/login',
-        headers: {
-          'Authorization': 'Bearer ' + bearerToken,
-          'Content-Type': 'application/json',
-        },
-        body: {
-          app_id: Cypress.env('configAppId'),
-          type: 'system',
-          email: Cypress.env('loginEmail'),
-          password: Cypress.env('loginPassword'),
-        },
-      }).then((response) => {
-        const token = response.body.tokens[0].token
-        cy.log('<login token>' + token)
-
-        callback(token)
-
-        expect(response.status).to.eq(200)
-      })
-    })
-  })
-}
 
 export function getOAuthUrl(callback, loginEmail, loginPassword) {
   const URL =
@@ -145,8 +121,8 @@ export function getOAuthUrl(callback, loginEmail, loginPassword) {
           form: true,
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            Cookie: newCookie,
-            csrf_token: csrfToken2,
+            'Cookie': newCookie,
+            'csrf_token': csrfToken2,
           },
           body: {
             csrf_token: csrfToken2,
