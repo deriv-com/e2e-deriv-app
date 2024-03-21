@@ -1,4 +1,5 @@
 import '@testing-library/cypress/add-commands'
+
 let fixedRate = 1.25
 let minOrder = 5
 let maxOrder = 10
