@@ -13,10 +13,10 @@ function verifyAdOnMyAdsScreen(fiatCurrency, localCurrency) {
   )
 }
 
-describe('QATEST-2403 - Create a Buy type Advert - Floating Rate', () => {
+describe('QATEST-2403 - Create a Buy type Advert - Fixed Rate', () => {
   beforeEach(() => {
     cy.clearAllSessionStorage()
-    cy.c_login()
+    cy.c_login({ user: 'p2pFixedRate' })
     cy.c_visitResponsive('/cashier/p2p', 'small')
   })
 
@@ -26,6 +26,8 @@ describe('QATEST-2403 - Create a Buy type Advert - Floating Rate', () => {
     cy.c_closeNotificationHeader()
     cy.c_clickMyAdTab()
     cy.c_createNewAd()
+    cy.findByText('Buy USD').click()
+    cy.findByText("You're creating an ad to buy...").should('be.visible')
     cy.findByTestId('offer_amount')
       .next('span.dc-text')
       .invoke('text')
