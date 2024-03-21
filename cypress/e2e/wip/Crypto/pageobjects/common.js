@@ -6,7 +6,7 @@ class cryptoconfig {
         cryptoaddaccount: () => cy.get('[class*="dc-btn dc-btn__effect dc-btn--primary dc-btn__large"]'),
         maybelater: () => cy.findByRole('button', { name: 'Maybe later' }),
         closenotification: () => cy.get('.notification__close-button')
- }
+    }
  }
  
  
