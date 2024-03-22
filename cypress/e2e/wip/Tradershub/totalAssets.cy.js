@@ -67,7 +67,6 @@ describe('QATEST-54234 - Validate the Total assets for account having crypto sib
             totalUSD = mt5AccountBalanceAmount + derivXAccountBalanceAmount
           })
       })
-    cy.log(`Total Balance with CFD Account: ${totalUSD}`)
     cy.findByTestId('dt_currency-switcher__arrow').click()
     cy.request(
       'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,litecoin&vs_currencies=usd'
