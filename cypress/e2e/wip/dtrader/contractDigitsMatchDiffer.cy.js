@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-import * as dtraderVariable from '../../../support/dtrader'
+import * as dtraderVariable from '../../../support/commands/dTrader'
 
 describe('QATEST-5040 -  Verify contract for Digits', () => {
   beforeEach(() => {

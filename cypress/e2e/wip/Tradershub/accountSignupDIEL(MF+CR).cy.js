@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-import { generateEpoch } from '../../../support/tradersHub'
+import { generateEpoch } from '../../../support/helper/utility'
 
 const regulationText = '.regulators-switcher__switch div.item.is-selected'
 
@@ -11,7 +11,7 @@ describe('QATEST-6211: Verify DIEL Signup flow - MF + CR', () => {
   let euCurrency = Cypress.env('accountCurrency').GBP
 
   beforeEach(() => {
-    cy.c_setEndpoint(signUpMail)
+    cy.c_setEndpoint(signUpEmail)
   })
   it('Verify I can signup for a DIEL demo and real account', () => {
     Cypress.env('citizenship', Cypress.env('dielCountry'))

@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-import { generateEpoch } from '../../../support/tradersHub'
+import { generateEpoch } from '../../../support/helper/utility'
 
 describe('QATEST-6000: Create a Financial SVG account', () => {
   const signUpEmail = `sanity${generateEpoch()}mt5financialsvg@deriv.com`
