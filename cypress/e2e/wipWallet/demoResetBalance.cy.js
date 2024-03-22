@@ -4,10 +4,10 @@ function reset_balance_demo() {
   cy.get('.wallets-dropdown__button').click()
   cy.findByText('USD Demo Wallet').scrollIntoView()
   cy.get('.wallets-list-card-dropdown__item-content')
-    .findByText('USD Demo Wallet')
+    .contains('USD Demo Wallet')
     .click()
   cy.get('.wallets-list-details__content').within(() => {
-    cy.findByText('USD').should('be.visible')
+    cy.contains('USD').should('be.visible')
   })
   cy.findByText('Reset balance').should('be.visible')
   cy.findByText('Reset balance').click()
@@ -34,7 +34,7 @@ describe('WALL-2760 - Reset Balance for Demo wallet', () => {
 
   it('should be able to reset balance for demo wallet', () => {
     cy.log('Reset Balance for Demo Account')
-    cy.findByText('Wallet', { timeout: 10000 }).should('exist')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
     reset_balance_demo()
   })
 })

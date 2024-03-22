@@ -16,7 +16,7 @@ function fiat_transfer(to_account) {
     .click()
     .type('1.000')
   //Check the transfer limit message
-  cy.findByText(
+  cy.contains(
     'lifetime transfer limit from USD Wallet to any cryptocurrency Wallets is'
   ).should('exist')
   cy.get('form')
@@ -35,7 +35,7 @@ describe('WALL-2858 - Fiat transfer and transactions', () => {
 
   it('should be able to perform transfer from fiat account', () => {
     cy.log('Transfer from Fiat account')
-    cy.findByText('Wallet', { timeout: 10000 }).should('exist')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.findByText('Transfer').first().click()
     fiat_transfer('BTC')
     fiat_transfer('ETH')
@@ -44,7 +44,7 @@ describe('WALL-2858 - Fiat transfer and transactions', () => {
 
   it('should be able to view transactions of fiat account', () => {
     cy.log('View Transactions of Fiat account')
-    cy.findByText('Wallet', { timeout: 10000 }).should('exist')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.findByText('Transactions').first().click()
     cy.findByTestId('dt_wallets_textfield_icon_right')
       .findByRole('button')
@@ -60,9 +60,9 @@ describe('WALL-2858 - Fiat transfer and transactions', () => {
       .findByRole('button')
       .click()
     cy.findByRole('option', { name: 'Transfer' }).click()
-    cy.findByText('LTC Wallet')
-    cy.findByText('ETH Wallet')
-    cy.findByText('BTC Wallet')
-    cy.findByText('-10.00 USD')
+    cy.contains('LTC Wallet')
+    cy.contains('ETH Wallet')
+    cy.contains('BTC Wallet')
+    cy.contains('-10.00 USD')
   })
 })

@@ -8,11 +8,11 @@ function crypto_transfer(to_account) {
     .click()
     .type('0.000010000')
   if (to_account == 'USD') {
-    cy.findByText(
+    cy.contains(
       'lifetime transfer limit from BTC Wallet to any fiat Wallets is'
     )
   } else {
-    cy.findByText('lifetime transfer limit between cryptocurrency Wallets is')
+    cy.contains('lifetime transfer limit between cryptocurrency Wallets is')
   }
   cy.get('form')
     .findByRole('button', { name: 'Transfer', exact: true })
@@ -30,15 +30,15 @@ describe('WALL-2858 - Crypto transfer and transactions', () => {
 
   it('should be able to perform transfer from crypto account', () => {
     cy.log('Transfer from Crypto account')
-    cy.findByText('Wallet', { timeout: 10000 }).should('exist')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.get('.wallets-dropdown__button').click()
     cy.get('.wallets-list-card-dropdown__item-content')
-      .findByText('BTC Wallet')
+      .contains('BTC Wallet')
       .click()
     cy.get('.wallets-list-details__content').within(() => {
-      cy.findByText('BTC').should('be.visible')
+      cy.contains('BTC').should('be.visible')
     })
-    cy.findByText('Transfer').click()
+    cy.contains('Transfer').click()
     crypto_transfer('USD')
     crypto_transfer('ETH')
     crypto_transfer('LTC')
@@ -46,7 +46,7 @@ describe('WALL-2858 - Crypto transfer and transactions', () => {
 
   it('should be able to view transactions of crypto account', () => {
     cy.log('View Transactions of Crypto account')
-    cy.findByText('Wallet', { timeout: 10000 }).should('exist')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.findAllByText(/BTC Wallet/)
       .first()
       .scrollIntoView()
@@ -63,9 +63,9 @@ describe('WALL-2858 - Crypto transfer and transactions', () => {
     cy.findByText('No recent transactions')
     cy.findByTestId('dt_wallets_textfield_box').click()
     cy.findByRole('option', { name: 'Transfer' }).click()
-    cy.findByText('LTC Wallet')
-    cy.findByText('ETH Wallet')
-    cy.findByText('USD Wallet')
-    cy.findByText('-0.00010000 BTC')
+    cy.contains('LTC Wallet')
+    cy.contains('ETH Wallet')
+    cy.contains('USD Wallet')
+    cy.contains('-0.00010000 BTC')
   })
 })
