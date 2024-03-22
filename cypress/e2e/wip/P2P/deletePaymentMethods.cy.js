@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-import { generateAccountNumberString } from '../../../support/p2p'
+import { generateAccountNumberString } from '../../../support/helper/utility'
 
 let paymentName = 'Skrill'
 let paymentID = generateAccountNumberString(12)

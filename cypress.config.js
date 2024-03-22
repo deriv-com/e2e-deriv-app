@@ -2,7 +2,7 @@ const { defineConfig } = require("cypress")
 require("dotenv").config()
 
 //const gViewPortSize = {small: 'phone-xr', large: 'macbook-16'} //TODO Use enum
-
+ 
 module.exports = defineConfig({
   e2e: {
     projectId: "rjvf4u",
@@ -25,6 +25,32 @@ module.exports = defineConfig({
       staging: "https://staging-bot.deriv.com/?l=en",
       prod: "https://bot.deriv.com/?l=en",
     },
+    credentials: {
+    test:{
+      masterUser: {
+        ID: process.env.E2E_DERIV_LOGIN,
+        PSWD: process.env.E2E_DERIV_PASSWORD
+      },
+      dBot: {
+        ID: process.env.E2E_LOGIN_ID_DBOT,
+        PSWD: process.env.E2E_LOGIN_PSWD_DBOT
+      },
+      p2pFloating: {
+        ID: process.env.E2E_P2P_Floating,
+        PSWD: process.env.E2E_PSWD_P2P
+      } 
+    },
+    production:{
+      masterUser:{
+        ID: process.env.E2E_DERIV_LOGIN_PROD,
+        PSWD: process.env.E2E_DERIV_PASSWORD_PROD
+      },
+      dBot: {
+        ID: process.env.E2E_LOGIN_ID_PROD_DBOT,
+        PSWD: process.env.E2E_LOGIN_PSWD_PROD_DBOT
+      } 
+    }
+  },
     RegionEU: "/?region=at",
     RegionROW: "/?region=za",
     skipROWTests: false,

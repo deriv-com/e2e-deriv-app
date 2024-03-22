@@ -1,7 +1,7 @@
 class TradersHub {
   get openBotButton() {
-    return cy.get("a[href='/bot']");
+    return cy.get("a[href='/bot']")
   }
 }
 
-export default TradersHub;
+export default TradersHub
