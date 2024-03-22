@@ -1,16 +1,16 @@
 import '@testing-library/cypress/add-commands'
-import { generateEpoch } from '../../../support/tradersHub'
+import { generateEpoch } from '../../../support/helper/utility'
 
-describe("QATEST-5724: CFDs - Create a demo Financial account using existing MT5 account password", () => {
-    const signUpEmail = `sanity${generateEpoch()}mail@deriv.com`
-    let country = Cypress.env("countries").CO
+describe('QATEST-5724: CFDs - Create a demo Financial account using existing MT5 account password', () => {
+  const signUpEmail = `sanity${generateEpoch()}mail@deriv.com`
+  let country = Cypress.env('countries').CO
 
-    beforeEach(() => {
-      cy.c_setEndpoint(signUpEmail)
-    })
+  beforeEach(() => {
+    cy.c_setEndpoint(signUpEmail)
+  })
 
- it("Verify I can add a demo financial account using exisiting MT5 derieved account password", () => {
-    cy.c_demoAccountSignup(country,signUpEmail)
+  it('Verify I can add a demo financial account using exisiting MT5 derieved account password', () => {
+    cy.c_demoAccountSignup(country, signUpEmail)
     cy.c_checkTradersHubHomePage()
     cy.findAllByRole('button', { name: 'Get' }).first().click()
     cy.findByText('Create a Deriv MT5 password').should('be.visible')
