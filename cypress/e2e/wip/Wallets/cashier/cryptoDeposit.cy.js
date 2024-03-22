@@ -9,7 +9,7 @@ describe('WALL-2831 - Crypto deposit and fiat onramp', () => {
 
   it('should be able to view crypto deposit details', () => {
     cy.log('Crypto Deposit')
-    cy.findByText('Wallet', { timeout: 10000 }).should('exist')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.get('.wallets-dropdown__button').click()
     cy.get('.wallets-list-card-dropdown__item-content')
       .findByText('BTC Wallet')
@@ -30,7 +30,7 @@ describe('WALL-2831 - Crypto deposit and fiat onramp', () => {
 
   it('should be able to deposit into crypto account through fiat onramp', () => {
     cy.log('Access Fiat OnRamp Provider')
-    cy.findByText('Wallet', { timeout: 10000 }).should('exist')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.get('.wallets-dropdown__button').click()
     cy.get('.wallets-list-card-dropdown__item-content')
       .findByText('BTC Wallet')

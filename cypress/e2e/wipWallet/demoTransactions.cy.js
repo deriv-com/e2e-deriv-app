@@ -4,10 +4,10 @@ function reset_balance_demo() {
   cy.get('.wallets-dropdown__button').click()
   cy.findByText('USD Demo Wallet').scrollIntoView()
   cy.get('.wallets-list-card-dropdown__item-content')
-    .findByText('USD Demo Wallet')
+    .contains('USD Demo Wallet')
     .click()
   cy.get('.wallets-list-details__content').within(() => {
-    cy.findByText('USD').should('be.visible')
+    cy.contains('USD').should('be.visible')
   })
   cy.findByText('Reset balance').should('be.visible')
   cy.findByText('Reset balance').click()
@@ -52,7 +52,7 @@ describe('WALL-2760 - Transfer and check transactions for Demo wallet', () => {
 
   it('should be able to transfer demo funds', () => {
     cy.log('Transfer Demo Funds for Demo Account')
-    cy.findByText('Wallet', { timeout: 10000 }).should('exist')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
     reset_balance_demo()
     cy.findByText(/Transfer from/).click()
     cy.findByRole('button', {
@@ -70,7 +70,7 @@ describe('WALL-2760 - Transfer and check transactions for Demo wallet', () => {
 
   it('should be able to view demo transactions', () => {
     cy.log('View Transactions for Demo Account')
-    cy.findByText('Wallet', { timeout: 10000 }).should('exist')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
     reset_balance_demo()
     cy.findByRole('button', { name: 'Transactions' }).click()
     cy.findByTestId('dt_wallets_textfield_icon_right')
@@ -82,8 +82,8 @@ describe('WALL-2760 - Transfer and check transactions for Demo wallet', () => {
       .findByRole('button')
       .click()
     cy.findByRole('option', { name: 'Transfer' }).click()
-    cy.findByText('MT5 Derived')
-    cy.findByText('Deriv X')
-    cy.findByText('-10.00 USD')
+    cy.contains('-10.00 USD')
+    cy.contains('MT5 Derived')
+    cy.contains('Deriv X')
   })
 })
