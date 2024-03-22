@@ -1,7 +1,7 @@
 import '@testing-library/cypress/add-commands'
 
 describe('QATEST-54234 - Validate the Total assets for account having crypto siblings accounts', () => {
-  it('Should check the Total assets for account having crypto siblings accounts', () => {
+  it('Should check the Total assets for account having crypto siblings and cfd accounts', () => {
     let totalUSD = 0
     cy.c_login()
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
