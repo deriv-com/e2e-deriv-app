@@ -34,6 +34,10 @@ module.exports = defineConfig({
       dBot: {
         ID: process.env.E2E_LOGIN_ID_DBOT,
         PSWD: process.env.E2E_LOGIN_PSWD_DBOT
+      },
+      p2pFloating: {
+        ID: process.env.E2E_P2P_Floating,
+        PSWD: process.env.E2E_PSWD_P2P
       } 
     },
     production:{
