@@ -1,8 +1,9 @@
 import '@testing-library/cypress/add-commands'
 import cryptoconfig from './pageobjects/common.js'
+import { generateEpoch } from '../../../support/tradersHub'
+
 
 const addcryptoaccount = (crypto, code) => {
-  cy.c_closeNotificationHeader()
   cryptoconfig.elements.currencyswitcher().should('be.visible').click()
   cryptoconfig.elements.manageaccount().should('be.visible').click()
   cy.get('.add-crypto-currency').then(($parent) => {
@@ -25,12 +26,34 @@ const addcryptoaccount = (crypto, code) => {
 };
 
 describe('QATEST-707 - Create crypto account', () => {
+  const signUpEmail = `sanity${generateEpoch()}crypto@deriv.com`
+  let country = Cypress.env("countries").CO
+  let nationalIDNum = Cypress.env("nationalIDNum").CO
+  let taxIDNum = Cypress.env("taxIDNum").CO
+  let currency = Cypress.env("accountCurrency").USD
   beforeEach(() => {
-    cy.c_login()
-    cy.c_visitResponsive('/appstore/traders-hub', 'large')
+    cy.c_setEndpoint(signUpEmail)
   })
   it('should be able to create crypto account from Traders Hub.', () => {
-    cy.get('.notification__text-body')
+    cy.c_demoAccountSignup(country, signUpEmail)
+    cy.c_switchToReal()
+    cy.c_completeTradersHubTour()
+    cy.findByRole("button", { name: "Get a Deriv account" }).click()
+    cy.c_generateRandomName().then((firstName) => {
+    cy.c_personalDetails(
+          firstName,
+          "Onfido",
+          country,
+          nationalIDNum,
+          taxIDNum,
+          currency
+        )
+      })
+   cy.c_addressDetails()
+   cy .c_completeFatcaDeclarationAgreement()
+   cy.c_addAccount()
+   cy.c_checkTradersHubHomePage()
+   cy.c_closeNotificationHeader()
     const cryptocurrencies = ["Bitcoin", "Ethereum", "Litecoin", "Tether TRC20", "USD Coin"]
     const currency_code = ["BTC", "ETH", "LTC", "tUSDT", "USDC"]
     // loop to make sure it check for all available currency
