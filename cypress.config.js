@@ -97,6 +97,7 @@ module.exports = defineConfig({
     emailUser: process.env.E2E_AUTH_EMAIL_USER,
     emailPassword: process.env.E2E_AUTH_EMAIL_PASSWORD,
     event_email_url: process.env.E2E_EVENTS_EMAIL,
+    mainURL: process.env.CYPRESS_BASE_URL,
     diel_country_list: [
       "Ecuador",
       "South Africa",
