@@ -1,14 +1,14 @@
 import '@testing-library/cypress/add-commands'
 
 function reset_balance_demo() {
-  cy.get(".wallets-dropdown__button").click()
-  cy.findByText("USD Demo Wallet").scrollIntoView()
-  cy.get(".wallets-list-card-dropdown__item-content").contains("USD Demo Wallet").click()
-  cy.get(".wallets-list-details__content").within(()=>{
-    cy.contains("USD").should("be.visible")
+  cy.get('.wallets-dropdown__button').click()
+  cy.findByText('USD Demo Wallet').scrollIntoView()
+  cy.get('.wallets-list-card-dropdown__item-content').contains('USD Demo Wallet').click()
+  cy.get('.wallets-list-details__content').within(()=>{
+    cy.contains('USD').should('be.visible')
   })
-  cy.contains("Reset balance").should("be.visible")
-  cy.contains("Reset balance").click()
+  cy.contains('Reset balance').should('be.visible')
+  cy.contains('Reset balance').click()
   cy.get('[class="wallets-cashier-content"]')
     .findByRole('button', { name: 'Reset balance' })
     .click()

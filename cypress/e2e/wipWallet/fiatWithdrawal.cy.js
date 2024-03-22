@@ -21,22 +21,22 @@ describe('WALL-2830 - Fiat withdrawal send email', () => {
   })
 })
 
-describe("WALL-2830 - Crypto withdrawal content access from email", () => {
+describe('WALL-2830 - Crypto withdrawal content access from email', () => {
     beforeEach(() => {
-      cy.c_login("doughflow")
-      cy.c_visitResponsive("/wallets", "large")
-      cy.contains("Wallet", { timeout: 10000 }).should("exist")
-      cy.contains("Withdraw").click()
+      cy.c_login('doughflow')
+      cy.c_visitResponsive('/wallets', 'large')
+      cy.contains('Wallet', { timeout: 10000 }).should('exist')
+      cy.contains('Withdraw').click()
     })
   
-    it("should be able to access doughflow iframe", () => {
-      cy.log("Access Fiat Withdrawal Iframe Through Email Link")
-      cy.c_emailVerification("request_payment_withdraw.html",Cypress.env("loginEmail"))
-      let verification_code = Cypress.env("walletsWithdrawalCode")
+    it('should be able to access doughflow iframe', () => {
+      cy.log('Access Fiat Withdrawal Iframe Through Email Link')
+      cy.c_emailVerification('request_payment_withdraw.html',Cypress.env('loginEmail'))
+      let verification_code = Cypress.env('walletsWithdrawalCode')
       cy.then(() => {
         cy.c_visitResponsive(
           `/wallets/cashier/withdraw?verification=${verification_code}`,
-          "large"
+          'large'
         )
       })
     })

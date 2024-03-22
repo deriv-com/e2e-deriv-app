@@ -53,7 +53,7 @@ describe('WALL-2830 - Crypto withdrawal content access from email', () => {
       let verification_code = Cypress.env('walletsWithdrawalCode')
       cy.c_visitResponsive(
         `/wallets/cashier/withdraw?verification=${verification_code}`,
-        "large"
+        'large'
       )
       cy.contains('Transaction status')
       cy.contains('Your Bitcoin cryptocurrency wallet address').click().type(
