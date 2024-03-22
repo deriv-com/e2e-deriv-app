@@ -2,8 +2,10 @@ import '@testing-library/cypress/add-commands'
 
 describe('QATEST-54234 - Validate the Total assets for account having crypto siblings accounts', () => {
   it('Should check the Total assets for account having crypto siblings accounts', () => {
+    let totalUSD = 0
     cy.c_login()
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
+
     cy.c_switchToDemo()
     cy.findAllByTestId('dt_balance_text_container')
       .eq(1)
@@ -12,35 +14,65 @@ describe('QATEST-54234 - Validate the Total assets for account having crypto sib
         const demoAccountBalanceAmount = parseFloat(
           demoAccountBalance.replace(/[^0-9.-]+/g, '')
         )
-        cy.findByTestId('dt_account-balance')
+        cy.findAllByTestId('dt_account-balance')
+          .eq(0)
           .invoke('text')
           .then((mt5AccountBalance) => {
             const mt5AccountBalanceAmount = parseFloat(
               mt5AccountBalance.replace(/[^0-9.-]+/g, '')
             )
-            cy.findAllByTestId('dt_balance_text_container')
-              .eq(0)
+
+            cy.findAllByTestId('dt_account-balance')
+              .eq(1)
               .invoke('text')
-              .then((totalBalance) => {
-                const totalBalanceAmount = parseFloat(
-                  totalBalance.replace(/[^0-9.-]+/g, '')
+              .then((derivXAccountBalance) => {
+                const derivXAccountBalanceAmount = parseFloat(
+                  derivXAccountBalance.replace(/[^0-9.-]+/g, '')
                 )
-                const expectedSum =
-                  mt5AccountBalanceAmount + demoAccountBalanceAmount
-                expect(expectedSum).to.equal(totalBalanceAmount)
+                cy.findAllByTestId('dt_balance_text_container')
+                  .eq(0)
+                  .invoke('text')
+                  .then((totalBalance) => {
+                    const totalBalanceAmount = parseFloat(
+                      totalBalance.replace(/[^0-9.-]+/g, '')
+                    )
+                    const expectedSum =
+                      mt5AccountBalanceAmount +
+                      demoAccountBalanceAmount +
+                      derivXAccountBalanceAmount
+                    expect(expectedSum).to.equal(totalBalanceAmount)
+                  })
               })
           })
       })
-
     cy.c_switchToReal()
     cy.findByText('Total assets').should('be.visible')
     cy.c_closeNotificationHeader()
+
+    cy.findAllByTestId('dt_account-balance')
+      .eq(0)
+      .invoke('text')
+      .then((mt5AccountBalance) => {
+        const mt5AccountBalanceAmount = parseFloat(
+          mt5AccountBalance.replace(/[^0-9.-]+/g, '')
+        )
+        cy.findAllByTestId('dt_account-balance')
+          .eq(1)
+          .invoke('text')
+          .then((derivXAccountBalance) => {
+            const derivXAccountBalanceAmount = parseFloat(
+              derivXAccountBalance.replace(/[^0-9.-]+/g, '')
+            )
+
+            totalUSD = mt5AccountBalanceAmount + derivXAccountBalanceAmount
+          })
+      })
+    cy.log(`Total Balance with CFD Account: ${totalUSD}`)
     cy.findByTestId('dt_currency-switcher__arrow').click()
     cy.request(
       'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,litecoin&vs_currencies=usd'
     ).then((response) => {
       const exchangeRates = response.body
-      let totalUSD = 0
 
       const currencyMapping = {
         BTC: 'bitcoin',
