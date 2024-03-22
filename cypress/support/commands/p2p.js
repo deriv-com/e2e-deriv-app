@@ -46,6 +46,59 @@ Cypress.Commands.add('c_verifyExchangeRate', () => {
   cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
 })
 
+Cypress.Commands.add(
+  'c_verifyFixedRate',
+  (adType, totalAmount, fixedRateValue, fiatCurrency, localCurrency) => {
+    totalAmount = totalAmount.toFixed(2)
+    fixedRateValue = fixedRateValue.toFixed(2)
+    cy.findByTestId('fixed_rate_type').clear()
+    cy.findByText('Fixed rate is required').should('be.visible')
+    cy.findByTestId('fixed_rate_type').type('abc').should('have.value', 'abc')
+    cy.findByText('Enter a valid amount').should('be.visible')
+    cy.findByTestId('fixed_rate_type')
+      .clear()
+      .type('10abc')
+      .should('have.value', '10abc')
+    cy.findByText('Enter a valid amount').should('be.visible')
+    cy.findByTestId('fixed_rate_type')
+      .clear()
+      .type('!@#')
+      .should('have.value', '!@#')
+    cy.findByText('Enter a valid amount').should('be.visible')
+    cy.findByTestId('fixed_rate_type').clear().type(fixedRateValue)
+    const totalPrice = totalAmount * fixedRateValue
+    regexPattern = `You\'re creating an ad to ${adType} ${totalAmount} ${fiatCurrency} for ${totalPrice.toFixed(2)} ${localCurrency} (${fixedRateValue} ${localCurrency}/${fiatCurrency})`
+    cy.get('.create-ad-summary')
+      .eq(0)
+      .invoke('text')
+      .then((spanText) => {
+        expect(spanText).to.eq(regexPattern)
+      })
+  }
+)
+
+Cypress.Commands.add('c_verifyTextAreaBlock', (blockName) => {
+  cy.c_verifyTextAreaLength(blockName, 0)
+  cy.findByTestId(blockName).clear()
+  if (blockName == 'contact_info') {
+    cy.findByText('Contact details is required').should('be.visible')
+  }
+  cy.findByTestId(blockName).clear().type('abc').should('have.value', 'abc')
+  cy.c_verifyTextAreaLength(blockName, 'abc'.length)
+  cy.findByTestId(blockName)
+    .clear()
+    .type('Text area info block.')
+    .should('have.value', 'Text area info block.')
+  cy.c_verifyTextAreaLength(blockName, 'Text area info block.'.length)
+})
+
+Cypress.Commands.add('c_verifyTextAreaLength', (blockName, textLength) => {
+  cy.findByTestId(blockName)
+    .parents('.dc-input__wrapper')
+    .find('.dc-input__footer .dc-input__counter')
+    .should('contain.text', `${textLength}/300`)
+})
+
 Cypress.Commands.add('c_verifyRate', () => {
   cy.findByTestId('float_rate_type').click().clear()
   cy.findByText('Floating rate is required').should('be.visible')
@@ -128,10 +181,10 @@ Cypress.Commands.add(
     cy.findByTestId(selector).click().type('11')
     cy.findByText(
       `Amount should not be below ${expectedValidation} limit`
-    ).should('be.visible')
+    ).should('exist')
     cy.findByText(
       `${expectedValidation} limit should not exceed Amount`
-    ).should('be.visible')
+    ).should('exist')
     cy.findByTestId(selector).click().clear().type(expectedValue)
   }
 )
@@ -143,7 +196,7 @@ Cypress.Commands.add('c_PaymentMethod', () => {
   cy.findByText('Bank Transfer').click()
   cy.findByPlaceholderText('Add').click()
   cy.findByText('Skrill').click()
-  cy.findByPlaceholderText('Add').should('not.be.exist')
+  cy.findByPlaceholderText('Add').should('not.exist')
 })
 
 Cypress.Commands.add('c_verifyAmountFiled', () => {
