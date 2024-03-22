@@ -23,6 +23,24 @@ function reset_balance_demo() {
     .should('include', 'wallets-cashier-header__tab--active') //find if the class has "active" string
 }
 
+function demo_transfer(transfer_to) {
+  cy.contains(/Transfer to/).click()
+  cy.contains(transfer_to).click()
+  cy.get('input[class="wallets-atm-amount-input__input"]')
+    .eq(1)
+    .click()
+    .type('1.000')
+  cy.get('form')
+    .findByRole('button', { name: 'Transfer', exact: true })
+    .should('be.enabled')
+    .click()
+  cy.findByText('Your transfer is successful!', {
+    exact: true,
+  }).should('be.visible')
+  cy.findByRole('button', { name: 'Make a new transfer' }).click()
+  cy.contains(/Transfer from/)
+}
+
 describe('WALL-2760 - Transfer and check transactions for Demo wallet', () => {
   //Prerequisites: Demo wallet account in any qa box with USD demo funds
   beforeEach(() => {
@@ -39,21 +57,13 @@ describe('WALL-2760 - Transfer and check transactions for Demo wallet', () => {
       name: 'USD Wallet Balance: 10,000.00 USD Demo',
       exact: true,
     }).click()
-    cy.contains(/Transfer to/).click()
-    cy.contains(/Deriv X/).click()
-    cy.get('input[class="wallets-atm-amount-input__input"]')
-      .eq(1)
-      .click()
-      .type('1.000')
-    cy.get('form')
-      .findByRole('button', { name: 'Transfer', exact: true })
-      .should('be.enabled')
-      .click()
-    cy.findByText('Your transfer is successful!', {
+    demo_transfer(/MT5 Derived/)
+    cy.contains(/Transfer from/).click()
+    cy.findByRole('button', {
+      name: 'USD Wallet Balance: 9,990.00 USD Demo',
       exact: true,
-    }).should('be.visible')
-    cy.findByRole('button', { name: 'Make a new transfer' }).click()
-    cy.contains(/Transfer from/)
+    }).click()
+    demo_transfer(/Deriv X/)
   })
 
   it('should be able to view demo transactions', () => {
@@ -66,6 +76,8 @@ describe('WALL-2760 - Transfer and check transactions for Demo wallet', () => {
     cy.contains("+10,000.00 USD")
     cy.findByTestId('dt_wallets_textfield_icon_right').findByRole('button').click()
     cy.findByRole("option", { name: "Transfer" }).click()
+    cy.contains('MT5 Derived')
+    cy.contains('Deriv X')
     cy.contains("-10.00 USD")
   })
 })
