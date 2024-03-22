@@ -1,16 +1,16 @@
 import '@testing-library/cypress/add-commands'
-import { generateEpoch } from '../../../support/tradersHub'
+import { generateEpoch } from '../../../support/helper/utility'
 
-describe("QATEST-5972: Create a Derived SVG account", () => {
+describe('QATEST-5972: Create a Derived SVG account', () => {
   const signUpEmail = `sanity${generateEpoch()}mt5derivedsvg@deriv.com`
-  let country = Cypress.env("countries").CO
-  let nationalIDNum = Cypress.env("nationalIDNum").CO
-  let taxIDNum = Cypress.env("taxIDNum").CO
+  let country = Cypress.env('countries').CO
+  let nationalIDNum = Cypress.env('nationalIDNum').CO
+  let taxIDNum = Cypress.env('taxIDNum').CO
 
   beforeEach(() => {
     cy.c_setEndpoint(signUpEmail)
   })
-  it("Verify I can signup for a real derived SVG CFD account", () => {
+  it('Verify I can signup for a real derived SVG CFD account', () => {
     cy.c_demoAccountSignup(country, signUpEmail)
     cy.c_checkTradersHubHomePage()
     cy.findByTestId('dt_dropdown_display').click()
