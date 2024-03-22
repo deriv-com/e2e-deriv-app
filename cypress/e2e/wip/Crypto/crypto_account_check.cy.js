@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
 import cryptoconfig from './pageobjects/common.js'
-import { generateEpoch } from '../../../support/tradersHub'
+import { generateEpoch } from '../../../support/helper/utility'
 
 const addcryptoaccount = (crypto, code) => {
   cryptoconfig.elements.currencyswitcher().should('be.visible').click()
