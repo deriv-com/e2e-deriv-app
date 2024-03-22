@@ -38,7 +38,11 @@ module.exports = defineConfig({
       p2pFixedRate: {
         ID: process.env.E2E_LOGIN_ID_P2P_FIXEDRATE,
         PSWD: process.env.E2E_LOGIN_PSWD_P2P_FIXEDRATE
-      }
+      },
+      p2pFloating: {
+        ID: process.env.E2E_P2P_Floating,
+        PSWD: process.env.E2E_PSWD_P2P
+      },
     },
     production:{
       masterUser:{
@@ -49,10 +53,6 @@ module.exports = defineConfig({
         ID: process.env.E2E_LOGIN_ID_PROD_DBOT,
         PSWD: process.env.E2E_LOGIN_PSWD_PROD_DBOT
       },
-      p2pFixedRate: {
-        ID: process.env.E2E_LOGIN_ID_PROD_P2P_FIXEDRATE,
-        PSWD: process.env.E2E_LOGIN_PSWD_PROD_P2P_FIXEDRATE
-      }
     }
   },
     RegionEU: "/?region=at",
