@@ -4,5 +4,9 @@ cypress/.DS_Store
 screenshots
 .env
 cypress/downloads
-*.config.js
 *.json
+*.yml
+*.md
+.prettierignore
+.prettierrc
+*.config.js

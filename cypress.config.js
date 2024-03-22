@@ -2,7 +2,7 @@ const { defineConfig } = require("cypress")
 require("dotenv").config()
 
 //const gViewPortSize = {small: 'phone-xr', large: 'macbook-16'} //TODO Use enum
-
+ 
 module.exports = defineConfig({
   e2e: {
     projectId: "rjvf4u",
