@@ -37,7 +37,7 @@ module.exports = defineConfig({
       },
       p2pFixedRate: {
         ID: process.env.E2E_LOGIN_ID_P2P_FIXEDRATE,
-        PSWD: process.env.E2E_LOGIN_PSWD_P2P_FIXEDRATE
+        PSWD: process.env.E2E_PSWD_P2P
       },
       p2pFloating: {
         ID: process.env.E2E_P2P_Floating,
