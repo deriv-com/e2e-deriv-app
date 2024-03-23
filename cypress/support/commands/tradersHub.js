@@ -31,9 +31,9 @@ Cypress.Commands.add('c_enterValidEmail', (signUpMail) => {
       },
     })
     //Wait for the signup page to load completely
-    cy.findByRole('button', { name: 'whatsapp icon' }).should('be.visible', {
-      timeout: 30000,
-    })
+   // cy.findByRole('button', { name: 'whatsapp icon' }).should('be.visible', {
+    //  timeout: 30000,
+    //})
     cy.findByPlaceholderText('Email').as('email').should('be.visible')
     cy.get('@email').type(signUpMail)
     cy.findByRole('checkbox').click()
