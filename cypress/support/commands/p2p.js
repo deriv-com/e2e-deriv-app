@@ -192,12 +192,12 @@ Cypress.Commands.add(
       'be.visible'
     )
     cy.findByTestId(selector).click().type('11')
-    cy.findByText(
-      `Amount should not be below ${expectedValidation} limit`
-    ).should('exist')
-    cy.findByText(
-      `${expectedValidation} limit should not exceed Amount`
-    ).should('exist')
+    cy.findByText(`Amount should not be below ${expectedValidation} limit`)
+      .scrollIntoView()
+      .should('be.visible')
+    cy.findByText(`${expectedValidation} limit should not exceed Amount`)
+      .scrollIntoView()
+      .should('be.visible')
     cy.findByTestId(selector).click().clear().type(expectedValue)
   }
 )
@@ -251,7 +251,7 @@ Cypress.Commands.add('c_removeExistingAds', (adType) => {
     cy.findByText('Payment methods').should('be.visible').click()
     cy.findByText('Payment methods').should('be.visible')
     cy.c_deleteAllPM()
-    cy.findByRole('button').should('exist').and('contain.text', 'Add')
+    cy.findByRole('button', { name: /Add/ }).should('exist')
     cy.c_visitResponsive('/cashier/p2p', 'small')
     cy.c_clickMyAdTab()
   }
