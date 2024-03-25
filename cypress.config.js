@@ -35,17 +35,22 @@ module.exports = defineConfig({
         ID: process.env.E2E_LOGIN_ID_DBOT,
         PSWD: process.env.E2E_LOGIN_PSWD_DBOT
       },
-      diel: {
-        ID: process.env.E2E_DIEL_LOGIN,
-        PSWD: process.env.E2E_DIEL_PASSWORD
+      p2pFixedRate: {
+        ID: process.env.E2E_LOGIN_ID_P2P_FIXEDRATE,
+        PSWD: process.env.E2E_PSWD_P2P
       },
-      eu: {
-        ID: process.env.E2E_EU_LOGIN,
-        PSWD: process.env.E2E_EU_PASSWORD
       p2pFloating: {
         ID: process.env.E2E_P2P_FLOATING,
         PSWD: process.env.E2E_PSWD_P2P
-      } 
+      },
+      diel: {
+        ID: process.env.E2E_DIEL_LOGIN,
+        PSWD: process.env.E2E_DIEL_PASSWORD,
+      },
+      eu: {
+        ID: process.env.E2E_EU_LOGIN,
+        PSWD: process.env.E2E_EU_PASSWORD,
+      },
     },
     production:{
       masterUser:{
@@ -55,7 +60,7 @@ module.exports = defineConfig({
       dBot: {
         ID: process.env.E2E_LOGIN_ID_PROD_DBOT,
         PSWD: process.env.E2E_LOGIN_PSWD_PROD_DBOT
-      } 
+      },
     }
   },
     RegionEU: "/?region=at",
