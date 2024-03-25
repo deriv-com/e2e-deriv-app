@@ -30,16 +30,6 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
     cy.findByText('Sell USD').click()
     cy.findByText("You're creating an ad to sell...").should('be.visible')
     cy.findByTestId('offer_amount')
-      .parentsUntil('.dc-input__wrapper')
-      .next('.dc-input__footer')
-      .invoke('text')
-      .then((strBalanceText) => {
-        const balanceValue = parseFloat(
-          strBalanceText.match(/\b\d+(,\d{3})*(\.\d+)?\b/)[0].replace(/,/g, '')
-        )
-        sessionStorage.setItem('c_balanceValue', balanceValue)
-      })
-    cy.findByTestId('offer_amount')
       .next('span.dc-text')
       .invoke('text')
       .then((fiatCurrency) => {
@@ -52,7 +42,6 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
         sessionStorage.setItem('c_localCurrency', localCurrency.trim())
       })
     cy.then(() => {
-      //sessionStorage.getItem('c_stringBalance', stringBalance.trim())
       cy.c_verifyAmountFiled()
       cy.c_verifyFixedRate(
         'sell',
