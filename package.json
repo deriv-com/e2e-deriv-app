@@ -21,4 +21,3 @@
     "**/*": "prettier --write --ignore-unknown"
   }
 }
- 
