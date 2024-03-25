@@ -43,7 +43,7 @@ module.exports = defineConfig({
         ID: process.env.E2E_EU_LOGIN,
         PSWD: process.env.E2E_EU_PASSWORD
       p2pFloating: {
-        ID: process.env.E2E_P2P_Floating,
+        ID: process.env.E2E_P2P_FLOATING,
         PSWD: process.env.E2E_PSWD_P2P
       } 
     },
