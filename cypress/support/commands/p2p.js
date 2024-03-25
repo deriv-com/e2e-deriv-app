@@ -251,7 +251,7 @@ Cypress.Commands.add('c_removeExistingAds', (adType) => {
     cy.findByText('Payment methods').should('be.visible').click()
     cy.findByText('Payment methods').should('be.visible')
     cy.c_deleteAllPM()
-    cy.findByRole('button', { name: /Add/ }).should('exist')
+    cy.findByRole('button', { name: /Add/ }).should('be.visible')
     cy.c_visitResponsive('/cashier/p2p', 'small')
     cy.c_clickMyAdTab()
   }
