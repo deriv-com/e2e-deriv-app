@@ -9,8 +9,7 @@ function reset_balance_demo() {
   cy.get('.wallets-list-details__content').within(() => {
     cy.contains('USD').should('be.visible')
   })
-  cy.findByText('Reset balance').should('be.visible')
-  cy.findByText('Reset balance').click()
+  cy.findByText('Reset balance').should('be.visible').click()
   cy.get('[class="wallets-cashier-content"]')
     .findByRole('button', { name: 'Reset balance' })
     .click()
