@@ -5,7 +5,7 @@ let calculatedValue
 let regexPattern
 const decimalPlacesToSkip = 1
 
-Cypress.Commands.add('c_createNewAd', () => {
+Cypress.Commands.add('c_createNewAd', (adType) => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
   cy.get('body', { timeout: 10000 }).then((body) => {
     if (body.find('.no-ads__message', { timeout: 10000 }).length > 0) {
@@ -219,7 +219,7 @@ Cypress.Commands.add('c_postAd', () => {
   cy.findByRole('button', { name: 'Ok' }).should('be.enabled').click()
 })
 
-Cypress.Commands.add('c_removeExistingAds', () => {
+Cypress.Commands.add('c_removeExistingAds', (adType) => {
   cy.get('.my-ads-table__row')
     .trigger('touchstart', 'right', { timeout: 1000 })
     .trigger('touchmove', 'left')
@@ -231,6 +231,9 @@ Cypress.Commands.add('c_removeExistingAds', () => {
   cy.findByRole('button', { name: 'Delete' }).should('not.exist', {
     timeout: 10000,
   })
+  if (adType == 'Sell') {
+    cy.c_deleteAllPM()
+  }
 })
 
 Cypress.Commands.add('c_verifyDynamicMsg', () => {

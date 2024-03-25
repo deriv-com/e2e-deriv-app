@@ -4,9 +4,12 @@ import { generateAccountNumberString } from '../../../support/helper/utility'
 let fixedRate = 1.25
 let minOrder = 5
 let maxOrder = 10
-function verifyAdOnMyAdsScreen(fiatCurrency, localCurrency) {
+let paymentName = 'Alipay'
+let paymentID = generateAccountNumberString(12)
+
+function verifyAdOnMyAdsScreen(adType, fiatCurrency, localCurrency) {
   cy.findByText('Active').should('be.visible')
-  cy.findByText(`Buy ${fiatCurrency}`).should('be.visible')
+  cy.findByText(`${adType} ${fiatCurrency}`).should('be.visible')
   cy.findByText(`${fixedRate} ${localCurrency}`)
   cy.findByText(
     `${minOrder.toFixed(2)} - ${maxOrder.toFixed(2)} ${fiatCurrency}`
@@ -15,7 +18,7 @@ function verifyAdOnMyAdsScreen(fiatCurrency, localCurrency) {
 describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
   beforeEach(() => {
     cy.clearAllSessionStorage()
-    cy.c_login()
+    cy.c_login({ user: 'p2pFixedRate' })
     cy.c_visitResponsive('/cashier/p2p', 'small')
   })
   it('Should be able to create sell type advert and verify all fields and messages for fixed rate.', () => {
@@ -64,9 +67,21 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
       cy.c_verifyTextAreaBlock('default_advert_description')
       cy.c_verifyTooltip()
       cy.c_verifyCompletionOrderDropdown()
-      //cy.c_PaymentMethod()
-      //cy.c_verifyPostAd()
-      //verifyAdOnMyAdsScreen(
+      cy.findByTestId('dt_payment_method_card_add_icon').should('exist').click()
+      cy.c_addPaymentMethod(paymentID, paymentName)
+      cy.findByText(paymentID)
+        .should('exist')
+        .parent()
+        .prev()
+        .find('.dc-checkbox')
+        .and('exist')
+        .click()
+      cy.c_verifyPostAd()
+      verifyAdOnMyAdsScreen(
+        'Sell',
+        sessionStorage.getItem('c_fiatCurrency'),
+        sessionStorage.getItem('c_localCurrency')
+      )
       //  sessionStorage.getItem('c_fiatCurrency'),
       //  sessionStorage.getItem('c_localCurrency')
       //)

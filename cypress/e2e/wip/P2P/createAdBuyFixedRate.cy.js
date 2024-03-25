@@ -43,6 +43,7 @@ describe('QATEST-2403 - Create a Buy type Advert - Fixed Rate', () => {
     cy.then(() => {
       cy.c_verifyAmountFiled()
       cy.c_verifyFixedRate(
+        'buy',
         10,
         fixedRate,
         sessionStorage.getItem('c_fiatCurrency'),
