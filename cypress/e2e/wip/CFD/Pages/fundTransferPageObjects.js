@@ -179,8 +179,6 @@ class FundTransferPageObjects {
 
       cy.get('@mt5BalanceBefore').then((mt5BalanceBefore) => {
         mt5BalanceBefore = Number(mt5BalanceBefore.replace(/[^0-9.-]+/g, ''))
-      cy.get('@mt5BalanceBefore').then((mt5BalanceBefore) => {
-        mt5BalanceBefore = Number(mt5BalanceBefore.replace(/[^0-9.-]+/g, ''))
 
         cy.get(locators.fundTransferLocators.mt5AccountHandle)
           .contains(mt5Account.split(' ')[0])
