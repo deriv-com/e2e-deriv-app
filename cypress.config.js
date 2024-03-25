@@ -2,7 +2,7 @@ const { defineConfig } = require("cypress")
 require("dotenv").config()
 
 //const gViewPortSize = {small: 'phone-xr', large: 'macbook-16'} //TODO Use enum
-
+ 
 module.exports = defineConfig({
   e2e: {
     projectId: "rjvf4u",
@@ -25,12 +25,51 @@ module.exports = defineConfig({
       staging: "https://staging-bot.deriv.com/?l=en",
       prod: "https://bot.deriv.com/?l=en",
     },
+    credentials: {
+    test:{
+      masterUser: {
+        ID: process.env.E2E_DERIV_LOGIN,
+        PSWD: process.env.E2E_DERIV_PASSWORD
+      },
+      dBot: {
+        ID: process.env.E2E_LOGIN_ID_DBOT,
+        PSWD: process.env.E2E_LOGIN_PSWD_DBOT
+      },
+      p2pFixedRate: {
+        ID: process.env.E2E_LOGIN_ID_P2P_FIXEDRATE,
+        PSWD: process.env.E2E_PSWD_P2P
+      },
+      p2pFloating: {
+        ID: process.env.E2E_P2P_FLOATING,
+        PSWD: process.env.E2E_PSWD_P2P
+      },
+      diel: {
+        ID: process.env.E2E_DIEL_LOGIN,
+        PSWD: process.env.E2E_DIEL_PASSWORD,
+      },
+      eu: {
+        ID: process.env.E2E_EU_LOGIN,
+        PSWD: process.env.E2E_EU_PASSWORD,
+      },
+    },
+    production:{
+      masterUser:{
+        ID: process.env.E2E_DERIV_LOGIN_PROD,
+        PSWD: process.env.E2E_DERIV_PASSWORD_PROD
+      },
+      dBot: {
+        ID: process.env.E2E_LOGIN_ID_PROD_DBOT,
+        PSWD: process.env.E2E_LOGIN_PSWD_PROD_DBOT
+      },
+    }
+  },
     RegionEU: "/?region=at",
     RegionROW: "/?region=za",
     skipROWTests: false,
     email: "test@example.com",
     viewPortSize: "small",
     loginEmail: process.env.E2E_DERIV_LOGIN,
+    walletloginEmail: process.env.E2E_DERIV_LOGIN_WALLET,
     loginPassword: process.env.E2E_DERIV_PASSWORD,
     p2pbuyloginEmail: process.env.E2E_P2P_BUY,
     p2psellloginEmail: process.env.E2E_P2P_SELL,
@@ -63,9 +102,8 @@ module.exports = defineConfig({
     oAuthToken: process.env.E2E_OAUTH_TOKEN,
     doughflowOAuthUrl: process.env.E2E_DOUGHFLOW_OAUTH_URL,
     doughflowOAuthToken: process.env.E2E_DOUGHFLOW_OAUTH_TOKEN,
-    walletsWithdrawalUrl: process.env.E2E_WALLETS_WITHDRAWAL_URL,
     walletsWithdrawalCode: process.env.E2E_WALLETS_WITHDRAWAL_CODE,
-    verificationdUrl:  process.env.E2E_WALLETS_PASSWORD_URL,
+    verificationUrl:  process.env.E2E_WALLETS_PASSWORD_URL,
     HMACKey: process.env.E2E_HMAC_KEY,
     username_cr_unauthenticated: process.env.E2E_USENAME_BOT,
     password: process.env.E2E_PASS_BOT,

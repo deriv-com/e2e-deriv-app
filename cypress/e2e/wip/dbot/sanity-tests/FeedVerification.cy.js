@@ -9,8 +9,7 @@ describe('QATEST-99340: Verify feed is loading on charts tab', () => {
 
   beforeEach(() => {
     cy.c_login()
-    cy.c_visitResponsive('/appstore/traders-hub', 'large')
-    tradersHub.openBotButton.click()
+    cy.c_visitResponsive('/bot', 'large')
     cy.c_loadingCheck()
     common.skipTour()
   })

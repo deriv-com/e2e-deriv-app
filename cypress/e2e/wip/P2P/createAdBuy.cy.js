@@ -1,9 +1,8 @@
 import '@testing-library/cypress/add-commands'
 
-
 describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
   beforeEach(() => {
-    cy.c_login()
+    cy.c_login({ user: 'p2pFloating' })
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
 
@@ -21,6 +20,5 @@ describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
     cy.c_verifyCompletionOrderDropdown()
     cy.c_PaymentMethod()
     cy.c_verifyPostAd()
-
   })
 })
