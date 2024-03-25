@@ -5,10 +5,6 @@
         "real":"#real"
     },
     "fundTransferLocators":{
-        "mt5AccountHandle":"[class='trading-app-card__container trading-app-card--divider']",
-        "mt5TradingDetails":".trading-app-card__details",
-        "mt5TradingActions":".trading-app-card__actions",
-        "usdBalanceLabel":"[data-testid='dt_balance_text_container']",
         "mt5AccountHandle":".trading-app-card__container",
         "mt5TradingDetails":".trading-app-card__details",
         "mt5TradingActions":".trading-app-card__actions",
