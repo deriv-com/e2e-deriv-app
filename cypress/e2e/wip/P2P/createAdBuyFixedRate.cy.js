@@ -51,6 +51,7 @@ describe('QATEST-2403 - Create a Buy type Advert - Fixed Rate', () => {
       )
       cy.c_verifyMaxMin('min_transaction', minOrder, 'Min')
       cy.c_verifyMaxMin('max_transaction', maxOrder, 'Max')
+      cy.c_verifyTextAreaBlock('default_advert_description')
       cy.c_verifyTooltip()
       cy.c_verifyCompletionOrderDropdown()
       cy.c_PaymentMethod()
