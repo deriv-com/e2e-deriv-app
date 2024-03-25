@@ -210,7 +210,6 @@ Cypress.Commands.add('c_PaymentMethod', () => {
   cy.findByPlaceholderText('Add').click()
   cy.findByText('Skrill').click()
   cy.findByPlaceholderText('Add').should('not.exist')
-  cy.findByPlaceholderText('Add').should('not.exist')
 })
 
 Cypress.Commands.add('c_verifyAmountFiled', () => {
@@ -240,10 +239,12 @@ Cypress.Commands.add('c_removeExistingAds', (adType) => {
   cy.get('.my-ads-table__popovers-delete>svg').click({ force: true })
   cy.findByText('Do you want to delete this ad?').should('be.visible')
   cy.findByText('You will NOT be able to restore it.').should('be.visible')
-  cy.findByRole('button', { name: 'Delete' }).should('be.enabled').click()
-  cy.findByRole('button', { name: 'Delete' }).should('be.enabled').click().should('not.exist', {
-    timeout: 10000,
-  })
+  cy.findByRole('button', { name: 'Delete' })
+    .should('be.enabled')
+    .click()
+    .should('not.exist', {
+      timeout: 10000,
+    })
   if (adType == 'sell') {
     cy.findByText('My profile').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
