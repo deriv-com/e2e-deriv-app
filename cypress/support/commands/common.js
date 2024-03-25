@@ -279,7 +279,7 @@ Cypress.Commands.add(
     let {
       retryCount = 0,
       maxRetries = 3,
-      baseUrl = Cypress.env('qaBoxBaseUrl'),
+      baseUrl = Cypress.env('configServer') + '/events',
     } = options
     cy.visit(
       `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
