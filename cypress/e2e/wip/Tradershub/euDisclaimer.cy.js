@@ -1,28 +1,28 @@
 import '@testing-library/cypress/add-commands'
-const size = ['desktop', 'small']
 
 describe('QATEST-42150 Validate the EU statutory disclaimer in footer for EU users', () => {
-  beforeEach(() => {
+  it('Should validate the EU statutory disclaimer in footer for EU users', () => {
     cy.c_login({ user: 'eu' })
-  })
-  size.forEach((size) => {
-    it(`Should validate the EU statutory disclaimer in footer for EU users on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
-      cy.c_visitResponsive('/appstore/traders-hub', size)
-      cy.c_validateEUDisclaimer()
-    })
+    cy.c_visitResponsive('/appstore/traders-hub', 'large')
+    cy.c_validateEUDisclaimer()
+    cy.c_visitResponsive('/appstore/traders-hub', 'small')
+    cy.c_validateEUDisclaimer()
   })
 })
 
-describe('QATEST-37723 Validate the EU statutory disclaimer in footer of EU account for DIEL users', () => {
+describe('QATEST-37723 Validate the EU statutory disclaimer in footer of EU account for DIEL users ', () => {
   beforeEach(() => {
-    cy.c_login({ user: 'diel' })
+    Cypress.env('oAuthUrl', '<empty>')
   })
 
-  size.forEach((size) => {
-    it(`Should validate the EU statutory disclaimer in footer of EU account for DIEL users on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
-      cy.c_visitResponsive('/appstore/traders-hub', size)
-      cy.findByText('EU', { exact: true }).click({ force: true })
-      cy.c_validateEUDisclaimer()
-    })
+  it('Should validate the EU statutory disclaimer in footer of EU account for DIEL users', () => {
+    cy.c_login({ user: 'diel' })
+    cy.c_visitResponsive('/appstore/traders-hub', 'large')
+    cy.findByText('EU', { exact: true }).click()
+    cy.c_closeNotificationHeader()
+    cy.c_validateEUDisclaimer()
+    cy.c_visitResponsive('/appstore/traders-hub', 'small')
+    cy.findByText('EU', { exact: true }).click()
+    cy.c_validateEUDisclaimer()
   })
 })

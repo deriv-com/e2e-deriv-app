@@ -545,6 +545,7 @@ Cypress.Commands.add('c_validateEUDisclaimer', () => {
   ).should('be.visible')
 })
 
+<<<<<<< HEAD
 /**
  * Requires a currency object that consists of both currency name and currency code and delta
  * currency={
@@ -856,3 +857,12 @@ Cypress.Commands.add(
     }
   }
 )
+=======
+Cypress.Commands.add('c_validateEUDisclaimer', () => {
+  cy.findByTestId('dt_traders_hub_disclaimer').should('be.visible')
+  cy.findByText('EU statutory disclaimer')
+  cy.findByText(
+    '70.1% of retail investor accounts lose money when trading CFDs with this provider'
+  ).should('be.visible')
+})
+>>>>>>> 1bf8af3e (eudisclaimer (#169))

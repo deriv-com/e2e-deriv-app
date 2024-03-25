@@ -168,6 +168,13 @@ module.exports = defineConfig({
         ID: process.env.E2E_LOGIN_ID_P2P_FIXEDRATE,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
+      diel: {
+        ID: process.env.E2E_DIEL_LOGIN,
+        PSWD: process.env.E2E_DIEL_PASSWORD
+      },
+      eu: {
+        ID: process.env.E2E_EU_LOGIN,
+        PSWD: process.env.E2E_EU_PASSWORD
       p2pFloating: {
         ID: process.env.E2E_P2P_FLOATING,
         PSWD: process.env.E2E_PSWD_P2P
