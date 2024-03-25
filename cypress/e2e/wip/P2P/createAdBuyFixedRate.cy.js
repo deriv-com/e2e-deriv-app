@@ -25,7 +25,7 @@ describe('QATEST-2403 - Create a Buy type Advert - Fixed Rate', () => {
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
     cy.c_clickMyAdTab()
-    cy.c_createNewAd()
+    cy.c_createNewAd('buy')
     cy.findByText('Buy USD').click()
     cy.findByText("You're creating an ad to buy...").should('be.visible')
     cy.findByTestId('offer_amount')

@@ -13,7 +13,7 @@ Cypress.Commands.add('c_createNewAd', (adType) => {
         .should('be.visible')
         .click()
     } else if (body.find('#toggle-my-ads', { timeout: 10000 }).length > 0) {
-      cy.c_removeExistingAds()
+      cy.c_removeExistingAds(adType)
       cy.findByRole('button', { name: 'Create new ad' })
         .should('be.visible')
         .click()
@@ -231,8 +231,15 @@ Cypress.Commands.add('c_removeExistingAds', (adType) => {
   cy.findByRole('button', { name: 'Delete' }).should('not.exist', {
     timeout: 10000,
   })
-  if (adType == 'Sell') {
+  if (adType == 'sell') {
+    cy.findByText('My profile').click()
+    cy.findByText('Available Deriv P2P balance').should('be.visible')
+    cy.findByText('Payment methods').should('be.visible').click()
+    cy.findByText('Payment methods').should('be.visible')
     cy.c_deleteAllPM()
+    cy.findByRole('button').should('exist').and('contain.text', 'Add')
+    cy.c_visitResponsive('/cashier/p2p', 'small')
+    cy.c_clickMyAdTab()
   }
 })
 
