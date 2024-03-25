@@ -241,7 +241,7 @@ Cypress.Commands.add('c_removeExistingAds', (adType) => {
   cy.findByText('Do you want to delete this ad?').should('be.visible')
   cy.findByText('You will NOT be able to restore it.').should('be.visible')
   cy.findByRole('button', { name: 'Delete' }).should('be.enabled').click()
-  cy.findByRole('button', { name: 'Delete' }).should('not.exist', {
+  cy.findByRole('button', { name: 'Delete' }).should('be.enabled').click().should('not.exist', {
     timeout: 10000,
   })
   if (adType == 'sell') {
