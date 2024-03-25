@@ -46,6 +46,37 @@ Cypress.Commands.add('c_verifyExchangeRate', () => {
   cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
 })
 
+Cypress.Commands.add(
+  'c_verifyFixedRate',
+  (totalAmount, fixedRateValue, fiatCurrency, localCurrency) => {
+    totalAmount = totalAmount.toFixed(2)
+    fixedRateValue = fixedRateValue.toFixed(2)
+    cy.findByTestId('fixed_rate_type').clear()
+    cy.findByText('Fixed rate is required').should('be.visible')
+    cy.findByTestId('fixed_rate_type').type('abc').should('have.value', 'abc')
+    cy.findByText('Enter a valid amount').should('be.visible')
+    cy.findByTestId('fixed_rate_type')
+      .clear()
+      .type('10abc')
+      .should('have.value', '10abc')
+    cy.findByText('Enter a valid amount').should('be.visible')
+    cy.findByTestId('fixed_rate_type')
+      .clear()
+      .type('!@#')
+      .should('have.value', '!@#')
+    cy.findByText('Enter a valid amount').should('be.visible')
+    cy.findByTestId('fixed_rate_type').clear().type(fixedRateValue)
+    const totalPrice = totalAmount * fixedRateValue
+    regexPattern = `You\'re creating an ad to buy ${totalAmount} ${fiatCurrency} for ${totalPrice.toFixed(2)} ${localCurrency} (${fixedRateValue} ${localCurrency}/${fiatCurrency})`
+    cy.get('.create-ad-summary')
+      .eq(0)
+      .invoke('text')
+      .then((spanText) => {
+        expect(spanText).to.eq(regexPattern)
+      })
+  }
+)
+
 Cypress.Commands.add('c_verifyRate', () => {
   cy.findByTestId('float_rate_type').click().clear()
   cy.findByText('Floating rate is required').should('be.visible')
@@ -143,7 +174,7 @@ Cypress.Commands.add('c_PaymentMethod', () => {
   cy.findByText('Bank Transfer').click()
   cy.findByPlaceholderText('Add').click()
   cy.findByText('Skrill').click()
-  cy.findByPlaceholderText('Add').should('not.be.exist')
+  cy.findByPlaceholderText('Add').should('not.exist')
 })
 
 Cypress.Commands.add('c_verifyAmountFiled', () => {
