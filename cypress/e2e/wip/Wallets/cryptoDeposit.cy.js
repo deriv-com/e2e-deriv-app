@@ -15,7 +15,7 @@ describe('WALL-2831 - Crypto deposit and fiat onramp', () => {
       .contains('BTC Wallet')
       .click()
     cy.get('.wallets-list-details__content').within(() => {
-      cy.contains('BTC').should('be.visible')
+      cy.findByText(/BTC/).should('be.visible')
     })
     cy.findByText('Deposit').should('be.visible')
     cy.findByText('Deposit').click()
@@ -23,7 +23,7 @@ describe('WALL-2831 - Crypto deposit and fiat onramp', () => {
     cy.findByText('Transaction status')
     cy.findByText(/To avoid loss of funds/)
     cy.get('.wallets-clipboard').click()
-    cy.contains('Copied')
+    cy.findByText('Copied!')
     cy.findByText('Try Fiat onramp').click()
     cy.findByText('Banxa')
   })
@@ -36,7 +36,7 @@ describe('WALL-2831 - Crypto deposit and fiat onramp', () => {
       .contains('BTC Wallet')
       .click()
     cy.get('.wallets-list-details__content').within(() => {
-      cy.contains('BTC').should('be.visible')
+      cy.findByText(/BTC/).should('be.visible')
     })
     cy.findByText('Deposit').should('be.visible')
     cy.findByText('Deposit').click()

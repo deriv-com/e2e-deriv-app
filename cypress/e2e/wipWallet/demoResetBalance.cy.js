@@ -7,7 +7,7 @@ function reset_balance_demo() {
     .contains('USD Demo Wallet')
     .click()
   cy.get('.wallets-list-details__content').within(() => {
-    cy.contains('USD').should('be.visible')
+    cy.findByText(/USD/).should('be.visible')
   })
   cy.findByText('Reset balance').should('be.visible').click()
   cy.get('[class="wallets-cashier-content"]')

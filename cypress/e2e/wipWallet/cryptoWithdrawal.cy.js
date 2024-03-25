@@ -14,7 +14,7 @@ describe('WALL-2830 - Crypto withdrawal send email', () => {
       .contains('BTC Wallet')
       .click()
     cy.get('.wallets-list-details__content').within(() => {
-      cy.contains('BTC').should('be.visible')
+      cy.findByText(/BTC/).should('be.visible')
     })
     cy.contains('Withdraw').click()
     cy.contains('Please help us verify').should('be.visible')
@@ -38,7 +38,7 @@ describe('WALL-2830 - Crypto withdrawal content access from email', () => {
       .contains('BTC Wallet')
       .click()
     cy.get('.wallets-list-details__content').within(() => {
-      cy.contains('BTC').should('be.visible')
+      cy.findByText(/BTC/).should('be.visible')
     })
     cy.contains('Withdraw').click()
   })
