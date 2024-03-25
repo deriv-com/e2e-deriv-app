@@ -19,6 +19,5 @@
         "transferSubmitButton":"[data-testid='dt_account_transfer_form_submit']",
         "closeButton":"[class='account-transfer-receipt__crypto--form-submit']",
         "transferButtonOnTradersHub":"button:contains('Transfer')"
-        
     }
 } 
