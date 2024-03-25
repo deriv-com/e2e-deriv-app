@@ -90,7 +90,7 @@ function onboardingfiatwallet() {
 
 describe('WALL-3037 & 3039- User Onboarding on Desktop for Fiat Wallets', () => {
   beforeEach(() => {
-    cy.c_login('wallets')
+    cy.c_login({ app: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')
   })
 

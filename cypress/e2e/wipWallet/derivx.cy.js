@@ -6,7 +6,7 @@ function clickAddDerivxButton() {
   ).click()
 }
 
-function verifyDerixCreation(accountType) {
+function verifyDerivxCreation(accountType) {
   let expectedText
   if (accountType === 'Real') {
     expectedText = 'Create a Deriv X password'
@@ -61,11 +61,11 @@ describe('WALL-3252 - Add derivx account', () => {
     )
     if (Text.length > 0) {
       clickAddDerivxButton()
-      verifyDerixCreation('Real')
+      verifyDerivxCreation('Real')
       verifyTransferFundsMessage('Real')
       expandDemoWallet()
       clickAddDerivxButton()
-      verifyDerixCreation('Demo')
+      verifyDerivxCreation('Demo')
       verifyTransferFundsMessage('Demo')
     }
   })
