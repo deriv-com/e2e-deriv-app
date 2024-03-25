@@ -197,6 +197,7 @@ Cypress.Commands.add('c_PaymentMethod', () => {
   cy.findByPlaceholderText('Add').click()
   cy.findByText('Skrill').click()
   cy.findByPlaceholderText('Add').should('not.exist')
+  cy.findByPlaceholderText('Add').should('not.exist')
 })
 
 Cypress.Commands.add('c_verifyAmountFiled', () => {

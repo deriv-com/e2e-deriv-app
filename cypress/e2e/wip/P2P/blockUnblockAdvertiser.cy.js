@@ -54,9 +54,7 @@ function createAnOrder(advertNickname) {
     .find('button')
     .should('be.visible')
     .click()
-  cy.findByText(
-    "If the market rate changes from the rate shown here, we won't be able to process your order."
-  ).should('be.visible')
+  cy.findByText('Orders must be completed in').should('be.visible')
   cy.findByRole('button', { name: 'Confirm' })
     .should('exist')
     .and('be.enabled')
