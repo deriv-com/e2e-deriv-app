@@ -1,3 +1,5 @@
+import { generateAccountNumberString } from '../helper/utility'
+
 let rate = 0.01
 let marketRate
 let rateCalculation
@@ -85,6 +87,17 @@ Cypress.Commands.add('c_verifyTextAreaBlock', (blockName) => {
   }
   cy.findByTestId(blockName).clear().type('abc').should('have.value', 'abc')
   cy.c_verifyTextAreaLength(blockName, 'abc'.length)
+  let textLimitCheck = generateAccountNumberString(300)
+  cy.findByTestId(blockName)
+    .clear()
+    .type(textLimitCheck)
+    .should('have.value', textLimitCheck)
+  cy.c_verifyTextAreaLength(blockName, textLimitCheck.length)
+  cy.findByTestId(blockName)
+    .clear()
+    .type(textLimitCheck + '1')
+    .should('have.value', textLimitCheck)
+  cy.c_verifyTextAreaLength(blockName, textLimitCheck.length)
   cy.findByTestId(blockName)
     .clear()
     .type('Text area info block.')
