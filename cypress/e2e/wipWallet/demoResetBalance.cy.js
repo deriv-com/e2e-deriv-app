@@ -1,13 +1,15 @@
 import '@testing-library/cypress/add-commands'
 
 function reset_balance_demo() {
-  cy.findByText('Demo').scrollIntoView()
-  cy.get('[class*="virtual"].wallets-accordion__header--virtual')
-    .find('.wallets-accordion__dropdown > svg')
+  cy.get('.wallets-dropdown__button').click()
+  cy.findByText('USD Demo Wallet').scrollIntoView()
+  cy.get('.wallets-list-card-dropdown__item-content')
+    .contains('USD Demo Wallet')
     .click()
-  cy.get('[class*="virtual"].wallets-accordion__header--virtual')
-    .contains('Reset balance')
-    .click()
+  cy.get('.wallets-list-details__content').within(() => {
+    cy.findByText(/USD/).should('be.visible')
+  })
+  cy.findByText('Reset balance').should('be.visible').click()
   cy.get('[class="wallets-cashier-content"]')
     .findByRole('button', { name: 'Reset balance' })
     .click()
@@ -15,7 +17,7 @@ function reset_balance_demo() {
   cy.findByRole('button', { name: 'Transfer funds' }).click()
   //To check if Transfer tab is active on clicking Transfer funds
   cy.get('[class*="wallets-cashier-header__tab"].wallets-cashier-header__tab')
-    .contains('Transfer')
+    .findByText('Transfer')
     .parent()
     .should('be.visible')
     .invoke('attr', 'class') //would return the string of that class
