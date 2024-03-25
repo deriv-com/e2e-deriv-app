@@ -178,7 +178,7 @@ describe('QATEST-20010 Withdrawal Request: Fiat - Different language', () => {
     cy.clearAllLocalStorage()
     cy.clearAllSessionStorage()
     cy.c_login()
-    cy.fixture('wallets/cashier_old/languageDetails').as('languageDetails')
+    cy.fixture('cashier/withdrawalLanguageContent').as('languageDetails')
   })
 
   screenSizes.forEach((size) => {
