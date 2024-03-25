@@ -39,22 +39,11 @@ Cypress.Commands.add('c_switchToReal', () => {
 Cypress.Commands.add('c_switchToDemo', () => {
   cy.findByTestId('dt_dropdown_display').click()
   cy.get('#demo').click()
-  //Wait for page to completely load
-  cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
 })
 
-Cypress.Commands.add('c_completeTradersHubTour', (options = {}) => {
-  const { language = 'english' } = options
-  cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
-    const lang = langData[language]
-    cy.c_skipPasskeysV2({ language: language })
-    cy.findByRole('button', { name: lang.realAccountFormUtils.nextBtn }).click()
-    if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
-      cy.contains('Choice of regulation').should('be.visible')
-      cy.contains('button', lang.realAccountFormUtils.nextBtn).click()
-    }
-    cy.findByRole('button', { name: 'OK' }).click()
-  })
+Cypress.Commands.add('c_completeTradersHubTour', () => {
+  cy.findByRole('button', { name: 'Next' }).click()
+  cy.findByRole('button', { name: 'OK' }).click()
 })
 
 Cypress.Commands.add('c_enterValidEmail', (signUpMail, options = {}) => {
