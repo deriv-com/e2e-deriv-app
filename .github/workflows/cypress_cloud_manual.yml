@@ -108,3 +108,6 @@ jobs:
           E2E_MAIN_QABOX_URL: ${{ secrets.E2E_MAIN_QABOX_URL }}
           E2E_QABOX_LOGIN: ${{ secrets.E2E_QABOX_LOGIN }}
           E2E_QABOX_PASSWORD: ${{ secrets.E2E_QABOX_PASSWORD }}
+          E2E_P2P_FLOATING: ${{secrets.E2E_P2P_FLOATING}}
+          E2E_PSWD_P2P: ${{secrets.E2E_PSWD_P2P}}
+
