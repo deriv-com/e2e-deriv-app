@@ -80,9 +80,9 @@ function onboardingfiatwallet() {
   cy.contains('Wallet', { timeout: 10000 }).should('exist')
   cy.findByText('CFDs', { exact: true }).should('be.visible')
   // Onboarding - Account having Fiat wallets (without CFD and Trading account).
-  cy.findByText('This account offers CFDs on derived instruments.').should(
-    'be.visible'
-  )
+  cy.findByText(
+    'Trade with leverage and tight spreads for better returns on trades'
+  ).should('be.visible')
   cy.findByTestId('dt_traders_hub_onboarding_icon').click()
   cy.get('[data-test-id="spotlight"]').should('be.visible')
   onboardingcfdtrading()
