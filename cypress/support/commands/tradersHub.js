@@ -305,3 +305,11 @@ Cypress.Commands.add('c_setEndpoint', (signUpMail) => {
   cy.findByRole('button', { name: 'Sign up' }).should('not.be.disabled')
   cy.c_enterValidEmail(signUpMail)
 })
+
+Cypress.Commands.add('c_validateEUDisclaimer', () => {
+  cy.findByTestId('dt_traders_hub_disclaimer').should('be.visible')
+  cy.findByText('EU statutory disclaimer')
+  cy.findByText(
+    '70.1% of retail investor accounts lose money when trading CFDs with this provider'
+  ).should('be.visible')
+})
