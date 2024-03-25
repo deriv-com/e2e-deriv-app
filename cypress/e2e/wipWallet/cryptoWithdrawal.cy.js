@@ -14,7 +14,7 @@ describe('WALL-2830 - Crypto withdrawal send email', () => {
       .contains('BTC Wallet')
       .click()
     cy.get('.wallets-list-details__content').within(() => {
-      cy.contains('BTC').should('be.visible')
+      cy.findByText(/BTC/).should('be.visible')
     })
     cy.contains('Withdraw').click()
     cy.contains('Please help us verify').should('be.visible')
@@ -29,9 +29,6 @@ describe('WALL-2830 - Crypto withdrawal send email', () => {
 
 describe('WALL-2830 - Crypto withdrawal content access from email', () => {
   //Prerequisites: Crypto wallet account in qa29 with BTC balance
-  let verification_code = Cypress.env('walletsWithdrawalCode')
-  const withdrawal_url = Cypress.env('walletsWithdrawalUrl')
-
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')
@@ -41,7 +38,7 @@ describe('WALL-2830 - Crypto withdrawal content access from email', () => {
       .contains('BTC Wallet')
       .click()
     cy.get('.wallets-list-details__content').within(() => {
-      cy.contains('BTC').should('be.visible')
+      cy.findByText(/BTC/).should('be.visible')
     })
     cy.contains('Withdraw').click()
   })
@@ -55,7 +52,7 @@ describe('WALL-2830 - Crypto withdrawal content access from email', () => {
     cy.then(() => {
       let verification_code = Cypress.env('walletsWithdrawalCode')
       cy.c_visitResponsive(
-        `${withdrawal_url}?verification=${verification_code}`,
+        `/wallets/cashier/withdraw?verification=${verification_code}`,
         'large'
       )
       cy.contains('Transaction status')
