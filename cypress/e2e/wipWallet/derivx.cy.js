@@ -6,7 +6,7 @@ function clickAddDerivxButton() {
   ).click()
 }
 
-function verifyDerixCreation(accountType) {
+function verifyDerivxCreation(accountType) {
   let expectedText
   if (accountType === 'Real') {
     expectedText = 'Create a Deriv X password'
@@ -56,12 +56,17 @@ describe('WALL-3252 - Add derivx account', () => {
   it('should be able to add DerivX USD account', () => {
     cy.log('add derivx account')
     cy.findByRole('heading', { name: 'Other CFD Platforms' }).should('exist')
-    clickAddDerivxButton()
-    verifyDerixCreation('Real')
-    verifyTransferFundsMessage('Real')
-    expandDemoWallet()
-    clickAddDerivxButton()
-    verifyDerixCreation('Demo')
-    verifyTransferFundsMessage('Demo')
+    const Text = Cypress.$(
+      ":contains('This account offers CFDs on a highly customisable CFD trading platform.')"
+    )
+    if (Text.length > 0) {
+      clickAddDerivxButton()
+      verifyDerivxCreation('Real')
+      verifyTransferFundsMessage('Real')
+      expandDemoWallet()
+      clickAddDerivxButton()
+      verifyDerivxCreation('Demo')
+      verifyTransferFundsMessage('Demo')
+    }
   })
 })

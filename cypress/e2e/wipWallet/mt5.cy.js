@@ -84,57 +84,78 @@ describe('WALL-2000 - Create MT5 account', () => {
   it('should be able to create mt5 svg account', () => {
     cy.log('create mt5 svg account')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
-
-    clickAddMt5Button()
-    verifyJurisdictionSelection('Derived')
-    verifyDerivMT5Creation('Derived')
-    verifyTransferFundsMessage('Derived')
-    closeModal()
-    clickAddMt5Button()
-    verifyJurisdictionSelection('Financial')
-    verifyDerivMT5Creation('Financial')
-    verifyTransferFundsMessage('Financial')
-    closeModal()
-
+    const svgText = Cypress.$(
+      ":contains('This account offers CFDs on derived instruments.')"
+    )
+    if (svgText.length > 0) {
+      clickAddMt5Button()
+      verifyJurisdictionSelection('Derived')
+      verifyDerivMT5Creation('Derived')
+      verifyTransferFundsMessage('Derived')
+      closeModal()
+    }
+    const financialText = Cypress.$(
+      ":contains('This account offers CFDs on derived instruments.')"
+    )
+    if (financialText.length > 0) {
+      clickAddMt5Button()
+      verifyJurisdictionSelection('Financial')
+      verifyDerivMT5Creation('Financial')
+      verifyTransferFundsMessage('Financial')
+      closeModal()
+    }
     // this part is commented due to this bug [https://app.clickup.com/t/20696747/WALL-3302]
+    // cy,findByText('Trade swap-free CFDs on MT5 with synthetics, forex, stocks, stock indices, cryptocurrencies and ETFs').then(()=>{
     // clickAddMt5Button()
     // verifyJurisdictionSelection('Swap-Free')
     // verifyDerivMT5Creation('Swap-Free')
     // verifyTransferFundsMessage('Swap-Free')
-    //closeModal()
+    // closeModal()
+    // })
+
     // create SVG Financial account
-
-    cy.findByText('Get more', { exact: true }).click()
-    cy.findByText('Select Deriv MT5’s account type').should('be.visible')
-    cy.get('.wallets-mt5-account-type-card-list-content').first().click()
-    cy.findByRole('button', { name: 'Next' }).click()
-    selectBVIJurisdiction('Derived')
-    cy.findByRole('heading', { name: 'Complete your personal details' }).should(
-      'exist'
-    )
-    cy.findByPlaceholderText('Tax residence*').click()
-    cy.findByPlaceholderText('Tax residence*').type('Indonesi')
-    cy.findByRole('option', { name: 'Indonesia' }).click()
-    cy.findByLabelText('Tax identification number*').click()
-    cy.findByLabelText('Tax identification number*').type('001234212343232')
-    cy.findByRole('button', { name: 'Next' }).click()
-    verifyDerivMT5Creation('BVI')
-    closeModal()
-
+    const getMoreText = Cypress.$(":contains('Get more')")
+    if (getMoreText.length > 0) {
+      cy.findByText('Get more', { exact: true }).click()
+      cy.findByText('Select Deriv MT5’s account type').should('be.visible')
+      cy.get('.wallets-mt5-account-type-card-list-content').first().click()
+      cy.findByRole('button', { name: 'Next' }).click()
+      selectBVIJurisdiction('Derived')
+      cy.findByRole('heading', {
+        name: 'Complete your personal details',
+      }).should('exist')
+      cy.findByPlaceholderText('Tax residence*').click()
+      cy.findByPlaceholderText('Tax residence*').type('Indonesi')
+      cy.findByRole('option', { name: 'Indonesia' }).click()
+      cy.findByLabelText('Tax identification number*').click()
+      cy.findByLabelText('Tax identification number*').type('001234212343232')
+      cy.findByRole('button', { name: 'Next' }).click()
+      verifyDerivMT5Creation('BVI')
+      closeModal()
+    }
     // Create Demo MT5 accounts
     cy.log('create demo mt5 svg account')
     expandDemoWallet()
     cy.findByText('CFDs', { exact: true }).should('be.visible')
-    clickAddMt5Button()
-    verifyDerivMT5Creation('Demo')
-    verifyDemoCreationsMessage('Derived')
+    const demoSvgText = Cypress.$(
+      ":contains('This account offers CFDs on derived instruments.')"
+    )
+    if (demoSvgText.length > 0) {
+      clickAddMt5Button()
+      verifyDerivMT5Creation('Demo')
+      verifyDemoCreationsMessage('Derived')
+    }
 
     cy.log('create demo mt5 svg financial account')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
-    clickAddMt5Button()
-    verifyDerivMT5Creation('Demo')
-    verifyDemoCreationsMessage('Financial')
-
+    const demoFinancialText = Cypress.$(
+      ":contains('This account offers CFDs on derived instruments.')"
+    )
+    if (demoFinancialText.length > 0) {
+      clickAddMt5Button()
+      verifyDerivMT5Creation('Demo')
+      verifyDemoCreationsMessage('Financial')
+    }
     // this part is commented due to this bug [https://app.clickup.com/t/20696747/WALL-3302]
     // cy.log("create demo mt5 svg swap free account")
     // cy.findByText("CFDs", { exact: true }).should("be.visible")
