@@ -1,8 +1,6 @@
 {
-
     "mt5Locators":
     {
-
         "tradershubDropDown":"[data-testid='dt_dropdown_display'] > .dc-text",
         "demo":"#demo",
         "real":"#real",
@@ -16,8 +14,5 @@
         "mt5ButtonContinue":"button:contains('Continue')",
         "mt5TextAccountType":".demo-account-card__type",
         "mt5DemoSuccessMessage":".dc-modal-body>:nth-child(1)>svg:nth-child(2)"
-
-        
-        
     } 
 }
