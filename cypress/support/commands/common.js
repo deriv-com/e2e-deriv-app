@@ -109,7 +109,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
         cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
-        cy.c_doOAuthLogin(app)
+        cy.c_doOAuthLogin({ app: app, isBackEndProd: backEndProd })
       },
       loginEmail,
       loginPassword
@@ -122,15 +122,30 @@ Cypress.Commands.add('c_login', (options = {}) => {
       cy.log('came inside wallet getOauth')
       Cypress.env('oAuthUrl', oAuthUrl)
       cy.log('getOAuthUrlWallet - value after: ' + Cypress.env('oAuthUrl'))
-      cy.c_doOAuthLogin(app)
+      cy.c_doOAuthLogin({ app: app, isBackEndProd: backEndProd })
     })
   } else {
-    cy.c_doOAuthLogin(app)
+    cy.c_doOAuthLogin({ app: app, isBackEndProd: backEndProd })
   }
 })
 
-Cypress.Commands.add('c_doOAuthLogin', (app) => {
-  cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
+Cypress.Commands.add('c_doOAuthLogin', (options = {}) => {
+  const { app = '', isBackEndProd = false } = options
+  if (
+    Cypress.config('baseUrl') != Cypress.env('prodUrl') &&
+    isBackEndProd == true
+  ) {
+    cy.c_visitResponsive(
+      Cypress.env('oAuthUrl').replace(
+        'https://app.deriv.com',
+        'https://staging-app.deriv.com'
+      ),
+      'large'
+    )
+  } else {
+    cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
+  }
+
   //To let the dtrader page load completely
   cy.get('.cq-symbol-select-btn', { timeout: 10000 }).should('exist')
   cy.document().then((doc) => {
