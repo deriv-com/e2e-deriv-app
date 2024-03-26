@@ -1,4 +1,5 @@
 require('dotenv').config()
+const crypto = require('crypto')
 const { chromium } = require('playwright')
 const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI')
 const WebSocket = require('ws')
@@ -32,9 +33,9 @@ const nameGenerator = () => {
 }
 
 const numbersGenerator = () => {
-  return Array.from({ length: 10 }, () => Math.floor(Math.random() * 10)).join(
-    ''
-  )
+  let array = new Uint8Array(10)
+  crypto.randomFillSync(array) // Synchronously fill the array with random bytes
+  return Array.from(array, (byte) => byte % 10).join('')
 }
 
 const randomEmail = emailGenerator()
