@@ -98,7 +98,6 @@ module.exports = defineConfig({
     emailUser: process.env.E2E_AUTH_EMAIL_USER,
     emailPassword: process.env.E2E_AUTH_EMAIL_PASSWORD,
     event_email_url: process.env.E2E_EVENTS_EMAIL,
-    mainURL: process.env.CYPRESS_BASE_URL,
     diel_country_list: [
       "Ecuador",
       "South Africa",
@@ -110,7 +109,7 @@ module.exports = defineConfig({
     CoROnfidoROW: process.env.E2E_COUNTRY_OF_RESI_ROW_ONFIDO,
     CoRIDVROW: process.env.E2E_COUNTRY_OF_RESI_ROW_IDV,
     CoRMF: process.env.E2E_COUNTRY_OF_RESI_MF,
-    user_password: process.env.E2E_USERPASSWORD,
+    user_password: process.env.E2E_DERIV_PASSWORD,
     citizenshipOnfidoROW: process.env.E2E_CITIZENSHIP_ROW_ONFIDO,
     citizenshipIDVROW: process.env.E2E_CITIZENSHIP_ROW_IDV,
     citizenshipMF: process.env.E2E_CITIZENSHIP_MF,
