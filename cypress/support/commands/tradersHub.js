@@ -31,9 +31,9 @@ Cypress.Commands.add('c_enterValidEmail', (signUpMail) => {
       },
     })
     //Wait for the signup page to load completely
-   // cy.findByRole('button', { name: 'whatsapp icon' }).should('be.visible', {
-    //  timeout: 30000,
-    //})
+    cy.findByRole('button', { name: 'whatsapp icon' }).should('be.visible', {
+     timeout: 30000,
+    })
     cy.findByPlaceholderText('Email').as('email').should('be.visible')
     cy.get('@email').type(signUpMail)
     cy.findByRole('checkbox').click()
@@ -242,7 +242,6 @@ Cypress.Commands.add('c_completeFatcaDeclarationAgreement', () => {
 })
 
 Cypress.Commands.add('c_addAccountMF', (type) => {
-  cy.log('logged country is ' + type)
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
   cy.get('.dc-checkbox__box').eq(0).click()
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
@@ -296,7 +295,6 @@ Cypress.Commands.add('c_setEndpoint', (signUpMail) => {
   localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
   localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
   const mainURL = Cypress.env('baseUrl')
-  cy.log('The main URL is : '+ mainURL)
   cy.c_visitResponsive(mainURL+'endpoint', 'desktop')
   cy.findByRole('button', { name: 'Sign up' }).should('not.be.disabled')
   cy.c_enterValidEmail(signUpMail)

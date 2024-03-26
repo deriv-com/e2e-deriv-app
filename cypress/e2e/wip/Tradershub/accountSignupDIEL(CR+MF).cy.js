@@ -43,7 +43,7 @@ describe('QATEST-5554: Verify DIEL Signup flow - CR + MF', () => {
     cy.findByRole('button', { name: 'Next' }).click()
     cy.c_completeTradingAssessment()
     cy.c_completeFinancialAssessment()
-    cy.c_addAccountMF()
+    cy.c_addAccountMF('CR+MF')
     cy.c_manageAccountsetting(country)
   })
 })
