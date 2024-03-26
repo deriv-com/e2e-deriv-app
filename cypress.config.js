@@ -1,5 +1,6 @@
-const { defineConfig } = require("cypress")
 require("dotenv").config()
+const { defineConfig } = require("cypress")
+const createAccountReal = require('./cypress/support/helper/accountCreationUtiliy');
 
 //const gViewPortSize = {small: 'phone-xr', large: 'macbook-16'} //TODO Use enum
  
@@ -12,6 +13,21 @@ module.exports = defineConfig({
     supportFile: "cypress/support/e2e.js",
     experimentalWebKitSupport: true,
     chromeWebSecurity: false,
+    setupNodeEvents(on, config) {
+      on('task', {
+        async createRealAccountTask() {
+          try {
+            const accountDetails = await createAccountReal();
+            return accountDetails;
+          } catch (error) {
+            console.error('Error creating account:', error);
+            throw error;
+          }
+        },
+      });
+
+      return config;  // Return the config object is important for custom configurations to take effect
+    },
   },
   env: {
     stagingUrl: "https://staging-app.deriv.com/",

@@ -1,7 +1,10 @@
+// import DerivAPI from '@deriv/deriv-api/dist/DerivAPI';
+const { chromium } = require('playwright')
 require('dotenv').config()
 const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI')
-const appId = Cypress.env('stdConfigAppId')
-const websocketURL = Cypress.env('websocketUrl')
+const WebSocket = require('ws')
+const appId = process.env.E2E_STD_CONFIG_APPID // Cypress.env('stdConfigAppId')
+const websocketURL = process.env.WEBSOCKET_URL // Cypress.env('websocketUrl')
 const connection = new WebSocket(
   `${websocketURL}?l=EN&app_id=${appId}&brand=deriv`
 )
@@ -36,38 +39,63 @@ const verifyEmail = async () => {
   })
 }
 
-export const getVerificationCode = async () => {
-  await verifyEmail()
+const getVerificationCode = async () => {
+  try {
+    // verifyEmail API call
+    await verifyEmail()
 
-  const eventsUrl = `https://${Cypress.env('emailUser')}:${Cypress.env('emailPassword')}@${Cypress.env('event_email_url')}`
-  cy.visit(`${eventsUrl}/events`)
-
-  // After the page has loaded, start interacting with it
-  cy.scrollTo('bottom') // Scroll to the bottom of the page
-  cy.get('a').last().click() // Click the last link
-
-  // Find the second link, get its href attribute, and extract the code
-  cy.get('a')
-    .eq(1)
-    .invoke('attr', 'href')
-    .then((href) => {
-      const code = href.match(/code=([A-Za-z0-9]{8})/) // Use regex to find the code
-      if (code) {
-        const verification_code = code[1]
-        cy.log('token', verification_code)
-        return verification_code // Extract the verification code
-      } else {
-        cy.log('Unable to find code in the URL') // Log if the code is not found
-      }
+    // Launch browser
+    const browser = await chromium.launch()
+    const context = await browser.newContext({
+      httpCredentials: {
+        // Playwright uses 'httpCredentials' instead of 'authenticate'
+        username: process.env.E2E_AUTH_EMAIL_USER,
+        password: process.env.E2E_AUTH_EMAIL_PASSWORD,
+      },
     })
+    const page = await context.newPage()
+
+    // Navigate to /events to extract the email verification code
+    await page.goto(`${process.env.BASIC_AUTH_URL}/events`)
+
+    // Scroll to the bottom of the page
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+
+    // Click on the last link on the page
+    await page.evaluate(() => {
+      const links = document.querySelectorAll('a')
+      links[links.length - 1].click()
+    })
+
+    await page.waitForNavigation({ waitUntil: 'domcontentloaded' })
+
+    // Extract the href attribute of the last link and process it
+    const href = await page.evaluate(() => {
+      const links = document.querySelectorAll('a')
+      const targetLink = links[links.length - 1].getAttribute('href')
+      return targetLink
+    })
+
+    const codeMatch = href.match(/code=([A-Za-z0-9]{8})/)
+    if (codeMatch) {
+      const verification_code = codeMatch[1]
+      await browser.close()
+      return verification_code
+    } else {
+      console.log('Unable to find code in the URL')
+      await browser.close()
+    }
+  } catch (e) {
+    // Handle the error
+    console.log(e)
+  }
 }
 
-export const createAccountVirtual = async (
-  password = cy.log(Cypress.env('loginPassword')),
+const createAccountVirtual = async (
+  password = process.env.E2E_DERIV_PASSWORD, // Cypress.env('loginPassword'),
   residence = 'id'
 ) => {
   try {
-    cy.log(Cypress.env('emailVerificationCode'))
     const response = await api.basic.newAccountVirtual({
       new_account_virtual: 1,
       type: 'trading',
@@ -78,19 +106,16 @@ export const createAccountVirtual = async (
     const {
       new_account_virtual: { oauth_token },
     } = response
-    // cy.log('Virtual Account Email: ', randomEmail, oauth_token)
+    console.log('Virtual Account Email: ', randomEmail, oauth_token)
     return oauth_token
   } catch (e) {
-    console.log(2)
+    console.log(e)
   }
 }
 
-export const createAccountReal = async (
-  clientResidence = 'id',
-  currency = 'USD'
-) => {
+const createAccountReal = async (clientResidence = 'id', currency = 'USD') => {
   try {
-    await api.account(`${await createAccountVirtual(clientResidence)}`)
+    await api.account(`${await createAccountVirtual()}`)
     const response = await api.basic.newAccountReal({
       new_account_real: 1,
       address_line_1: '20 Broadway Av',
@@ -113,3 +138,5 @@ export const createAccountReal = async (
     connection.close()
   }
 }
+
+module.exports = createAccountReal
