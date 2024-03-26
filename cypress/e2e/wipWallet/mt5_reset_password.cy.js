@@ -33,7 +33,7 @@ describe('WALL-3255 - Reset MT5 password', () => {
     cy.c_emailVerification(
       'New%20DMT5%20password%20request.html',
       'QA script',
-      { baseUrl: Cypress.env('mainQaBoxBaseUrl') }
+      { baseUrl: Cypress.env('configServer') + '/emails' }
     )
     cy.then(() => {
       cy.c_visitResponsive(Cypress.env('verificationUrl'), 'large')
