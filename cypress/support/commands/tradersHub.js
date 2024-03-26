@@ -292,8 +292,7 @@ Cypress.Commands.add('c_demoAccountSignup', (country, accountEmail) => {
 Cypress.Commands.add('c_setEndpoint', (signUpMail) => {
   localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
   localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
-  const mainURL = Cypress.env('mainURL')
-  Cypress.config('mainURL', mainURL)
+  const mainURL = Cypress.env('baseUrl')
   cy.log('The main URL is : '+ mainURL)
   cy.c_visitResponsive(mainURL+'endpoint', 'desktop')
   cy.findByRole('button', { name: 'Sign up' }).should('not.be.disabled')
