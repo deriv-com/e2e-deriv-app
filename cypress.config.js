@@ -1,6 +1,6 @@
 require("dotenv").config()
 const { defineConfig } = require("cypress")
-const createAccountReal = require('./cypress/support/helper/accountCreationUtiliy');
+const {createAccountReal, createAccountVirtual} = require('./cypress/support/helper/accountCreationUtiliy');
 
 //const gViewPortSize = {small: 'phone-xr', large: 'macbook-16'} //TODO Use enum
  
@@ -17,13 +17,22 @@ module.exports = defineConfig({
       on('task', {
         async createRealAccountTask() {
           try {
-            const accountDetails = await createAccountReal();
-            return accountDetails;
+            const realAccountDetails = await createAccountReal();
+            return realAccountDetails;
           } catch (error) {
             console.error('Error creating account:', error);
             throw error;
           }
         },
+        async createVirtualAccountTask() {
+          try {
+              const virtualAccountDetails = await createAccountVirtual();
+              return virtualAccountDetails;
+          } catch (error) {
+              console.error('Error creating virtual account:', error);
+              throw error;
+          }
+      },
       });
 
       return config;  // Return the config object is important for custom configurations to take effect
