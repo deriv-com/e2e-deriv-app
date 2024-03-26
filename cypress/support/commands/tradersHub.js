@@ -185,7 +185,7 @@ Cypress.Commands.add('c_addAccount', () => {
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
   cy.url().should(
     'be.equal',
-    Cypress.config('baseUrl') + '/appstore/traders-hub'
+    Cypress.config('baseUrl') + 'appstore/traders-hub'
   )
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
   cy.c_closeNotificationHeader()
@@ -241,13 +241,16 @@ Cypress.Commands.add('c_completeFatcaDeclarationAgreement', () => {
   cy.findAllByTestId('dti_list_item').eq(0).click()
 })
 
-Cypress.Commands.add('c_addAccountMF', () => {
+Cypress.Commands.add('c_addAccountMF', (type) => {
+  cy.log('logged country is ' + type)
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
   cy.get('.dc-checkbox__box').eq(0).click()
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
   cy.get('.dc-checkbox__box').eq(1).click()
-  cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
-  cy.get('.dc-checkbox__box').eq(2).click()
+  if (type == 'MF'){
+    cy.log('Country is '+ type)
+    cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
+    cy.get('.dc-checkbox__box').eq(2).click()}
   cy.findByRole('button', { name: 'Add account' }).click()
   cy.findByRole('heading', { name: 'Deposit' }).should('be.visible')
   cy.findByTestId('dt_modal_close_icon').click()
@@ -256,7 +259,7 @@ Cypress.Commands.add('c_addAccountMF', () => {
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
   cy.url().should(
     'be.equal',
-    Cypress.config('baseUrl') + '/appstore/traders-hub'
+    Cypress.config('baseUrl') + 'appstore/traders-hub'
   )
   cy.findByRole('button', { name: 'Next' }).click()
   if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
