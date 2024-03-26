@@ -116,7 +116,7 @@ module.exports = defineConfig({
     emailUser: process.env.E2E_AUTH_EMAIL_USER,
     emailPassword: process.env.E2E_AUTH_EMAIL_PASSWORD,
     event_email_url: process.env.E2E_EVENTS_EMAIL,
-    mailiskApiKey: process.env.E2E_MAILISK_API_KEY,
+    MAILISK_API_KEY: process.env.E2E_MAILISK_API_KEY, // the variable name should be like MAILISK_API_KEY as per mailisk documentation
     mailiskNamespace: process.env.E2E_MAILISK_NAMESPACE,
     diel_country_list: [
       "Ecuador",
