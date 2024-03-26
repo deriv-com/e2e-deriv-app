@@ -1,4 +1,5 @@
 import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
+import '@testing-library/cypress/add-commands'
 
 Cypress.prevAppId = 0
 
@@ -340,4 +341,19 @@ Cypress.Commands.add(
 
 Cypress.Commands.add('c_loadingCheck', () => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
+})
+
+Cypress.Commands.add('c_createRealAccount', () => {
+  cy.task('createRealAccountTask').then((realAccountDetails) => {
+    // Assuming realAccountDetails is an array where the first element is email
+    const [email] = realAccountDetails
+    cy.wrap(realAccountDetails).as('realAccountDetails') // Wrap and alias for later use
+
+    cy.log(email) // Logging the email for debugging
+
+    // Updating Cypress environment variables with the new email
+    const currentCredentials = Cypress.env('credentials')
+    currentCredentials.test.masterUser.ID = email
+    Cypress.env('credentials', currentCredentials)
+  })
 })
