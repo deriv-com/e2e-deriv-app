@@ -52,6 +52,7 @@ module.exports = defineConfig({
     skipROWTests: false,
     email: "test@example.com",
     viewPortSize: "small",
+    baseUrl: process.env.CYPRESS_BASE_URL,
     loginEmail: process.env.E2E_DERIV_LOGIN,
     walletloginEmail: process.env.E2E_DERIV_LOGIN_WALLET,
     loginPassword: process.env.E2E_DERIV_PASSWORD,
