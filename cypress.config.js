@@ -61,6 +61,10 @@ module.exports = defineConfig({
         ID: process.env.E2E_LOGIN_ID_PROD_DBOT,
         PSWD: process.env.E2E_LOGIN_PSWD_PROD_DBOT
       },
+      cashierWithdrawal:{
+        ID: process.env.E2E_CASHIER_WITHDRAWAL_PROD,
+        PSWD: process.env.E2E_CASHIER_PROD_PASSWORD
+      }
     }
   },
     RegionEU: "/?region=at",

@@ -2,8 +2,12 @@ import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
 
-const setLoginUser = (user = 'masterUser') => {
-  if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
+const setLoginUser = (user = 'masterUser', options = {}) => {
+  const { backEndProd = false } = options
+  if (
+    Cypress.config().baseUrl == Cypress.env('prodURL') ||
+    backEndProd == true
+  ) {
     return {
       loginEmail: Cypress.env('credentials').production[`${user}`].ID,
       loginPassword: Cypress.env('credentials').production[`${user}`].PSWD,
@@ -50,15 +54,20 @@ Cypress.Commands.add('c_visitResponsive', (path, size) => {
 })
 
 Cypress.Commands.add('c_login', (options = {}) => {
-  const { user = 'masterUser', app = '' } = options
-  const { loginEmail, loginPassword } = setLoginUser(user)
+  const { user = 'masterUser', app = '', backEndProd = false } = options
+  const { loginEmail, loginPassword } = setLoginUser(user, {
+    backEndProd: backEndProd,
+  })
   cy.c_visitResponsive('/endpoint', 'large')
 
   if (app == 'doughflow') {
     Cypress.env('configServer', Cypress.env('doughflowConfigServer'))
     Cypress.env('configAppId', Cypress.env('doughflowConfigAppId'))
   } //Use production server and app id for production base url
-  else if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
+  else if (
+    Cypress.config().baseUrl == Cypress.env('prodURL') ||
+    backEndProd == true
+  ) {
     Cypress.env('configServer', Cypress.env('prodServer'))
     Cypress.env('configAppId', Cypress.env('prodAppId'))
   } else {
