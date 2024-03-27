@@ -85,7 +85,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
         //To redirect to wallet page
         if (
           app == 'wallets' ||
-          app == 'Doughflow' ||
+          app == 'doughflow' ||
           app == 'demoonlywallet' ||
           app == 'onramp'
         ) {
@@ -99,7 +99,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
       //when deriv charts popup is not available and if we need to redirect to wallet page
       if (
         app == 'wallets' ||
-        app == 'Doughflow' ||
+        app == 'doughflow' ||
         app == 'demoonlywallet' ||
         app == 'onramp'
       ) {

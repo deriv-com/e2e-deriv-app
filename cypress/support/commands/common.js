@@ -94,7 +94,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
   if (
     Cypress.env('oAuthUrl') == '<empty>' &&
     app != 'wallets' &&
-    app != 'Doughflow'
+    app != 'doughflow'
   ) {
     getOAuthUrl(
       (oAuthUrl) => {
@@ -107,7 +107,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
     )
   } else if (
     (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') ||
-    app == 'Doughflow'
+    app == 'doughflow'
   ) {
     getWalletOAuthUrl((oAuthUrl) => {
       cy.log('came inside wallet getOauth')

@@ -3,7 +3,7 @@ import '@testing-library/cypress/add-commands'
 describe('WALL-2830 - Fiat withdrawal send email', () => {
   //Prerequisites: Fiat wallet account in qa04 with USD wallet
   beforeEach(() => {
-    cy.c_login({ app: 'Doughflow' })
+    cy.c_login({ app: 'doughflow' })
     cy.c_visitResponsive('/wallets', 'large')
   })
 
@@ -23,7 +23,7 @@ describe('WALL-2830 - Fiat withdrawal send email', () => {
 
 describe('WALL-2830 - Crypto withdrawal content access from email', () => {
   beforeEach(() => {
-    cy.c_login('Doughflow')
+    cy.c_login('doughflow')
     cy.c_visitResponsive('/wallets', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.findByText('Withdraw').click()
