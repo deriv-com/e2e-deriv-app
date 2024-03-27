@@ -81,6 +81,7 @@ module.exports = defineConfig({
     loginPasswordProd: process.env.E2E_DERIV_PASSWORD_PROD,
     prodServer: process.env.E2E_PROD_SERVER,
     prodAppId: process.env.E2E_PROD_APPID,
+    stgAppId: process.env.E2E_STG_APPID,
     doughflowLoginEmail: process.env.E2E_DOUGHFLOW_LOGIN,
     doughflowLoginPassword: process.env.E2E_DOUGHFLOW_PASSWORD,
     qaBoxLoginEmail: process.env.E2E_QABOX_LOGIN,

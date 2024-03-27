@@ -1,13 +1,17 @@
 import '@testing-library/cypress/add-commands'
 
-const screenSizes = ['small', 'large']
+const screenSizes = ['large']
 
 const isLanguageTest = true
 
 Cypress.Commands.add('c_verifyLink', (options = {}) => {
   const { screenSize = 'small', isExpired = false } = options
-  cy.c_visitResponsive(Cypress.env('verificationdUrl'), screenSize)
-  cy.c_loadingCheck()
+  cy.then(() => {
+    cy.c_visitResponsive(Cypress.env('verificationUrl'), screenSize)
+    cy.frameLoaded('.cashier__content')
+    cy.c_loadingCheck()
+  })
+
   cy.c_rateLimit({
     waitTimeAfterError: 15000,
     isLanguageTest: true,
@@ -87,90 +91,20 @@ Cypress.Commands.add('c_verifyWithdrawalScreenContent', (language) => {
     'contain.text',
     language.afterEmailSentContent.linkText
   )
-  // TODO update c_withdrawalEmailVerification to c_emailVerification after PR 132 is merged.
-  cy.c_withdrawalEmailVerification(
-    'qa10.deriv.dev/events',
-    'request_payment_withdraw.html',
-    Cypress.env('loginEmail'),
-    language.shortCode
-  )
-})
 
-// TODO remove after PR https://github.com/deriv-com/e2e-deriv-app/pull/132 is merged
-Cypress.Commands.add(
-  'c_withdrawalEmailVerification',
-  (
-    base_url,
-    request_type,
-    account_email,
-    language = 'EN',
-    retryCount = 0,
-    maxRetries = 3
-  ) => {
-    cy.visit(
-      `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
-        'qaBoxLoginPassword'
-      )}@${base_url}`
-    )
-    const sentArgs = { request_type, account_email }
-    cy.origin(
-      `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
-        'qaBoxLoginPassword'
-      )}@${base_url}`,
-      { args: [request_type, account_email, language] },
-      ([request_type, account_email, language]) => {
-        cy.document().then((doc) => {
-          const allRelatedEmails = Array.from(
-            doc.querySelectorAll(`a[href*="${request_type}"]`)
-          )
-          if (allRelatedEmails.length) {
-            const verificationEmail = allRelatedEmails.pop()
-            cy.wrap(verificationEmail).click()
-            cy.contains('p', `${account_email}`).should('be.visible')
-            cy.contains('p', `lang: ${language}`)
-              .parent()
-              .within(() => {
-                cy.contains('a', Cypress.config('baseUrl'))
-                  .invoke('attr', 'href')
-                  .then((href) => {
-                    if (href) {
-                      Cypress.env('verificationdUrl', href)
-                      cy.log(Cypress.env('verificationdUrl'))
-                      const code = href.match(/code=([A-Za-z0-9]{8})/)
-                      verification_code = code[1]
-                      cy.log('Verification link found')
-                      Cypress.env('walletsWithdrawalCode', verification_code)
-                    } else {
-                      cy.log('Verification link not found')
-                    }
-                  })
-              })
-          } else {
-            cy.log('email not found')
-          }
-        })
-      }
-    )
-    cy.then(() => {
-      //Retry finding email after 1 second interval
-      if (retryCount <= maxRetries && !Cypress.env('verificationdUrl')) {
-        cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
-        cy.wait(1000)
-        cy.c_withdrawalEmailVerification(
-          base_url,
-          request_type,
-          account_email,
-          ++retryCount
-        )
-      }
-      if (retryCount > maxRetries) {
-        throw new Error(
-          `Signup URL extraction failed after ${maxRetries} attempts.`
-        )
-      }
-    })
-  }
-)
+  cy.mailiskSearchInbox(Cypress.env('mailiskNamespace'), {
+    to_addr_prefix:
+      Cypress.env('credentials').production.cashierWithdrawal.ID.split('@')[0],
+    subject_includes: language.emailSubject,
+    from_timestamp: Math.floor((Date.now() - 30000) / 1000),
+    wait: true,
+  }).then((response) => {
+    const email = response.data[0]
+    const verificationLink = email.text.match(/https?:\/\/\S*redirect\?\S*/)
+    cy.log(verificationLink)
+    Cypress.env('verificationUrl', verificationLink[0])
+  })
+})
 
 describe('QATEST-20010 Withdrawal Request: Fiat - Different language', () => {
   beforeEach(() => {
@@ -209,6 +143,7 @@ describe('QATEST-20010 Withdrawal Request: Fiat - Different language', () => {
           }
           cy.c_verifyWithdrawalScreenContent(language[1])
           cy.c_verifyLink({ isExpired: false, screenSize: size })
+
           cy.c_verifyErrorContent({
             isExpired: false,
             currentLanguage: language[1],

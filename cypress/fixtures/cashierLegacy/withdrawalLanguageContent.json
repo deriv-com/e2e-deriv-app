@@ -8,6 +8,7 @@
             "description":"Pulse el botón de abajo y le enviaremos un correo electrónico con un enlace. Haga clic en ese enlace para verificar su solicitud de retiro.Esto es para proteger su cuenta de retiros no autorizados.",
             "buttonText": "Enviar correo electrónico"
         },
+        "emailSubject":"solicitud de retiro",
         "afterEmailSentContent": {
             "summary": "Le hemos enviado un correo electrónico.",
             "description": "Por favor, revise su correo electrónico para obtener el enlace de verificación y completar el proceso.",
@@ -29,6 +30,7 @@
             "description":"Ao clicar no botão abaixo, iremos enviar-lhe um e-mail com um link. Clique nesse link para validar o seu pedido de levantamento.Esta medida destina-se a proteger a sua conta contra levantamentos não autorizados.",
             "buttonText": "Enviar e-mail"
         },
+        "emailSubject":"pedido de levantamento",
         "afterEmailSentContent": {
             "summary": "Enviámos-lhe um e-mail.",
             "description": "Verifique no seu e-mail o link de validação para concluir o processo.",
@@ -50,6 +52,7 @@
             "description":"Нажмите кнопку ниже, и мы вышлем Вам письмо со ссылкой. Щелкните по этой ссылке, чтобы проверить Ваш запрос на вывод средств.Это нужно для того, чтобы защитить ваш счет от несанкционированного вывода средств.",
             "buttonText": "Отправить письмо"
         },
+        "emailSubject":"запрос на вывод",
         "afterEmailSentContent": {
             "summary": "Мы отправили вам письмо.",
             "description": "Проверьте эл. почту. Вам должна прийти проверочная ссылка, необходимая для успешного завершения процесса.",
@@ -71,6 +74,7 @@
             "description":"Cliquez sur le bouton ci-dessous et nous vous enverrons un e-mail contenant un lien. Cliquez sur ce lien pour vérifier votre demande de retrait.Ceci afin de protéger votre compte contre les retraits non autorisés.",
             "buttonText": "Envoyer l'email"
         },
+        "emailSubject":"demande de retrait",
         "afterEmailSentContent": {
             "summary": "Nous vous avons envoyé un e-mail.",
             "description": "Veuillez vérifier votre email pour le lien de vérification afin de terminer l'opération.",
@@ -92,6 +96,7 @@
             "description": "Click the button below and we'll send you an email with a link. Click that link to verify your withdrawal request.This is to protect your account from unauthorised withdrawals.",
             "buttonText": "Send email"
         },
+        "emailSubject":"withdrawal request",
         "afterEmailSentContent": {
             "summary": "We've sent you an email.",
             "description": "Please check your email for the verification link to complete the process.",

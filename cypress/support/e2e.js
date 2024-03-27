@@ -1,3 +1,4 @@
 import './commands/index'
 import 'cypress-mailisk'
-require('cypress-xpath')
+import 'cypress-iframe'
+import 'cypress-xpath'
