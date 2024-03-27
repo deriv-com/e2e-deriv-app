@@ -14,7 +14,6 @@ describe('QATEST 5813 - Add USD account for existing BTC account', () => {
   it('Create a new crypto account and add USD account', () => {
     cy.c_demoAccountSignup(country, signUpEmail)
     cy.c_switchToReal()
-    cy.c_completeTradersHubTour()
     cy.findByRole('button', { name: 'Get a Deriv account' }).click()
     cy.c_generateRandomName().then((firstName) => {
       cy.c_personalDetails(

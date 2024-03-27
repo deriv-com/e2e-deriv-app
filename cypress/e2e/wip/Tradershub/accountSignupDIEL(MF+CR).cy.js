@@ -36,7 +36,7 @@ describe('QATEST-6211: Verify DIEL Signup flow - MF + CR', () => {
     cy.c_completeTradingAssessment()
     cy.c_completeFinancialAssessment()
     cy.c_completeFatcaDeclarationAgreement()
-    cy.c_addAccountMF()
+    cy.c_addAccountMF('CR+MF')
     cy.findByText('Non-EU', { exact: true }).click()
     cy.get(regulationText).should('have.text', 'Non-EU')
     cy.findByRole('button', { name: 'Get a Deriv account' }).click()

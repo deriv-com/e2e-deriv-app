@@ -37,7 +37,7 @@ Cypress.Commands.add('c_enterValidEmail', (signUpMail) => {
     })
     //Wait for the signup page to load completely
     cy.findByRole('button', { name: 'whatsapp icon' }).should('be.visible', {
-      timeout: 30000,
+     timeout: 30000,
     })
     cy.findByPlaceholderText('Email').as('email').should('be.visible')
     cy.get('@email').type(signUpMail)
@@ -70,18 +70,6 @@ Cypress.Commands.add('c_enterPassword', () => {
 })
 
 Cypress.Commands.add('c_completeOnboarding', () => {
-  const onboarding = Cypress.$("button:contains('Next'):visible").length > 0
-  if (onboarding) {
-    for (
-      let next_button_count = 0;
-      next_button_count < 5;
-      next_button_count++
-    ) {
-      cy.contains('button', 'Next').should('be.visible')
-      cy.contains('button', 'Next').click()
-    }
-    cy.contains('Start trading').should('be.visible')
-    cy.contains('button', 'Start trading').click()
     cy.contains('Switch accounts').should('be.visible')
     cy.contains('button', 'Next').click()
     if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
@@ -90,7 +78,6 @@ Cypress.Commands.add('c_completeOnboarding', () => {
     }
     cy.contains("Trader's Hub tour").should('be.visible')
     cy.contains('button', 'OK').click()
-  }
 })
 
 // TODO move to Utility finction
@@ -203,7 +190,7 @@ Cypress.Commands.add('c_addAccount', () => {
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
   cy.url().should(
     'be.equal',
-    Cypress.config('baseUrl') + '/appstore/traders-hub'
+    Cypress.config('baseUrl') + 'appstore/traders-hub'
   )
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
   cy.c_closeNotificationHeader()
@@ -259,11 +246,15 @@ Cypress.Commands.add('c_completeFatcaDeclarationAgreement', () => {
   cy.findAllByTestId('dti_list_item').eq(0).click()
 })
 
-Cypress.Commands.add('c_addAccountMF', () => {
+Cypress.Commands.add('c_addAccountMF', (type) => {
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
   cy.get('.dc-checkbox__box').eq(0).click()
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
   cy.get('.dc-checkbox__box').eq(1).click()
+  if (type == 'MF'){
+    cy.log('Country is '+ type)
+    cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
+    cy.get('.dc-checkbox__box').eq(2).click()}
   cy.findByRole('button', { name: 'Add account' }).click()
   cy.findByRole('heading', { name: 'Deposit' }).should('be.visible')
   cy.findByTestId('dt_modal_close_icon').click()
@@ -272,7 +263,7 @@ Cypress.Commands.add('c_addAccountMF', () => {
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
   cy.url().should(
     'be.equal',
-    Cypress.config('baseUrl') + '/appstore/traders-hub'
+    Cypress.config('baseUrl') + 'appstore/traders-hub'
   )
   cy.findByRole('button', { name: 'Next' }).click()
   if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
@@ -299,14 +290,17 @@ Cypress.Commands.add('c_demoAccountSignup', (country, accountEmail) => {
     cy.c_selectCountryOfResidence(country)
     cy.c_selectCitizenship(country)
     cy.c_enterPassword()
-    cy.c_completeOnboarding()
+    if (country !== Cypress.env('countries').ES) {
+      cy.c_completeOnboarding()
+     }
   })
 })
 
 Cypress.Commands.add('c_setEndpoint', (signUpMail) => {
   localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
   localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
-  cy.c_visitResponsive('/endpoint', 'desktop')
+  const mainURL = Cypress.env('baseUrl')
+  cy.c_visitResponsive(mainURL+'endpoint', 'desktop')
   cy.findByRole('button', { name: 'Sign up' }).should('not.be.disabled')
   cy.c_enterValidEmail(signUpMail)
 })

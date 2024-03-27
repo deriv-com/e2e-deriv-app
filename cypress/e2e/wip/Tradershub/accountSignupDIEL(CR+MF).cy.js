@@ -16,8 +16,6 @@ describe('QATEST-5554: Verify DIEL Signup flow - CR + MF', () => {
     Cypress.env('citizenship', country)
     cy.c_demoAccountSignup(country, signUpEmail)
     cy.c_checkTradersHubHomePage()
-    cy.findByTestId('dt_dropdown_display').click()
-    cy.get('#real').click()
     cy.get(regulationText).should('have.text', 'Non-EU')
     cy.findByRole('button', { name: 'Get a Deriv account' }).click()
     cy.c_generateRandomName().then((firstName) => {
@@ -45,7 +43,7 @@ describe('QATEST-5554: Verify DIEL Signup flow - CR + MF', () => {
     cy.findByRole('button', { name: 'Next' }).click()
     cy.c_completeTradingAssessment()
     cy.c_completeFinancialAssessment()
-    cy.c_addAccountMF()
+    cy.c_addAccountMF('CR+MF')
     cy.c_manageAccountsetting(country)
   })
 })

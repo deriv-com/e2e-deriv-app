@@ -27,7 +27,7 @@ describe('QATEST-5569: Verify MF Signup flow', () => {
     cy.c_completeTradingAssessment()
     cy.c_completeFinancialAssessment()
     cy.c_completeFatcaDeclarationAgreement()
-    cy.c_addAccountMF()
+    cy.c_addAccountMF('MF')
     cy.get('#traders-hub').scrollIntoView({ position: 'top' })
     cy.findByText('Total assets').should('be.visible')
     cy.findByText('0.00').should('be.visible')
