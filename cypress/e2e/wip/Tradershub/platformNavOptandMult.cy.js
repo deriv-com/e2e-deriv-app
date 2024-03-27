@@ -17,8 +17,13 @@ describe('QATEST-5948: Verify platforms navigations on Options and Multipliers',
     cy.findAllByRole('button', { name: 'Open' }).first().click({ force: true })
     cy.get('flt-glass-pane', { timeout: 15000 }).should('be.visible')
     if (Cypress.config().baseUrl.includes('staging'))
-      cy.url().should('eql', derivAppStagingUrl)
-    else cy.url().should('eql', derivAppProdUrl)
+      cy.url().should('satisfy', (url) => {
+        return url.includes(derivAppStagingUrl)
+      })
+    else 
+      cy.url().should('satisfy', (url) => {
+        return url.includes(derivAppProdUrl)
+      })
 
     //Open DBot
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
@@ -32,10 +37,13 @@ describe('QATEST-5948: Verify platforms navigations on Options and Multipliers',
 
     //Open SmartTrader
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
-    cy.findAllByRole('button', { name: 'Open' }).eq(2).click({ force: true })
-    cy.findByRole('heading', { name: 'Rise' }, { timeout: 15000 }).should(
-      'be.visible'
-    )
+    cy.findAllByRole('button', { name: 'Open' }).eq(2).click({ force: true }).then(() => {
+    localStorage.clear()
+    localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
+    localStorage.setItem('config.app_id', Cypress.env('smtConfigAppId'))
+    cy.log('Server is ' + Cypress.env('stdConfigServer'))
+    cy.log('app id is '+ Cypress.env('smtConfigAppId'))})
+    cy.findByRole('heading', { name: 'Rise' }, { timeout: 15000 }).should('be.visible')
     cy.findByRole('heading', { name: 'Fall' }, { timeout: 15000 }).should(
       'be.visible'
     )

@@ -81,6 +81,7 @@ module.exports = defineConfig({
     doughflowConfigAppId: process.env.E2E_DOUGHFLOW_CONFIG_APPID,
     stdConfigServer: process.env.E2E_STD_CONFIG_SERVER,
     stdConfigAppId: process.env.E2E_STD_CONFIG_APPID,
+    smtConfigAppId: process.env.E2E_SMT_CONFIG_APPID,
     oAuthUrl: process.env.E2E_OAUTH_URL,
     demoOAuthUrl: process.env.E2E_DEMO_WALLET_OAUTH_URL,
     demoOAuthToken: process.env.E2E_DEMO_OAUTH_TOKEN,
