@@ -1,5 +1,4 @@
-// import '@testing-library/cypress/add-commands'
-// const { getOAuthLogin } = require('../../support/common')
+import '@testing-library/cypress/add-commands'
 
 describe('Get oAuthUrl', () => {
   beforeEach(() => {
