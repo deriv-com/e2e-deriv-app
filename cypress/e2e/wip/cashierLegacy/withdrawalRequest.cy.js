@@ -1,22 +1,42 @@
 import '@testing-library/cypress/add-commands'
 
-const screenSizes = ['large']
+const screenSizes = ['small', 'large']
 
 const isLanguageTest = true
 
 Cypress.Commands.add('c_verifyLink', (options = {}) => {
   const { screenSize = 'small', isExpired = false } = options
-  cy.then(() => {
-    cy.c_visitResponsive(Cypress.env('verificationUrl'), screenSize)
-    cy.frameLoaded('.cashier__content')
-    cy.c_loadingCheck()
-  })
-
+  cy.c_visitResponsive(Cypress.env('verificationUrl'), screenSize)
   cy.c_rateLimit({
     waitTimeAfterError: 15000,
     isLanguageTest: true,
     maxRetries: 5,
   })
+  cy.then(() => {
+    if (
+      isExpired == false &&
+      (sessionStorage.getItem('c_rateLimitOccurred') == 'false' ||
+        !sessionStorage.getItem('c_rateLimitOccurred'))
+    ) {
+      cy.frameLoaded('.cashier__content')
+      cy.get('iframe[class=cashier__content]')
+        .invoke('attr', 'height', '784')
+        .then(() => {
+          cy.findByTestId('dt_initial_loader').invoke('remove')
+        })
+      cy.get('iframe[class=cashier__content]').should('be.visible')
+      cy.enter('iframe[class=cashier__content]').then((getBody) => {
+        getBody().find('#prCurrentBalance').should('be.visible')
+        getBody().find('#prPayoutReview').should('be.visible')
+        getBody().find('#prAvailableBalance').should('be.visible')
+        getBody().find('#payoutbanner').should('be.visible')
+        getBody().find('#payoutoptions').should('be.visible')
+        getBody().find('#morePayoutOptionsMsg').should('be.visible')
+      })
+      cy.c_loadingCheck()
+    }
+  })
+
   cy.then(() => {
     if (sessionStorage.getItem('c_rateLimitOccurred') == 'true') {
       sessionStorage.removeItem('c_rateLimitOccurred')
@@ -46,21 +66,17 @@ Cypress.Commands.add('c_verifyErrorContent', (options = {}) => {
       cy.c_verifyWithdrawalScreenContent(currentLanguage)
       cy.c_verifyLink()
     }
-    cy.findByRole('heading', {
-      name: currentLanguage.errorPopUpContent.header,
-    }).should('be.visible')
     if (isExpired == true) {
+      cy.findByRole('heading', {
+        name: currentLanguage.errorPopUpContent.header,
+      }).should('be.visible')
       cy.findByText(
         currentLanguage.errorPopUpContent.descriptionAfterLinkExpired
       ).should('be.visible')
-    } else {
-      cy.findByText(
-        currentLanguage.errorPopUpContent.descriptionAfterEmailVerification
-      ).should('be.visible')
+      cy.findByRole('button', {
+        name: currentLanguage.errorPopUpContent.button,
+      }).click()
     }
-    cy.findByRole('button', {
-      name: currentLanguage.errorPopUpContent.button,
-    }).click()
   })
 })
 
@@ -161,7 +177,7 @@ describe('QATEST-20010 Withdrawal Request: Fiat - Different language', () => {
             screenSize: size,
           })
           prevLanguage = language[1].urlCode.replace('-', '_')
-          cy.c_rateLimit({ waitTimeAfterError: 15000 })
+          cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
         })
       })
     })
