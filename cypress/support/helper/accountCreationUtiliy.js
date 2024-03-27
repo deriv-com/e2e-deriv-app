@@ -5,7 +5,8 @@ const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI')
 const WebSocket = require('ws')
 
 const appId = process.env.E2E_STD_CONFIG_APPID
-const websocketURL = process.env.WEBSOCKET_URL
+const websocketURL = `wss://${process.env.E2E_STD_CONFIG_SERVER}/websockets/v3`
+const basicAuthUrl = `https://${process.env.E2E_STD_CONFIG_SERVER}`
 
 const connection = new WebSocket(
   `${websocketURL}?l=EN&app_id=${appId}&brand=deriv`
@@ -71,7 +72,7 @@ const getVerificationCode = async () => {
     const page = await context.newPage()
 
     // Navigate to /events to extract the email verification code
-    await page.goto(`${process.env.BASIC_AUTH_URL}/events`)
+    await page.goto(`${basicAuthUrl}/events`)
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
     await page.evaluate(() => {
       const links = document.querySelectorAll('a')
