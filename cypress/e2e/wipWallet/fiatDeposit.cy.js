@@ -3,7 +3,7 @@ import '@testing-library/cypress/add-commands'
 describe('WALL-2817 - Fiat deposit iframe access', () => {
   //Prerequisites: Fiat wallet account in qa04 with USD wallet
   beforeEach(() => {
-    cy.c_login({ app: 'Doughflow' })
+    cy.c_login({ app: 'doughflow' })
     cy.c_visitResponsive('/wallets', 'large')
   })
 
