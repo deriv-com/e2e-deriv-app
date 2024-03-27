@@ -18,7 +18,7 @@ Cypress.Commands.add(
 Cypress.Commands.add('c_login', (app) => {
   cy.c_visitResponsive('/endpoint', 'large')
 
-  if (app == 'doughflow' || app == 'walletDoughflow') {
+  if (app == 'doughflow') {
     Cypress.env('configServer', Cypress.env('doughflowConfigServer'))
     Cypress.env('configAppId', Cypress.env('doughflowConfigAppId'))
   } //Use production server and app id for production base url
@@ -85,7 +85,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
         //To redirect to wallet page
         if (
           app == 'wallets' ||
-          app == 'walletDoughflow' ||
+          app == 'Doughflow' ||
           app == 'demoonlywallet' ||
           app == 'onramp'
         ) {
@@ -99,7 +99,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
       //when deriv charts popup is not available and if we need to redirect to wallet page
       if (
         app == 'wallets' ||
-        app == 'walletDoughflow' ||
+        app == 'Doughflow' ||
         app == 'demoonlywallet' ||
         app == 'onramp'
       ) {

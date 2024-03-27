@@ -54,7 +54,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
   const { loginEmail, loginPassword } = setLoginUser(user)
   cy.c_visitResponsive('/endpoint', 'large')
 
-  if (app == 'doughflow' || app == 'walletDoughflow') {
+  if (app == 'doughflow') {
     Cypress.env('configServer', Cypress.env('doughflowConfigServer'))
     Cypress.env('configAppId', Cypress.env('doughflowConfigAppId'))
   } //Use production server and app id for production base url
@@ -81,7 +81,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
     localStorage.setItem('config.server_url', Cypress.env('configServer'))
     localStorage.setItem('config.app_id', Cypress.env('configAppId'))
   }
-  if (app == 'wallets' || app == 'walletDoughflow' || app == 'demoonlywallet') {
+  if (app == 'wallets' || app == 'Doughflow' || app == 'demoonlywallet') {
     cy.contains('next_wallet').then(($element) => {
       //Check if the element exists
       if ($element.length) {
@@ -94,7 +94,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
   if (
     Cypress.env('oAuthUrl') == '<empty>' &&
     app != 'wallets' &&
-    app != 'walletDoughflow'
+    app != 'Doughflow'
   ) {
     getOAuthUrl(
       (oAuthUrl) => {
@@ -107,7 +107,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
     )
   } else if (
     (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') ||
-    app == 'walletDoughflow'
+    app == 'Doughflow'
   ) {
     getWalletOAuthUrl((oAuthUrl) => {
       cy.log('came inside wallet getOauth')
