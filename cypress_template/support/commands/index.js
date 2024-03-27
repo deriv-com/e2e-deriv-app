@@ -1,2 +1,2 @@
 import './common.js'
-import './cashier.js'
+import './appModule1.js'

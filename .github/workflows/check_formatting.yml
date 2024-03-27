@@ -1,0 +1,31 @@
+name: 'Check code formatting'
+on:
+    pull_request:
+        branches: master
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+    prettier:
+        name: Prettier Check
+        runs-on: ubuntu-latest
+        permissions:
+          pull-requests: read
+        
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+          with:
+            repository: deriv-com/e2e-deriv-app
+            ref: ${{ github.head_ref }}
+            fetch-depth: 0
+        - name: Get changed files
+          id: changed-files
+          uses: tj-actions/changed-files@v43
+        - name: Install Depdendencies
+          run: npm i -D
+        - name: Check formatting
+          run: npx prettier ${{steps.changed-files.outputs.all_changed_files}} --check
+
+
+    

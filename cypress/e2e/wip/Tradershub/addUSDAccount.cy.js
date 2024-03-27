@@ -1,19 +1,18 @@
 import '@testing-library/cypress/add-commands'
-import { generateEpoch } from '../../../support/tradersHub'
+import { generateEpoch } from '../../../support/helper/utility'
 
 describe('QATEST 5813 - Add USD account for existing BTC account', () => {
-  const epoch = generateEpoch()
-  const signUpMail = `sanity${epoch}crypto@deriv.com`
+  const signUpEmail = `sanity${generateEpoch()}crypto@deriv.com`
   let country = Cypress.env('countries').CO
   let nationalIDNum = Cypress.env('nationalIDNum').CO
   let taxIDNum = Cypress.env('taxIDNum').CO
   let currency = Cypress.env('accountCurrency').BTC
 
   beforeEach(() => {
-    cy.c_setEndpoint(signUpMail)
+    cy.c_setEndpoint(signUpEmail)
   })
   it('Create a new crypto account and add USD account', () => {
-    cy.c_demoAccountSignup(epoch, country)
+    cy.c_demoAccountSignup(country, signUpEmail)
     cy.c_switchToReal()
     cy.c_completeTradersHubTour()
     cy.findByRole('button', { name: 'Get a Deriv account' }).click()

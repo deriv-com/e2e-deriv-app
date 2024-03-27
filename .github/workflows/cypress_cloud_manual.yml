@@ -18,7 +18,7 @@ on:
           - full
           - smoke
           - wip/CFD/testcases/MT5
-          - wip/dbot
+          - wip/dbot/*
           - wip/dbot/sanity-tests
           - wip/Wallets/cashier
           - wip/dtrader
@@ -108,3 +108,10 @@ jobs:
           E2E_MAIN_QABOX_URL: ${{ secrets.E2E_MAIN_QABOX_URL }}
           E2E_QABOX_LOGIN: ${{ secrets.E2E_QABOX_LOGIN }}
           E2E_QABOX_PASSWORD: ${{ secrets.E2E_QABOX_PASSWORD }}
+          E2E_LOGIN_ID_P2P_FIXEDRATE: ${{ secrets.E2E_LOGIN_ID_P2P_FIXEDRATE }}
+          E2E_P2P_FLOATING: ${{secrets.E2E_P2P_FLOATING}}
+          E2E_PSWD_P2P: ${{secrets.E2E_PSWD_P2P}}
+          E2E_DIEL_LOGIN: ${{ secrets.E2E_DIEL_LOGIN }}
+          E2E_DIEL_PASSWORD: ${{ secrets.E2E_DIEL_PASSWORD }}
+          E2E_EU_LOGIN: ${{ secrets.E2E_EU_LOGIN }}
+          E2E_EU_PASSWORD: ${{ secrets.E2E_EU_PASSWORD }}
