@@ -91,7 +91,11 @@ Cypress.Commands.add('c_login', (options = {}) => {
     })
   }
   cy.log('getOAuthUrl - value before: ' + Cypress.env('oAuthUrl'))
-  if (Cypress.env('oAuthUrl') == '<empty>' && app != 'wallets') {
+  if (
+    Cypress.env('oAuthUrl') == '<empty>' &&
+    app != 'wallets' &&
+    app != 'doughflow'
+  ) {
     getOAuthUrl(
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
@@ -101,7 +105,10 @@ Cypress.Commands.add('c_login', (options = {}) => {
       loginEmail,
       loginPassword
     )
-  } else if (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') {
+  } else if (
+    (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') ||
+    app == 'doughflow'
+  ) {
     getWalletOAuthUrl((oAuthUrl) => {
       cy.log('came inside wallet getOauth')
       Cypress.env('oAuthUrl', oAuthUrl)
@@ -279,7 +286,7 @@ Cypress.Commands.add(
     let {
       retryCount = 0,
       maxRetries = 3,
-      baseUrl = Cypress.env('qaBoxBaseUrl'),
+      baseUrl = Cypress.env('configServer') + '/events',
     } = options
     cy.visit(
       `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
