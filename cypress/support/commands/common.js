@@ -1,5 +1,4 @@
 import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
-import '@testing-library/cypress/add-commands'
 
 Cypress.prevAppId = 0
 
