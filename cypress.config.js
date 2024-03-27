@@ -1,6 +1,6 @@
 require("dotenv").config()
 const { defineConfig } = require("cypress")
-const {createAccountReal, createAccountVirtual} = require('./cypress/support/helper/accountCreationUtiliy');
+const {createAccountReal, createAccountVirtual} = require('./cypress/support/helper/accountCreationUtility');
 
 //const gViewPortSize = {small: 'phone-xr', large: 'macbook-16'} //TODO Use enum
  
