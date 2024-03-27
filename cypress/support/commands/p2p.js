@@ -5,7 +5,6 @@ let marketRate
 let rateCalculation
 let calculatedValue
 let regexPattern
-const decimalPlacesToSkip = 1
 
 Cypress.Commands.add('c_createNewAd', (adType) => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
@@ -39,11 +38,11 @@ Cypress.Commands.add('c_postBuyAd', () => {
   cy.c_postAd()
 })
 
-Cypress.Commands.add('c_verifyExchangeRate', () => {
+Cypress.Commands.add('c_verifyExchangeRate', (rate) => {
   rateCalculation = rate * 0.01
   calculatedValue = rateCalculation * marketRate + marketRate
   regexPattern = new RegExp(
-    `Your rate is = ${calculatedValue.toFixed(6 - decimalPlacesToSkip)}\\d{${decimalPlacesToSkip}} NZD`
+    `Your rate is = ${calculatedValue.toFixed(6).slice(0, -1)}\\d NZD`
   )
   cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
 })
@@ -135,17 +134,17 @@ Cypress.Commands.add('c_verifyRate', () => {
       const match = text.match(/of the market rate1 USD = (\d+(\.\d+)?)/)
       marketRate = parseFloat(match[1])
       if (match) {
-        cy.c_verifyExchangeRate()
+        cy.c_verifyExchangeRate(rate)
         // Verify clicking plus button twice
         cy.get('#floating_rate_input_add')
           .click({ force: true })
           .click({ force: true })
         rate = rate + 0.02
-        cy.c_verifyExchangeRate()
+        cy.c_verifyExchangeRate(rate)
         // // verify minus button once
         cy.get('#floating_rate_input_sub').click({ force: true })
         rate = rate - 0.01
-        cy.c_verifyExchangeRate()
+        cy.c_verifyExchangeRate(rate)
       } else {
         throw new Error('Text does not match the expected pattern')
       }
