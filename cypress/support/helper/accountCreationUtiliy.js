@@ -44,10 +44,6 @@ const nameGenerator = () => {
       name += consonants[index]
     }
   }
-
-  // For simplicity, we will skip the shuffling part as it requires a more complex implementation
-  // with cryptographic security which might not be directly feasible without a custom implementation
-
   return name
 }
 
