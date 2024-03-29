@@ -40,7 +40,7 @@ describe('QATEST-20036 - Transfer: Enter USD amount when Transfer Fiat to Crypto
           cy.findByRole('button', { name: 'Add account' }).click()
           cy.findByText('Success!').should('exist')
           cy.findByText(`You have added a ${toCurrency.code} account.`).should(
-            'be.visiblie'
+            'be.visible'
           )
           cy.findByRole('button', { name: 'Maybe later' }).click()
         })
