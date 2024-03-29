@@ -20,7 +20,7 @@ const setLoginUser = (user = 'masterUser', options = {}) => {
   }
 }
 
-Cypress.Commands.add('c_visitResponsive', (path, size) => {
+Cypress.Commands.add('c_visitResponsive', (path, size, rateLimit = '') => {
   //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
   cy.log(path)
   if (size === undefined) size = Cypress.env('viewPortSize')
@@ -30,6 +30,13 @@ Cypress.Commands.add('c_visitResponsive', (path, size) => {
   else cy.viewport('macbook-16')
 
   cy.visit(path)
+  if (rateLimit == 'check') {
+    cy.c_rateLimit({
+      waitTimeAfterError: 15000,
+      maxRetries: 5,
+    })
+    cy.visit(path)
+  }
 
   if (path.includes('region')) {
     //Wait for relevent elements to appear (based on page)
@@ -230,7 +237,9 @@ Cypress.Commands.add('c_rateLimit', (options = {}) => {
         cy.wait(retryWaitTime, { log: false })
         cy.c_rateLimit({ ...options, retryCount: retryCount + 1 })
       } else {
-        cy.log('Max retries reached without detecting a rate limit error.')
+        cy.log(
+          `Max retries reached without detecting a rate limit error, after ${retryCount} attempts`
+        )
       }
     }
   )
