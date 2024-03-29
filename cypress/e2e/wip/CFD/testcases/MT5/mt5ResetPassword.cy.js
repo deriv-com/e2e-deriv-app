@@ -39,6 +39,7 @@ function loading_check() {
     cy.findByText('This will change the password to all of your Deriv MT5 accounts.').should('be.visible')
     mt5.elements.mt5ConfirmChangePassword().click()
 
+    // This need to be continued
     cy.c_emailVerificationMT5(verification_code, Cypress.env("mainQaBoxBaseUrl"))
     cy.then(() => {
       Cypress.config("baseUrl")
@@ -67,23 +68,3 @@ describe("QATEST-37180 - Reset Password", () => {
 
 
 })
-
-
-
-    // cy.get("body").then(() => {
-    //   cy.contains('.trading-app-card__container', 'Financial')
-    //     .parent() // Move up to the common parent
-    //     .find('.trading-app-card__actions')
-    //     .then(($actions) => {
-    //       if ($actions.find('button[name="transfer-btn"]').length > 0) {
-    //           loading_check();
-    //           cy.log(`Existing Real Swap-Free MT5 account with Loginid: found will proceed to reset password`);
-    //       } else {
-    //         cy.log('Creating Derived SVG MT5 account');
-    //       }
-    //     });
-    // });    
-
-
-
-              // const loginId = tradersHubElement.find('.dc-text.title:contains("Swap-Free")').next('.dc-text.trading-app-card__details__short-code:contains("SVG")').closest('.trading-app-card__details').find('.dc-text.description').text();
