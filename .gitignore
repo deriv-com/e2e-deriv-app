@@ -4,3 +4,4 @@ cypress/.DS_Store
 screenshots
 .env
 cypress/downloads
+test.cy.js
