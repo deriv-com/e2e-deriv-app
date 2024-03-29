@@ -155,14 +155,8 @@ export function getOAuthUrl(callback, loginEmail, loginPassword) {
         })
       }
       const oAuthUrl = response.headers['location']
-      if (oAuthUrl == undefined) {
-        throw Error(
-          'No location(oAuthUrl) returned in the header. Make sure your env Variables are present and you are using correct credentials'
-        )
-      } else {
-        cy.log('oAuthUrl: ' + oAuthUrl)
-        callback(oAuthUrl)
-      }
+      cy.log('oAuthUrl: ' + oAuthUrl)
+      callback(oAuthUrl)
     })
   })
   // Note: Ensure that `extractCsrfToken` and `extractOauthToken` are defined and compatible with Cypress's execution.
@@ -236,14 +230,8 @@ export function getWalletOAuthUrl(callback) {
       },
     }).then((response) => {
       const oAuthUrl = response.headers['location']
-      if (oAuthUrl == undefined) {
-        throw Error(
-          'No location(oAuthUrl) returned in the header. Make sure your env Variables are present and you are using correct credentials'
-        )
-      } else {
-        cy.log('oAuthUrl: ' + oAuthUrl)
-        callback(oAuthUrl)
-      }
+      cy.log('oAuthUrl: ' + oAuthUrl)
+      callback(oAuthUrl)
       expect(response.status).to.eq(302) //302 means success on this occasion!
     })
   })
