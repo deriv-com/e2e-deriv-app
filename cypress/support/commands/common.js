@@ -2,8 +2,12 @@ import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
 
-const setLoginUser = (user = 'masterUser') => {
-  if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
+const setLoginUser = (user = 'masterUser', options = {}) => {
+  const { backEndProd = false } = options
+  if (
+    Cypress.config().baseUrl == Cypress.env('prodURL') ||
+    backEndProd == true
+  ) {
     return {
       loginEmail: Cypress.env('credentials').production[`${user}`].ID,
       loginPassword: Cypress.env('credentials').production[`${user}`].PSWD,
@@ -16,7 +20,7 @@ const setLoginUser = (user = 'masterUser') => {
   }
 }
 
-Cypress.Commands.add('c_visitResponsive', (path, size) => {
+Cypress.Commands.add('c_visitResponsive', (path, size, rateLimit = '') => {
   //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
   cy.log(path)
   if (size === undefined) size = Cypress.env('viewPortSize')
@@ -26,6 +30,13 @@ Cypress.Commands.add('c_visitResponsive', (path, size) => {
   else cy.viewport('macbook-16')
 
   cy.visit(path)
+  if (rateLimit == 'check') {
+    cy.c_rateLimit({
+      waitTimeAfterError: 15000,
+      maxRetries: 5,
+    })
+    cy.visit(path)
+  }
 
   if (path.includes('region')) {
     //Wait for relevent elements to appear (based on page)
@@ -50,8 +61,10 @@ Cypress.Commands.add('c_visitResponsive', (path, size) => {
 })
 
 Cypress.Commands.add('c_login', (options = {}) => {
-  const { user = 'masterUser', app = '' } = options
-  const { loginEmail, loginPassword } = setLoginUser(user)
+  const { user = 'masterUser', app = '', backEndProd = false } = options
+  const { loginEmail, loginPassword } = setLoginUser(user, {
+    backEndProd: backEndProd,
+  })
   cy.c_visitResponsive('/endpoint', 'large')
 
   if (app == 'doughflow') {
@@ -61,6 +74,12 @@ Cypress.Commands.add('c_login', (options = {}) => {
   else if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
     Cypress.env('configServer', Cypress.env('prodServer'))
     Cypress.env('configAppId', Cypress.env('prodAppId'))
+  } else if (
+    Cypress.config().baseUrl != Cypress.env('prodURL') &&
+    backEndProd == true
+  ) {
+    Cypress.env('configServer', Cypress.env('prodServer'))
+    Cypress.env('configAppId', Cypress.env('stgAppId'))
   } else {
     Cypress.env('configServer', Cypress.env('stdConfigServer'))
     Cypress.env('configAppId', Cypress.env('stdConfigAppId'))
@@ -218,7 +237,9 @@ Cypress.Commands.add('c_rateLimit', (options = {}) => {
         cy.wait(retryWaitTime, { log: false })
         cy.c_rateLimit({ ...options, retryCount: retryCount + 1 })
       } else {
-        cy.log('Max retries reached without detecting a rate limit error.')
+        cy.log(
+          `Max retries reached without detecting a rate limit error, after ${retryCount} attempts`
+        )
       }
     }
   )

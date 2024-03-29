@@ -61,6 +61,10 @@ module.exports = defineConfig({
         ID: process.env.E2E_LOGIN_ID_PROD_DBOT,
         PSWD: process.env.E2E_LOGIN_PSWD_PROD_DBOT
       },
+      cashierWithdrawal:{
+        ID: process.env.E2E_CASHIER_WITHDRAWAL_PROD,
+        PSWD: process.env.E2E_CASHIER_PROD_PASSWORD
+      }
     }
   },
     RegionEU: "/?region=at",
@@ -77,6 +81,7 @@ module.exports = defineConfig({
     loginPasswordProd: process.env.E2E_DERIV_PASSWORD_PROD,
     prodServer: process.env.E2E_PROD_SERVER,
     prodAppId: process.env.E2E_PROD_APPID,
+    stgAppId: process.env.E2E_STG_APPID,
     doughflowLoginEmail: process.env.E2E_DOUGHFLOW_LOGIN,
     doughflowLoginPassword: process.env.E2E_DOUGHFLOW_PASSWORD,
     qaBoxLoginEmail: process.env.E2E_QABOX_LOGIN,
@@ -112,6 +117,8 @@ module.exports = defineConfig({
     emailUser: process.env.E2E_AUTH_EMAIL_USER,
     emailPassword: process.env.E2E_AUTH_EMAIL_PASSWORD,
     event_email_url: process.env.E2E_EVENTS_EMAIL,
+    MAILISK_API_KEY: process.env.E2E_MAILISK_API_KEY, // the variable name should be like MAILISK_API_KEY as per mailisk documentation
+    mailiskNamespace: process.env.E2E_MAILISK_NAMESPACE,
     diel_country_list: [
       "Ecuador",
       "South Africa",
