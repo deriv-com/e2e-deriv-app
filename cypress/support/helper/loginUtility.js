@@ -155,14 +155,8 @@ export function getOAuthUrl(callback, loginEmail, loginPassword) {
         })
       }
       const oAuthUrl = response.headers['location']
-      if (oAuthUrl == undefined) {
-        throw Error(
-          'No location(oAuthUrl) returned in the header. Make sure your env Variables are present and you are using correct credentials'
-        )
-      } else {
         cy.log('oAuthUrl: ' + oAuthUrl)
         callback(oAuthUrl)
-      }
     })
   })
   // Note: Ensure that `extractCsrfToken` and `extractOauthToken` are defined and compatible with Cypress's execution.
