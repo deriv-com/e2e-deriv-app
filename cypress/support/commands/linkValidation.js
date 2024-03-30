@@ -1,47 +1,26 @@
-Cypress.Commands.add('checkAllLanguages', () => {
-  {
-    const languages = [
-      'ES',
-      'BN',
-      'DE',
-      'KO',
-      'PT',
-      'PL',
-      'RU',
-      'FR',
-      'IT',
-      'TH',
-      'TR',
-      'VI',
-      'ZHCN',
-      'ZHTW',
-    ]
-    const langChangeCheck = [
-      'Cajero',
-      'ক্যাশিয়ার',
-      'Kassierer',
-      '캐셔',
-      'Caixa',
-      'Kasjer',
-      'Касса',
-      'Caisse',
-      'Cassa',
-      'แคชเชียร์',
-      'Kasiyer',
-      'Thanh toán',
-      '收银台',
-      '收銀台',
-    ]
-    cy.checkHyperLinks('EN')
-    for (let i = 0; i < languages.length; i++) {
-      cy.findAllByTestId('dt_icon').eq(0).click()
-      cy.wait(2000)
-      cy.findAllByTestId('dt_settings_language_button').eq(i).click()
-      cy.c_rateLimit()
-      cy.findByText(langChangeCheck[i]).should('be.visible')
-      cy.checkHyperLinks(languages[i])
-    }
+Cypress.Commands.add('checkLanguage', (language) => {
+  const languages = {
+    ES: { lang: 'Español', langChangeCheck: 'Cajero' },
+    BN: { lang: 'বাংলা', langChangeCheck: 'ক্যাশিয়ার' },
+    DE: { lang: 'Deutsch', langChangeCheck: 'Kassierer' },
+    KO: { lang: '한국어', langChangeCheck: '캐셔' },
+    PT: { lang: 'Português', langChangeCheck: 'Caixa' },
+    PL: { lang: 'Polish', langChangeCheck: 'Kasjer' },
+    RU: { lang: 'Русский', langChangeCheck: 'Касса' },
+    FR: { lang: 'Français', langChangeCheck: 'Caisse' },
+    IT: { lang: 'Italiano', langChangeCheck: 'Cassa' },
+    TH: { lang: 'ไทย', langChangeCheck: 'แคชเชียร์' },
+    TR: { lang: 'Türkçe', langChangeCheck: 'Kasiyer' },
+    VI: { lang: 'Tiếng Việt', langChangeCheck: 'Thanh toán' },
+    ZHCN: { lang: '简体中文', langChangeCheck: '收银台' },
+    ZHTW: { lang: '繁體中文', langChangeCheck: '收銀台' },
   }
+  const { lang, langChangeCheck } = languages[language]
+  cy.findAllByTestId('dt_icon').eq(0).click()
+  cy.findByText(lang).should('be.visible').click()
+  cy.c_rateLimit()
+  cy.findByText(langChangeCheck).should('be.visible')
+  cy.checkHyperLinks(language)
 })
 
 const termsAndConditions = {
@@ -406,6 +385,7 @@ Cypress.Commands.add('checkHyperLinks', (language) => {
     language === 'EN' ? linkValidations.EN : linkValidations.ES
 
   validations.forEach(({ linkName, expectedUrl, contentCheck }) => {
+    cy.c_rateLimit()
     validateLink(linkName, expectedUrl, contentCheck)
   })
   cy.c_rateLimit()
@@ -572,6 +552,7 @@ function clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD) {
       cy.c_rateLimit()
       cy.findAllByRole('button', { name: getButton }).first().click()
       cy.findByText(term).click()
+      cy.c_rateLimit()
       cy.findAllByRole('link', { name: termsConditionLink })
         .invoke('attr', 'target', '_self')
         .click()
@@ -588,6 +569,7 @@ function clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD) {
       cy.c_rateLimit()
       cy.findAllByRole('button', { name: getButton }).eq(1).click()
       cy.findByText(term).click()
+      cy.c_rateLimit()
       cy.findAllByRole('link', { name: termsConditionLink })
         .invoke('attr', 'target', '_self')
         .click()
