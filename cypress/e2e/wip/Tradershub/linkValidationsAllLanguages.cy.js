@@ -3,38 +3,33 @@ import '@testing-library/cypress/add-commands'
 describe('TRAH-2997 Verify the hyperlinks on Traders Hub', () => {
   beforeEach(() => {
     cy.c_login()
+    cy.c_rateLimit()
+    cy.c_visitResponsive('/appstore/traders-hub?lang=EN', 'large')
+    cy.c_rateLimit()
   })
 
   it('Should validate the hyperlinks in tradershub for EN', () => {
-    cy.c_visitResponsive('/appstore/traders-hub', 'large')
     cy.checkHyperLinks('EN')
   })
   it('Should validate the hyperlinks in tradershub for ES', () => {
-    cy.c_visitResponsive('/appstore/traders-hub', 'large')
     cy.checkLanguage('ES')
   })
   it('Should validate the hyperlinks in tradershub for BN', () => {
-    cy.c_visitResponsive('/appstore/traders-hub', 'large')
     cy.checkLanguage('BN')
   })
   it('Should validate the hyperlinks in tradershub for DE', () => {
-    cy.c_visitResponsive('/appstore/traders-hub', 'large')
     cy.checkLanguage('DE')
   })
   it('Should validate the hyperlinks in tradershub for KO', () => {
-    cy.c_visitResponsive('/appstore/traders-hub', 'large')
     cy.checkLanguage('KO')
   })
   it('Should validate the hyperlinks in tradershub for PT', () => {
-    cy.c_visitResponsive('/appstore/traders-hub', 'large')
     cy.checkLanguage('PT')
   })
   it('Should validate the hyperlinks in tradershub for PL', () => {
-    cy.c_visitResponsive('/appstore/traders-hub', 'large')
     cy.checkLanguage('PL')
   })
   it('Should validate the hyperlinks in tradershub for RU', () => {
-    cy.c_visitResponsive('/appstore/traders-hub', 'large')
     cy.checkLanguage('RU')
   })
   it('Should validate the hyperlinks in tradershub for FR', () => {

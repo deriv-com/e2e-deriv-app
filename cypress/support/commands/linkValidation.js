@@ -1,5 +1,6 @@
 Cypress.Commands.add('checkLanguage', (language) => {
   const languages = {
+    EN: { lang: 'English', langChangeCheck: 'Cashier' },
     ES: { lang: 'Español', langChangeCheck: 'Cajero' },
     BN: { lang: 'বাংলা', langChangeCheck: 'ক্যাশিয়ার' },
     DE: { lang: 'Deutsch', langChangeCheck: 'Kassierer' },
@@ -18,6 +19,7 @@ Cypress.Commands.add('checkLanguage', (language) => {
   const { lang, langChangeCheck } = languages[language]
   cy.findAllByTestId('dt_icon').eq(0).click()
   cy.findByText(lang).should('be.visible').click()
+  cy.wait(1000)
   cy.c_rateLimit()
   cy.findByText(langChangeCheck).should('be.visible')
   cy.checkHyperLinks(language)
@@ -381,8 +383,7 @@ Cypress.Commands.add('checkHyperLinks', (language) => {
     ],
   }
 
-  const validations =
-    language === 'EN' ? linkValidations.EN : linkValidations.ES
+  const validations = linkValidations[language]
 
   validations.forEach(({ linkName, expectedUrl, contentCheck }) => {
     cy.c_rateLimit()
