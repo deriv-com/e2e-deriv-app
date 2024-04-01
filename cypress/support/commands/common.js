@@ -366,6 +366,23 @@ Cypress.Commands.add(
   }
 )
 
+Cypress.Commands.add(
+  'c_retrieveVerificationLinkUsingMailisk',
+  (account, subject, timestamp) => {
+    cy.mailiskSearchInbox(Cypress.env('mailiskNamespace'), {
+      to_addr_prefix: account,
+      subject_includes: subject,
+      wait: true,
+      ...(timestamp ? { from_timestamp: timestamp } : {}),
+    }).then((response) => {
+      const email = response.data[0]
+      const verificationLink = email.text.match(/https?:\/\/\S*redirect\?\S*/)
+      cy.log(verificationLink)
+      Cypress.env('verificationUrl', verificationLink[0])
+    })
+  }
+)
+
 Cypress.Commands.add('c_loadingCheck', () => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
 })

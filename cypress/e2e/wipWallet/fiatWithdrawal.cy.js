@@ -1,9 +1,27 @@
 import '@testing-library/cypress/add-commands'
 
+Cypress.Commands.add('c_verifyWalletsWithdrawalScreenContentAfterLink', () => {
+  let verification_url = Cypress.env('verificationUrl')
+  const code = verification_url.match(/code=([A-Za-z0-9]{8})/)
+  const verification_code = code[1]
+  cy.c_visitResponsive(
+    `/wallets/cashier/withdraw?verification=${verification_code}`,
+    'large'
+  )
+  cy.findByTestId('dt_initial_loader').should('not.exist')
+  cy.get('iframe[class=wallets-withdrawal-fiat__iframe]').should('be.visible')
+  cy.enter('iframe[class=wallets-withdrawal-fiat__iframe]').then((getBody) => {
+    getBody().find('#prCurrentBalance').should('be.visible')
+    getBody().find('#prPayoutReview').should('be.visible')
+    getBody().find('#prAvailableBalance').should('be.visible')
+    getBody().find('#noPayoutOptionsMsg').should('be.visible')
+  })
+})
+
 describe('WALL-2830 - Fiat withdrawal send email', () => {
-  //Prerequisites: Fiat wallet account in qa04 with USD wallet
+  //Prerequisites: Fiat wallet account in backend prod staging with USD wallet
   beforeEach(() => {
-    cy.c_login({ app: 'doughflow' })
+    cy.c_login({ user: 'wallets', backEndProd: true })
     cy.c_visitResponsive('/wallets', 'large')
   })
 
@@ -21,9 +39,9 @@ describe('WALL-2830 - Fiat withdrawal send email', () => {
   })
 })
 
-describe('WALL-2830 - Crypto withdrawal content access from email', () => {
+describe('WALL-2830 - Fiat withdrawal content access from email', () => {
   beforeEach(() => {
-    cy.c_login('doughflow')
+    cy.c_login({ user: 'wallets', backEndProd: true })
     cy.c_visitResponsive('/wallets', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.findByText('Withdraw').click()
@@ -31,16 +49,10 @@ describe('WALL-2830 - Crypto withdrawal content access from email', () => {
 
   it('should be able to access doughflow iframe', () => {
     cy.log('Access Fiat Withdrawal Iframe Through Email Link')
-    cy.c_emailVerification(
-      'request_payment_withdraw.html',
-      Cypress.env('walletloginEmail')
+    cy.c_retrieveVerificationLinkUsingMailisk(
+      Cypress.env('credentials').production.wallets.ID.split('@')[0],
+      'withdrawal'
     )
-    let verification_code = Cypress.env('walletsWithdrawalCode')
-    cy.then(() => {
-      cy.c_visitResponsive(
-        `/wallets/cashier/withdraw?verification=${verification_code}`,
-        'large'
-      )
-    })
+    cy.c_verifyWalletsWithdrawalScreenContentAfterLink()
   })
 })

@@ -89,6 +89,10 @@ module.exports = defineConfig({
       cashierWithdrawal:{
         ID: process.env.E2E_CASHIER_WITHDRAWAL_PROD,
         PSWD: process.env.E2E_CASHIER_PROD_PASSWORD
+      },
+      wallets: {
+        ID: process.env.E2E_WALLETS_LOGIN_PROD,
+        PSWD: process.env.E2E_WALLETS_PASSWORD_PROD
       }
     }
   },
