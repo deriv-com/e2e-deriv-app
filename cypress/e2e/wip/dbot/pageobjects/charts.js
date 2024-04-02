@@ -43,21 +43,29 @@ class Charts {
    * @param {*} symbol
    * @param {*} duration
    */
+
   verifyTickChange = (duration) => {
-    let initialPrice
-    this.chartPrice
-      .invoke('text')
-      .should('not.be.empty')
-      .then((text) => {
-        initialPrice = text
-      })
     cy.wait(duration)
-    this.chartPrice
-      .invoke('text')
-      .should('not.be.empty')
-      .then((text) => {
-        expect(text).to.not.eq(initialPrice)
-      })
+    cy.get('body').then(($body) => {
+      if ($body.find('.cq-symbol-closed-text').length > 0) {
+        cy.log('This market is closed currently')
+      } else {
+        let initialPrice
+        this.chartPrice
+          .invoke('text')
+          .should('not.be.empty')
+          .then((text) => {
+            initialPrice = text
+          })
+        cy.wait(duration)
+        this.chartPrice
+          .invoke('text')
+          .should('not.be.empty')
+          .then((text) => {
+            expect(text).to.not.eq(initialPrice)
+          })
+      }
+    })
   }
 }
 
