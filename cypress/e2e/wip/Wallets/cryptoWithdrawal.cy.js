@@ -59,13 +59,13 @@ describe('WALL-2830 - Crypto withdrawal content access from email', () => {
       cy.contains('Your Bitcoin cryptocurrency wallet address').click().type(
         '1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71' //Example bitcoin wallet address
       )
-      cy.contains('Amount (BTC)').click().type('0.005')
+      cy.contains('Amount (BTC)').click().type('0.0005')
       cy.get('form').findByRole('button', { name: 'Withdraw' }).click()
       cy.get('#modal_root, .modal-root', { timeout: 10000 }).then(() => {
         if (cy.get('.wallets-button__loader')) {
           return
         } else {
-          cy.contains('0.00500000 BTC', { exact: true })
+          cy.contains('0.000500000 BTC', { exact: true })
           cy.contains('Your withdrawal is currently in process')
           cy.findByRole('button', { name: 'Close' }).click()
           cy.contains('Please help us verify')
