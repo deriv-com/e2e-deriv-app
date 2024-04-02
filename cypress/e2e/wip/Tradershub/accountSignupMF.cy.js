@@ -12,6 +12,7 @@ describe('QATEST-5569: Verify MF Signup flow', () => {
     cy.c_setEndpoint(signUpEmail)
   })
   it('Verify I can signup for an MF demo and real account', () => {
+    Cypress.env('citizenship', country)
     cy.c_demoAccountSignup(country, signUpEmail)
     cy.c_generateRandomName().then((firstName) => {
       cy.c_personalDetails(

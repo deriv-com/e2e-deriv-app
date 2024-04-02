@@ -4,8 +4,8 @@ describe('QATEST-5948: Verify platforms navigations on Options and Multipliers',
   it('Should navigate to correct platform on clicking Open button', () => {
     cy.c_login()
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
-    const derivAppProdUrl = Cypress.env('prodURL')
-    const derivAppStagingUrl = Cypress.env('stagingUrl')
+    const derivAppProdUrl = `${Cypress.env('prodURL')}?chart_type=area&interval=1t&symbol=1HZ100V&trade_type=accumulator`
+    const derivAppStagingUrl = `${Cypress.env('stagingUrl')}?chart_type=area&interval=1t&symbol=1HZ100V&trade_type=accumulator`
     const bBotStagingUrl = Cypress.env('binaryBotUrl').staging
     const bBotProdUrl = Cypress.env('binaryBotUrl').prod
     const smartTraderStagingUrl = Cypress.env('smartTraderUrl').staging

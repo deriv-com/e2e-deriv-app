@@ -6,10 +6,11 @@ describe('QATEST-5699: Create a Financial Demo CFD account', () => {
   let country = Cypress.env('countries').CO
 
   beforeEach(() => {
-    cy.c_setEndpoint(signUpMail)
+    cy.c_setEndpoint(signUpEmail)
   })
   it('Verify I can signup for a demo financial CFD account', () => {
     cy.c_demoAccountSignup(country, signUpEmail)
+    cy.c_completeTradersHubTour()
     cy.c_checkTradersHubHomePage()
     cy.findAllByRole('button', { name: 'Get' }).eq(1).click()
     cy.findByText('Create a Deriv MT5 password').should('be.visible')

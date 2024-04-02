@@ -316,6 +316,7 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
         })
       cy.findAllByRole('button', { name: 'Close' })
         .first()
+        .scrollIntoView()
         .should('be.visible')
         .click()
         .and('not.exist')

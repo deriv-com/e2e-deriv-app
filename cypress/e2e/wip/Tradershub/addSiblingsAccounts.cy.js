@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-import { generateEpoch } from '../../../support/tradersHub'
+import { generateEpoch } from '../../../support/helper/utility'
 
 function createSiblingAcct(acctCount) {
   cy.findByTestId('dt_currency-switcher__arrow').click()
@@ -31,7 +31,7 @@ describe('QATEST-5797, QATEST-5820 - Add siblings accounts', () => {
   })
 
   it('Create siblings accounts from USD account ', () => {
-    cy.c_demoAccountSignup(epoch, country)
+    cy.c_demoAccountSignup(country, signUpMail)
     cy.c_switchToReal()
     cy.findByRole('button', { name: 'Next' }).click()
     cy.findByRole('button', { name: 'OK' }).click()

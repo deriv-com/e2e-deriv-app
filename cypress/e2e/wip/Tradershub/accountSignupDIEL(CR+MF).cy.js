@@ -1,8 +1,6 @@
 import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/helper/utility'
 
-const regulationText = '.regulators-switcher__switch div.item.is-selected'
-
 describe('QATEST-5554: Verify DIEL Signup flow - CR + MF', () => {
   const signUpEmail = `sanity${generateEpoch()}diel@deriv.com`
   let country = Cypress.env('countries').ZA
@@ -15,10 +13,10 @@ describe('QATEST-5554: Verify DIEL Signup flow - CR + MF', () => {
   it('Verify I can signup for a DIEL demo and real account', () => {
     Cypress.env('citizenship', country)
     cy.c_demoAccountSignup(country, signUpEmail)
+    cy.c_completeTradersHubTour(true)
     cy.c_checkTradersHubHomePage()
-    cy.findByTestId('dt_dropdown_display').click()
-    cy.get('#real').click()
-    cy.get(regulationText).should('have.text', 'Non-EU')
+    cy.c_switchToReal()
+    cy.findByText('Non-EU').parent().should('have.class', 'is-selected')
     cy.findByRole('button', { name: 'Get a Deriv account' }).click()
     cy.c_generateRandomName().then((firstName) => {
       cy.c_personalDetails(firstName, 'IDV', country, nationalIDNum, taxIDNum)
@@ -29,8 +27,8 @@ describe('QATEST-5554: Verify DIEL Signup flow - CR + MF', () => {
     cy.c_addressDetails()
     cy.c_completeFatcaDeclarationAgreement()
     cy.c_addAccount()
-    cy.findByText('EU', { exact: true }).click()
-    cy.get(regulationText).should('have.text', 'EU')
+    cy.findByText('EU').click()
+    cy.findByText('EU').parent().should('have.class', 'is-selected')
     cy.findByRole('button', { name: 'Get a Deriv account' }).click()
     cy.findByText('US Dollar').click()
     cy.findByRole('button', { name: 'Next' }).click()

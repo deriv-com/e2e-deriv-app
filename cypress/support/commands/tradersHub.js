@@ -11,16 +11,23 @@ Cypress.Commands.add('c_checkTradersHubHomePage', () => {
 
 Cypress.Commands.add('c_switchToReal', () => {
   cy.findByTestId('dt_dropdown_display').click()
-  cy.get('#real').click()
+  cy.findByTestId('dt_dropdown_container')
+    .findAllByText('Real')
+    .last()
+    .click({ force: true })
 })
 
 Cypress.Commands.add('c_switchToDemo', () => {
   cy.findByTestId('dt_dropdown_display').click()
-  cy.get('#demo').click()
+  cy.findByTestId('dt_dropdown_container')
+    .findAllByText('Demo')
+    .last()
+    .click({ force: true })
 })
 
-Cypress.Commands.add('c_completeTradersHubTour', () => {
+Cypress.Commands.add('c_completeTradersHubTour', (diel = false) => {
   cy.findByRole('button', { name: 'Next' }).click()
+  if (diel) cy.findByRole('button', { name: 'Next' }).click()
   cy.findByRole('button', { name: 'OK' }).click()
 })
 
@@ -116,7 +123,9 @@ Cypress.Commands.add(
     currency = Cypress.env('accountCurrency').USD
   ) => {
     cy.findByText(currency).click()
-    cy.findByRole('button', { name: 'Next' }).click()
+    cy.findByTestId('dt_modal_footer')
+      .findByRole('button', { name: 'Next' })
+      .click()
     if (identity == 'Onfido') {
       cy.contains('Any information you provide is confidential').should(
         'be.visible'
@@ -175,8 +184,12 @@ Cypress.Commands.add(
     }
     //below check is to make sure previous button is working.
     cy.findByRole('button', { name: 'Previous' }).click()
-    cy.findByRole('button', { name: 'Next' }).click()
-    cy.findByRole('button', { name: 'Next' }).click()
+    cy.findByTestId('dt_modal_footer')
+      .findByRole('button', { name: 'Next' })
+      .click()
+    cy.findByTestId('dt_modal_footer')
+      .findByRole('button', { name: 'Next' })
+      .click()
   }
 )
 
@@ -185,7 +198,9 @@ Cypress.Commands.add('c_addressDetails', () => {
   cy.findByLabelText('Second line of address').type('myaddress 2')
   cy.findByLabelText('Town/City*').type('mycity')
   cy.findByLabelText('Postal/ZIP Code').type('1234')
-  cy.findByRole('button', { name: 'Next' }).click()
+  cy.findByTestId('dt_modal_footer')
+    .findByRole('button', { name: 'Next' })
+    .click()
 })
 
 Cypress.Commands.add('c_addAccount', () => {
@@ -262,8 +277,10 @@ Cypress.Commands.add('c_completeFatcaDeclarationAgreement', () => {
 Cypress.Commands.add('c_addAccountMF', () => {
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
   cy.get('.dc-checkbox__box').eq(0).click()
-  cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
   cy.get('.dc-checkbox__box').eq(1).click()
+  //To handle additional declaration for Spain https://app.clickup.com/t/20696747/TRAH-2864
+  if (Cypress.env('citizenship') == Cypress.env('countries').ES)
+    cy.get('.dc-checkbox__box').eq(2).click()
   cy.findByRole('button', { name: 'Add account' }).click()
   cy.findByRole('heading', { name: 'Deposit' }).should('be.visible')
   cy.findByTestId('dt_modal_close_icon').click()

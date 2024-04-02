@@ -14,13 +14,13 @@ describe('QATEST-6211: Verify DIEL Signup flow - MF + CR', () => {
     cy.c_setEndpoint(signUpEmail)
   })
   it('Verify I can signup for a DIEL demo and real account', () => {
-    Cypress.env('citizenship', Cypress.env('dielCountry'))
+    Cypress.env('citizenship', country)
     cy.c_demoAccountSignup(country, signUpEmail)
+    cy.c_completeTradersHubTour(true)
     cy.c_checkTradersHubHomePage()
-    cy.findByTestId('dt_dropdown_display').click()
-    cy.get('#real').click()
+    cy.c_switchToReal()
     cy.findByText('EU', { exact: true }).click()
-    cy.get(regulationText).should('have.text', 'EU')
+    cy.findByText('EU').parent().should('have.class', 'is-selected')
     cy.findByRole('button', { name: 'Get a Deriv account' }).click()
     cy.c_generateRandomName().then((firstName) => {
       cy.c_personalDetails(
@@ -38,7 +38,7 @@ describe('QATEST-6211: Verify DIEL Signup flow - MF + CR', () => {
     cy.c_completeFatcaDeclarationAgreement()
     cy.c_addAccountMF()
     cy.findByText('Non-EU', { exact: true }).click()
-    cy.get(regulationText).should('have.text', 'Non-EU')
+    cy.findByText('Non-EU').parent().should('have.class', 'is-selected')
     cy.findByRole('button', { name: 'Get a Deriv account' }).click()
     cy.findByText('US Dollar').click()
     cy.findByRole('button', { name: 'Next' }).click()
