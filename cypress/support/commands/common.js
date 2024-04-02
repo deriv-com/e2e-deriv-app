@@ -304,7 +304,7 @@ Cypress.Commands.add('c_selectDemoAccount', () => {
 Cypress.Commands.add(
   'c_emailVerification',
   (requestType, accountEmail, options = {}) => {
-    let {
+    const {
       retryCount = 0,
       maxRetries = 3,
       baseUrl = Cypress.env('configServer') + '/events',
@@ -328,8 +328,13 @@ Cypress.Commands.add(
           if (allRelatedEmails.length) {
             const verificationEmail = allRelatedEmails.pop()
             cy.wrap(verificationEmail).click()
-            cy.contains('p', `${accountEmail}`).should('be.visible')
-            cy.contains('a', Cypress.config('baseUrl'))
+            // cy.contains('p', `${accountEmail}`).should('be.visible')
+            cy.contains('p', `${accountEmail}`)
+              .should('be.visible')
+              .parent()
+              .children()
+              .contains('a', Cypress.config('baseUrl'))
+              // cy.contains('a', Cypress.config('baseUrl'))
               .invoke('attr', 'href')
               .then((href) => {
                 if (href) {
@@ -353,8 +358,8 @@ Cypress.Commands.add(
       if (retryCount <= maxRetries && !Cypress.env('verificationUrl')) {
         cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
         cy.wait(1000)
-        cy.c_emailVerification(requestType, accountEmail, {
-          retryCount: ++retryCount,
+        cy.c_emailVerification(requestType, accountEmail, ...options, {
+          retryCount: retryCount + 1,
         })
       }
       if (retryCount > maxRetries) {
