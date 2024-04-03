@@ -25,8 +25,6 @@ describe('QATEST-99419: Import and run custom strategy', () => {
   it('Run Timely Balance Strategy', () => {
     botDashboard.importStrategy('TimelyBalance')
     common.skipTour()
-    cy.reload() // adding this until bug BOT-1147 is fixed
-    cy.c_loadingCheck()
 
     common.accountBalance.then(($el) => {
       beforePurchaseBalanceString = $el.text()

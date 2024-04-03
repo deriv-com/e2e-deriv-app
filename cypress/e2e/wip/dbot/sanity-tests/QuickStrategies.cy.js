@@ -19,8 +19,6 @@ describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
     common.switchToDemo()
     botBuilder.openBotBuilderTab()
     common.skipTour()
-    cy.reload() // adding this until bug BOT-1147 is fixed
-    cy.c_loadingCheck() //TODO:remove once bug is fixed
   })
 
   it('Run Martingale Quick Strategy', () => {

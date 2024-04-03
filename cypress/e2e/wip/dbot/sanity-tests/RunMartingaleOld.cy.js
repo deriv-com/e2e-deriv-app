@@ -23,8 +23,6 @@ describe('QATEST-99420: Import and run custom strategy', () => {
   it('Run Martingale Old Strategy', () => {
     botDashboard.importStrategy('MartingaleOld')
     common.skipTour()
-    cy.reload() // adding this until bug BOT-1147 is fixed
-    cy.c_loadingCheck()
 
     //Enter Expected profit, expected Loss, and Trade Amount
     cy.window().then((win) => {
