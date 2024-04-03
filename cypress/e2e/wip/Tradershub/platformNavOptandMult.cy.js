@@ -38,11 +38,6 @@ describe('QATEST-5948: Verify platforms navigations on Options and Multipliers',
     //Open SmartTrader
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     cy.findAllByRole('button', { name: 'Open' }).eq(2).click({ force: true })
-    // localStorage.clear()
-    // localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
-    // localStorage.setItem('config.app_id', Cypress.env('smtConfigAppId'))
-    // cy.log('Server is ' + Cypress.env('stdConfigServer'))
-    // cy.log('app id is '+ Cypress.env('smtConfigAppId'))})
     cy.findByRole('heading', { name: 'Rise' }, { timeout: 15000 }).should('be.visible')
     cy.findByRole('heading', { name: 'Fall' }, { timeout: 15000 }).should(
       'be.visible'
