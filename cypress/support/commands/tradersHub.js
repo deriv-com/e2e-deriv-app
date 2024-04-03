@@ -25,9 +25,9 @@ Cypress.Commands.add('c_switchToDemo', () => {
     .click({ force: true })
 })
 
-Cypress.Commands.add('c_completeTradersHubTour', (diel = false) => {
+Cypress.Commands.add('c_completeTradersHubTour', (isDiel = false) => {
   cy.findByRole('button', { name: 'Next' }).click()
-  if (diel) cy.findByRole('button', { name: 'Next' }).click()
+  if (isDiel) cy.findByRole('button', { name: 'Next' }).click()
   cy.findByRole('button', { name: 'OK' }).click()
 })
 

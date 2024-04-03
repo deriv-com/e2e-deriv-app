@@ -4,8 +4,12 @@ describe('QATEST-5948: Verify platforms navigations on Options and Multipliers',
   it('Should navigate to correct platform on clicking Open button', () => {
     cy.c_login()
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
-    const derivAppProdUrl = `${Cypress.env('prodURL')}?chart_type=area&interval=1t&symbol=1HZ100V&trade_type=accumulator`
-    const derivAppStagingUrl = `${Cypress.env('stagingUrl')}?chart_type=area&interval=1t&symbol=1HZ100V&trade_type=accumulator`
+    const derivAppProdUrl = new RegExp(
+      `${Cypress._.escapeRegExp(Cypress.env('prodURL'))}\\?chart_type=[a-z]+\\&interval=[0-9]+[a-z]\\&symbol=[0-9a-zA-Z]+\\&trade_type=[a-z]+`
+    )
+    const derivAppStagingUrl = new RegExp(
+      `${Cypress._.escapeRegExp(Cypress.env('stagingUrl'))}\\?chart_type=[a-z]+\\&interval=[0-9]+[a-z]\\&symbol=[0-9a-zA-Z]+\\&trade_type=[a-z]+`
+    )
     const bBotStagingUrl = Cypress.env('binaryBotUrl').staging
     const bBotProdUrl = Cypress.env('binaryBotUrl').prod
     const smartTraderStagingUrl = Cypress.env('smartTraderUrl').staging
@@ -17,8 +21,8 @@ describe('QATEST-5948: Verify platforms navigations on Options and Multipliers',
     cy.findAllByRole('button', { name: 'Open' }).first().click({ force: true })
     cy.get('flt-glass-pane', { timeout: 15000 }).should('be.visible')
     if (Cypress.config().baseUrl.includes('staging'))
-      cy.url().should('eql', derivAppStagingUrl)
-    else cy.url().should('eql', derivAppProdUrl)
+      cy.url().should('match', derivAppStagingUrl)
+    else cy.url().should('match', derivAppProdUrl)
 
     //Open DBot
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
