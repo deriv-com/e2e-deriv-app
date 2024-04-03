@@ -112,7 +112,7 @@ class Common {
   }
 
   blockDashboardLoad = () => {
-    cy.get('.bot-dashboard.bot').should('be.visible').wait(2000)
+    cy.get('.bot-dashboard.bot').should('be.visible')
   }
 
   /**
