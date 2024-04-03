@@ -28,10 +28,15 @@ describe('WALL-2830 - Fiat withdrawal send email', () => {
   it('should be able to send withdrawal verification link', () => {
     cy.log('Access Fiat Withdrawal Iframe')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
     cy.findByText('Withdraw').click()
     cy.findByText(/Please help us verify/).should('be.visible')
     if (cy.findByRole('button', { name: 'Send email' }).should('be.visible')) {
-      cy.findByRole('button', { name: 'Send email' }).click()
+      cy.findByRole('button', { name: 'Send email' })
+        .should('be.visible')
+        .should('be.enabled')
+        .wait(500)
+        .click()
     }
     cy.findByText("We've sent you an email.")
     cy.findByRole('button', { name: "Didn't receive the email?" }).click()
@@ -44,6 +49,7 @@ describe('WALL-2830 - Fiat withdrawal content access from email', () => {
     cy.c_login({ user: 'wallets', backEndProd: true })
     cy.c_visitResponsive('/wallets', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
     cy.findByText('Withdraw').click()
   })
 
