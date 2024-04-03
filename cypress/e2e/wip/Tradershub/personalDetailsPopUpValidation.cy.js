@@ -24,10 +24,7 @@ describe('QATEST-24444 - Verify the user is able to close the personal details p
     cy.findByText('Complete your personal details').should('be.visible')
     cy.findByTestId('dt_modal_close_icon').click()
     cy.findByRole('button', { name: 'Yes' }).click()
-    cy.url().should(
-      'be.equal',
-      Cypress.env('baseUrl') + 'appstore/traders-hub'
-    )
+    cy.url().should('be.equal', Cypress.env('baseUrl') + 'appstore/traders-hub')
     cy.findByRole('button', { name: 'Get a Deriv account' }).should(
       'be.enabled'
     )

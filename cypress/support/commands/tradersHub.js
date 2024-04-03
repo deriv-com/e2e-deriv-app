@@ -188,10 +188,7 @@ Cypress.Commands.add('c_addAccount', () => {
     .findByRole('button', { name: 'Deposit' })
     .should('be.visible')
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
-  cy.url().should(
-    'be.equal',
-    Cypress.env('baseUrl') + 'appstore/traders-hub'
-  )
+  cy.url().should('be.equal', Cypress.env('baseUrl') + 'appstore/traders-hub')
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
   cy.c_closeNotificationHeader()
   cy.findAllByTestId('dt_balance_text_container').eq(0).should('be.visible')
@@ -262,10 +259,7 @@ Cypress.Commands.add('c_addAccountMF', (type) => {
   cy.findByRole('heading', { name: 'Account added' }).should('be.visible')
   cy.findByRole('button', { name: 'Verify now' }).should('be.visible')
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
-  cy.url().should(
-    'be.equal',
-    Cypress.env('baseUrl') + 'appstore/traders-hub'
-  )
+  cy.url().should('be.equal', Cypress.env('baseUrl') + 'appstore/traders-hub')
   cy.findByRole('button', { name: 'Next' }).click()
   if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
     cy.contains('Choice of regulation').should('be.visible')
