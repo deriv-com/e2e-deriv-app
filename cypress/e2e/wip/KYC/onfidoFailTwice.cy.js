@@ -7,6 +7,8 @@ describe('QATEST-22853 Onfido (2 attempts) failed clients are redirected to manu
   })
 
   it('Onfido should fail twice and then manual upload screen should be displayed', () => {
+    cy.findByText('Maybe later').click()
+    cy.c_fixPassKeysScreen('Colombia')
     cy.get('.dc-checkbox__box').click()
     cy.findByText('Choose document').should('be.visible')
     cy.findByText('Passport').click()
@@ -18,5 +20,7 @@ describe('QATEST-22853 Onfido (2 attempts) failed clients are redirected to manu
       { force: true }
     )
     cy.findByText('Confirm').click()
+    cy.findByText('Take a selfie').should('be.visible')
+    cy.findByText('Continue').click()
   })
 })

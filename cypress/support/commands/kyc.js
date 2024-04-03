@@ -14,3 +14,9 @@ Cypress.Commands.add('c_navigateToPoiResponsive', (country) => {
   cy.get('select[name="country_input"]').select(country)
   cy.contains('button', 'Next').click()
 })
+
+Cypress.Commands.add('c_fixPassKeysScreen', (country) => {
+  cy.c_visitResponsive('/account/proof-of-identity', 'small')
+  cy.get('select[name="country_input"]').select(country)
+  cy.contains('button', 'Next').click()
+})
