@@ -25,6 +25,10 @@ module.exports = defineConfig({
       staging: "https://staging-bot.deriv.com/?l=en",
       prod: "https://bot.deriv.com/?l=en",
     },
+    dTraderUrl: {
+      staging: "https://staging-app.deriv.com/?chart_type=area&interval=1t&symbol=1HZ100V&trade_type=accumulator",
+      prod: "https://app.deriv.com/?chart_type=area&interval=1t&symbol=1HZ100V&trade_type=accumulator",
+    },
     credentials: {
     test:{
       masterUser: {
