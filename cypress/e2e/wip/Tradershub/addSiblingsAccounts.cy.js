@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-import { generateEpoch } from '../../../support/tradersHub'
+import { generateEpoch } from '../../../support/helper/utility'
 
 function createSiblingAcct(acctCount) {
   cy.findByTestId('dt_currency-switcher__arrow').click()
@@ -20,24 +20,19 @@ function getCurrencyList() {
     })
 }
 describe('QATEST-5797, QATEST-5820 - Add siblings accounts', () => {
-  const epoch = generateEpoch()
-  const signUpMail = `sanity${epoch}@deriv.com`
+  const signUpEmail = `sanity${generateEpoch()}sibacct@deriv.com`
   let country = Cypress.env('countries').CO
   let nationalIDNum = Cypress.env('nationalIDNum').CO
   let taxIDNum = Cypress.env('taxIDNum').CO
   let currency = Cypress.env('accountCurrency').USD
   beforeEach(() => {
-    cy.c_setEndpoint(signUpMail)
+    cy.c_setEndpoint(signUpEmail)
   })
 
   it('Create siblings accounts from USD account ', () => {
-    cy.c_demoAccountSignup(epoch, country)
+    cy.c_demoAccountSignup(country, signUpEmail)
     cy.c_switchToReal()
-    cy.findByRole('button', { name: 'Next' }).click()
-    cy.findByRole('button', { name: 'OK' }).click()
-    cy.findByRole('button', { name: 'Get a Deriv account' }).click({
-      force: true,
-    })
+    cy.findByRole('button', { name: 'Get a Deriv account' }).click()
     cy.c_generateRandomName().then((firstName) => {
       cy.c_personalDetails(
         firstName,
