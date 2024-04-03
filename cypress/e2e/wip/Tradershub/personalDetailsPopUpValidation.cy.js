@@ -28,6 +28,8 @@ describe('QATEST-24444 - Verify the user is able to close the personal details p
       'be.equal',
       Cypress.config('baseUrl') + 'appstore/traders-hub'
     )
-    cy.findByRole('button', { name: 'Get a Deriv account' }).should('be.enabled')
+    cy.findByRole('button', { name: 'Get a Deriv account' }).should(
+      'be.enabled'
+    )
   })
 })

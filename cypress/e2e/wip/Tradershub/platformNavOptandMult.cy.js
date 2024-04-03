@@ -20,7 +20,7 @@ describe('QATEST-5948: Verify platforms navigations on Options and Multipliers',
       cy.url().should('satisfy', (url) => {
         return url.includes(derivAppStagingUrl)
       })
-    else 
+    else
       cy.url().should('satisfy', (url) => {
         return url.includes(derivAppProdUrl)
       })
@@ -38,7 +38,9 @@ describe('QATEST-5948: Verify platforms navigations on Options and Multipliers',
     //Open SmartTrader
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     cy.findAllByRole('button', { name: 'Open' }).eq(2).click({ force: true })
-    cy.findByRole('heading', { name: 'Rise' }, { timeout: 15000 }).should('be.visible')
+    cy.findByRole('heading', { name: 'Rise' }, { timeout: 15000 }).should(
+      'be.visible'
+    )
     cy.findByRole('heading', { name: 'Fall' }, { timeout: 15000 }).should(
       'be.visible'
     )
