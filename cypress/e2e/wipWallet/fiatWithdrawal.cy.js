@@ -29,7 +29,7 @@ describe('WALL-2830 - Fiat withdrawal send email', () => {
     cy.log('Access Fiat Withdrawal Iframe')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.findByText('Withdraw').click()
-    cy.findByText('Please help us verify').should('be.visible')
+    cy.findByText(/Please help us verify/).should('be.visible')
     if (cy.findByRole('button', { name: 'Send email' }).should('be.visible')) {
       cy.findByRole('button', { name: 'Send email' }).click()
     }
