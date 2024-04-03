@@ -190,7 +190,7 @@ Cypress.Commands.add('c_addAccount', () => {
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
   cy.url().should(
     'be.equal',
-    Cypress.config('baseUrl') + 'appstore/traders-hub'
+    Cypress.env('baseUrl') + 'appstore/traders-hub'
   )
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
   cy.c_closeNotificationHeader()
@@ -264,7 +264,7 @@ Cypress.Commands.add('c_addAccountMF', (type) => {
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
   cy.url().should(
     'be.equal',
-    Cypress.config('baseUrl') + 'appstore/traders-hub'
+    Cypress.env('baseUrl') + 'appstore/traders-hub'
   )
   cy.findByRole('button', { name: 'Next' }).click()
   if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
