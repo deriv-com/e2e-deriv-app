@@ -140,9 +140,8 @@ Cypress.Commands.add('c_login', (options = {}) => {
 })
 
 Cypress.Commands.add('c_doOAuthLogin', (app) => {
-  cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
+  cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large', 'check')
   //To let the dtrader page load completely
-  cy.c_rateLimit()
   cy.get('.cq-symbol-select-btn', { timeout: 10000 }).should('exist')
   cy.document().then((doc) => {
     const launchModal = doc.querySelector('[data-test-id="launch-modal"]')
@@ -200,7 +199,7 @@ Cypress.Commands.add('c_mt5login', () => {
 Cypress.Commands.add('c_rateLimit', (options = {}) => {
   const {
     retryCount = 1,
-    maxRetries = 6,
+    maxRetries = 3,
     waitTimeAfterError = 60000,
     retryWaitTime = 1000,
     isLanguageTest = false,
