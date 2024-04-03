@@ -54,9 +54,7 @@ function createAnOrder(advertNickname) {
     .find('button')
     .should('be.visible')
     .click()
-  cy.findByText(
-    "If the market rate changes from the rate shown here, we won't be able to process your order."
-  ).should('be.visible')
+  cy.findByText('Orders must be completed in').should('be.visible')
   cy.findByRole('button', { name: 'Confirm' })
     .should('exist')
     .and('be.enabled')
@@ -163,12 +161,14 @@ function unblockedAdvertiserValidation(advertNickname) {
 
 describe('QATEST-2871 - Block and unblock user from advertisers profile page', () => {
   beforeEach(() => {
+    cy.clearAllLocalStorage()
     cy.clearAllSessionStorage()
     cy.c_login()
-    cy.c_visitResponsive('/cashier/p2p', 'small')
+    cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
 
   it('Should be able to block and unblock the advertiser from profile page in responsive mode.', () => {
+    cy.c_navigateToDerivP2P()
     cy.c_closeSafetyInstructions()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()

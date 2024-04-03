@@ -1,5 +1,6 @@
-const { defineConfig } = require("cypress")
 require("dotenv").config()
+const { defineConfig } = require("cypress")
+const {createAccountReal, createAccountVirtual} = require('./cypress/support/helper/accountCreationUtility');
 
 //const gViewPortSize = {small: 'phone-xr', large: 'macbook-16'} //TODO Use enum
  
@@ -12,6 +13,30 @@ module.exports = defineConfig({
     supportFile: "cypress/support/e2e.js",
     experimentalWebKitSupport: true,
     chromeWebSecurity: false,
+    setupNodeEvents(on, config) {
+      on('task', {
+        async createRealAccountTask() {
+          try {
+            const realAccountDetails = await createAccountReal();
+            return realAccountDetails;
+          } catch (error) {
+            console.error('Error creating account:', error);
+            throw error;
+          }
+        },
+        async createVirtualAccountTask() {
+          try {
+              const virtualAccountDetails = await createAccountVirtual();
+              return virtualAccountDetails;
+          } catch (error) {
+              console.error('Error creating virtual account:', error);
+              throw error;
+          }
+      },
+      });
+
+      return config;  // Return the config object is important for custom configurations to take effect
+    },
   },
   env: {
     stagingUrl: "https://staging-app.deriv.com/",
@@ -34,7 +59,23 @@ module.exports = defineConfig({
       dBot: {
         ID: process.env.E2E_LOGIN_ID_DBOT,
         PSWD: process.env.E2E_LOGIN_PSWD_DBOT
-      } 
+      },
+      p2pFixedRate: {
+        ID: process.env.E2E_LOGIN_ID_P2P_FIXEDRATE,
+        PSWD: process.env.E2E_PSWD_P2P
+      },
+      p2pFloating: {
+        ID: process.env.E2E_P2P_FLOATING,
+        PSWD: process.env.E2E_PSWD_P2P
+      },
+      diel: {
+        ID: process.env.E2E_DIEL_LOGIN,
+        PSWD: process.env.E2E_DIEL_PASSWORD,
+      },
+      eu: {
+        ID: process.env.E2E_EU_LOGIN,
+        PSWD: process.env.E2E_EU_PASSWORD,
+      },
     },
     production:{
       masterUser:{
@@ -44,7 +85,11 @@ module.exports = defineConfig({
       dBot: {
         ID: process.env.E2E_LOGIN_ID_PROD_DBOT,
         PSWD: process.env.E2E_LOGIN_PSWD_PROD_DBOT
-      } 
+      },
+      cashierWithdrawal:{
+        ID: process.env.E2E_CASHIER_WITHDRAWAL_PROD,
+        PSWD: process.env.E2E_CASHIER_PROD_PASSWORD
+      }
     }
   },
     RegionEU: "/?region=at",
@@ -62,6 +107,7 @@ module.exports = defineConfig({
     loginPasswordProd: process.env.E2E_DERIV_PASSWORD_PROD,
     prodServer: process.env.E2E_PROD_SERVER,
     prodAppId: process.env.E2E_PROD_APPID,
+    stgAppId: process.env.E2E_STG_APPID,
     doughflowLoginEmail: process.env.E2E_DOUGHFLOW_LOGIN,
     doughflowLoginPassword: process.env.E2E_DOUGHFLOW_PASSWORD,
     qaBoxLoginEmail: process.env.E2E_QABOX_LOGIN,
@@ -88,7 +134,6 @@ module.exports = defineConfig({
     oAuthToken: process.env.E2E_OAUTH_TOKEN,
     doughflowOAuthUrl: process.env.E2E_DOUGHFLOW_OAUTH_URL,
     doughflowOAuthToken: process.env.E2E_DOUGHFLOW_OAUTH_TOKEN,
-    walletsWithdrawalUrl: process.env.E2E_WALLETS_WITHDRAWAL_URL,
     walletsWithdrawalCode: process.env.E2E_WALLETS_WITHDRAWAL_CODE,
     verificationUrl:  process.env.E2E_WALLETS_PASSWORD_URL,
     HMACKey: process.env.E2E_HMAC_KEY,
@@ -99,6 +144,8 @@ module.exports = defineConfig({
     emailUser: process.env.E2E_AUTH_EMAIL_USER,
     emailPassword: process.env.E2E_AUTH_EMAIL_PASSWORD,
     event_email_url: process.env.E2E_EVENTS_EMAIL,
+    MAILISK_API_KEY: process.env.E2E_MAILISK_API_KEY, // the variable name should be like MAILISK_API_KEY as per mailisk documentation
+    mailiskNamespace: process.env.E2E_MAILISK_NAMESPACE,
     diel_country_list: [
       "Ecuador",
       "South Africa",

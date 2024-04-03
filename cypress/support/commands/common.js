@@ -2,8 +2,12 @@ import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
 
-const setLoginUser = (user = 'masterUser') => {
-  if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
+const setLoginUser = (user = 'masterUser', options = {}) => {
+  const { backEndProd = false } = options
+  if (
+    Cypress.config().baseUrl == Cypress.env('prodURL') ||
+    backEndProd == true
+  ) {
     return {
       loginEmail: Cypress.env('credentials').production[`${user}`].ID,
       loginPassword: Cypress.env('credentials').production[`${user}`].PSWD,
@@ -16,7 +20,7 @@ const setLoginUser = (user = 'masterUser') => {
   }
 }
 
-Cypress.Commands.add('c_visitResponsive', (path, size) => {
+Cypress.Commands.add('c_visitResponsive', (path, size, rateLimit = '') => {
   //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
   cy.log(path)
   if (size === undefined) size = Cypress.env('viewPortSize')
@@ -26,6 +30,13 @@ Cypress.Commands.add('c_visitResponsive', (path, size) => {
   else cy.viewport('macbook-16')
 
   cy.visit(path)
+  if (rateLimit == 'check') {
+    cy.c_rateLimit({
+      waitTimeAfterError: 15000,
+      maxRetries: 5,
+    })
+    cy.visit(path)
+  }
 
   if (path.includes('region')) {
     //Wait for relevent elements to appear (based on page)
@@ -50,8 +61,10 @@ Cypress.Commands.add('c_visitResponsive', (path, size) => {
 })
 
 Cypress.Commands.add('c_login', (options = {}) => {
-  const { user = 'masterUser', app = '' } = options
-  const { loginEmail, loginPassword } = setLoginUser(user)
+  const { user = 'masterUser', app = '', backEndProd = false } = options
+  const { loginEmail, loginPassword } = setLoginUser(user, {
+    backEndProd: backEndProd,
+  })
   cy.c_visitResponsive('/endpoint', 'large')
 
   if (app == 'doughflow') {
@@ -61,6 +74,12 @@ Cypress.Commands.add('c_login', (options = {}) => {
   else if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
     Cypress.env('configServer', Cypress.env('prodServer'))
     Cypress.env('configAppId', Cypress.env('prodAppId'))
+  } else if (
+    Cypress.config().baseUrl != Cypress.env('prodURL') &&
+    backEndProd == true
+  ) {
+    Cypress.env('configServer', Cypress.env('prodServer'))
+    Cypress.env('configAppId', Cypress.env('stgAppId'))
   } else {
     Cypress.env('configServer', Cypress.env('stdConfigServer'))
     Cypress.env('configAppId', Cypress.env('stdConfigAppId'))
@@ -91,7 +110,11 @@ Cypress.Commands.add('c_login', (options = {}) => {
     })
   }
   cy.log('getOAuthUrl - value before: ' + Cypress.env('oAuthUrl'))
-  if (Cypress.env('oAuthUrl') == '<empty>' && app != 'wallets') {
+  if (
+    Cypress.env('oAuthUrl') == '<empty>' &&
+    app != 'wallets' &&
+    app != 'doughflow'
+  ) {
     getOAuthUrl(
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
@@ -101,7 +124,10 @@ Cypress.Commands.add('c_login', (options = {}) => {
       loginEmail,
       loginPassword
     )
-  } else if (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') {
+  } else if (
+    (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') ||
+    app == 'doughflow'
+  ) {
     getWalletOAuthUrl((oAuthUrl) => {
       cy.log('came inside wallet getOauth')
       Cypress.env('oAuthUrl', oAuthUrl)
@@ -211,7 +237,9 @@ Cypress.Commands.add('c_rateLimit', (options = {}) => {
         cy.wait(retryWaitTime, { log: false })
         cy.c_rateLimit({ ...options, retryCount: retryCount + 1 })
       } else {
-        cy.log('Max retries reached without detecting a rate limit error.')
+        cy.log(
+          `Max retries reached without detecting a rate limit error, after ${retryCount} attempts`
+        )
       }
     }
   )
@@ -279,7 +307,7 @@ Cypress.Commands.add(
     let {
       retryCount = 0,
       maxRetries = 3,
-      baseUrl = Cypress.env('qaBoxBaseUrl'),
+      baseUrl = Cypress.env('configServer') + '/events',
     } = options
     cy.visit(
       `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
@@ -340,4 +368,19 @@ Cypress.Commands.add(
 
 Cypress.Commands.add('c_loadingCheck', () => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
+})
+
+Cypress.Commands.add('c_createRealAccount', () => {
+  cy.task('createRealAccountTask').then((realAccountDetails) => {
+    // Assuming realAccountDetails is an array where the first element is email
+    const [email] = realAccountDetails
+    cy.wrap(realAccountDetails).as('realAccountDetails') // Wrap and alias for later use
+
+    cy.log(email) // Logging the email for debugging
+
+    // Updating Cypress environment variables with the new email
+    const currentCredentials = Cypress.env('credentials')
+    currentCredentials.test.masterUser.ID = email
+    Cypress.env('credentials', currentCredentials)
+  })
 })
