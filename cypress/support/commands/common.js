@@ -328,13 +328,11 @@ Cypress.Commands.add(
           if (allRelatedEmails.length) {
             const verificationEmail = allRelatedEmails.pop()
             cy.wrap(verificationEmail).click()
-            // cy.contains('p', `${accountEmail}`).should('be.visible')
             cy.contains('p', `${accountEmail}`)
               .should('be.visible')
               .parent()
               .children()
               .contains('a', Cypress.config('baseUrl'))
-              // cy.contains('a', Cypress.config('baseUrl'))
               .invoke('attr', 'href')
               .then((href) => {
                 if (href) {
@@ -355,10 +353,11 @@ Cypress.Commands.add(
     )
     cy.then(() => {
       //Retry finding email after 1 second interval
-      if (retryCount <= maxRetries && !Cypress.env('verificationUrl')) {
+      if (retryCount < maxRetries && !Cypress.env('verificationUrl')) {
         cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
         cy.wait(1000)
-        cy.c_emailVerification(requestType, accountEmail, ...options, {
+        cy.c_emailVerification(requestType, accountEmail, {
+          ...options,
           retryCount: retryCount + 1,
         })
       }
