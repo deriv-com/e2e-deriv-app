@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
-import { stakeAmount } from '../../../support/commands/dTrader'
 
+const stakeAmount = '10.00'
 describe('QATEST-5040 -  Verify contract for Digits', () => {
   beforeEach(() => {
     cy.c_login()

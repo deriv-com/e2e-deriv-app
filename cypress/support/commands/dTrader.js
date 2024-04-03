@@ -1,10 +1,6 @@
 const pixelmatch = require('pixelmatch')
 const { PNG } = require('pngjs')
 
-//TODO move variables to either test files.
-export const stakeAmount = '10.00'
-export const tickDuration = 4
-
 Cypress.Commands.add('c_selectSymbol', (symbolName) => {
   cy.get('.cq-symbol-select-btn', { timeout: 20000 }).should('be.visible')
   cy.get('.cq-symbol-select-btn').click()
@@ -36,15 +32,17 @@ Cypress.Commands.add('c_checkSymbolTickChange', (duration) => {
     })
 })
 
+//TODO: Remove it. No need for a command for a single action
 Cypress.Commands.add('c_selectStakeTab', () => {
   cy.findByRole('button', { name: 'Stake' }).click()
 })
 
+//TODO: Remove it. No need for a command for a single action
 Cypress.Commands.add('c_selectPayoutTab', () => {
   cy.findByRole('button', { name: 'Payout' }).click()
 })
 
-Cypress.Commands.add('c_selectTickDuration', () => {
+Cypress.Commands.add('c_selectTickDuration', (tickDuration) => {
   cy.get(`[data-testid="tick_step_${tickDuration}"]`).click({ force: true }) // adding force true due to scss in locator
 })
 
@@ -97,7 +95,7 @@ Cypress.Commands.add(
   }
 )
 
-function checkTradeTablePage(buyReference) {
+Cypress.Commands.add('c_checkTradeTablePage', (buyReference) => {
   cy.findByRole('link', { name: 'Trade table' }).click()
   cy.findByText('Type').should('be.visible')
   cy.findByText('Ref. ID').should('be.visible')
@@ -108,9 +106,9 @@ function checkTradeTablePage(buyReference) {
   cy.findByText('Sell price').should('be.visible')
   cy.findByText('Profit / Loss').should('be.visible')
   cy.contains(buyReference).should('be.visible')
-}
+})
 
-function checkStatementPage(buyReference, sellReference) {
+Cypress.Commands.add('c_checkStatementPage', (buyReference, sellReference) => {
   cy.findByRole('link', { name: 'Statement' }).click()
   cy.findByText('Type').should('be.visible')
   cy.findByText('Ref. ID').should('be.visible')
@@ -120,7 +118,7 @@ function checkStatementPage(buyReference, sellReference) {
   cy.findByText('Credit/Debit').should('be.visible')
   cy.contains(buyReference).should('be.visible')
   cy.contains(buyReference).should('be.visible')
-}
+})
 
 Cypress.Commands.add(
   'c_checkContractDetailsPage',
@@ -155,8 +153,8 @@ Cypress.Commands.add(
           })
           .then(() => {
             cy.get('#dt_reports_tab > .dc-text').click()
-            checkTradeTablePage(buyReference)
-            checkStatementPage(buyReference, sellReference)
+            cy.c_checkTradeTablePage(buyReference)
+            cy.c_checkStatementPage(buyReference, sellReference)
           })
       })
   }
