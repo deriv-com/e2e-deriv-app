@@ -22,6 +22,7 @@ on:
           - wip/dbot/sanity-tests
           - wip/Wallets/cashier
           - wip/dtrader
+          - wip/P2P
       testlink:
         type: string
         required: false
