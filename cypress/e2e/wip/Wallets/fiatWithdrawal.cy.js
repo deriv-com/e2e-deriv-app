@@ -9,6 +9,7 @@ Cypress.Commands.add('c_verifyWalletsWithdrawalScreenContentAfterLink', () => {
     'large'
   )
   cy.findByTestId('dt_initial_loader').should('not.exist')
+  cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
   cy.get('iframe[class=wallets-withdrawal-fiat__iframe]').should('be.visible')
   cy.enter('iframe[class=wallets-withdrawal-fiat__iframe]').then((getBody) => {
     getBody().find('#prCurrentBalance').should('be.visible')
