@@ -1,12 +1,13 @@
 const pixelmatch = require('pixelmatch')
 const { PNG } = require('pngjs')
+import { derivApp } from '../locators'
 
 Cypress.Commands.add('c_selectSymbol', (symbolName) => {
-  cy.get('.cq-symbol-select-btn', { timeout: 20000 }).should('be.visible')
-  cy.get('.cq-symbol-select-btn').click()
-  cy.get(
-    '.ic-icon.sc-mcd__filter__group-icon.sc-mcd__filter__group-icon--open'
-  ).should('be.visible')
+  derivApp.dTraderPage.sharedLocators
+    .symbolSelectBtn(20000)
+    .should('be.visible')
+  derivApp.dTraderPage.sharedLocators.symbolSelectBtn().click()
+  derivApp.dTraderPage.desktopLocators.symbolExpandIcon().should('be.visible')
   cy.findByText('Synthetics').should('be.visible').click()
   cy.contains('div.sc-mcd__item__name', symbolName).click()
 })
