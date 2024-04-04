@@ -26,6 +26,7 @@ describe('QATEST-136582: Redirection to other pages from dbot', () => {
     cy.findByText(
       'A whole new trading experience on a powerful yet easy to use platform.'
     ).click()
-    cy.get('.cq-symbol-select-btn', { timeout: 10000 }).should('exist')
+    cy.get('.cq-symbol-select-btn', { timeout: 5000 }).should('exist')
+    cy.findByTestId('dt_acc_info').should('be.visible')
   })
 })
