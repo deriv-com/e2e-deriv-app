@@ -417,13 +417,20 @@ Cypress.Commands.add('c_deletePaymentMethod', (paymentID, paymentName) => {
   cy.findByText(paymentID).should('not.exist')
 })
 
-Cypress.Commands.add('c_skipPasskey', () => {
-  cy.contains('body', 'Effortless login with passkeys', {
-    timeout: 10000,
-  }).then(($element) => {
-    if ($element.length > 0) {
+Cypress.Commands.add('c_skipPasskey', (adType) => {
+  cy.findByTestId('dt_initial_loader').should('not.exist')
+  cy.get('body', { timeout: 10000 }).then((body) => {
+    if (
+      body.find(':contains("Effortless login with passkeys")', {
+        timeout: 10000,
+      }).length > 0
+    ) {
       cy.findByText('Maybe later').click()
       cy.c_navigateToDerivP2P()
+    } else if (
+      body.find(':contains("Deriv P2P")', { timeout: 10000 }).length > 0
+    ) {
+      cy.log('Passkey is disable')
     }
   })
 })
