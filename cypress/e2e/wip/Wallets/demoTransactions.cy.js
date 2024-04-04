@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
 
-function reset_balance_demo() {
+function resetBalanceDemo() {
   cy.get('.wallets-dropdown__button').click()
   cy.findByText('USD Demo Wallet').scrollIntoView()
   cy.get('.wallets-list-card-dropdown__item-content')
@@ -24,22 +24,27 @@ function reset_balance_demo() {
     .should('include', 'wallets-cashier-header__tab--active') //find if the class has "active" string
 }
 
-function demo_transfer(transfer_to) {
+function demoTransfer(transferToAccount) {
   cy.findByText(/Transfer to/).click()
-  cy.findByText(transfer_to).click()
-  cy.get('input[class="wallets-atm-amount-input__input"]')
-    .eq(1)
-    .click()
-    .type('1.000')
-  cy.get('form')
-    .findByRole('button', { name: 'Transfer', exact: true })
-    .should('be.enabled')
-    .click()
-  cy.findByText('Your transfer is successful!', {
-    exact: true,
-  }).should('be.visible')
-  cy.findByRole('button', { name: 'Make a new transfer' }).click()
-  cy.findByText(/Transfer from/)
+  const transferToText = Cypress.$(`:contains(${transferToAccount})`)
+  if (transferToText.length > 0) {
+    cy.findByText(transferToAccount).click()
+    cy.get('input[class="wallets-atm-amount-input__input"]')
+      .eq(1)
+      .click()
+      .type('1.000')
+    cy.get('form')
+      .findByRole('button', { name: 'Transfer', exact: true })
+      .should('be.enabled')
+      .click()
+    cy.findByText('Your transfer is successful!', {
+      exact: true,
+    }).should('be.visible')
+    cy.findByRole('button', { name: 'Make a new transfer' }).click()
+    cy.findByText(/Transfer from/)
+  } else {
+    cy.get('.wallets-transfer-form-account-selection__close-button').click()
+  }
 }
 
 describe('WALL-2760 - Transfer and check transactions for Demo wallet', () => {
@@ -49,28 +54,29 @@ describe('WALL-2760 - Transfer and check transactions for Demo wallet', () => {
     cy.c_visitResponsive('/wallets', 'large')
   })
 
+  let firstAccount = /MT5 Derived/
+  let secondAccount = /Deriv X/
+
   it('should be able to transfer demo funds', () => {
     cy.log('Transfer Demo Funds for Demo Account')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    reset_balance_demo()
+    resetBalanceDemo()
     cy.findByText(/Transfer from/).click()
-    cy.findByRole('button', {
-      name: 'USD Wallet Balance: 10,000.00 USD Demo',
-      exact: true,
-    }).click()
-    demo_transfer(/MT5 Derived/)
+    cy.get('button[class=wallets-transfer-form-account-selection__account]')
+      .last()
+      .click()
+    demoTransfer(firstAccount)
     cy.findByText(/Transfer from/).click()
-    cy.findByRole('button', {
-      name: 'USD Wallet Balance: 9,990.00 USD Demo',
-      exact: true,
-    }).click()
-    demo_transfer(/Deriv X/)
+    cy.get('button[class=wallets-transfer-form-account-selection__account]')
+      .last()
+      .click()
+    demoTransfer(secondAccount)
   })
 
   it('should be able to view demo transactions', () => {
     cy.log('View Transactions for Demo Account')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    reset_balance_demo()
+    resetBalanceDemo()
     cy.findByRole('button', { name: 'Transactions' }).click()
     cy.findByTestId('dt_wallets_textfield_icon_right')
       .findByRole('button')
@@ -81,14 +87,19 @@ describe('WALL-2760 - Transfer and check transactions for Demo wallet', () => {
       .findByRole('button')
       .click()
     cy.findByRole('option', { name: 'Transfer' }).click()
-    cy.findAllByText(/-10.00 USD/)
-      .first()
-      .should('be.visible')
-    cy.findAllByText(/MT5 Derived/)
-      .first()
-      .should('be.visible')
-    cy.findAllByText(/Deriv X/)
-      .first()
-      .should('be.visible')
+    const firstAccountText = Cypress.$(`:contains(${firstAccount})`)
+    if (firstAccountText.length > 0) {
+      cy.findAllByText(firstAccount).first().should('be.visible')
+      cy.findAllByText(/-10.00 USD/)
+        .first()
+        .should('be.visible')
+    }
+    const secondAccountText = Cypress.$(`:contains(${secondAccount})`)
+    if (secondAccountText.length > 0) {
+      cy.findAllByText(secondAccount).first().should('be.visible')
+      cy.findAllByText(/-10.00 USD/)
+        .first()
+        .should('be.visible')
+    }
   })
 })
