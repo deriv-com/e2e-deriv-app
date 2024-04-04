@@ -1,9 +1,9 @@
 import '@testing-library/cypress/add-commands'
 
 describe('WALL-2817 - Fiat deposit iframe access', () => {
-  //Prerequisites: Fiat wallet account in qa04 with USD wallet
+  //Prerequisites: Fiat wallet account in backend prod staging with USD wallet
   beforeEach(() => {
-    cy.c_login({ app: 'doughflow' })
+    cy.c_login({ user: 'wallets', backEndProd: true })
     cy.c_visitResponsive('/wallets', 'large')
   })
 
@@ -11,7 +11,11 @@ describe('WALL-2817 - Fiat deposit iframe access', () => {
     cy.log('Access Fiat Deposit Iframe')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.findByText('Deposit').click()
-    cy.get('#app_contents iframe').should('exist')
+    cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
+    cy.enter('iframe[class=wallets-deposit-fiat__iframe]').then((getBody) => {
+      getBody().find('#pmfilter').should('be.visible')
+      getBody().find('#depositoptions').should('be.visible')
+    })
   })
 })
 
