@@ -4,7 +4,7 @@
  * @returns {EpochTimeStamp}
  */
 export function generateEpoch() {
-  return Math.floor(new Date().getTime() / 100000)
+  return Math.floor(new Date().getTime() % 10000)
 }
 
 /**
