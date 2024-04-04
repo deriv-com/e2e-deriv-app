@@ -34,21 +34,6 @@ Cypress.Commands.add(
   }
 )
 
-Cypress.Commands.add('c_retrieveVerificationLinkUsingMailisk', (language) => {
-  cy.mailiskSearchInbox(Cypress.env('mailiskNamespace'), {
-    to_addr_prefix:
-      Cypress.env('credentials').production.cashierWithdrawal.ID.split('@')[0],
-    subject_includes: language.emailSubject,
-    from_timestamp: Math.floor((Date.now() - 3000) / 1000),
-    wait: true,
-  }).then((response) => {
-    const email = response.data[0]
-    const verificationLink = email.text.match(/https?:\/\/\S*redirect\?\S*/)
-    cy.log(verificationLink)
-    Cypress.env('verificationUrl', verificationLink[0])
-  })
-})
-
 Cypress.Commands.add(
   'c_verifyWithdrawalScreenContentAfterLink',
   (options = {}) => {
@@ -124,7 +109,13 @@ Cypress.Commands.add(
           sessionStorage.removeItem('c_isValidLinkExpiredByRateLimit')
         })
         cy.c_verifyWithdrawalScreenContentBeforeLink(currentLanguage)
-        cy.c_retrieveVerificationLinkUsingMailisk(currentLanguage)
+        cy.c_retrieveVerificationLinkUsingMailisk(
+          Cypress.env('credentials').production.cashierWithdrawal.ID.split(
+            '@'
+          )[0],
+          currentLanguage.emailSubject,
+          Math.floor((Date.now() - 3000) / 1000)
+        )
         cy.c_verifyWithdrawalScreenContentAfterLink()
       }
       if (isExpired == true) {
@@ -162,7 +153,11 @@ Cypress.Commands.add('c_checkLanguage', (languageEntry, size) => {
     ).click()
   }
   cy.c_verifyWithdrawalScreenContentBeforeLink(language)
-  cy.c_retrieveVerificationLinkUsingMailisk(language)
+  cy.c_retrieveVerificationLinkUsingMailisk(
+    Cypress.env('credentials').production.cashierWithdrawal.ID.split('@')[0],
+    language.emailSubject,
+    Math.floor((Date.now() - 3000) / 1000)
+  )
   cy.c_verifyWithdrawalScreenContentAfterLink({
     screenSize: size,
     currentLanguage: language,
