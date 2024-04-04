@@ -302,6 +302,7 @@ Cypress.Commands.add('c_closeSafetyInstructions', () => {
       }
     })
   cy.findByRole('button', { name: 'Confirm' }).should('be.visible').click()
+  cy.c_skipPasskey()
 })
 
 Cypress.Commands.add('c_closeNotificationHeader', () => {
@@ -414,4 +415,15 @@ Cypress.Commands.add('c_deletePaymentMethod', (paymentID, paymentName) => {
   cy.findByText(`Delete ${paymentName}?`).should('be.visible')
   cy.findByRole('button', { name: 'Yes, remove' }).should('be.visible').click()
   cy.findByText(paymentID).should('not.exist')
+})
+
+Cypress.Commands.add('c_skipPasskey', () => {
+  cy.contains('body', 'Effortless login with passkeys', {
+    timeout: 10000,
+  }).then(($element) => {
+    if ($element.length > 0) {
+      cy.findByText('Maybe later').click()
+      cy.c_navigateToDerivP2P()
+    }
+  })
 })
