@@ -19,15 +19,15 @@ Cypress.Commands.add('c_verifyWalletsWithdrawalScreenContentAfterLink', () => {
   })
 })
 
-describe('WALL-2830 - Fiat withdrawal send email', () => {
+describe('WALL-2830 - Fiat withdrawal access iframe from email verification link', () => {
   //Prerequisites: Fiat wallet account in backend prod staging with USD wallet
   beforeEach(() => {
     cy.c_login({ user: 'wallets', backEndProd: true })
     cy.c_visitResponsive('/wallets', 'large')
   })
 
-  it('should be able to send withdrawal verification link', () => {
-    cy.log('Access Fiat Withdrawal Iframe')
+  it('should be able to access doughflow iframe', () => {
+    cy.log('Access Fiat Withdrawal Iframe Through Email Link')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
     cy.findByText('Withdraw').click()
@@ -42,23 +42,10 @@ describe('WALL-2830 - Fiat withdrawal send email', () => {
     cy.findByText("We've sent you an email.")
     cy.findByRole('button', { name: "Didn't receive the email?" }).click()
     cy.findByText(/Resend email/)
-  })
-})
-
-describe('WALL-2830 - Fiat withdrawal content access from email', () => {
-  beforeEach(() => {
-    cy.c_login({ user: 'wallets', backEndProd: true })
-    cy.c_visitResponsive('/wallets', 'large')
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
-    cy.findByText('Withdraw').click()
-  })
-
-  it('should be able to access doughflow iframe', () => {
-    cy.log('Access Fiat Withdrawal Iframe Through Email Link')
     cy.c_retrieveVerificationLinkUsingMailisk(
       Cypress.env('credentials').production.wallets.ID.split('@')[0],
-      'withdrawal'
+      'withdrawal',
+      Math.floor((Date.now() - 500) / 1000)
     )
     cy.c_verifyWalletsWithdrawalScreenContentAfterLink()
   })
