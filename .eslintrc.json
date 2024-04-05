@@ -1,0 +1,6 @@
+{
+    "extends": ["plugin:cypress/recommended"],
+    "plugins": ["cypress"],
+    "env": { "es6": true }
+
+  }
