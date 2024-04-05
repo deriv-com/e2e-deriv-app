@@ -22,6 +22,7 @@ on:
           - wip/dbot/sanity-tests
           - wip/Wallets/cashier
           - wip/dtrader
+          - wip/TradersHubTranslation/*
       testlink:
         type: string
         required: false
