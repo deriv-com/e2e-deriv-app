@@ -34,37 +34,58 @@ const getVerificationCode = async () => {
     const browser = await chromium.launch()
     const context = await browser.newContext({
       httpCredentials: {
-        username: process.env.E2E_AUTH_EMAIL_USER,
-        password: process.env.E2E_AUTH_EMAIL_PASSWORD,
+        username: process.env.E2E_QABOX_LOGIN,
+        password: process.env.E2E_QABOX_PASSWORD,
       },
     })
     const page = await context.newPage()
 
     // Navigate to /events to extract the email verification code
     await page.goto(`${basicAuthUrl}/events`)
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
-    await page.evaluate(() => {
-      const links = document.querySelectorAll('a')
-      links[links.length - 1].click()
-    })
-    await page.waitForNavigation({ waitUntil: 'domcontentloaded' })
 
-    // Extract the href attribute of the last link and process it
-    const href = await page.evaluate(() => {
-      const links = document.querySelectorAll('a')
-      const targetLink = links[links.length - 1].getAttribute('href')
-      return targetLink
-    })
+    let verificationCode
+    for (let retryCount = 0; retryCount < 3; retryCount++) {
+      await page.evaluate(() => {
+        const allRelatedEmails = Array.from(
+          document.querySelectorAll(`a[href*="account_opening_new.html"]`)
+        )
+        if (allRelatedEmails.length) {
+          const verificationEmail = allRelatedEmails.pop()
+          verificationEmail.click()
+        }
+      })
 
-    const codeMatch = href.match(/code=([A-Za-z0-9]{8})/)
-    if (codeMatch) {
-      const verification_code = codeMatch[1]
-      await browser.close()
-      return verification_code
-    } else {
-      console.log('Unable to find code in the URL')
-      await browser.close()
+      await page.waitForNavigation({ waitUntil: 'domcontentloaded' })
+
+      // Extract the href attribute of the last link and process it
+      const href = await page.evaluate(() => {
+        const links = document.querySelectorAll('a')
+        const targetLink = links[links.length - 1].getAttribute('href')
+        return targetLink
+      })
+
+      const codeMatch = href.match(/code=([A-Za-z0-9]{8})/)
+      if (codeMatch) {
+        verificationCode = codeMatch[1]
+      } else {
+        console.log('Unable to find code in the URL')
+      }
+
+      if (verificationCode) {
+        break
+      }
+
+      console.log(
+        `Email not found. Retrying... Attempt number: ${retryCount + 1}`
+      )
+      await page.waitForTimeout(1000)
     }
+
+    if (!verificationCode) {
+      throw new Error(`Signup URL extraction failed after 3 attempts.`)
+    }
+    await browser.close()
+    return verificationCode
   } catch (e) {
     console.log(e)
   }
