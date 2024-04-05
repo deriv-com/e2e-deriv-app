@@ -24,6 +24,7 @@ describe('QATEST-99419: Import and run custom strategy', () => {
 
   it('Run Timely Balance Strategy', () => {
     botDashboard.importStrategy('TimelyBalance')
+    common.blockDashboardLoad()
     common.skipTour()
 
     common.accountBalance.then(($el) => {

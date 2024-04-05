@@ -111,6 +111,10 @@ class Common {
     this.blocklyDurationValue.type('2')
   }
 
+  blockDashboardLoad = () => {
+    cy.get('.bot-dashboard.bot').should('be.visible')
+  }
+
   /**
    * Skip the tour
    */
