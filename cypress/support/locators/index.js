@@ -1,7 +1,7 @@
 import { cashierPageLocators } from './cashier'
 import { commonPageLocators } from './common'
 import { dBotPageLocators } from './dBot'
-import { dTraderPageLocators } from './dtrader'
+import { dTraderPageLocators } from './dTrader'
 import { p2pPageLocators } from './p2p'
 import { reportsPageLocators } from './reports'
 import { settingsPageLocators } from './settings'
