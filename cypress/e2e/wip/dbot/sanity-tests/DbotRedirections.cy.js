@@ -20,7 +20,7 @@ describe('QATEST-136582: Redirection to other pages from dbot', () => {
     )
   })
 
-  it('Switchingfrom Dbot to Dtrader', () => {
+  it('Switching from Dbot to Dtrader', () => {
     cy.findByTestId('dt_platform_switcher').click()
     cy.get('.platform-dropdown__list').should('be.visible')
     cy.findByText(
