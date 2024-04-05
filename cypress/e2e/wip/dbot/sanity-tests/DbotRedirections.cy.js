@@ -22,11 +22,14 @@ describe('QATEST-136582: Redirection to other pages from dbot', () => {
 
   it('Switching from Dbot to Dtrader', () => {
     cy.findByTestId('dt_platform_switcher').click()
-    cy.get('.platform-dropdown__list').should('be.visible')
+    cy.findByTestId('dt_div_100_vh').should('be.visible')
     cy.findByText(
       'A whole new trading experience on a powerful yet easy to use platform.'
     ).click()
-    cy.get('.cq-symbol-select-btn', { timeout: 5000 }).should('exist')
+    //check if the user is in dtrader page and logged in
+    cy.findByTestId('dt_positions_toggle', { timeout: 5000 }).should(
+      'be.visible'
+    )
     cy.findByTestId('dt_acc_info').should('be.visible')
   })
 })
