@@ -72,7 +72,7 @@ describe('WALL-2858 - Crypto transfer and transactions', () => {
     cy.findAllByText(/USD Wallet/)
       .first()
       .should('be.visible')
-    cy.findAllByText(/-0.000030000 BTC/)
+    cy.findAllByText(/-0.00003000 BTC/)
       .first()
       .should('be.visible')
   })
