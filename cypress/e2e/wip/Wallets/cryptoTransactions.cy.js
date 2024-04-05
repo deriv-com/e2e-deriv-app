@@ -6,7 +6,7 @@ function crypto_transfer(to_account) {
   cy.get('input[class="wallets-atm-amount-input__input"]')
     .eq(1)
     .click()
-    .type('0.000010000')
+    .type('0.000003000')
   if (to_account == 'USD') {
     cy.contains(
       'lifetime transfer limit from BTC Wallet to any fiat Wallets is'
@@ -18,7 +18,7 @@ function crypto_transfer(to_account) {
     .findByRole('button', { name: 'Transfer', exact: true })
     .should('be.enabled')
     .click()
-  cy.c_transferLimit('0.00010000 BTC')
+  cy.c_transferLimit('0.00003000 BTC')
 }
 
 describe('WALL-2858 - Crypto transfer and transactions', () => {
