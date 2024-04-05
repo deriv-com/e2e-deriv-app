@@ -1,4 +1,3 @@
-import { parse } from 'path'
 import { calculateTransferFee } from '../helper/utility'
 import { derivApp } from '../locators'
 const transferScreen = derivApp.cashierPage.transferScreen
@@ -7,15 +6,22 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
   const {
     fromAccount = '',
     toAccount = '',
-    usingAmount = '',
-    usingPercentageSelector = '',
     withExtraVerifications = false,
+    transferAmount = 10,
   } = options
   const fromAccountBalance = {
     withCurrency: sessionStorage.getItem(`c_balance${fromAccount.code}`),
     withoutCurrency: parseFloat(
       sessionStorage
         .getItem(`c_balance${fromAccount.code}`)
+        .replace(/[^\d.]/g, '')
+    ),
+  }
+  const toAccountBalance = {
+    withCurrency: sessionStorage.getItem(`c_balance${toAccount.code}`),
+    withoutCurrency: parseFloat(
+      sessionStorage
+        .getItem(`c_balance${toAccount.code}`)
         .replace(/[^\d.]/g, '')
     ),
   }
@@ -52,14 +58,14 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
         cy.findByText(toAccount.name).click({ force: true })
       })
     if (withExtraVerifications == true) {
-      transferScreen.sharedLocators.fromAmmountField().type(1)
+      transferScreen.sharedLocators.fromAmountField().type(1)
       transferScreen.sharedLocators
-        .toAmmountField()
+        .toAmountField()
         .should('not.have.value', '')
-        .then((toAmmountElement) => {
+        .then((toAmountElement) => {
           sessionStorage.setItem(
             `c_conversionRate${fromAccount.code}To${toAccount.code}`,
-            toAmmountElement.val()
+            toAmountElement.val()
           )
         })
       cy.c_verifypercentageSelectorSection(fromAccountBalance)
@@ -68,14 +74,30 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
         toAccount,
       })
     }
-    transferScreen.sharedLocators.fromAmmountField().clear().type(10)
-    console.log(
-      sessionStorage.getItem(
-        `c_conversionRate${fromAccount.code}To${toAccount.code}`
-      )
-    )
     cy.then(() => {
-      transferScreen.sharedLocators.toAmmountField().then(($toAmount) => {
+      transferScreen.sharedLocators
+        .fromAmountField()
+        .clear()
+        .type(transferAmount)
+      console.log(
+        'Current Exchange Rate: ',
+        sessionStorage.getItem(
+          `c_conversionRate${fromAccount.code}To${toAccount.code}`
+        )
+      )
+      transferScreen.sharedLocators.fromAmountField().then(($fromAmount) => {
+        let balanceFromAccounAfterTransfer =
+          fromAccountBalance.withoutCurrency - parseFloat($fromAmount.val())
+        cy.log(
+          'Expected balance in From account after transfer',
+          balanceFromAccounAfterTransfer
+        )
+        sessionStorage.setItem(
+          'c_expectedFromAccountBalance',
+          balanceFromAccounAfterTransfer
+        )
+      })
+      transferScreen.sharedLocators.toAmountField().then(($toAmount) => {
         expect(parseFloat($toAmount.val())).to.be.closeTo(
           10 *
             parseFloat(
@@ -83,9 +105,22 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
             ),
           0.0001
         )
-        let BalanceAfterTransferFeeDeducted = fromAccountBalance(
-          calculateTransferFee(parseFloat($toAmount.val())) +
-            parseFloat($toAmount.val)
+        let balanceToAccounAfterTransfer =
+          toAccountBalance.withoutCurrency +
+          (parseFloat($toAmount.val()) -
+            calculateTransferFee(transferAmount) *
+              parseFloat(
+                sessionStorage.getItem(
+                  `c_conversionRate${fromAccount.code}To${toAccount.code}`
+                )
+              ))
+        cy.log(
+          'Expected balance in ToAccount after transfer',
+          balanceToAccounAfterTransfer
+        )
+        sessionStorage.setItem(
+          'c_expectedToAccountBalance',
+          balanceToAccounAfterTransfer
         )
 
         transferScreen.sharedLocators.percentageSelectorText(
@@ -94,7 +129,7 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
         )
       })
     })
-    transferScreen.sharedLocators.transferButton().should('be.enabled')
+    transferScreen.sharedLocators.transferButton().should('be.enabled').click()
   })
 })
 
@@ -147,7 +182,7 @@ Cypress.Commands.add(
             )
         })
       transferScreen.sharedLocators
-        .fromAmmountField()
+        .fromAmountField()
         .should(
           'contain.value',
           (fromAccountBalance.withoutCurrency * (percentage / 100)).toFixed(2)
@@ -167,7 +202,7 @@ Cypress.Commands.add(
     const randomFromAmount = Math.floor(Math.random() * (5000 + 1))
     const randomToAmount = (Math.random() * 0.0001).toFixed(8)
     transferScreen.sharedLocators
-      .fromAmmountField()
+      .fromAmountField()
       .clear()
       .type(randomFromAmount)
     console.log(
@@ -176,7 +211,7 @@ Cypress.Commands.add(
       )
     )
     cy.then(() => {
-      transferScreen.sharedLocators.toAmmountField().then(($toAmount) => {
+      transferScreen.sharedLocators.toAmountField().then(($toAmount) => {
         expect(parseFloat($toAmount.val())).to.be.closeTo(
           randomFromAmount *
             parseFloat(
@@ -192,9 +227,9 @@ Cypress.Commands.add(
         )
       })
     })
-    transferScreen.sharedLocators.toAmmountField().clear().type(randomToAmount)
+    transferScreen.sharedLocators.toAmountField().clear().type(randomToAmount)
     cy.then(() => {
-      transferScreen.sharedLocators.fromAmmountField().then(($fromAmount) => {
+      transferScreen.sharedLocators.fromAmountField().then(($fromAmount) => {
         expect(parseFloat($fromAmount.val())).to.be.closeTo(
           randomToAmount /
             parseFloat(
@@ -212,41 +247,41 @@ Cypress.Commands.add(
         )
       })
     })
-    transferScreen.sharedLocators.fromAmmountField().clear()
+    transferScreen.sharedLocators.fromAmountField().clear()
     transferScreen.sharedLocators
-      .fromAmmountField()
+      .fromAmountField()
       .parent()
       .next()
       .within(() => {
         transferScreen.sharedLocators.fieldRequiredError().should('be.visible')
       })
-    transferScreen.sharedLocators.fromAmmountField().type('test Validation')
+    transferScreen.sharedLocators.fromAmountField().type('test Validation')
     transferScreen.sharedLocators
-      .fromAmmountField()
+      .fromAmountField()
       .parent()
       .next()
       .within(() => {
         transferScreen.sharedLocators.validNumberError().should('be.visible')
       })
-    transferScreen.sharedLocators.fromAmmountField().clear().type('5001')
+    transferScreen.sharedLocators.fromAmountField().clear().type('5001')
     transferScreen.sharedLocators
-      .fromAmmountField()
+      .fromAmountField()
       .parent()
       .next()
       .within(() => {
         transferScreen.sharedLocators.rangeError().should('be.visible')
       })
-    transferScreen.sharedLocators.toAmmountField().type('test Validation')
+    transferScreen.sharedLocators.toAmountField().type('test Validation')
     transferScreen.sharedLocators
-      .toAmmountField()
+      .toAmountField()
       .parent()
       .next()
       .within(() => {
         transferScreen.sharedLocators.validNumberError().should('be.visible')
       })
-    transferScreen.sharedLocators.toAmmountField().clear().type('999999999')
+    transferScreen.sharedLocators.toAmountField().clear().type('999999999')
     transferScreen.sharedLocators
-      .fromAmmountField()
+      .fromAmountField()
       .parent()
       .next()
       .within(() => {
