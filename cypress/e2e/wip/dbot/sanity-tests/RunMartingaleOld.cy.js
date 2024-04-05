@@ -22,6 +22,7 @@ describe('QATEST-99420: Import and run custom strategy', () => {
 
   it('Run Martingale Old Strategy', () => {
     botDashboard.importStrategy('MartingaleOld')
+    common.blockDashboardLoad()
     common.skipTour()
 
     //Enter Expected profit, expected Loss, and Trade Amount
