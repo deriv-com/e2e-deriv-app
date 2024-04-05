@@ -26,7 +26,7 @@ describe('QATEST-136582: Redirection to other pages from dbot', () => {
     cy.findByText(
       'A whole new trading experience on a powerful yet easy to use platform.'
     ).click()
-    //check if the user is in dtrader page and logged in
+    //check if the user is in dtrader page and is logged in
     cy.findByTestId('dt_positions_toggle', { timeout: 5000 }).should(
       'be.visible'
     )
