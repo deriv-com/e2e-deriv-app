@@ -65,7 +65,7 @@ describe('WALL-2760 - Transfer and check transactions for Demo wallet', () => {
       exact: true,
     }).click()
     demo_transfer(/Deriv X/)
-  })
+  }).tag('smoke')
 
   it('should be able to view demo transactions', () => {
     cy.log('View Transactions for Demo Account')
