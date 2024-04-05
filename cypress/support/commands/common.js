@@ -393,18 +393,14 @@ Cypress.Commands.add('c_loadingCheck', () => {
 })
 
 Cypress.Commands.add('c_createRealAccount', () => {
-  //
+  // Call Verify Email and then set the Verification code in env
   cy.task('verifyEmailTask').then((accountEmail) => {
-    cy.log(accountEmail)
     cy.c_emailVerification('account_opening_new.html', accountEmail)
   })
 
   cy.task('createRealAccountTask').then((realAccountDetails) => {
     // Assuming realAccountDetails is an array where the first element is email
     const [email] = realAccountDetails
-    cy.wrap(realAccountDetails).as('realAccountDetails') // Wrap and alias for later use
-
-    cy.log(email) // Logging the email for debugging
 
     // Updating Cypress environment variables with the new email
     const currentCredentials = Cypress.env('credentials')
