@@ -24,72 +24,74 @@ const verifyEmail = async () => {
     verify_email: randomEmail,
     type: 'account_opening',
   })
+  return randomEmail
 }
 
-const getVerificationCode = async () => {
-  try {
-    await verifyEmail()
+// const getVerificationCode = async () => {
+//   // Launch browser
+//   const browser = await chromium.launch()
+//   try {
+//     await verifyEmail()
 
-    // Launch browser
-    const browser = await chromium.launch()
-    const context = await browser.newContext({
-      httpCredentials: {
-        username: process.env.E2E_QABOX_LOGIN,
-        password: process.env.E2E_QABOX_PASSWORD,
-      },
-    })
-    const page = await context.newPage()
+//     const context = await browser.newContext({
+//       httpCredentials: {
+//         username: process.env.E2E_QABOX_LOGIN,
+//         password: process.env.E2E_QABOX_PASSWORD,
+//       },
+//     })
+//     const page = await context.newPage()
 
-    // Navigate to /events to extract the email verification code
-    await page.goto(`${basicAuthUrl}/events`)
+//     // Navigate to /events to extract the email verification code
+//     await page.goto(`${basicAuthUrl}/events`)
 
-    let verificationCode
-    for (let retryCount = 0; retryCount < 3; retryCount++) {
-      await page.evaluate(() => {
-        const allRelatedEmails = Array.from(
-          document.querySelectorAll(`a[href*="account_opening_new.html"]`)
-        )
-        if (allRelatedEmails.length) {
-          const verificationEmail = allRelatedEmails.pop()
-          verificationEmail.click()
-        }
-      })
+//     let verificationCode
+//     for (let retryCount = 0; retryCount < 3; retryCount++) {
+//       await page.evaluate(() => {
+//         const allRelatedEmails = Array.from(
+//           document.querySelectorAll(`a[href*="account_opening_new.html"]`)
+//         )
+//         if (allRelatedEmails.length) {
+//           const verificationEmail = allRelatedEmails.pop()
+//           verificationEmail.click()
+//         }
+//       })
 
-      await page.waitForNavigation({ waitUntil: 'domcontentloaded' })
+//       await page.waitForNavigation({ waitUntil: 'domcontentloaded' })
 
-      // Extract the href attribute of the last link and process it
-      const href = await page.evaluate(() => {
-        const links = document.querySelectorAll('a')
-        const targetLink = links[links.length - 1].getAttribute('href')
-        return targetLink
-      })
+//       // Extract the href attribute of the last link and process it
+//       const href = await page.evaluate(() => {
+//         const links = document.querySelectorAll('a')
+//         const targetLink = links[links.length - 1].getAttribute('href')
+//         return targetLink
+//       })
 
-      const codeMatch = href.match(/code=([A-Za-z0-9]{8})/)
-      if (codeMatch) {
-        verificationCode = codeMatch[1]
-      } else {
-        console.log('Unable to find code in the URL')
-      }
+//       const codeMatch = href.match(/code=([A-Za-z0-9]{8})/)
+//       if (codeMatch) {
+//         verificationCode = codeMatch[1]
+//       } else {
+//         console.log('Unable to find code in the URL')
+//       }
 
-      if (verificationCode) {
-        break
-      }
+//       if (verificationCode) {
+//         break
+//       }
 
-      console.log(
-        `Email not found. Retrying... Attempt number: ${retryCount + 1}`
-      )
-      await page.waitForTimeout(1000)
-    }
+//       console.log(
+//         `Email not found. Retrying... Attempt number: ${retryCount + 1}`
+//       )
+//       await page.waitForTimeout(1000)
+//     }
 
-    if (!verificationCode) {
-      throw new Error(`Signup URL extraction failed after 3 attempts.`)
-    }
-    await browser.close()
-    return verificationCode
-  } catch (e) {
-    console.log(e)
-  }
-}
+//     if (!verificationCode) {
+//       throw new Error(`Signup URL extraction failed after 3 attempts.`)
+//     }
+//     return verificationCode
+//   } catch (e) {
+//     console.log(e)
+//   } finally {
+//     await browser.close()
+//   }
+// }
 
 const createAccountVirtual = async (
   password = process.env.E2E_DERIV_PASSWORD,
@@ -101,7 +103,7 @@ const createAccountVirtual = async (
       type: 'trading',
       client_password: password,
       residence: residence,
-      verification_code: `${await getVerificationCode()}`,
+      verification_code: process.env.E2E_EMAIL_VERIFICATION_CODE,
     })
     const {
       new_account_virtual: { oauth_token },
@@ -146,8 +148,11 @@ const createAccountReal = async (clientResidence = 'id', currency = 'USD') => {
   } catch (e) {
     console.log(e)
   } finally {
-    connection.close()
+    console.log(connection.readyState)
+    if (connection.readyState === WebSocket.OPEN) {
+      connection.close()
+    }
   }
 }
 
-module.exports = { createAccountReal, createAccountVirtual }
+module.exports = { createAccountReal, createAccountVirtual, verifyEmail }

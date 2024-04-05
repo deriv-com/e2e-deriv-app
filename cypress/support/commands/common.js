@@ -340,6 +340,7 @@ Cypress.Commands.add(
                   const code = href.match(/code=([A-Za-z0-9]{8})/)
                   verification_code = code[1]
                   Cypress.env('walletsWithdrawalCode', verification_code)
+                  Cypress.env('emailVerificationCode', verification_code)
                   cy.log('Verification link found')
                 } else {
                   cy.log('Verification link not found')
@@ -392,6 +393,12 @@ Cypress.Commands.add('c_loadingCheck', () => {
 })
 
 Cypress.Commands.add('c_createRealAccount', () => {
+  //
+  cy.task('verifyEmailTask').then((accountEmail) => {
+    cy.log(accountEmail)
+    cy.c_emailVerification('account_opening_new.html', accountEmail)
+  })
+
   cy.task('createRealAccountTask').then((realAccountDetails) => {
     // Assuming realAccountDetails is an array where the first element is email
     const [email] = realAccountDetails
