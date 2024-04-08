@@ -3,6 +3,8 @@ declare global {
     interface Chainable {
       /**
        * Performs a transfer between two accounts, with optional verifications and a specified transfer amount.
+       * Pre Req: Get the currency balances using cy.c_getCurrencyBalance() command for both From and To Account.
+       *
        * @example
        * cy.c_TransferBetweenAccounts({
        *   fromAccount: { code: 'USD', name: 'US Dollar Account' },

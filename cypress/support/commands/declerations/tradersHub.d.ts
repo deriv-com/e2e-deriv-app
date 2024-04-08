@@ -5,7 +5,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       /**
-       * Checks if a currency account already exists.
+       * Checks if a currency account already exists and saves values as true or false in session Storage.
        * @param currency Object containing currency name and code.
        * @param options Object with flags to control modal behavior.
        * @example
@@ -21,13 +21,13 @@ declare global {
       ): Chainable<void>
 
       /**
-       * Retrieves the balance for a specified currency account.
+       * Retrieves the balance for a specified currency account into Session Storage for the currency passed as "1999.03 USD".
        * @param currency Object containing currency name and code.
        * @param options Object with flags to control modal behavior.
        * @example
        * cy.c_getCurrencyBalance({ name: "Euro", code: "EUR" });
        * @example
-       * cy.c_getCurrencyBalance({ name: "Euro", code: "EUR" }, { closeModalAtEnd: false });
+       * cy.c_getCurrencyBalance({ name: "US Dollar", code: "USD" }, { closeModalAtEnd: false });
        * @example
        * cy.c_getCurrencyBalance({ name: "Japanese Yen", code: "JPY" }, { closeModalAtEnd: true, modalAlreadyOpened: true });
        */
@@ -87,7 +87,7 @@ declare global {
       ): Chainable<void>
 
       /**
-       * Retrieves the current currency account's balance.
+       * Retrieves the current active currency account's balance and stores in the session Storage as "999.99 USD".
        * @example
        * cy.c_getCurrentCurrencyBalance();
        */
