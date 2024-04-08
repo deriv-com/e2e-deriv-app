@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
 
-function crypto_transfer(to_account) {
+function crypto_transfer(to_account, transferAmount) {
   cy.findByText('Transfer to').click()
   cy.findByText(`${to_account} Wallet`).click()
   cy.get('input[class="wallets-atm-amount-input__input"]')
@@ -18,11 +18,12 @@ function crypto_transfer(to_account) {
     .findByRole('button', { name: 'Transfer', exact: true })
     .should('be.enabled')
     .click()
-  cy.c_transferLimit('0.00003000 BTC')
+  cy.c_transferLimit(transferAmount)
 }
 
 describe('WALL-2858 - Crypto transfer and transactions', () => {
   //Prerequisites: Crypto wallet account in any qa box with 1.00000000 BTC balance and USD, ETH and LTC wallets
+  let transferAmount = '0.00003000 BTC'
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')
@@ -39,9 +40,9 @@ describe('WALL-2858 - Crypto transfer and transactions', () => {
       cy.contains('BTC').should('be.visible')
     })
     cy.contains('Transfer').click()
-    crypto_transfer('USD')
-    crypto_transfer('ETH')
-    crypto_transfer('LTC')
+    crypto_transfer('USD', transferAmount)
+    crypto_transfer('ETH', transferAmount)
+    crypto_transfer('LTC', transferAmount)
   })
 
   it('should be able to view transactions of crypto account', () => {
@@ -72,8 +73,6 @@ describe('WALL-2858 - Crypto transfer and transactions', () => {
     cy.findAllByText(/USD Wallet/)
       .first()
       .should('be.visible')
-    cy.findAllByText(/-0.00010000 BTC/)
-      .first()
-      .should('be.visible')
+    cy.findAllByText(`-${transferAmount}`).first().should('be.visible')
   })
 })
