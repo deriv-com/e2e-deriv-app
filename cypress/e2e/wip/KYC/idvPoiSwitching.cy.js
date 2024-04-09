@@ -18,16 +18,19 @@ describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients
     cy.contains(
       'We were unable to verify the identity document with the details provided.'
     ).should('be.visible')
-    cy.c_submitIdv()
+
     cy.findByText('Proof of address required').should('exist')
-    cy.reload()
+    cy.c_closeNotificationHeader()
+    cy.get('select[name="country_input"]').select('Republic of QA')
+    cy.contains('button', 'Next').click()
+
+    cy.c_submitIdv()
+
     cy.contains('ID verification failed').should('be.visible')
     cy.contains(
       'We were unable to verify your ID with the details you provided. Please upload your identity document.'
     ).should('be.visible')
     cy.findByRole('button', { name: 'Upload identity document' })
-      .should('be.enabled')
-      .click()
     cy.get('select[name="country_input"]').select('Colombia')
     cy.contains('button', 'Next').click()
     cy.findByTestId('date_of_birth').type('2000-09-20')
