@@ -372,6 +372,69 @@ Cypress.Commands.add(
 )
 
 Cypress.Commands.add(
+  'c_emailVerificationV2',
+  (requestType, accountEmail, options = {}) => {
+    const {
+      retryCount = 0,
+      maxRetries = 3,
+      baseUrl = Cypress.env('configServer') + '/events',
+    } = options
+    cy.visit(
+      `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
+        'qaBoxLoginPassword'
+      )}@${baseUrl}`
+    )
+    const sentArgs = { requestType, accountEmail }
+    cy.document().then((doc) => {
+      let verification_code
+      const allRelatedEmails = Array.from(
+        doc.querySelectorAll(`a[href*="${requestType}"]`)
+      )
+      if (allRelatedEmails.length) {
+        const verificationEmail = allRelatedEmails.pop()
+        cy.wrap(verificationEmail).click()
+        cy.contains('p', `${accountEmail}`)
+          .should('be.visible')
+          .parent()
+          .children()
+          .contains('a', Cypress.config('baseUrl'))
+          .invoke('attr', 'href')
+          .then((href) => {
+            if (href) {
+              Cypress.env('verificationUrl', href)
+              const code = href.match(/code=([A-Za-z0-9]{8})/)
+              verification_code = code[1]
+              Cypress.env('emailVerificationCode', verification_code)
+              cy.log(Cypress.env('emailVerificationCode'))
+            } else {
+              cy.log('Verification link not found')
+            }
+          })
+      } else {
+        cy.log('email not found')
+      }
+    })
+
+    cy.then(() => {
+      //Retry finding email after 1 second interval
+      if (retryCount < maxRetries && !Cypress.env('verificationUrl')) {
+        cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
+        cy.wait(1000)
+        cy.c_emailVerification(requestType, accountEmail, {
+          ...options,
+          retryCount: retryCount + 1,
+        })
+      }
+      if (retryCount > maxRetries) {
+        throw new Error(
+          `Signup URL extraction failed after ${maxRetries} attempts.`
+        )
+      }
+    })
+  }
+)
+
+Cypress.Commands.add(
   'c_retrieveVerificationLinkUsingMailisk',
   (account, subject, timestamp) => {
     cy.mailiskSearchInbox(Cypress.env('mailiskNamespace'), {
@@ -395,16 +458,18 @@ Cypress.Commands.add('c_loadingCheck', () => {
 Cypress.Commands.add('c_createRealAccount', () => {
   // Call Verify Email and then set the Verification code in env
   cy.task('verifyEmailTask').then((accountEmail) => {
-    cy.c_emailVerification('account_opening_new.html', accountEmail)
-  })
+    cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
+    cy.task(
+      'createRealAccountTask',
+      `${Cypress.env('emailVerificationCode')}`
+    ).then((realAccountDetails) => {
+      // Assuming realAccountDetails is an array where the first element is email
+      const [email] = realAccountDetails
 
-  cy.task('createRealAccountTask').then((realAccountDetails) => {
-    // Assuming realAccountDetails is an array where the first element is email
-    const [email] = realAccountDetails
-
-    // Updating Cypress environment variables with the new email
-    const currentCredentials = Cypress.env('credentials')
-    currentCredentials.test.masterUser.ID = email
-    Cypress.env('credentials', currentCredentials)
+      // Updating Cypress environment variables with the new email
+      const currentCredentials = Cypress.env('credentials')
+      currentCredentials.test.masterUser.ID = email
+      Cypress.env('credentials', currentCredentials)
+    })
   })
 })
