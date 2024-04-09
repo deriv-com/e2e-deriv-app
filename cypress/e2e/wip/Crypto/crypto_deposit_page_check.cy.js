@@ -7,34 +7,49 @@ describe('QATEST-707 - Create crypto account', () => {
   })
 
   it('should be able to create crypto account from Traders Hub.', () => {
-    cy.c_closeNotificationHeader()
-    cy.findByTestId('dt_currency-switcher__arrow').should('be.visible').click()
-    cy.findByText('Bitcoin').click()
-    cy.wait(10000)
-    cy.c_closeNotificationHeader()
-    cy.findByRole('button', { name: 'Deposit' }).click()
-    cy.xpath('//canvas[contains(@class,"qrcode")]').should('exist') // assert that the QR code element exists
-    cy.get('.deposit-crypto-wallet-address__hash-container').should('exist') // Assert that the container exists
-    cy.get('.deposit-crypto-wallet-address__action-container').click()
-    cy.get('.deposit-crypto-wallet-address__hash-container')
-      .invoke('text')
-      .then((expectedValue) => {
-        cy.get('.deposit-crypto-wallet-address__action-container')
-          .click()
-          .then(() => {
-            // After clicking, retrieve the value from the clipboard
-            cy.window().then((win) => {
-              cy.wrap(win.navigator.clipboard.readText()).then(
-                (copiedValue) => {
-                  // Assert that the copied value matches the expected value
-                  expect(copiedValue.trim()).to.equal(expectedValue.trim())
-                }
-              )
+    const cryptocurrencies = [
+      'Bitcoin',
+      'Ethereum',
+      'Litecoin',
+      'Tether ERC20',
+      //'Tether TRC20',
+      'USD Coin',
+    ]
+    cryptocurrencies.forEach((crypto) => {
+      cy.c_closeNotificationHeader()
+      cy.findByTestId('dt_currency-switcher__arrow')
+        .should('be.visible')
+        .click()
+      cy.findByText(crypto).click()
+      cy.wait(10000)
+      cy.c_closeNotificationHeader()
+      cy.findByRole('button', { name: 'Deposit' }).click()
+      cy.xpath('//canvas[contains(@class,"qrcode")]').should('exist') // assert that the QR code element exists
+      cy.get('.deposit-crypto-wallet-address__hash-container').should('exist') // Assert that the container exists
+      cy.get('.deposit-crypto-wallet-address__action-container').click()
+      cy.get('.deposit-crypto-wallet-address__hash-container')
+        .invoke('text')
+        .then((expectedValue) => {
+          cy.get('.deposit-crypto-wallet-address__action-container')
+            .click()
+            .then(() => {
+              // After clicking, retrieve the value from the clipboard
+              cy.window().then((win) => {
+                cy.wrap(win.navigator.clipboard.readText()).then(
+                  (copiedValue) => {
+                    // Assert that the copied value matches the expected value
+                    expect(copiedValue.trim()).to.equal(expectedValue.trim())
+                  }
+                )
+              })
             })
-          })
-      })
-    cy.findAllByText('Transaction status').should('be.visible')
-    cy.get('.transactions-crypto-transaction-status-side-note').should('exist')
-    cy.get('.side-note').should('exist')
+        })
+      cy.findAllByText('Transaction status').should('be.visible')
+      cy.get('.transactions-crypto-transaction-status-side-note').should(
+        'exist'
+      )
+      cy.get('.side-note').should('exist')
+      cy.findAllByTestId('dt_traders_hub_home_button').click()
+    })
   })
 })
