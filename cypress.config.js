@@ -60,6 +60,14 @@ module.exports = defineConfig({
         ID: process.env.E2E_LOGIN_ID_DBOT,
         PSWD: process.env.E2E_LOGIN_PSWD_DBOT
       },
+      p2pStandardAccountWithAds: {
+        ID: process.env.E2E_LOGIN_ID_P2P_STANDARDACCOUNTWITHADS,
+        PSWD: process.env.E2E_PSWD_P2P
+      },
+      p2pStandardAccountWithoutAds: {
+        ID: process.env.E2E_LOGIN_ID_P2P_STANDARDACCOUNTWITHOUTADS,
+        PSWD: process.env.E2E_PSWD_P2P
+      },
       p2pFixedRate: {
         ID: process.env.E2E_LOGIN_ID_P2P_FIXEDRATE,
         PSWD: process.env.E2E_PSWD_P2P
