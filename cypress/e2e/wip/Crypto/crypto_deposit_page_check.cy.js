@@ -10,6 +10,7 @@ describe('QATEST-707 - Create crypto account', () => {
     cy.c_closeNotificationHeader()
     cy.findByTestId('dt_currency-switcher__arrow').should('be.visible').click()
     cy.findByText('Bitcoin').click()
+    cy.wait(10000)
     cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'Deposit' }).click()
     cy.xpath('//canvas[contains(@class,"qrcode")]').should('exist') // assert that the QR code element exists
