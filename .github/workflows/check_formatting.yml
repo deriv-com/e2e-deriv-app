@@ -21,7 +21,7 @@ jobs:
             fetch-depth: 0
         - name: Get changed files
           id: changed-files
-          uses: tj-actions/changed-files@77af4bed286740ef1a6387dc4e4e4dec39f96054
+          uses: tj-actions/changed-files@634b61511ee053fabd2cfaaf72201ee2aba54a71
         - name: Install Depdendencies
           run: npm i -D
         - name: Check formatting
