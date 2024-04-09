@@ -1,4 +1,5 @@
 import '@testing-library/cypress/add-commands'
+import jsQR from 'jsqr'
 
 describe('QATEST-707 - Create crypto account', () => {
   beforeEach(() => {
@@ -12,19 +13,45 @@ describe('QATEST-707 - Create crypto account', () => {
       'Ethereum',
       'Litecoin',
       'Tether ERC20',
-      //'Tether TRC20',
       'USD Coin',
+      'Tether TRC20',
     ]
     cryptocurrencies.forEach((crypto) => {
+      cy.findAllByText('Options & Multipliers').should('be.visible')
       cy.c_closeNotificationHeader()
       cy.findByTestId('dt_currency-switcher__arrow')
         .should('be.visible')
         .click()
       cy.findByText(crypto).click()
-      cy.wait(10000)
+      cy.findByTestId('dt_currency-switcher__arrow').should('be.visible')
       cy.c_closeNotificationHeader()
       cy.findByRole('button', { name: 'Deposit' }).click()
-      cy.xpath('//canvas[contains(@class,"qrcode")]').should('exist') // assert that the QR code element exists
+
+      // To check for QR code and compare with the code generated
+      cy.xpath('//canvas[contains(@class,"qrcode")]').should('be.visible') // assert that the QR code element exists
+      cy.xpath('//canvas[contains(@class,"qrcode")]').then(($canvas) => {
+        // Get the image data from the canvas
+        const imageData = $canvas[0]
+          .getContext('2d')
+          .getImageData(0, 0, $canvas[0].width, $canvas[0].height)
+        // Decode the QR code using jsQR
+        const code = jsQR(imageData.data, imageData.width, imageData.height)
+        // Assert that the QR code was successfully decoded and get its value
+        expect(code).to.not.be.null
+        const qrCodeValue = code.data
+        // Log the value of the QR code
+        cy.log('QR Code Value:', qrCodeValue)
+        // Get the value from the element with the specified class
+        cy.get('.deposit-crypto-wallet-address__hash-container')
+          .invoke('text')
+          .then((actionContainerValue) => {
+            // Ensure that both values are trimmed to remove any leading/trailing whitespace
+            const trimmedQRCodeValue = qrCodeValue.trim()
+            const trimmedActionContainerValue = actionContainerValue.trim()
+            // Compare the QR code value with the value from the specified class
+            expect(trimmedQRCodeValue).to.equal(trimmedActionContainerValue)
+          })
+      })
       cy.get('.deposit-crypto-wallet-address__hash-container').should('exist') // Assert that the container exists
       cy.get('.deposit-crypto-wallet-address__action-container').click()
       cy.get('.deposit-crypto-wallet-address__hash-container')
