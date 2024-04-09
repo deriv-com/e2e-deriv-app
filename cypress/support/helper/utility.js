@@ -21,3 +21,10 @@ export const generateAccountNumberString = (length) => {
   }
   return result
 }
+
+export const calculateTransferFee = (amountTransferred) => {
+  const percentFeeRate = 0.02 // 2% transfer fee
+  const minimumFee = 0.01 // Minimum fee in USD
+  const calculatedFee = amountTransferred * percentFeeRate
+  return Math.max(calculatedFee, minimumFee)
+}

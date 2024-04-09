@@ -405,3 +405,10 @@ Cypress.Commands.add('c_createRealAccount', () => {
     Cypress.env('credentials', currentCredentials)
   })
 })
+
+Cypress.Commands.add('c_closeModal', () => {
+  cy.log('Closing the modal')
+  cy.get('.dc-modal').within(() => {
+    cy.get('.currency-selection-modal__header .close-icon').click()
+  })
+})
