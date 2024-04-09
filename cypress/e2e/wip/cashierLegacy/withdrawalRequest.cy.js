@@ -2,12 +2,33 @@ import '@testing-library/cypress/add-commands'
 
 let prevLanguage = ''
 
+Cypress.Commands.add('c_verifyHeaderAndSidePanel', (language, size) => {
+  cy.findByText(language.header).should('exist')
+  if (size != 'small') {
+    language.sidePanelHeadings.forEach((sidePanelHeading) => {
+      cy.findByText(sidePanelHeading, { exact: true }).should('be.visible')
+    })
+  } else {
+    cy.get('#dt_mobile_drawer_toggle').click()
+    cy.findAllByTestId('dt_div_100_vh')
+      .eq(0)
+      .within(() => {
+        cy.findByText(language.cashierBtnMobile).click()
+        language.sidePanelHeadings.forEach((sidePanelHeading) => {
+          cy.findByText(sidePanelHeading).should('be.visible')
+        })
+      })
+    cy.get('.dc-mobile-drawer__header-close').click()
+  }
+})
+
 Cypress.Commands.add(
   'c_verifyWithdrawalScreenContentBeforeLink',
-  (language) => {
+  (language, size) => {
     cy.c_loadingCheck()
     // TODO uncomment when https://app.clickup.com/t/20696747/WALL-3521 is fixed.
-    //cy.findByText(language.header).should('exist')
+    // cy.c_verifyHeaderAndSidePanel(language, size)
+
     cy.findByTestId('dt_empty_state_title').should(
       'contain.text',
       language.beforeEmailSentContent.summary
@@ -108,7 +129,10 @@ Cypress.Commands.add(
         cy.then(() => {
           sessionStorage.removeItem('c_isValidLinkExpiredByRateLimit')
         })
-        cy.c_verifyWithdrawalScreenContentBeforeLink(currentLanguage)
+        cy.c_verifyWithdrawalScreenContentBeforeLink(
+          currentLanguage,
+          screenSize
+        )
         cy.c_retrieveVerificationLinkUsingMailisk(
           Cypress.env('credentials').production.cashierWithdrawal.ID.split(
             '@'
@@ -152,7 +176,7 @@ Cypress.Commands.add('c_checkLanguage', (languageEntry, size) => {
       `#dt_settings_${language.urlCode.toUpperCase().replace('-', '_')}_button`
     ).click()
   }
-  cy.c_verifyWithdrawalScreenContentBeforeLink(language)
+  cy.c_verifyWithdrawalScreenContentBeforeLink(language, size)
   cy.c_retrieveVerificationLinkUsingMailisk(
     Cypress.env('credentials').production.cashierWithdrawal.ID.split('@')[0],
     language.emailSubject,
