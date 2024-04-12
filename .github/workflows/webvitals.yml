@@ -7,7 +7,7 @@ on:
     inputs:
       run_name:
         description: 'Insert TAG card link / TAG number Ex. "v_20240311_01"'
-        default: 'deriv-app webvitals'
+        default: 'deriv-app'
         required: true
         type: string
       test_env:
@@ -64,6 +64,7 @@ jobs:
         env:
           workflow_test_env: ${{ github.event.inputs.test_env }}
           workflow_app_id: ${{ github.event.inputs.app_id }}
+          workflow_run_name: ${{ github.event.inputs.run_name }}
         run: |
             VALID_PASSWORD="${{secrets.WEBVITALS_PASSWORD}}"
             TEST_ENV="$(echo "$workflow_test_env")"
@@ -71,7 +72,7 @@ jobs:
             WPT_KEY="$(echo "${{ secrets.WPT_KEY }}")"
             echo "Running webpagetest on staging(tag) vs production(staging).."
             cd ../../webvitals/resoruces/
-            bash run_test.sh $VALID_PASSWORD $TEST_ENV $APP_ID $WPT_KEY
+            bash run_test.sh $VALID_PASSWORD $TEST_ENV $APP_ID $WPT_KEY $workflow_run_name
             sudo cp -r ../report_outputs/* /tmp/webvitals-reports
       - name: 📊 Publish Test Results
         if: always()

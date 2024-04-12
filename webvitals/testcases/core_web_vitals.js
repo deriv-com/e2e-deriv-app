@@ -2,7 +2,9 @@ const fs = require('fs');
 const WebPageTest = require('webpagetest');
 const xlsx = require('xlsx');
 
-api_key = process.argv[3];
+var api_key = process.argv[3];
+var version = process.argv[4].replace(/\s/g, '_');
+
 var test_data_file = '../resources/testdata.xlsx';
 
 const wptServer = "www.webpagetest.org";
@@ -21,7 +23,8 @@ async function getTestURLs() {
     for (const row of xl_data) {
         const url = row.url;
         const device = row.device;
-        const label = Math.random().toString(36).substring(2, 9);
+        const uniq_string = Math.random().toString(36).substring(2, 6);
+        const label = uniq_string+version;
 
         const prodStagingScores = {
             FCP: row.FCP,
@@ -100,7 +103,7 @@ async function getPerformanceMetrics(session_url, device, label) {
             });
         });
 
-        output_file = `../report_outputs/${device}_${session_url.split('?')[0].replace(/[^\w\s]/gi, '_')}.json`
+        output_file = `../report_outputs/${testId}_${device}_${session_url.replace(/^https?:\/\//, '').split('?')[0].replace(/[^\w\s]/gi, '_')}.json`
 
         fs.writeFile(output_file, JSON.stringify(testData), (err) => {
             if (err) {
