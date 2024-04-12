@@ -7,7 +7,7 @@ let paymentID = generateAccountNumberString(12)
 describe('QATEST-2839 - My Profile page - Delete Payment Method', () => {
   beforeEach(() => {
     cy.clearAllLocalStorage()
-    cy.c_login()
+    cy.c_login({ user: 'p2pStandardAccountWithoutAds' })
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
 

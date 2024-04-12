@@ -164,7 +164,7 @@ describe('QATEST-2871 - Block and unblock user from advertisers profile page', (
     cy.clearAllLocalStorage()
     cy.clearAllSessionStorage()
     cy.clearAllCookies()
-    cy.c_login()
+    cy.c_login({ user: 'p2pStandardAccountWithoutAds' })
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
 
