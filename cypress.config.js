@@ -33,14 +33,18 @@ module.exports = defineConfig({
               throw error;
           }
       },
-      async verifyEmailTask() {
+        async verifyEmailTask() {
         try {
           const accountEmail = await verifyEmail();
           return accountEmail;
-      } catch (error) {
+        } catch (error) {
           console.error('Error creating virtual account:', error);
           throw error;
       }
+      },
+      setVerificationCode: (verificationCode) => {
+        process.env.E2E_EMAIL_VERIFICATION_CODE = verificationCode;
+        return null;
       }
       });
 
