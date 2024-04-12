@@ -3,7 +3,7 @@ const WebPageTest = require('webpagetest');
 const xlsx = require('xlsx');
 
 var api_key = process.argv[3];
-var version = process.argv[4].replace(/\s/g, '-');
+var version = process.argv[4].replace(/[\s_]/g, '-');
 
 var test_data_file = '../resources/testdata.xlsx';
 
