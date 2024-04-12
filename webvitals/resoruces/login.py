@@ -50,7 +50,7 @@ def get_auth_tokens():
         log_file = open('./pyout.txt', 'w')     #This is to tuncate the file content for next run
     finally:
         driver.quit()
-        print(token_list)
-        return(token_list)
+        tokens = print(token_list)
+    return tokens
 
 get_auth_tokens()
