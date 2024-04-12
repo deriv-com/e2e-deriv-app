@@ -23,8 +23,7 @@ async function getTestURLs() {
     for (const row of xl_data) {
         const url = row.url;
         const device = row.device;
-        const uniq_string = Math.random().toString(36).substring(2, 6);
-        const label = uniq_string+version;
+        const label = version;
 
         const prodStagingScores = {
             FCP: row.FCP,
