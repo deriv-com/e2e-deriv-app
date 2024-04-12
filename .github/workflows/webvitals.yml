@@ -1,0 +1,81 @@
+name: WEBVITALS
+
+run-name: ${{ github.event.inputs.run_name }}
+
+on: 
+  workflow_dispatch:
+    inputs:
+      run_name:
+        description: 'Insert TAG card link / TAG number Ex. "v_20240311_01"'
+        default: 'deriv-app webvitals'
+        required: true
+        type: string
+      test_env:
+        description: 'Insert environment details - QA Ex. "red.derivws.com" || PROD Ex. "green.derivws.com" :'
+        default: 'red.derivws.com'
+        required: true
+        type: string
+      app_id:
+        description: 'Insert app_id staging use only "16303" || PROD Ex. "16929" :'
+        default: '16303'
+        required: true
+        type: number
+
+jobs:
+  webvitals:
+    runs-on:
+      group: github-hosted-regentmarkets
+    if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/trigger_test' || contains(github.ref, 'webvitals') }}
+    steps:
+      - name: 🧭 Display System Information
+        run: |
+          printf "Operating System: $(uname -a)"
+          printf "\nAvailable Memory: \n$(free -m)"
+          printf "\nCPU Information: \n$(lscpu)"
+      - name: 🧰 Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11   # v4.1.1
+      - name: 🛠️ Install Node
+        run: |
+          sudo apt-get update
+          sudo apt install nodejs
+          npm install xlsx
+          npm install webpagetest -g
+          npm list -g
+      - name: 🛠️ Install Python Dependencies
+        run: |
+          sudo apt-get -y install software-properties-common
+          sudo add-apt-repository -y ppa:deadsnakes/ppa
+          sudo apt-get update
+          sudo apt-get -y install python3.11
+          sudo apt-get -y install python3-pip
+          python3 -V
+          sudo python3 -m pip install requests
+          sudo python3 -m pip install selenium
+          sudo python3 -m pip install webdriver-manager
+          sudo python3 -m pip list
+      - name: 📁 Create Webvitals Reports Directory
+        run: |
+          sudo mkdir /tmp/webvitals-reports
+          sudo mkdir /tmp/webvitals-reports-rerun
+      - name: 🗓️ Get Current Date
+        id: date
+        run: echo "date_now=$(date +'%Y-%m-%dT%H-%M-%S')" >> $GITHUB_ENV
+      - name: 🤖 Running Test
+        env:
+          workflow_test_env: ${{ github.event.inputs.test_env }}
+          workflow_app_id: ${{ github.event.inputs.app_id }}
+        run: |
+            VALID_PASSWORD="${{secrets.WEBVITALS_PASSWORD}}"
+            TEST_ENV="$(echo "$workflow_test_env")"
+            APP_ID="$(echo "$workflow_app_id")"
+            WPT_KEY="$(echo "${{ secrets.WPT_KEY }}")"
+            echo "Running webpagetest on staging(tag) vs production(staging).."
+            cd ../../webvitals/resoruces/
+            bash run_test.sh $VALID_PASSWORD $TEST_ENV $APP_ID $WPT_KEY
+            sudo cp -r ../report_outputs/* /tmp/webvitals-reports
+      - name: 📊 Publish Test Results
+        if: always()
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3    # v4.3.1
+        with:
+          name: webvitals-test-results-${{ env.date_now}}
+          path: /tmp/webvitals-reports*

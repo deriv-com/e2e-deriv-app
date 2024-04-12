@@ -100,7 +100,7 @@ async function getPerformanceMetrics(session_url, device, label) {
             });
         });
 
-        output_file = `../output_reports/${device}_${session_url.split('?')[0].replace(/[^\w\s]/gi, '_')}.json`
+        output_file = `../report_outputs/${device}_${session_url.split('?')[0].replace(/[^\w\s]/gi, '_')}.json`
 
         fs.writeFile(output_file, JSON.stringify(testData), (err) => {
             if (err) {
