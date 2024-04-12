@@ -3,7 +3,7 @@ const WebPageTest = require('webpagetest');
 const xlsx = require('xlsx');
 
 var api_key = process.argv[3];
-var version = process.argv[4].replace(/[\s_]/g, '-');
+var tag_version = process.argv[4].replace(/[\s_]/g, '-');
 
 var test_data_file = '../resources/testdata.xlsx';
 
@@ -23,7 +23,6 @@ async function getTestURLs() {
     for (const row of xl_data) {
         const url = row.url;
         const device = row.device;
-        const label = version;
 
         const prodStagingScores = {
             FCP: row.FCP,
@@ -37,7 +36,7 @@ async function getTestURLs() {
             session_url = url + stage_auth_url;
         }
 
-        const tagStagingScores = await getPerformanceMetrics(session_url, device, label);
+        const tagStagingScores = await getPerformanceMetrics(session_url, device);
         await new Promise(resolve => setTimeout(resolve, 30000));
 
         compareScores(prodStagingScores, tagStagingScores, device, url);
@@ -45,7 +44,7 @@ async function getTestURLs() {
     testReport();
 }
 
-async function getPerformanceMetrics(session_url, device, label) {
+async function getPerformanceMetrics(session_url, device) {
     try {
         console.log(`Test initiated --------> on URL: ${session_url.split('?')[0]}`);
         const testResult = await new Promise((resolve, reject) => {
@@ -53,7 +52,7 @@ async function getPerformanceMetrics(session_url, device, label) {
                 location: location,
                 connectivity: connectivity,
                 firstViewOnly: true,
-                label: label,
+                label: tag_version,
                 device: device,
                 runs: 2,
             }, (err, result) => {
