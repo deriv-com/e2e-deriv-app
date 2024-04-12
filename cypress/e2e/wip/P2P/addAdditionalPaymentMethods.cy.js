@@ -9,7 +9,7 @@ let additionalPaymentID = generateAccountNumberString(12)
 describe('QATEST-2811 - My profile page - User with existing payment method add new payment method', () => {
   beforeEach(() => {
     cy.clearAllLocalStorage()
-    cy.c_login()
+    cy.c_login({ user: 'p2pStandardAccountWithoutAds' })
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
 
