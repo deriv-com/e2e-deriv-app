@@ -13,8 +13,10 @@ if re.match('green', sys.argv[2]) or re.match('red', sys.argv[2]) or re.match('b
 elif re.match('dev', sys.argv[2]):
     sys.argv[2] = sys.argv[2]
 
-PASSWORD =  sys.argv[1]
-auth_url = 'https://'+sys.argv[2]+'/oauth2/authorize?app_id='+sys.argv[3]+''
+EMAIL = sys.argv [1]
+PASSWORD =  sys.argv[2]
+auth_url = 'https://'+sys.argv[3]+'/oauth2/authorize?app_id='+sys.argv[4]+''
+
 
 def get_auth_tokens():
     capabilities = DesiredCapabilities.CHROME
@@ -27,7 +29,7 @@ def get_auth_tokens():
 
     try:
         token_list = ''
-        DERIV_EMAIL = 'webvitals@deriv.com'
+        DERIV_EMAIL = EMAIL
         driver.get(auth_url)
         email_field = driver.find_element('id', 'txtEmail')
         email_field.send_keys(DERIV_EMAIL)
@@ -47,7 +49,7 @@ def get_auth_tokens():
         cmd = ["""grep -o '"location":"https://[^"]*state=' pyout.txt | tail -n1 | sed -e 's/"location":"https:\\/\\/app.deriv.com//' -e 's/"location":"https:\\/\\/staging-app.deriv.com//'"""]
         token = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, text=True)
         token_list = (token.stdout)
-        log_file = open('./pyout.txt', 'w')     #This is to tuncate the file content for next run
+        log_file = open('./pyout.txt', 'w')     #This is to truncate the file content for next run
     finally:
         driver.quit()
         tokens = print(token_list)
