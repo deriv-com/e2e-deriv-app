@@ -5,3 +5,5 @@ screenshots
 .env
 cypress/downloads
 test.cy.js
+webvitals/report_outputs/*
+webvitals/resources/pyout.txt
