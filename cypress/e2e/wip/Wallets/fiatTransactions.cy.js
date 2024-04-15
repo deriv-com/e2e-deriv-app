@@ -29,7 +29,7 @@ function fiat_transfer(to_account) {
 describe('WALL-2858 - Fiat transfer and transactions', () => {
   //Prerequisites: Fiat wallet account in any qa box with 10,000.00 USD balance and BTC, ETH and LTC wallets
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ app: 'wallets', user: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')
   })
 

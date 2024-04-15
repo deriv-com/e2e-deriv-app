@@ -27,7 +27,7 @@ function reset_balance_demo() {
 describe('WALL-2760 - Reset Balance for Demo wallet', () => {
   //Prerequisites: Demo wallet account in any qa box with USD demo funds
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ app: 'wallets', user: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')
   })
 

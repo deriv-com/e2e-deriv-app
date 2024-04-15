@@ -22,7 +22,7 @@ describe('WALL-2817 - Fiat deposit iframe access', () => {
 describe('WALL-2817 - Fiat deposit error', () => {
   //Prerequisites: Fiat wallet account in qa box besides qa04 with USD wallet
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ app: 'wallets', user: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')
   })
 
