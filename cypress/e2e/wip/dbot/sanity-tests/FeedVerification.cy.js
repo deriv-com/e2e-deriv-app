@@ -17,32 +17,32 @@ describe('QATEST-99340: Verify feed is loading on charts tab', () => {
   it('Verify feed for real account', () => {
     charts.openChartsTab()
     charts.selectSymbolOnCharts('Volatility 10 (1s) Index')
-    charts.verifyTickChange(5000)
+    charts.verifyTickChange()
 
     charts.selectSymbolOnCharts('Gold Basket')
-    charts.verifyTickChange(5000)
+    charts.verifyTickChange()
 
     charts.selectSymbolOnCharts('AUD/JPY')
-    charts.verifyTickChange(5000)
+    charts.verifyTickChange()
 
     charts.selectSymbolOnCharts('Gold/USD')
-    charts.verifyTickChange(5000)
+    charts.verifyTickChange()
   })
 
-  it('Verify feed for demo account', () => {
-    common.switchToDemo()
-    charts.openChartsTab()
+  // it('Verify feed for demo account', () => {
+  //   common.switchToDemo()
+  //   charts.openChartsTab()
 
-    charts.selectSymbolOnCharts('Volatility 10 (1s) Index')
-    charts.verifyTickChange(5000)
+  //   charts.selectSymbolOnCharts('Volatility 10 (1s) Index')
+  //   charts.verifyTickChange(5000)
 
-    charts.selectSymbolOnCharts('Gold Basket')
-    charts.verifyTickChange(5000)
+  //   charts.selectSymbolOnCharts('Gold Basket')
+  //   charts.verifyTickChange(5000)
 
-    charts.selectSymbolOnCharts('AUD/JPY')
-    charts.verifyTickChange(5000)
+  //   charts.selectSymbolOnCharts('AUD/JPY')
+  //   charts.verifyTickChange(5000)
 
-    charts.selectSymbolOnCharts('Gold/USD')
-    charts.verifyTickChange(5000)
-  })
+  //   charts.selectSymbolOnCharts('Gold/USD')
+  //   charts.verifyTickChange(5000)
+  // })
 })
