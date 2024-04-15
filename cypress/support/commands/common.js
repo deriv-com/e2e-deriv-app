@@ -442,6 +442,7 @@ Cypress.Commands.add('c_createRealAccount', () => {
     cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
   })
 
+  // create real account task
   cy.task('createRealAccountTask').then((realAccountDetails) => {
     // Assuming realAccountDetails is an array where the first element is email
     const [email] = realAccountDetails
