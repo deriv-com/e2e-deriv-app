@@ -54,7 +54,7 @@ async function getPerformanceMetrics(session_url, device) {
                 firstViewOnly: true,
                 label: tag_version,
                 device: device,
-                runs: 2,
+                runs: 3,
             }, (err, result) => {
                 if (err) {
                     console.error('Error:', err);
