@@ -8,7 +8,7 @@ describe('QATEST-99340: Verify feed is loading on charts tab', () => {
   const common = new Common()
 
   beforeEach(() => {
-    cy.c_login()
+    cy.c_login({ user: 'dBot' })
     cy.c_visitResponsive('/bot', 'large')
     cy.c_loadingCheck()
     common.skipTour()
