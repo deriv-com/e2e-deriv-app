@@ -12,3 +12,7 @@ else
     exit 1;
 fi
 node ../testcases/core_web_vitals.js $STAGING_AUTH_TOKEN $5 $6
+
+account=$(echo "$STAGING_AUTH_TOKEN" | grep -o '&token1=[^&]*' | tail -n1 |awk -F'=' '{print $2}')
+
+python3 logout.py $3 $4 $account
