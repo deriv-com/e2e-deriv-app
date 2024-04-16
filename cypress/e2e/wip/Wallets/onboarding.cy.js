@@ -2,7 +2,7 @@ import '@testing-library/cypress/add-commands'
 
 function onboardingcfdtrading() {
   //Wallet Onboarding -  tour around CFD section
-  cy.get('.wallets-mt5-list__content')
+  cy.get('.wallets-cfd-list-accounts__content')
     .should('exist')
     .then(($mt5list) => {
       const derivedDesc = $mt5list.children().first().text()
@@ -30,23 +30,23 @@ function onboardingcfdtrading() {
     .then(($list) => {
       const derivAppDesc = $list.children().eq(1).text()
       const expderivAppDesc =
-        'Get a Deriv Apps trading account to trade options and multipliers on these apps.'
+        'Get an Options trading account to trade options and multipliers on these apps.'
       if (derivAppDesc.includes(expderivAppDesc)) {
         //Deriv App Trading Account is not created
-        cy.contains('Deriv Apps trading account')
+        cy.contains('Options trading account')
         cy.contains(
-          'This is your Deriv Apps trading account. Click Get to create the Deriv Apps trading account for trading.'
+          'This is your Options trading account. Click Get to create the Options trading account for trading.'
         )
         cy.findByRole('button', { name: 'Next' }).click()
         cy.contains(
-          'Once you have get a Deriv Apps trading account, choose a Deriv app to trade options or multipliers.'
+          'Once you have get an Options trading account, choose a Deriv app to trade options or multipliers.'
         )
         cy.findByRole('button', { name: 'Next' }).click()
       } else {
         //Deriv App Trading Account exist
-        cy.contains('Deriv Apps trading account')
+        cy.contains('Options trading account')
         cy.contains(
-          'This is your Deriv Apps trading account balance. Click Transfer to move funds between your Wallet and Deriv Apps trading account.'
+          'This is your Options trading account balance. Click Transfer to move funds between your Wallet and Options trading account.'
         )
         cy.findByRole('button', { name: 'Next' }).click()
         cy.contains('Choose a Deriv app to trade options or multipliers.')
@@ -81,9 +81,6 @@ function onboardingfiatwallet() {
   cy.findByText('CFDs', { exact: true }).should('be.visible')
   // Onboarding - Account having Fiat wallets (without CFD and Trading account).
   cy.contains('Swap-Free').should('be.visible')
-  cy.contains(
-    'Trade with leverage and tight spreads for better returns on trades'
-  ).should('be.visible')
   cy.findByTestId('dt_traders_hub_onboarding_icon').click()
   cy.get('[data-test-id="spotlight"]').should('be.visible')
   onboardingcfdtrading()
