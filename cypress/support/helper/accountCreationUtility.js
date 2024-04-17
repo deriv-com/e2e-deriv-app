@@ -1,24 +1,14 @@
 require('dotenv').config()
 
-const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI')
-const WebSocket = require('ws')
 const {
   emailGenerator,
   numbersGenerator,
   nameGenerator,
 } = require('./commonJsUtility')
 
-const appId = process.env.E2E_STD_CONFIG_APPID
-const websocketURL = `wss://${process.env.E2E_STD_CONFIG_SERVER}/websockets/v3`
-
-const connection = new WebSocket(
-  `${websocketURL}?l=EN&app_id=${appId}&brand=deriv`
-)
-const api = new DerivAPI({ connection })
-
 const randomEmail = emailGenerator()
 
-const verifyEmail = async () => {
+const verifyEmail = async (api) => {
   await api.basic.verifyEmail({
     verify_email: randomEmail,
     type: 'account_opening',
@@ -27,6 +17,7 @@ const verifyEmail = async () => {
 }
 
 const createAccountVirtual = async (
+  api,
   password = process.env.E2E_DERIV_PASSWORD,
   residence = 'id'
 ) => {
@@ -48,9 +39,13 @@ const createAccountVirtual = async (
   }
 }
 
-const createAccountReal = async (clientResidence = 'id', currency = 'USD') => {
+const createAccountReal = async (
+  api,
+  clientResidence = 'id',
+  currency = 'USD'
+) => {
   try {
-    const resp = await createAccountVirtual()
+    const resp = await createAccountVirtual(api)
     const [, , oauth_token] = resp
     await api.account(oauth_token) // API authentication
 
@@ -80,11 +75,6 @@ const createAccountReal = async (clientResidence = 'id', currency = 'USD') => {
     return results
   } catch (e) {
     console.log(e)
-  } finally {
-    console.log(connection.readyState)
-    if (connection.readyState === WebSocket.OPEN) {
-      connection.close()
-    }
   }
 }
 

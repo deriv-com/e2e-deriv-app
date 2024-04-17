@@ -437,10 +437,10 @@ Cypress.Commands.add('c_loadingCheck', () => {
 
 Cypress.Commands.add('c_createRealAccount', () => {
   // Call Verify Email and then set the Verification code in env
+  cy.task('wsConnect')
   cy.task('verifyEmailTask').then((accountEmail) => {
     cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
   })
-
   cy.task('createRealAccountTask').then((realAccountDetails) => {
     // Assuming realAccountDetails is an array where the first element is email
     const [email] = realAccountDetails
@@ -450,4 +450,5 @@ Cypress.Commands.add('c_createRealAccount', () => {
     currentCredentials.test.masterUser.ID = email
     Cypress.env('credentials', currentCredentials)
   })
+  cy.task('wsDisconnect')
 })

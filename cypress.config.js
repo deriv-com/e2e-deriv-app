@@ -2,6 +2,13 @@ require("dotenv").config()
 const { defineConfig } = require("cypress")
 const {createAccountReal, createAccountVirtual, verifyEmail} = require('./cypress/support/helper/accountCreationUtility');
 
+const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI')
+const WebSocket = require('ws')
+
+const appId = process.env.E2E_STD_CONFIG_APPID
+const websocketURL = `wss://${process.env.E2E_STD_CONFIG_SERVER}/websockets/v3`
+let connection;
+let api;
 //const gViewPortSize = {small: 'phone-xr', large: 'macbook-16'} //TODO Use enum
  
 module.exports = defineConfig({
@@ -15,9 +22,26 @@ module.exports = defineConfig({
     chromeWebSecurity: false,
     setupNodeEvents(on, config) {
       on('task', {
+        wsConnect() {
+          connection = new WebSocket(
+            `${websocketURL}?l=EN&app_id=${appId}&brand=deriv`
+          )
+          api = new DerivAPI({ connection })
+          console.log('Connection opened succesfully')
+          return null
+        },
+        wsDisconnect() {
+          if (connection && connection.readyState === WebSocket.OPEN) {
+            connection.close(); // Close the connection if it is open
+            console.log('Connection closed successfully');
+          } else {
+            console.log('Connection is not open or has already been closed');
+          }
+          return null
+        },
         async createRealAccountTask() {
           try {
-            const realAccountDetails = await createAccountReal();
+            const realAccountDetails = await createAccountReal(api);
             return realAccountDetails;
           } catch (error) {
             console.error('Error creating account:', error);
@@ -26,7 +50,7 @@ module.exports = defineConfig({
         },
         async createVirtualAccountTask() {
           try {
-              const virtualAccountDetails = await createAccountVirtual();
+              const virtualAccountDetails = await createAccountVirtual(api);
               return virtualAccountDetails;
           } catch (error) {
               console.error('Error creating virtual account:', error);
@@ -35,10 +59,11 @@ module.exports = defineConfig({
       },
         async verifyEmailTask() {
         try {
-          const accountEmail = await verifyEmail();
+          console.log('attempting to verify....')
+          const accountEmail = await verifyEmail(api);
           return accountEmail;
         } catch (error) {
-          console.error('Error creating virtual account:', error);
+          console.error('Error verifying email:', error);
           throw error;
       }
       },
