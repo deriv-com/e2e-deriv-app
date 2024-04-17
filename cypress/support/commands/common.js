@@ -443,7 +443,7 @@ Cypress.Commands.add('c_createRealAccount', () => {
   })
   cy.task('createRealAccountTask').then((realAccountDetails) => {
     // Assuming realAccountDetails is an array where the first element is email
-    const [email] = realAccountDetails
+    const { email } = realAccountDetails
 
     // Updating Cypress environment variables with the new email
     const currentCredentials = Cypress.env('credentials')

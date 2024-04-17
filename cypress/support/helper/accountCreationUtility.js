@@ -32,10 +32,14 @@ const createAccountVirtual = async (
     const {
       new_account_virtual: { oauth_token },
     } = response
-    const results = [randomEmail, residence, oauth_token]
-    return results
+    return {
+      email: randomEmail,
+      residence: residence,
+      oauthToken: oauth_token,
+    }
   } catch (e) {
-    console.log(e)
+    console.error('Operation failed', e)
+    throw e
   }
 }
 
@@ -46,8 +50,8 @@ const createAccountReal = async (
 ) => {
   try {
     const resp = await createAccountVirtual(api)
-    const [, , oauth_token] = resp
-    await api.account(oauth_token) // API authentication
+    const { oauthToken } = resp
+    await api.account(oauthToken) // API authentication
 
     const clientDetails = {
       new_account_real: 1,
@@ -71,10 +75,14 @@ const createAccountReal = async (
       new_account_real: { client_id },
       echo_req: { residence },
     } = response
-    const results = [randomEmail, client_id, residence]
-    return results
+    return {
+      email: randomEmail,
+      clientID: client_id,
+      residence: residence,
+    }
   } catch (e) {
-    console.log(e)
+    console.error('Operation failed', e)
+    throw e
   }
 }
 

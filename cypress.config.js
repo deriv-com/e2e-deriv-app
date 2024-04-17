@@ -3,7 +3,7 @@ const { defineConfig } = require("cypress")
 const {createAccountReal, createAccountVirtual, verifyEmail} = require('./cypress/support/helper/accountCreationUtility');
 
 const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI')
-const WebSocket = require('ws')
+const WebSocket = require('ws');
 
 const appId = process.env.E2E_STD_CONFIG_APPID
 const websocketURL = `wss://${process.env.E2E_STD_CONFIG_SERVER}/websockets/v3`
@@ -23,21 +23,34 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       on('task', {
         wsConnect() {
+          // Check if there is an existing connection and close it if open
+          if (connection && connection.readyState === WebSocket.OPEN) {
+            connection.close();
+            console.log('Previous connection closed');
+          }
+          // Establish a new connection
           connection = new WebSocket(
             `${websocketURL}?l=EN&app_id=${appId}&brand=deriv`
-          )
-          api = new DerivAPI({ connection })
-          console.log('Connection opened succesfully')
-          return null
+          );
+          connection.onopen = () => console.log('Connection opened successfully');
+          connection.onerror = error => console.error('Connection error:', error);
+
+          api = new DerivAPI({ connection });
+
+          return null;  // Return null or consider returning a success message
         },
         wsDisconnect() {
           if (connection && connection.readyState === WebSocket.OPEN) {
-            connection.close(); // Close the connection if it is open
+            connection.close();  // Close the connection if it is open
             console.log('Connection closed successfully');
           } else {
             console.log('Connection is not open or has already been closed');
           }
-          return null
+          // Reset connection and api to ensure clean state
+          connection = null;
+          api = null;
+        
+          return null;
         },
         async createRealAccountTask() {
           try {
@@ -59,7 +72,6 @@ module.exports = defineConfig({
       },
         async verifyEmailTask() {
         try {
-          console.log('attempting to verify....')
           const accountEmail = await verifyEmail(api);
           return accountEmail;
         } catch (error) {
