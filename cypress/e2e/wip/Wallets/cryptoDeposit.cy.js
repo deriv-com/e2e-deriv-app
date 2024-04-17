@@ -10,7 +10,8 @@ describe('WALL-2831 - Crypto deposit and fiat onramp', () => {
   it('should be able to view crypto deposit details', () => {
     cy.log('Crypto Deposit')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    cy.c_switchWalletsAccount('BTC', 'Deposit')
+    cy.c_switchWalletsAccount('BTC')
+    cy.findByText('Deposit').should('be.visible').click()
     cy.get('canvas').should('be.visible')
     cy.findByText('Transaction status')
     cy.findByText(/To avoid loss of funds/)
@@ -23,7 +24,8 @@ describe('WALL-2831 - Crypto deposit and fiat onramp', () => {
   it('should be able to deposit into crypto account through fiat onramp', () => {
     cy.log('Access Fiat OnRamp Provider')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    cy.c_switchWalletsAccount('BTC', 'Deposit')
+    cy.c_switchWalletsAccount('BTC')
+    cy.findByText('Deposit').should('be.visible').click()
     cy.findByText('Try Fiat onramp').click()
     cy.findByText('Banxa')
     cy.findByRole('button', { name: 'Select' }).click()
