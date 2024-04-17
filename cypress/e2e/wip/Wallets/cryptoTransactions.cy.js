@@ -32,14 +32,7 @@ describe('WALL-2858 - Crypto transfer and transactions', () => {
   it('should be able to perform transfer from crypto account', () => {
     cy.log('Transfer from Crypto account')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    cy.get('.wallets-dropdown__button').click()
-    cy.get('.wallets-list-card-dropdown__item-content')
-      .contains('BTC Wallet')
-      .click()
-    cy.get('.wallets-list-details__content').within(() => {
-      cy.contains('BTC').should('be.visible')
-    })
-    cy.contains('Transfer').click()
+    cy.c_switchWalletsAccount('BTC', 'Transfer')
     crypto_transfer('USD', transferAmount)
     crypto_transfer('ETH', transferAmount)
     crypto_transfer('LTC', transferAmount)
@@ -48,14 +41,7 @@ describe('WALL-2858 - Crypto transfer and transactions', () => {
   it('should be able to view transactions of crypto account', () => {
     cy.log('View Transactions of Crypto account')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    cy.get('.wallets-dropdown__button').click()
-    cy.get('.wallets-list-card-dropdown__item-content')
-      .contains('BTC Wallet')
-      .click()
-    cy.get('.wallets-list-details__content').within(() => {
-      cy.contains('BTC').should('be.visible')
-    })
-    cy.contains('Transfer').click()
+    cy.c_switchWalletsAccount('BTC', 'Transfer')
     cy.findByText('Transactions').first().click()
     cy.findByTestId('dt_wallets_textfield_box').click()
     cy.findByRole('option', { name: 'Deposit' }).click()

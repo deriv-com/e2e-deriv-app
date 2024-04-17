@@ -9,14 +9,7 @@ describe('WALL-2830 - Crypto withdrawal send email', () => {
   it('should be able to send withdrawal verification link', () => {
     cy.log('Send Crypto Withdrawal Verification')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    cy.get('.wallets-dropdown__button').click()
-    cy.get('.wallets-list-card-dropdown__item-content')
-      .contains('BTC Wallet')
-      .click()
-    cy.get('.wallets-list-details__content').within(() => {
-      cy.findByText(/BTC/).should('be.visible')
-    })
-    cy.contains('Withdraw').click()
+    cy.c_switchWalletsAccount('BTC', 'Withdraw')
     cy.contains('Please help us verify').should('be.visible')
     if (cy.findByRole('button', { name: 'Send email' }).should('be.visible')) {
       cy.findByRole('button', { name: 'Send email' }).click()
@@ -33,14 +26,7 @@ describe('WALL-2830 - Crypto withdrawal content access from email', () => {
     cy.c_login({ app: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    cy.get('.wallets-dropdown__button').click()
-    cy.get('.wallets-list-card-dropdown__item-content')
-      .contains('BTC Wallet')
-      .click()
-    cy.get('.wallets-list-details__content').within(() => {
-      cy.findByText(/BTC/).should('be.visible')
-    })
-    cy.contains('Withdraw').click()
+    cy.c_switchWalletsAccount('BTC', 'Withdraw')
   })
 
   it('should be able to access crypto withdrawal content and perform withdrawal', () => {

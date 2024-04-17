@@ -1,15 +1,7 @@
 import '@testing-library/cypress/add-commands'
 
 function reset_balance_demo() {
-  cy.get('.wallets-dropdown__button').click()
-  cy.findByText('USD Demo Wallet').scrollIntoView()
-  cy.get('.wallets-list-card-dropdown__item-content')
-    .contains('USD Demo Wallet')
-    .click()
-  cy.get('.wallets-list-details__content').within(() => {
-    cy.findByText(/USD/).should('be.visible')
-  })
-  cy.findByText('Reset balance').should('be.visible').click()
+  cy.c_switchWalletsAccount('USD Demo', 'Reset balance')
   cy.get('[class="wallets-cashier-content"]')
     .findByRole('button', { name: 'Reset balance' })
     .click()
