@@ -14,7 +14,7 @@ describe('QATEST-99419: Import and run custom strategy', () => {
   let afterPurchaseBalanceString
 
   beforeEach(() => {
-    cy.c_login()
+    cy.c_login({ user: 'dBot' })
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     tradersHub.openBotButton.click()
     cy.c_loadingCheck()
@@ -24,9 +24,8 @@ describe('QATEST-99419: Import and run custom strategy', () => {
 
   it('Run Timely Balance Strategy', () => {
     botDashboard.importStrategy('TimelyBalance')
+    common.blockDashboardLoad()
     common.skipTour()
-    cy.reload() // adding this until bug BOT-1147 is fixed
-    cy.c_loadingCheck()
 
     common.accountBalance.then(($el) => {
       beforePurchaseBalanceString = $el.text()

@@ -16,13 +16,16 @@ describe('QATEST-22853 IDV Document Rejected by Smile Identity provider', () => 
     cy.findByRole('button', { name: 'Verify' }).should('be.disabled')
     cy.get('.dc-checkbox__box').click()
     cy.findByRole('button', { name: 'Verify' }).should('be.enabled').click()
-    cy.findByText('Your documents were submitted successfully').should('be.visible')
+    cy.findByText('Your documents were submitted successfully').should(
+      'be.visible'
+    )
     cy.findByText('Proof of address required').should('be.visible')
     cy.reload()
 
     cy.findByText('Proof of address required').should('be.visible')
     cy.c_closeNotificationHeader()
-    cy.findByText('We were unable to verify the identity document with the details provided.').should('be.visible')
-
-})
+    cy.findByText(
+      'We were unable to verify the identity document with the details provided.'
+    ).should('be.visible')
+  })
 })

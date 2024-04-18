@@ -4,7 +4,7 @@
  * @returns {EpochTimeStamp}
  */
 export function generateEpoch() {
-  return Math.floor(new Date().getTime() / 100000)
+  return Math.floor(new Date().getTime() % 10000)
 }
 
 /**
@@ -20,4 +20,11 @@ export const generateAccountNumberString = (length) => {
     result += characters.charAt(Math.floor(Math.random() * charactersLength))
   }
   return result
+}
+
+export const calculateTransferFee = (amountTransferred) => {
+  const percentFeeRate = 0.02 // 2% transfer fee
+  const minimumFee = 0.01 // Minimum fee in USD
+  const calculatedFee = amountTransferred * percentFeeRate
+  return Math.max(calculatedFee, minimumFee)
 }

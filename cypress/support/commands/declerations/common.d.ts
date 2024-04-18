@@ -1,3 +1,4 @@
+export {}
 declare global {
   namespace Cypress {
     interface Chainable {
@@ -104,6 +105,22 @@ declare global {
        * @example cy.c_loadingCheck()
        */
       c_loadingCheck(): void
+
+      /**
+       * Custom command to retry finding an element until N number of tries
+       * @param options Options for locator (Cypress locator or normal CSS locator), timeout between each try (in milliseconds), and maximum retries
+       * @example cy.c_waitUntilElementIsFound({cyLocator: () => cy.findByText('Pending action required')})
+       * @example cy.c_waitUntilElementIsFound({cyLocator: () => cy.findByText('Pending action required'), maxRetries:4})
+       * @example cy.c_waitUntilElementIsFound({cyLocator: () => cy.get(':nth-child(1) > .notification__text-container > .notification__header')})
+       * @example cy.c_waitUntilElementIsFound({locator: '.notification:nth-child(1)',maxRetries: 2})
+       */
+      c_waitUntilElementIsFound(options?: {
+        cyLocator?: string
+        locator?: string
+        retry?: number
+        maxRetries?: number
+        timeout?: number
+      }): void
     }
   }
 }
