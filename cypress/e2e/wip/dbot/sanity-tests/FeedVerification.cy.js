@@ -9,6 +9,7 @@ describe('QATEST-99340: Verify feed is loading on charts tab', () => {
 
   beforeEach(() => {
     cy.c_login({ user: 'dBot' })
+    cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
     cy.c_visitResponsive('/bot', 'large')
     cy.c_loadingCheck()
     common.skipTour()
