@@ -19,7 +19,7 @@ describe('QATEST-98805 - Fiat deposit iframe access', () => {
   })
 })
 
-describe('WALL-2817 - Fiat deposit error', () => {
+describe('QATEST-98805 - Fiat deposit error', () => {
   //Prerequisites: Fiat wallet account in qa box besides qa04 with USD wallet
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
