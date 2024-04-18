@@ -6,7 +6,17 @@ require("dotenv").config()
 module.exports = defineConfig({
   e2e: {
     projectId: "rjvf4u",
-    setupNodeEvents(on, config) {},
+    setupNodeEvents(on, config) {
+      on('before:browser:launch', (browser = {}, launchOptions) => {
+        if (browser.family === 'chromium') {
+          launchOptions.args.push('--use-fake-ui-for-media-stream')
+          launchOptions.args.push('--use-fake-device-for-media-stream')
+          launchOptions.args.push('--use-file-for-fake-video-capture=cypress/fixtures/kyc/pass_1.y4m')
+        }
+        
+        return launchOptions
+      })
+    },
     baseUrl: "https://staging-app.deriv.com",
     defaultCommandTimeout: 15000,
     supportFile: "cypress/support/e2e.js",
@@ -102,7 +112,6 @@ module.exports = defineConfig({
     oAuthToken: process.env.E2E_OAUTH_TOKEN,
     doughflowOAuthUrl: process.env.E2E_DOUGHFLOW_OAUTH_URL,
     doughflowOAuthToken: process.env.E2E_DOUGHFLOW_OAUTH_TOKEN,
-    walletsWithdrawalUrl: process.env.E2E_WALLETS_WITHDRAWAL_URL,
     walletsWithdrawalCode: process.env.E2E_WALLETS_WITHDRAWAL_CODE,
     verificationUrl:  process.env.E2E_WALLETS_PASSWORD_URL,
     HMACKey: process.env.E2E_HMAC_KEY,

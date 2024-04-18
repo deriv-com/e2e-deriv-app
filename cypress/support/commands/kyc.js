@@ -24,3 +24,19 @@ Cypress.Commands.add('c_submitIdv', () => {
   cy.get('.dc-checkbox__box').click()
   cy.findByRole('button', { name: 'Verify' }).click()
 })
+
+Cypress.Commands.add('c_onfidoSecondRun', () => {
+  cy.get('select[name="country_input"]').select('Colombia')
+  cy.contains('button', 'Next').click()
+  cy.get('.dc-checkbox__box').click()
+  cy.findByText('Passport').click()
+  cy.findByText('or upload photo – no scans or photocopies').click()
+  cy.get('input[type=file]').selectFile(
+    'cypress/fixtures/kyc/testDriversLicense.jpeg',
+    { force: true }
+  )
+  cy.findByText('Confirm').click()
+  cy.findByText('Continue').click()
+  cy.get('.onfido-sdk-ui-Camera-btn').click()
+  cy.findByText('Confirm').click()
+})
