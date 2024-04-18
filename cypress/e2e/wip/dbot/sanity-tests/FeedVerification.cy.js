@@ -46,10 +46,4 @@ describe('QATEST-99340: Verify feed is loading on charts tab', () => {
     charts.selectSymbolOnCharts('Gold/USD')
     charts.verifyTickChange(5000)
   })
-
-  after(() => {
-    cy.findByTestId('dt_acc_info').click({ force: true })
-    cy.findByText('Log out').click()
-    cy.findByText('Trading for anyone. Anywhere. Anytime.').should('be.visible')
-  })
 })
