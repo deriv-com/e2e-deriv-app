@@ -36,4 +36,11 @@ describe('QATEST-99418: Verify toolbar on bot builder page', () => {
     botBuilder.importStrategyFromToolbar('MartingaleOld')
     common.snackBar.should('have.text', 'You’ve successfully imported a bot.')
   })
+  after(() => {
+    cy.findByTestId('dt_acc_info').should('be.visible').click()
+    cy.finByText('Log out').click()
+    cy.findAllByRole('heading', {
+      name: 'Trading for anyone. Anywhere',
+    }).should('be.visible')
+  })
 })

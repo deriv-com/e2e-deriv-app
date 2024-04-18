@@ -39,4 +39,12 @@ describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
     runPanel.runPanelScrollbar.scrollTo('bottom', { ensureScrollable: false })
     runPanel.transactionAfterFirstLoss.should('have.text', '2.00 USD')
   })
+
+  after(() => {
+    cy.findByTestId('dt_acc_info').should('be.visible').click()
+    cy.finByText('Log out').click()
+    cy.findAllByRole('heading', {
+      name: 'Trading for anyone. Anywhere',
+    }).should('be.visible')
+  })
 })

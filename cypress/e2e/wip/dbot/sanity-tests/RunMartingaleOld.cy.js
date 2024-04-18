@@ -71,5 +71,10 @@ describe('QATEST-99420: Import and run custom strategy', () => {
 
   after(() => {
     botDashboard.deleteStrategy()
+    cy.findByTestId('dt_acc_info').should('be.visible').click()
+    cy.finByText('Log out').click()
+    cy.findAllByRole('heading', {
+      name: 'Trading for anyone. Anywhere',
+    }).should('be.visible')
   })
 })
