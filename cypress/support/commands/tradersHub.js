@@ -1,3 +1,14 @@
+import {
+  BVI,
+  clickText,
+  Labuan,
+  languages,
+  linkValidations,
+  termsAndConditions,
+  translations,
+  Vanuatu,
+} from '../../fixtures/tradersHubData/trader'
+
 Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
   if (isMobile) {
     cy.findByRole('button', { name: 'Options & Multipliers' }).should(
@@ -491,3 +502,90 @@ Cypress.Commands.add(
     }
   }
 )
+
+Cypress.Commands.add('checkLanguage', (language) => {
+  const { lang, langChangeCheck } = languages[language]
+  cy.findAllByTestId('dt_icon').eq(0).click()
+  cy.findByText(lang).should('be.visible').click()
+  cy.wait(1000)
+  cy.c_rateLimit()
+  cy.findByText(langChangeCheck).should('be.visible')
+  cy.checkHyperLinks(language)
+})
+
+const validateLink = (linkName, expectedUrl, contentCheck) => {
+  cy.findByRole('link', { name: linkName }).then(($link) => {
+    const url = $link.prop('href')
+    cy.visit(url, {
+      onBeforeLoad: (win) => {
+        cy.stub(win, 'open').as('windowOpen')
+      },
+    })
+    cy.url().should('contain', expectedUrl)
+    cy.findByRole('heading', { name: `${contentCheck}` })
+  })
+  cy.go('back')
+}
+
+Cypress.Commands.add('checkHyperLinks', (language) => {
+  const bviCFD = BVI[language]
+  const vanuatuCFD = Vanuatu[language]
+  const labuanCFD = Labuan[language]
+
+  const validations = linkValidations[language]
+
+  validations.forEach(({ linkName, expectedUrl, contentCheck }) => {
+    cy.c_rateLimit({ maxRetries: 6 })
+    validateLink(linkName, expectedUrl, contentCheck)
+  })
+  cy.c_rateLimit()
+  clickCompareAccounts(language)
+  cy.c_rateLimit({ maxRetries: 6 })
+  clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD)
+})
+
+function clickCompareAccounts(language) {
+  const { compareAccount, urlPart, compareAccountContent } =
+    translations[language]
+
+  cy.findByText(compareAccount).click()
+  cy.url().should('contain', urlPart)
+  cy.findByText(compareAccountContent).should('be.visible')
+  cy.go('back')
+}
+
+function clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD) {
+  const { getButton, termsConditionLink } = clickText[language]
+  if (bviCFD) {
+    ;[bviCFD, vanuatuCFD].forEach((term) => {
+      cy.c_rateLimit()
+      cy.findAllByRole('button', { name: getButton }).first().click()
+      cy.findByText(term).click()
+      cy.c_rateLimit()
+      cy.findAllByRole('link', { name: termsConditionLink })
+        .invoke('attr', 'target', '_self')
+        .click()
+        .then(() => {
+          cy.url().should('eq', termsAndConditions[term])
+          cy.go('back')
+        })
+    })
+  }
+
+  cy.c_rateLimit()
+  if (bviCFD) {
+    ;[bviCFD, vanuatuCFD, labuanCFD].forEach((term) => {
+      cy.c_rateLimit()
+      cy.findAllByRole('button', { name: getButton }).eq(1).click()
+      cy.findByText(term).click()
+      cy.c_rateLimit()
+      cy.findAllByRole('link', { name: termsConditionLink })
+        .invoke('attr', 'target', '_self')
+        .click()
+        .then(() => {
+          cy.url().should('eq', termsAndConditions[term])
+          cy.go('back')
+        })
+    })
+  }
+}
