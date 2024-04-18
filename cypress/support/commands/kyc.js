@@ -1,5 +1,3 @@
-import { generateRandomName } from '../helper/loginUtility'
-
 Cypress.Commands.add('c_navigateToPoi', (country) => {
   cy.get('a[href="/account/personal-details"]').click()
   cy.findByRole('link', { name: 'Proof of identity' }).click()
