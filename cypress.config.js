@@ -58,7 +58,15 @@ module.exports = defineConfig({
       },
       dBot: {
         ID: process.env.E2E_LOGIN_ID_DBOT,
-        PSWD: process.env.E2E_LOGIN_PSWD_DBOT
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      p2pStandardAccountWithAds: {
+        ID: process.env.E2E_LOGIN_ID_P2P_STANDARDACCOUNTWITHADS,
+        PSWD: process.env.E2E_PSWD_P2P
+      },
+      p2pStandardAccountWithoutAds: {
+        ID: process.env.E2E_LOGIN_ID_P2P_STANDARDACCOUNTWITHOUTADS,
+        PSWD: process.env.E2E_PSWD_P2P
       },
       p2pFixedRate: {
         ID: process.env.E2E_LOGIN_ID_P2P_FIXEDRATE,
@@ -84,7 +92,7 @@ module.exports = defineConfig({
       },
       dBot: {
         ID: process.env.E2E_LOGIN_ID_PROD_DBOT,
-        PSWD: process.env.E2E_LOGIN_PSWD_PROD_DBOT
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       cashierWithdrawal:{
         ID: process.env.E2E_CASHIER_WITHDRAWAL_PROD,

@@ -37,7 +37,7 @@ function editPaymentMethod() {
 describe('QATEST-2831 - My Profile page - Edit Payment Method', () => {
   beforeEach(() => {
     cy.clearAllLocalStorage()
-    cy.c_login()
+    cy.c_login({ user: 'p2pStandardAccountWithoutAds' })
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
 

@@ -12,7 +12,7 @@ describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
   const botBuilder = new BotBuilder()
 
   beforeEach(() => {
-    cy.c_login()
+    cy.c_login({ user: 'dBot' })
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     tradersHub.openBotButton.click()
     common.blockDashboardLoad()
