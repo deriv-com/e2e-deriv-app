@@ -1,9 +1,9 @@
 import '@testing-library/cypress/add-commands'
 
 function clickAddDerivxButton() {
-  cy.get(
-    '.wallets-other-cfd__content > .wallets-trading-account-card > .wallets-trading-account-card__content > .wallets-button'
-  ).click()
+  cy.get('.wallets-available-dxtrade__icon')
+    .parent('.wallets-trading-account-card')
+    .click()
 }
 
 function verifyDerivxCreation(accountType) {
@@ -55,7 +55,6 @@ describe('WALL-3252 - Add derivx account', () => {
 
   it('should be able to add DerivX USD account', () => {
     cy.log('add derivx account')
-    cy.findByRole('heading', { name: 'Other CFD Platforms' }).should('exist')
     const Text = Cypress.$(
       ":contains('This account offers CFDs on a highly customisable CFD trading platform.')"
     )
