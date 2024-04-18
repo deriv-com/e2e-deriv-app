@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
 
-describe('WALL-2830 - Crypto withdrawal send email', () => {
+describe('QATEST-98698 - Crypto withdrawal send email', () => {
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')
@@ -21,7 +21,7 @@ describe('WALL-2830 - Crypto withdrawal send email', () => {
   })
 })
 
-describe('WALL-2830 - Crypto withdrawal content access from email', () => {
+describe('QATEST-98698 - Crypto withdrawal content access from email', () => {
   //Prerequisites: Crypto wallet account in qa29 with BTC balance
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })

@@ -21,7 +21,7 @@ function crypto_transfer(to_account, transferAmount) {
   cy.c_transferLimit(transferAmount)
 }
 
-describe('WALL-2858 - Crypto transfer and transactions', () => {
+describe('QATEST-98789 - Transfer to crypto accounts', () => {
   //Prerequisites: Crypto wallet account in any qa box with 1.00000000 BTC balance and USD, ETH and LTC wallets
   let transferAmount = '0.00003000 BTC'
   beforeEach(() => {
