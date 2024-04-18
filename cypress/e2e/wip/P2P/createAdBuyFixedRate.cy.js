@@ -15,17 +15,19 @@ function verifyAdOnMyAdsScreen(fiatCurrency, localCurrency) {
 
 describe('QATEST-2403 - Create a Buy type Advert - Fixed Rate', () => {
   beforeEach(() => {
+    cy.clearAllLocalStorage()
     cy.clearAllSessionStorage()
     cy.c_login({ user: 'p2pFixedRate' })
-    cy.c_visitResponsive('/cashier/p2p', 'small')
+    cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
 
   it('Should be able to create buy type advert and verify all fields and messages for fixed rate.', () => {
+    cy.c_navigateToDerivP2P()
     cy.c_closeSafetyInstructions()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
     cy.c_clickMyAdTab()
-    cy.c_createNewAd()
+    cy.c_createNewAd('buy')
     cy.findByText('Buy USD').click()
     cy.findByText("You're creating an ad to buy...").should('be.visible')
     cy.findByTestId('offer_amount')
@@ -43,6 +45,7 @@ describe('QATEST-2403 - Create a Buy type Advert - Fixed Rate', () => {
     cy.then(() => {
       cy.c_verifyAmountFiled()
       cy.c_verifyFixedRate(
+        'buy',
         10,
         fixedRate,
         sessionStorage.getItem('c_fiatCurrency'),
@@ -50,6 +53,7 @@ describe('QATEST-2403 - Create a Buy type Advert - Fixed Rate', () => {
       )
       cy.c_verifyMaxMin('min_transaction', minOrder, 'Min')
       cy.c_verifyMaxMin('max_transaction', maxOrder, 'Max')
+      cy.c_verifyTextAreaBlock('default_advert_description')
       cy.c_verifyTooltip()
       cy.c_verifyCompletionOrderDropdown()
       cy.c_PaymentMethod()

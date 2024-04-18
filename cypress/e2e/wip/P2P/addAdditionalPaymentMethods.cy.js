@@ -8,11 +8,13 @@ let additionalPaymentID = generateAccountNumberString(12)
 
 describe('QATEST-2811 - My profile page - User with existing payment method add new payment method', () => {
   beforeEach(() => {
-    cy.c_login()
-    cy.c_visitResponsive('/cashier/p2p', 'small')
+    cy.clearAllLocalStorage()
+    cy.c_login({ user: 'p2pStandardAccountWithoutAds' })
+    cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
 
   it('Should be able to add additional payment method in responsive mode.', () => {
+    cy.c_navigateToDerivP2P()
     cy.c_closeSafetyInstructions()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()

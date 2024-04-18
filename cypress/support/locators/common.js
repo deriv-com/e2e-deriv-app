@@ -6,7 +6,9 @@ export const commonPageLocators = {
     //commonMobileLocator2 : () => cy.findByTestId('xyz')
   },
   desktopLocators: {
-    header: {},
+    header: {
+      tradersHubButton: () => cy.findByTestId('dt_traders_hub_home_button'),
+    },
     footer: {},
     //commonDesktopLocator1 : () => cy.findByTestId('abc')
     //commonDesktopLocator2 : () => cy.findByTestId('xyz')

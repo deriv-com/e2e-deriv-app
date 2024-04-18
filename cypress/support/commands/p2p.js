@@ -1,11 +1,12 @@
+import { generateAccountNumberString } from '../helper/utility'
+
 let rate = 0.01
 let marketRate
 let rateCalculation
 let calculatedValue
 let regexPattern
-const decimalPlacesToSkip = 1
 
-Cypress.Commands.add('c_createNewAd', () => {
+Cypress.Commands.add('c_createNewAd', (adType) => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
   cy.get('body', { timeout: 10000 }).then((body) => {
     if (body.find('.no-ads__message', { timeout: 10000 }).length > 0) {
@@ -13,7 +14,7 @@ Cypress.Commands.add('c_createNewAd', () => {
         .should('be.visible')
         .click()
     } else if (body.find('#toggle-my-ads', { timeout: 10000 }).length > 0) {
-      cy.c_removeExistingAds()
+      cy.c_removeExistingAds(adType)
       cy.findByRole('button', { name: 'Create new ad' })
         .should('be.visible')
         .click()
@@ -37,18 +38,18 @@ Cypress.Commands.add('c_postBuyAd', () => {
   cy.c_postAd()
 })
 
-Cypress.Commands.add('c_verifyExchangeRate', () => {
+Cypress.Commands.add('c_verifyExchangeRate', (rate) => {
   rateCalculation = rate * 0.01
   calculatedValue = rateCalculation * marketRate + marketRate
   regexPattern = new RegExp(
-    `Your rate is = ${calculatedValue.toFixed(6 - decimalPlacesToSkip)}\\d{${decimalPlacesToSkip}} NZD`
+    `Your rate is = ${calculatedValue.toFixed(6).slice(0, -1)}\\d? NZD`
   )
   cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
 })
 
 Cypress.Commands.add(
   'c_verifyFixedRate',
-  (totalAmount, fixedRateValue, fiatCurrency, localCurrency) => {
+  (adType, totalAmount, fixedRateValue, fiatCurrency, localCurrency) => {
     totalAmount = totalAmount.toFixed(2)
     fixedRateValue = fixedRateValue.toFixed(2)
     cy.findByTestId('fixed_rate_type').clear()
@@ -67,7 +68,7 @@ Cypress.Commands.add(
     cy.findByText('Enter a valid amount').should('be.visible')
     cy.findByTestId('fixed_rate_type').clear().type(fixedRateValue)
     const totalPrice = totalAmount * fixedRateValue
-    regexPattern = `You\'re creating an ad to buy ${totalAmount} ${fiatCurrency} for ${totalPrice.toFixed(2)} ${localCurrency} (${fixedRateValue} ${localCurrency}/${fiatCurrency})`
+    regexPattern = `You\'re creating an ad to ${adType} ${totalAmount} ${fiatCurrency} for ${totalPrice.toFixed(2)} ${localCurrency} (${fixedRateValue} ${localCurrency}/${fiatCurrency})`
     cy.get('.create-ad-summary')
       .eq(0)
       .invoke('text')
@@ -76,6 +77,39 @@ Cypress.Commands.add(
       })
   }
 )
+
+Cypress.Commands.add('c_verifyTextAreaBlock', (blockName) => {
+  cy.c_verifyTextAreaLength(blockName, 0)
+  cy.findByTestId(blockName).clear()
+  if (blockName == 'contact_info') {
+    cy.findByText('Contact details is required').should('be.visible')
+  }
+  cy.findByTestId(blockName).clear().type('abc').should('have.value', 'abc')
+  cy.c_verifyTextAreaLength(blockName, 'abc'.length)
+  let textLimitCheck = generateAccountNumberString(300)
+  cy.findByTestId(blockName)
+    .clear()
+    .type(textLimitCheck)
+    .should('have.value', textLimitCheck)
+  cy.c_verifyTextAreaLength(blockName, textLimitCheck.length)
+  cy.findByTestId(blockName)
+    .clear()
+    .type(textLimitCheck + '1')
+    .should('have.value', textLimitCheck)
+  cy.c_verifyTextAreaLength(blockName, textLimitCheck.length)
+  cy.findByTestId(blockName)
+    .clear()
+    .type('Text area info block.')
+    .should('have.value', 'Text area info block.')
+  cy.c_verifyTextAreaLength(blockName, 'Text area info block.'.length)
+})
+
+Cypress.Commands.add('c_verifyTextAreaLength', (blockName, textLength) => {
+  cy.findByTestId(blockName)
+    .parents('.dc-input__wrapper')
+    .find('.dc-input__footer .dc-input__counter')
+    .should('contain.text', `${textLength}/300`)
+})
 
 Cypress.Commands.add('c_verifyRate', () => {
   cy.findByTestId('float_rate_type').click().clear()
@@ -100,17 +134,17 @@ Cypress.Commands.add('c_verifyRate', () => {
       const match = text.match(/of the market rate1 USD = (\d+(\.\d+)?)/)
       marketRate = parseFloat(match[1])
       if (match) {
-        cy.c_verifyExchangeRate()
+        cy.c_verifyExchangeRate(rate)
         // Verify clicking plus button twice
         cy.get('#floating_rate_input_add')
           .click({ force: true })
           .click({ force: true })
         rate = rate + 0.02
-        cy.c_verifyExchangeRate()
+        cy.c_verifyExchangeRate(rate)
         // // verify minus button once
         cy.get('#floating_rate_input_sub').click({ force: true })
         rate = rate - 0.01
-        cy.c_verifyExchangeRate()
+        cy.c_verifyExchangeRate(rate)
       } else {
         throw new Error('Text does not match the expected pattern')
       }
@@ -157,12 +191,12 @@ Cypress.Commands.add(
       'be.visible'
     )
     cy.findByTestId(selector).click().type('11')
-    cy.findByText(
-      `Amount should not be below ${expectedValidation} limit`
-    ).should('be.visible')
-    cy.findByText(
-      `${expectedValidation} limit should not exceed Amount`
-    ).should('be.visible')
+    cy.findByText(`Amount should not be below ${expectedValidation} limit`)
+      .scrollIntoView()
+      .should('be.visible')
+    cy.findByText(`${expectedValidation} limit should not exceed Amount`)
+      .scrollIntoView()
+      .should('be.visible')
     cy.findByTestId(selector).click().clear().type(expectedValue)
   }
 )
@@ -196,7 +230,7 @@ Cypress.Commands.add('c_postAd', () => {
   cy.findByRole('button', { name: 'Ok' }).should('be.enabled').click()
 })
 
-Cypress.Commands.add('c_removeExistingAds', () => {
+Cypress.Commands.add('c_removeExistingAds', (adType) => {
   cy.get('.my-ads-table__row')
     .trigger('touchstart', 'right', { timeout: 1000 })
     .trigger('touchmove', 'left')
@@ -204,10 +238,22 @@ Cypress.Commands.add('c_removeExistingAds', () => {
   cy.get('.my-ads-table__popovers-delete>svg').click({ force: true })
   cy.findByText('Do you want to delete this ad?').should('be.visible')
   cy.findByText('You will NOT be able to restore it.').should('be.visible')
-  cy.findByRole('button', { name: 'Delete' }).should('be.enabled').click()
-  cy.findByRole('button', { name: 'Delete' }).should('not.exist', {
-    timeout: 10000,
-  })
+  cy.findByRole('button', { name: 'Delete' })
+    .should('be.enabled')
+    .click()
+    .should('not.exist', {
+      timeout: 10000,
+    })
+  if (adType == 'sell') {
+    cy.findByText('My profile').click()
+    cy.findByText('Available Deriv P2P balance').should('be.visible')
+    cy.findByText('Payment methods').should('be.visible').click()
+    cy.findByText('Payment methods').should('be.visible')
+    cy.c_deleteAllPM()
+    cy.findByRole('button', { name: /Add/ }).should('be.visible')
+    cy.c_visitResponsive('/cashier/p2p', 'small')
+    cy.c_clickMyAdTab()
+  }
 })
 
 Cypress.Commands.add('c_verifyDynamicMsg', () => {
@@ -256,6 +302,7 @@ Cypress.Commands.add('c_closeSafetyInstructions', () => {
       }
     })
   cy.findByRole('button', { name: 'Confirm' }).should('be.visible').click()
+  cy.c_skipPasskey()
 })
 
 Cypress.Commands.add('c_closeNotificationHeader', () => {
@@ -368,4 +415,22 @@ Cypress.Commands.add('c_deletePaymentMethod', (paymentID, paymentName) => {
   cy.findByText(`Delete ${paymentName}?`).should('be.visible')
   cy.findByRole('button', { name: 'Yes, remove' }).should('be.visible').click()
   cy.findByText(paymentID).should('not.exist')
+})
+
+Cypress.Commands.add('c_skipPasskey', (adType) => {
+  cy.findByTestId('dt_initial_loader').should('not.exist')
+  cy.get('body', { timeout: 10000 }).then((body) => {
+    if (
+      body.find(':contains("Effortless login with passkeys")', {
+        timeout: 10000,
+      }).length > 0
+    ) {
+      cy.findByText('Maybe later').click()
+      cy.c_navigateToDerivP2P()
+    } else if (
+      body.find(':contains("Deriv P2P")', { timeout: 10000 }).length > 0
+    ) {
+      cy.log('Passkey is disable')
+    }
+  })
 })

@@ -70,27 +70,14 @@ Cypress.Commands.add('c_enterPassword', () => {
 })
 
 Cypress.Commands.add('c_completeOnboarding', () => {
-  const onboarding = Cypress.$("button:contains('Next'):visible").length > 0
-  if (onboarding) {
-    for (
-      let next_button_count = 0;
-      next_button_count < 5;
-      next_button_count++
-    ) {
-      cy.contains('button', 'Next').should('be.visible')
-      cy.contains('button', 'Next').click()
-    }
-    cy.contains('Start trading').should('be.visible')
-    cy.contains('button', 'Start trading').click()
-    cy.contains('Switch accounts').should('be.visible')
+  cy.contains('Switch accounts').should('be.visible')
+  cy.contains('button', 'Next').click()
+  if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
+    cy.contains('Choice of regulation').should('be.visible')
     cy.contains('button', 'Next').click()
-    if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
-      cy.contains('Choice of regulation').should('be.visible')
-      cy.contains('button', 'Next').click()
-    }
-    cy.contains("Trader's Hub tour").should('be.visible')
-    cy.contains('button', 'OK').click()
   }
+  cy.contains("Trader's Hub tour").should('be.visible')
+  cy.contains('button', 'OK').click()
 })
 
 // TODO move to Utility finction
@@ -201,10 +188,7 @@ Cypress.Commands.add('c_addAccount', () => {
     .findByRole('button', { name: 'Deposit' })
     .should('be.visible')
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
-  cy.url().should(
-    'be.equal',
-    Cypress.config('baseUrl') + '/appstore/traders-hub'
-  )
+  cy.url().should('be.equal', Cypress.env('baseUrl') + 'appstore/traders-hub')
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
   cy.c_closeNotificationHeader()
   cy.findAllByTestId('dt_balance_text_container').eq(0).should('be.visible')
@@ -259,21 +243,23 @@ Cypress.Commands.add('c_completeFatcaDeclarationAgreement', () => {
   cy.findAllByTestId('dti_list_item').eq(0).click()
 })
 
-Cypress.Commands.add('c_addAccountMF', () => {
+Cypress.Commands.add('c_addAccountMF', (type) => {
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
   cy.get('.dc-checkbox__box').eq(0).click()
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
   cy.get('.dc-checkbox__box').eq(1).click()
+  if (type == 'MF') {
+    cy.log('Country is ' + type)
+    cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
+    cy.get('.dc-checkbox__box').eq(2).click()
+  }
   cy.findByRole('button', { name: 'Add account' }).click()
   cy.findByRole('heading', { name: 'Deposit' }).should('be.visible')
   cy.findByTestId('dt_modal_close_icon').click()
   cy.findByRole('heading', { name: 'Account added' }).should('be.visible')
   cy.findByRole('button', { name: 'Verify now' }).should('be.visible')
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
-  cy.url().should(
-    'be.equal',
-    Cypress.config('baseUrl') + '/appstore/traders-hub'
-  )
+  cy.url().should('be.equal', Cypress.env('baseUrl') + 'appstore/traders-hub')
   cy.findByRole('button', { name: 'Next' }).click()
   if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
     cy.contains('Choice of regulation').should('be.visible')
@@ -299,14 +285,17 @@ Cypress.Commands.add('c_demoAccountSignup', (country, accountEmail) => {
     cy.c_selectCountryOfResidence(country)
     cy.c_selectCitizenship(country)
     cy.c_enterPassword()
-    cy.c_completeOnboarding()
+    if (country !== Cypress.env('countries').ES) {
+      cy.c_completeOnboarding()
+    }
   })
 })
 
 Cypress.Commands.add('c_setEndpoint', (signUpMail) => {
   localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
   localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
-  cy.c_visitResponsive('/endpoint', 'desktop')
+  const mainURL = Cypress.config('baseUrl')
+  cy.c_visitResponsive(mainURL + 'endpoint', 'desktop')
   cy.findByRole('button', { name: 'Sign up' }).should('not.be.disabled')
   cy.c_enterValidEmail(signUpMail)
 })
@@ -318,3 +307,148 @@ Cypress.Commands.add('c_validateEUDisclaimer', () => {
     '70.1% of retail investor accounts lose money when trading CFDs with this provider'
   ).should('be.visible')
 })
+
+/**
+ * Requires a currency object that consists of both currency name and currency code
+ * currency={
+ *  name: "Us Dollar"
+ *  code: "USD"
+ * }
+ */
+Cypress.Commands.add(
+  'c_checkCurrencyAccountExists',
+  (currency, options = {}) => {
+    const { closeModalAtEnd = true, modalAlreadyOpened = false } = options
+    cy.log(`Checking if ${currency.name} account already exists.`)
+    if (modalAlreadyOpened == false) {
+      cy.c_openCurrencyAccountSelector()
+    }
+    cy.document().then((doc) => {
+      sessionStorage.setItem(`c_is${currency.code}AccountCreated`, false)
+      doc
+        .querySelectorAll('.currency-item-card__details .dc-text')
+        .forEach((element) => {
+          if (element.textContent.includes(currency.name)) {
+            cy.log(`Account for currency ${currency.name} already exists`)
+            sessionStorage.setItem(`c_is${currency.code}AccountCreated`, true)
+          }
+        })
+    })
+    if (closeModalAtEnd == true) {
+      cy.c_closeModal()
+    }
+  }
+)
+
+Cypress.Commands.add('c_getCurrentCurrencyBalance', () => {
+  cy.log('Getting the current currency accounts Balance')
+  cy.get('.currency-switcher-container').within(() => {
+    cy.findByTestId('dt_balance_text_container').then((currentBalance) => {
+      sessionStorage.setItem(
+        'c_currentCurrencyBalance',
+        currentBalance.text().replace(/(\d)([A-Za-z])/, '$1 $2')
+      )
+    })
+  })
+})
+
+/**
+ * Requires a currency object that consists of both currency name and currency code
+ * currency={
+ *  name: "Us Dollar"
+ *  code: "USD"
+ * }
+ */
+Cypress.Commands.add('c_getCurrencyBalance', (currency, options = {}) => {
+  const { closeModalAtEnd = true, modalAlreadyOpened = false } = options
+  cy.log(`Getting the balance for ${currency.name} account.`)
+  if (modalAlreadyOpened == false) {
+    cy.c_openCurrencyAccountSelector()
+  }
+  cy.get('.dc-modal').within(() => {
+    cy.contains('div[class="currency-item-card__balance"]', currency.code).then(
+      (balance) => {
+        sessionStorage.setItem(`c_balance${currency.code}`, balance.text())
+      }
+    )
+  })
+  if (closeModalAtEnd == true) {
+    cy.c_closeModal()
+  }
+})
+
+/**
+ * Requires a currency object that consists of both currency name and currency code
+ * currency={
+ *  name: "Us Dollar"
+ *  code: "USD"
+ * }
+ */
+Cypress.Commands.add('c_createNewCurrencyAccount', (currency) => {
+  cy.log(`Creating ${currency.name} account`)
+  cy.get('.dc-modal').within(() => {
+    cy.findByRole('button', { name: 'Add or manage account' }).click()
+    cy.findByRole('heading', {
+      name: 'Choose your preferred cryptocurrency',
+    }).should('exist')
+    cy.findByText(currency.name).click()
+    cy.findByRole('button', { name: 'Add account' }).click()
+    cy.findByText('Success!').should('exist')
+    cy.findByText(`You have added a ${currency.code} account.`).should(
+      'be.visible'
+    )
+    cy.findByRole('button', { name: 'Maybe later' }).click()
+  })
+})
+
+Cypress.Commands.add('c_openCurrencyAccountSelector', () => {
+  cy.log('Opening currency account selector modal')
+  cy.get('.currency-switcher-container').within(() => {
+    cy.findByTestId('dt_currency-switcher__arrow').click()
+  })
+  cy.findByText('Select account').should('be.visible')
+})
+
+/**
+ * Requires a currency object that consists of both currency name and currency code
+ * currency={
+ *  name: "Us Dollar"
+ *  code: "USD"
+ * }
+ */
+Cypress.Commands.add('c_selectCurrency', (currency, options = {}) => {
+  const { modalAlreadyOpened = false } = options
+  cy.log(`Selecting ${currency.name} account.`)
+  if (modalAlreadyOpened == false) {
+    cy.c_openCurrencyAccountSelector()
+  }
+  cy.get('.dc-modal').within(() => {
+    cy.findByText(currency.name).click()
+  })
+})
+
+/**
+ * Requires a currency object that consists of both currency name and currency code
+ * currency={
+ *  name: "Us Dollar"
+ *  code: "USD"
+ * }
+ */
+Cypress.Commands.add(
+  'c_verifyActiveCurrencyAccount',
+  (currency, options = {}) => {
+    const { closeModalAtEnd = true, modalAlreadyOpened = false } = options
+    cy.log(`Checking if ${currency.name} account is active currency Account.`)
+    if (modalAlreadyOpened == false) {
+      cy.c_openCurrencyAccountSelector()
+    }
+    cy.get('.dc-modal').within(() => {
+      cy.get('.currency-item-card--active').within(() => {
+        cy.findByText(currency.name).should('exist')
+      })
+    })
+    if (closeModalAtEnd == true) {
+      cy.c_closeModal()
+    }
+  }
+)

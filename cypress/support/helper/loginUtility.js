@@ -154,7 +154,6 @@ export function getOAuthUrl(callback, loginEmail, loginPassword) {
           })
         })
       }
-
       const oAuthUrl = response.headers['location']
       cy.log('oAuthUrl: ' + oAuthUrl)
       callback(oAuthUrl)
@@ -233,7 +232,6 @@ export function getWalletOAuthUrl(callback) {
       const oAuthUrl = response.headers['location']
       cy.log('oAuthUrl: ' + oAuthUrl)
       callback(oAuthUrl)
-
       expect(response.status).to.eq(302) //302 means success on this occasion!
     })
   })

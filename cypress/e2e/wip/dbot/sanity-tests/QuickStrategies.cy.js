@@ -12,15 +12,14 @@ describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
   const botBuilder = new BotBuilder()
 
   beforeEach(() => {
-    cy.c_login()
+    cy.c_login({ user: 'dBot' })
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     tradersHub.openBotButton.click()
+    common.blockDashboardLoad()
     common.skipTour()
     common.switchToDemo()
     botBuilder.openBotBuilderTab()
     common.skipTour()
-    cy.reload() // adding this until bug BOT-1147 is fixed
-    cy.c_loadingCheck() //TODO:remove once bug is fixed
   })
 
   it('Run Martingale Quick Strategy', () => {
