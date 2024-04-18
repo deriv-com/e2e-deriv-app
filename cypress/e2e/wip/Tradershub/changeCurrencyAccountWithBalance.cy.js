@@ -5,7 +5,6 @@ describe('QATEST-5925: Verify Change currency functionality for the account whic
 
   beforeEach(() => {
     cy.c_login()
-    // cy.c_visitResponsive('/account/self-exclusion', 'small')
   })
 
   Object.keys(size).forEach((key) => {
