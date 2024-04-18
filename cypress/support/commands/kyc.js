@@ -17,12 +17,7 @@ Cypress.Commands.add('c_navigateToPoiResponsive', (country) => {
 
 Cypress.Commands.add('c_submitIdv', () => {
   cy.get('select[name="document_type"]').select('Passport')
-  cy.findByLabelText('Enter your document number').type('12345678')
-  cy.findByTestId('first_name').clear().type('Refuted')
-  cy.findByTestId('last_name')
-    .clear()
-    .type(`${generateRandomName()}` + ' ' + 'Rejected')
-  cy.findByTestId('date_of_birth').type('2000-09-20')
+  cy.findByLabelText('Enter your document number').type('G0000001')
   cy.get('.dc-checkbox__box').click()
   cy.findByRole('button', { name: 'Verify' }).click()
 })

@@ -4,12 +4,12 @@ describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients
   beforeEach(() => {
     cy.c_createRealAccount()
     cy.c_login()
-    cy.c_navigateToPoiResponsive('Republic of QA')
+    cy.c_navigateToPoiResponsive('Ghana')
   })
 
   it('IDV (2 attempts) and Onfido (1 attempt) failed clients should be redirected to manual upload', () => {
     // IDV flow
-    cy.c_submitIdv()
+    cy.c_submitIdv() // first IDV attempt
     cy.contains('Your documents were submitted successfully').should(
       'be.visible'
     )
@@ -23,17 +23,13 @@ describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients
 
     cy.findByText('Proof of address required').should('exist')
     cy.c_closeNotificationHeader()
-    cy.get('select[name="country_input"]').select('Republic of QA')
+    cy.get('select[name="country_input"]').select('Ghana')
     cy.contains('button', 'Next').click()
 
-    cy.c_submitIdv()
+    cy.c_submitIdv() // second IDV attempt
+    cy.reload()
 
-    cy.contains(
-      'We were unable to verify your ID with the details you provided. Please upload your identity document.'
-    ).should('be.visible')
-    cy.c_closeNotificationHeader()
     // Onfido flow
-    cy.findByRole('button', { name: 'Upload identity document' }).click()
     cy.get('select[name="country_input"]').select('Colombia')
     cy.contains('button', 'Next').click()
     cy.get('.dc-checkbox__box').click()
@@ -46,5 +42,18 @@ describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients
       { force: true }
     )
     cy.findByText('Confirm').click()
+    cy.findByText('Continue').click()
+    cy.findByText('Take a selfie').should('be.visible')
+    cy.get('.onfido-sdk-ui-Camera-btn').click()
+    cy.findByText('Confirm').click()
+    cy.findByText('Your documents were submitted successfully').should(
+      'be.visible'
+    )
+    cy.reload()
+
+    // Manual upload screen
+    cy.findByText('Please upload one of the following documents:').should(
+      'be.visible'
+    )
   })
 })
