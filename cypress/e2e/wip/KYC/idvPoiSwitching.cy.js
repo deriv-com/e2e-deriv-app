@@ -2,6 +2,7 @@ import '@testing-library/cypress/add-commands'
 
 describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients are redirected to manual upload', () => {
   beforeEach(() => {
+    cy.c_createRealAccount()
     cy.c_login()
     cy.c_navigateToPoiResponsive('Republic of QA')
   })
