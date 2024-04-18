@@ -62,19 +62,19 @@ module.exports = defineConfig({
       },
       p2pStandardAccountWithAds: {
         ID: process.env.E2E_LOGIN_ID_P2P_STANDARDACCOUNTWITHADS,
-        PSWD: process.env.E2E_PSWD_P2P
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       p2pStandardAccountWithoutAds: {
         ID: process.env.E2E_LOGIN_ID_P2P_STANDARDACCOUNTWITHOUTADS,
-        PSWD: process.env.E2E_PSWD_P2P
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       p2pFixedRate: {
         ID: process.env.E2E_LOGIN_ID_P2P_FIXEDRATE,
-        PSWD: process.env.E2E_PSWD_P2P
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       p2pFloating: {
         ID: process.env.E2E_P2P_FLOATING,
-        PSWD: process.env.E2E_PSWD_P2P
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       diel: {
         ID: process.env.E2E_DIEL_LOGIN,
