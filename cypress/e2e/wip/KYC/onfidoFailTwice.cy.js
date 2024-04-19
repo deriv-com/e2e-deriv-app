@@ -32,6 +32,7 @@ describe('QATEST-22853 Onfido (2 attempts) failed clients are redirected to manu
     cy.findByText('Your proof of identity submission failed because:')
     cy.get('.dc-btn').click()
 
+    // Second onfido attempt
     cy.c_onfidoSecondRun()
     cy.findByText('Your documents were submitted successfully').should(
       'be.visible'
