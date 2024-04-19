@@ -1,4 +1,5 @@
 import '@testing-library/cypress/add-commands'
+import { derivApp } from '../../../support/locators'
 
 const tickDuration = 4
 const stakeAmount = '10.00'
@@ -9,7 +10,7 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
 
   function createMatchDiffContract(tradeType) {
     cy.get('span.number-selector__selection[data-value="5"]').click()
-    cy.c_selectStakeTab()
+    cy.findByRole('button', { name: 'Stake' }).click()
     cy.findByLabelText('Amount').clear().type(stakeAmount)
     if (tradeType == 'Matches') {
       cy.get('button.btn-purchase.btn-purchase--1').click()
@@ -26,14 +27,13 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
     cy.c_selectTradeType('Options', 'Matches/Differs')
     cy.c_validateDurationDigits('Matches/Differs')
     cy.c_selectTickDuration(tickDuration)
-    cy.c_matchStakePayoutValue(
-      'Matches/Differs',
-      '#dt_purchase_digitmatch_price'
+    cy.c_matchStakePayoutValue(() =>
+      cy.findByTestId('dt_purchase_digitmatch_price')
     )
     createMatchDiffContract('Matches')
-    cy.get('a.dc-result__caption-wrapper', {
-      timeout: tickDuration * 1000 + 3000,
-    }).should('be.visible')
+    derivApp.dTraderPage.desktopLocators
+      .contractCard(tickDuration * 1000 + 3000)
+      .should('be.visible')
     cy.c_checkContractDetailsPage('Matches/Differs', stakeAmount, tickDuration)
   })
 
@@ -43,14 +43,13 @@ describe('QATEST-5040 -  Verify contract for Digits', () => {
     cy.c_selectTradeType('Options', 'Matches/Differs')
     cy.c_validateDurationDigits('Matches/Differs')
     cy.c_selectTickDuration(tickDuration)
-    cy.c_matchStakePayoutValue(
-      'Matches/Differs',
-      '#dt_purchase_digitmatch_price'
+    cy.c_matchStakePayoutValue(() =>
+      cy.findByTestId('dt_purchase_digitdiff_price')
     )
     createMatchDiffContract('Differs')
-    cy.get('a.dc-result__caption-wrapper', {
-      timeout: tickDuration * 1000 + 3000,
-    }).should('be.visible')
+    derivApp.dTraderPage.desktopLocators
+      .contractCard(tickDuration * 1000 + 3000)
+      .should('be.visible')
     cy.c_checkContractDetailsPage('Matches/Differs', stakeAmount, tickDuration)
   })
 })
