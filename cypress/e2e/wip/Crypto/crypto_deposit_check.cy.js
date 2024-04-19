@@ -1,5 +1,4 @@
 import '@testing-library/cypress/add-commands'
-import jsQR from 'jsqr'
 
 describe('QATEST-707 - Create crypto account', () => {
   beforeEach(() => {
@@ -35,7 +34,11 @@ describe('QATEST-707 - Create crypto account', () => {
           .getContext('2d')
           .getImageData(0, 0, $canvas[0].width, $canvas[0].height)
         // Decode the QR code using jsQR
-        const code = jsQR(imageData.data, imageData.width, imageData.height)
+        const code = Cypress.jsQR(
+          imageData.data,
+          imageData.width,
+          imageData.height
+        )
         // Assert that the QR code was successfully decoded and get its value
         expect(code).to.not.be.null
         const qrCodeValue = code.data
