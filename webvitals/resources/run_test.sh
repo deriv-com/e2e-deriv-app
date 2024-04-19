@@ -7,6 +7,7 @@ STAGING_AUTH_TOKEN=`python3 login.py $1 $2 $3 $4`
 if [[ $STAGING_AUTH_TOKEN =~ '?acct1=CR' ]]; then
     echo "Token generation completed"
     echo "Executing test scripts..."
+    echo $1 $3
 else
     echo "$0 - Error \$STAGING_AUTH_TOKEN is NULL, please check environement | app_id is valid and account exists. "
     exit 1;
