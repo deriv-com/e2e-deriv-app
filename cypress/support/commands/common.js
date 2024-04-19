@@ -150,7 +150,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
 })
 
 Cypress.Commands.add('c_doOAuthLogin', (app) => {
-  cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
+  cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large', 'check')
   //To let the dtrader page load completely
   cy.get('.cq-symbol-select-btn', { timeout: 10000 }).should('exist')
   cy.document().then((doc) => {
