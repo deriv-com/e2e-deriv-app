@@ -24,18 +24,6 @@ declare global {
       c_checkSymbolTickChange(duration: Number): void
 
       /**
-       * Remove it. No need for a command for a single action
-       * Replace with cy.findByRole('button', { name: 'Stake' }).click()
-       */
-      c_selectStakeTab(): void
-
-      /**
-       * Remove it. No need for a command for a single action
-       * Replace with cy.findByRole('button', { name: 'Payout' }).click()
-       */
-      c_selectPayoutTab(): void
-
-      /**
        * Custom command to select the number of ticks for a contract
        * @param tickDuration Number of ticks
        * @example cy.c_selectTickDuration(4)
