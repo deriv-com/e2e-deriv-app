@@ -10,6 +10,7 @@ var test_data_file = '../resources/testdata.xlsx';
 const wptServer = "www.webpagetest.org";
 const wpt = new WebPageTest(wptServer, api_key);
 var failedTests = [];
+var failedImages = [];
 
 const location = 'ec2-af-south-1:Chrome';
 const connectivity = '3GFast';
@@ -36,10 +37,30 @@ async function getTestURLs() {
             session_url = url + stage_auth_url;
         }
 
-        const tagStagingScores = await getPerformanceMetrics(session_url, device);
+        const stagingScores = await getPerformanceMetrics(session_url, device);
         await new Promise(resolve => setTimeout(resolve, 30000));
 
+        const tagStagingScores = {
+            FCP: stagingScores.data.average.firstView.firstPaint,
+            LCP: stagingScores.data.average.firstView['chromeUserTiming.LargestContentfulPaint'],
+            CLS: stagingScores.data.average.firstView["chromeUserTiming.CumulativeLayoutShift"],
+            PAGE_FULLY_LOADED: stagingScores.data.average.firstView.fullyLoaded,
+            FULL_REPORT: stagingScores.data.summary,
+        };
+
+        if (tagStagingScores.FCP === null || tagStagingScores.LCP === null || tagStagingScores.CLS === null || tagStagingScores.PAGE_FULLY_LOADED === null || tagStagingScores.FULL_REPORT === null) {
+            throw new Error('One or more metrics are null in TAG staging run');
+        }
+        
+        const stagingImages = {
+            IMAGES_DATA: stagingScores.data.median.firstView,
+        }
+
         compareScores(prodStagingScores, tagStagingScores, device, url);
+
+        validateImagesSize(stagingImages.IMAGES_DATA);
+
+
     }
     testReport();
 }
@@ -111,19 +132,7 @@ async function getPerformanceMetrics(session_url, device) {
             }
         });
 
-        const scores = {
-            FCP: testData.data.average.firstView.firstPaint,
-            LCP: testData.data.average.firstView['chromeUserTiming.LargestContentfulPaint'],
-            CLS: testData.data.average.firstView["chromeUserTiming.CumulativeLayoutShift"],
-            PAGE_FULLY_LOADED: testData.data.average.firstView.fullyLoaded,
-            FULL_REPORT: testData.data.summary,
-        };
-
-        if (scores.FCP === null || scores.LCP === null || scores.CLS === null || scores.PAGE_FULLY_LOADED === null || scores.FULL_REPORT === null) {
-            throw new Error('One or more metrics are null in TAG staging run');
-        }
-
-        return scores;
+        return testData
     } catch (error) {
         console.error('Error in getPerformanceMetrics:', error);
         throw error;
@@ -170,23 +179,56 @@ function updateExcelMetric(metricName, value, url, device, jsonData, workbook) {
     const row = jsonData.find(row => row.url === url && row.device === device);
     if (row) {
         row[metricName] = value;
-        console.log(`Updated ${metricName} value in JSON for URL: ${url}`);
+        console.log(`Updated ${metricName} value in excel for URL: ${url}`);
         const updatedWorksheet = xlsx.utils.json_to_sheet(jsonData);
         workbook.Sheets['urls'] = updatedWorksheet;
         xlsx.writeFile(workbook, test_data_file);
     } else {
-        console.error(`Row not found in JSON for URL: ${url} and Device: ${device}`);
+        console.error(`Row not found in excel for URL: ${url} and Device: ${device}`);
     }
 }
 
 module.exports = updateExcelMetric;
 
+function validateImagesSize(images_data) {
+    console.log("Validating images size");
+    var first_view_requests = images_data.requests;
+    for (var i = 0; i < first_view_requests.length; i++) {
+        var request = first_view_requests[i];
+        if (request.contentType === "image/svg+xml") {
+            var objectSize = request.objectSize;
+            if (objectSize > 200000) {
+                var failed_image = {
+                    url: request.full_url,
+                    size: objectSize
+                };
+                failedImages.push(failed_image);
+            }
+        }
+    }
+    
+    // Print the details of SVG images that failed validation
+    for (var j = 0; j < failedImages.length; j++) {
+        var failed_image = failedImages[j];
+        console.error("Image size validation failed!!!")
+        console.log("SVG Image URL: " + failed_image.url);
+        console.log("Object Size: " + failed_image.size + " bytes");
+    }
+}
+
+
 function testReport() {
     if (failedTests.length > 0) {
-        console.error("Some test/s failed:", failedTests);
+        console.error("Some test/s score validation failed:", failedTests);
         process.exit(1);
     } else {
-        console.log("All tests passed!");
+        console.log("Scores tests passed!");
+    }
+    if (failedImages.length > 0) {
+        console.error("Some test/s image validation failed:", failedImages);
+        process.exit(1);
+    } else {
+        console.log("Images tests passed!");
     }
 }
 
