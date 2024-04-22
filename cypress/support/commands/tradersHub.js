@@ -508,7 +508,7 @@ Cypress.Commands.add('checkLanguage', (language) => {
   cy.findAllByTestId('dt_icon').eq(0).click()
   cy.findByText(lang).should('be.visible').click()
   cy.wait(1000)
-  cy.c_rateLimit()
+  cy.c_rateLimit({ maxRetries: 6 })
   cy.findByText(langChangeCheck).should('be.visible')
   cy.checkHyperLinks(language)
 })
@@ -538,7 +538,7 @@ Cypress.Commands.add('checkHyperLinks', (language) => {
     cy.c_rateLimit({ maxRetries: 6 })
     validateLink(linkName, expectedUrl, contentCheck)
   })
-  cy.c_rateLimit()
+  cy.c_rateLimit({ maxRetries: 6 })
   clickCompareAccounts(language)
   cy.c_rateLimit({ maxRetries: 6 })
   clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD)
@@ -558,10 +558,10 @@ function clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD) {
   const { getButton, termsConditionLink } = clickText[language]
   if (bviCFD) {
     ;[bviCFD, vanuatuCFD].forEach((term) => {
-      cy.c_rateLimit()
+      cy.c_rateLimit({ maxRetries: 6 })
       cy.findAllByRole('button', { name: getButton }).first().click()
       cy.findByText(term).click()
-      cy.c_rateLimit()
+      cy.c_rateLimit({ maxRetries: 6 })
       cy.findAllByRole('link', { name: termsConditionLink })
         .invoke('attr', 'target', '_self')
         .click()
@@ -572,13 +572,13 @@ function clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD) {
     })
   }
 
-  cy.c_rateLimit()
+  cy.c_rateLimit({ maxRetries: 6 })
   if (bviCFD) {
     ;[bviCFD, vanuatuCFD, labuanCFD].forEach((term) => {
-      cy.c_rateLimit()
+      cy.c_rateLimit({ maxRetries: 6 })
       cy.findAllByRole('button', { name: getButton }).eq(1).click()
       cy.findByText(term).click()
-      cy.c_rateLimit()
+      cy.c_rateLimit({ maxRetries: 6 })
       cy.findAllByRole('link', { name: termsConditionLink })
         .invoke('attr', 'target', '_self')
         .click()
