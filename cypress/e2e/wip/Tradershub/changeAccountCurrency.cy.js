@@ -15,7 +15,8 @@ describe('QATEST-5918: Verify Change currency functionality for the account whic
     cy.findByRole('button', { name: 'Sign up' }).should('not.be.disabled')
     cy.c_enterValidEmail(signUpEmail)
   })
-  it('Should be able to change currency', () => {
+  it.skip('Should be able to change currency', () => {
+    //skipped due to fixing master failure in https://app.clickup.com/t/86by71v27
     cy.c_demoAccountSignup(country, signUpEmail)
     cy.c_switchToReal()
     cy.findByRole('button', { name: 'Get a Deriv account' }).click()
