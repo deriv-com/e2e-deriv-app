@@ -37,11 +37,11 @@ module.exports = defineConfig({
 
           api = new DerivAPI({ connection });
 
-          return null;  // Return null or consider returning a success message
+          return null;
         },
         wsDisconnect() {
           if (connection && connection.readyState === WebSocket.OPEN) {
-            connection.close();  // Close the connection if it is open
+            connection.close();
             console.log('Connection closed successfully');
           } else {
             console.log('Connection is not open or has already been closed');

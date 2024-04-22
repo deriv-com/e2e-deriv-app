@@ -440,15 +440,12 @@ Cypress.Commands.add('c_createRealAccount', () => {
   cy.task('wsConnect')
   cy.task('verifyEmailTask').then((accountEmail) => {
     cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
-  })
-  cy.task('createRealAccountTask').then((realAccountDetails) => {
-    // Assuming realAccountDetails is an array where the first element is email
-    const { email } = realAccountDetails
-
-    // Updating Cypress environment variables with the new email
-    const currentCredentials = Cypress.env('credentials')
-    currentCredentials.test.masterUser.ID = email
-    Cypress.env('credentials', currentCredentials)
+    cy.task('createRealAccountTask').then(() => {
+      // Updating Cypress environment variables with the new email
+      const currentCredentials = Cypress.env('credentials')
+      currentCredentials.test.masterUser.ID = accountEmail
+      Cypress.env('credentials', currentCredentials)
+    })
   })
   cy.task('wsDisconnect')
 })
