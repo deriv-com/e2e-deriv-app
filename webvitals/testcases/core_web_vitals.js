@@ -220,10 +220,11 @@ function testReport() {
     } else {
         console.log("Images tests passed!");
     }
-    if (failedImages.length > 0 || failedTests.length > 0){
+    if (failedImages.length > 0 || failedTests.length > 0) {
         process.exit(1);
     }
-    else{
+    else {
+        console.log("All tests passed!");
         process.exit(0);
     }
 }
