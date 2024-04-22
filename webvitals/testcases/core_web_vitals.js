@@ -60,6 +60,7 @@ async function getTestURLs() {
 
         validateImagesSize(stagingImages.IMAGES_DATA);
 
+        console.log('Test completed for', device, 'on', url);
 
     }
     testReport();
@@ -152,7 +153,6 @@ function compareScores(prodStagingScores, tagStagingScores, device, url) {
     validateMetric('LCP', prodStagingScores.LCP, tagStagingScores.LCP, LCPThreshold, tagStagingScores.FULL_REPORT, url, device);
     validateMetric('CLS', prodStagingScores.CLS, tagStagingScores.CLS, CLSThreshold, tagStagingScores.FULL_REPORT, url, device);
 
-    console.log('Test completed for', device, 'on', url);
 }
 
 
