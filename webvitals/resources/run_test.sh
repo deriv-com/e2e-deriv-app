@@ -4,7 +4,6 @@
 # #     $1:acc email $2:acc password; $3:environemnt; $4:app_id; $5:wpt_key $6:run version for tagging      # #
 
 STAGING_AUTH_TOKEN=`python3 login.py $1 $2 $3 $4`
-echo $1 $3
 if [[ $STAGING_AUTH_TOKEN =~ '?acct1=CR' ]]; then
     echo "Token generation completed"
     echo "Executing test scripts..."
