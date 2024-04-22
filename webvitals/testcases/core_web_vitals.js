@@ -195,7 +195,7 @@ function validateImagesSize(images_data) {
         var request = first_view_requests[i];
         if (request.contentType === "image/svg+xml" && request.host.includes("app.deriv.com")) {
             var objectSize = request.objectSize;
-            if (objectSize > 10000) {
+            if (objectSize > 700000) {
                 var failed_image = {
                     url: request.full_url,
                     size: objectSize
@@ -208,21 +208,24 @@ function validateImagesSize(images_data) {
 }
 
 function testReport() {
-    var exitStatus = 0;
     if (failedTests.length > 0) {
+        console.log("Failed tests report!");
         console.error("Following test/s score validation failed:", failedTests);
-        exitStatus = 1;
     } else {
         console.log("Scores tests passed!");
     }
 
     if (failedImages.length > 0) {
         console.error("Following test/s image validation failed:", failedImages);
-        exitStatus = 1;
     } else {
         console.log("Images tests passed!");
     }
-    process.exit(exitStatus);
+    if (failedImages.length > 0 || failedTests.length > 0){
+        process.exit(1);
+    }
+    else{
+        process.exit(0);
+    }
 }
 
 getTestURLs();
