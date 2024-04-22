@@ -6,9 +6,8 @@ const {
   nameGenerator,
 } = require('./commonJsUtility')
 
-const randomEmail = emailGenerator()
-
 const verifyEmail = async (api) => {
+  const randomEmail = emailGenerator()
   await api.basic.verifyEmail({
     verify_email: randomEmail,
     type: 'account_opening',
@@ -33,7 +32,6 @@ const createAccountVirtual = async (
       new_account_virtual: { oauth_token },
     } = response
     return {
-      email: randomEmail,
       residence: residence,
       oauthToken: oauth_token,
     }
@@ -76,7 +74,6 @@ const createAccountReal = async (
       echo_req: { residence },
     } = response
     return {
-      email: randomEmail,
       clientID: client_id,
       residence: residence,
     }
