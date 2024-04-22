@@ -11,7 +11,9 @@ describe('WALL-2830 - Crypto withdrawal send email', () => {
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccount('BTC')
     cy.findByText('Withdraw').should('be.visible').click()
-    cy.contains('Please help us verify').should('be.visible')
+    cy.findByText('Confirm your identity to make a withdrawal.').should(
+      'be.visible'
+    )
     if (cy.findByRole('button', { name: 'Send email' }).should('be.visible')) {
       cy.findByRole('button', { name: 'Send email' }).click()
     }
