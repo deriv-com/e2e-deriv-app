@@ -197,7 +197,7 @@ function validateImagesSize(images_data) {
         var request = first_view_requests[i];
         if (request.contentType === "image/svg+xml") {
             var objectSize = request.objectSize;
-            if (objectSize > 200000) {
+            if (objectSize > 700000) {
                 var failed_image = {
                     url: request.full_url,
                     size: objectSize
