@@ -225,6 +225,10 @@ function testReport() {
         console.log("Images tests passed!");
     }
 
+    if (exitStatus === 0) {
+        console.log("All tests passed!");
+    }
+
     process.exit(exitStatus);
 }
 
