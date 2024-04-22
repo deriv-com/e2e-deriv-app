@@ -168,7 +168,7 @@ function validateMetric(metricName, productionValue, stagingValue, threshold, st
         }
         else {
             console.error(`Staging has higher ${metricName} score exceeding 3% threshold.`);
-            failedTests.push(`Staging test: ${stageFinalReport} failed for ${metricName} against prod`);
+            failedTests.push(`Staging test: ${stageFinalReport}, ${metricName} validation failed for ${url} against prod`);
         }
     }
 }
@@ -210,14 +210,14 @@ function validateImagesSize(images_data) {
 function testReport() {
     var exitStatus = 0;
     if (failedTests.length > 0) {
-        console.error("Some test/s score validation failed:", failedTests);
+        console.error("Following test/s score validation failed:", failedTests);
         exitStatus = 1;
     } else {
         console.log("Scores tests passed!");
     }
 
     if (failedImages.length > 0) {
-        console.error("Some test/s image validation failed:", failedImages);
+        console.error("Following test/s image validation failed:", failedImages);
         exitStatus = 1;
     } else {
         console.log("Images tests passed!");
