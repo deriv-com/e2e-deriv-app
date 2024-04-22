@@ -31,7 +31,9 @@ describe('WALL-2830 - Fiat withdrawal access iframe from email verification link
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
     cy.findByText('Withdraw').click()
-    cy.findByText(/Please help us verify/).should('be.visible')
+    cy.findByText('Confirm your identity to make a withdrawal.').should(
+      'be.visible'
+    )
     if (cy.findByRole('button', { name: 'Send email' }).should('be.visible')) {
       cy.findByRole('button', { name: 'Send email' })
         .should('be.visible')
