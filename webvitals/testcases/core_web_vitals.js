@@ -51,15 +51,14 @@ async function getTestURLs() {
         if (tagStagingScores.FCP === null || tagStagingScores.LCP === null || tagStagingScores.CLS === null || tagStagingScores.PAGE_FULLY_LOADED === null || tagStagingScores.FULL_REPORT === null) {
             throw new Error('One or more metrics are null in TAG staging run');
         }
-        
+
+        compareScores(prodStagingScores, tagStagingScores, device, url);
+
         const stagingImages = {
             IMAGES_DATA: stagingScores.data.median.firstView,
         }
 
-        compareScores(prodStagingScores, tagStagingScores, device, url);
-
         validateImagesSize(stagingImages.IMAGES_DATA);
-
         console.log('Test completed for', device, 'on', url);
 
     }
@@ -155,7 +154,6 @@ function compareScores(prodStagingScores, tagStagingScores, device, url) {
 
 }
 
-
 function validateMetric(metricName, productionValue, stagingValue, threshold, stageFinalReport, url, device) {
     if (stagingValue <= productionValue) {
         console.log(`Staging ${metricName} score is better than or same as production score.`);
@@ -195,41 +193,36 @@ function validateImagesSize(images_data) {
     var first_view_requests = images_data.requests;
     for (var i = 0; i < first_view_requests.length; i++) {
         var request = first_view_requests[i];
-        if (request.contentType === "image/svg+xml") {
+        if (request.contentType === "image/svg+xml" && request.host.includes("app.deriv.com")) {
             var objectSize = request.objectSize;
-            if (objectSize > 700000) {
+            if (objectSize > 10000) {
                 var failed_image = {
                     url: request.full_url,
                     size: objectSize
                 };
-                failedImages.push(failed_image);
+                console.error(`Image url: ${failed_image.url} size validation failed, exceeding limit of 700 Kb's!`)
+                failedImages.push(`Image url: ${failed_image.url} validation failed, image size is: ${failed_image.size} exceeding limit of 700 Kb's!`);
             }
         }
     }
-    
-    // Print the details of SVG images that failed validation
-    for (var j = 0; j < failedImages.length; j++) {
-        var failed_image = failedImages[j];
-        console.error("Image size validation failed!!!")
-        console.log("SVG Image URL: " + failed_image.url);
-        console.log("Object Size: " + failed_image.size + " bytes");
-    }
 }
 
-
 function testReport() {
+    var exitStatus = 0;
     if (failedTests.length > 0) {
         console.error("Some test/s score validation failed:", failedTests);
-        process.exit(1);
+        exitStatus = 1;
     } else {
         console.log("Scores tests passed!");
     }
+
     if (failedImages.length > 0) {
         console.error("Some test/s image validation failed:", failedImages);
-        process.exit(1);
+        exitStatus = 1;
     } else {
         console.log("Images tests passed!");
     }
+    process.exit(exitStatus);
 }
 
 getTestURLs();
