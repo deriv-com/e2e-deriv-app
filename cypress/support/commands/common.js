@@ -61,11 +61,16 @@ Cypress.Commands.add('c_visitResponsive', (path, size, rateLimit = '') => {
 })
 
 Cypress.Commands.add('c_login', (options = {}) => {
-  const { user = 'masterUser', app = '', backEndProd = false } = options
+  const {
+    user = 'masterUser',
+    app = '',
+    backEndProd = false,
+    rateLimit = '',
+  } = options
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
   })
-  cy.c_visitResponsive('/endpoint', 'large')
+  cy.c_visitResponsive('/endpoint', 'large', rateLimit)
 
   if (app == 'doughflow') {
     Cypress.env('configServer', Cypress.env('doughflowConfigServer'))

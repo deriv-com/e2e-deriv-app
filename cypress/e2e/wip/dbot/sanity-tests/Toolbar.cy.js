@@ -12,7 +12,7 @@ describe('QATEST-99418: Verify toolbar on bot builder page', () => {
   let strategyName = 'Stock_Netherland_25' + Math.random().toString()
 
   beforeEach(() => {
-    cy.c_login({ user: 'dBot' })
+    cy.c_login({ user: 'dBot', rateLimit: 'check' })
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     tradersHub.openBotButton.click()
     cy.c_loadingCheck()
@@ -35,12 +35,5 @@ describe('QATEST-99418: Verify toolbar on bot builder page', () => {
   it('Import strategy from local', () => {
     botBuilder.importStrategyFromToolbar('MartingaleOld')
     common.snackBar.should('have.text', 'You’ve successfully imported a bot.')
-  })
-  after(() => {
-    cy.findByTestId('dt_acc_info').should('be.visible').click()
-    cy.finByText('Log out').click()
-    cy.findAllByRole('heading', {
-      name: 'Trading for anyone. Anywhere',
-    }).should('be.visible')
   })
 })
