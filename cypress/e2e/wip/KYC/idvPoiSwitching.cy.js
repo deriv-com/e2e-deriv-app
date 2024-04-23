@@ -30,22 +30,7 @@ describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients
     cy.reload()
 
     // Onfido flow
-    cy.get('select[name="country_input"]').select('Colombia')
-    cy.contains('button', 'Next').click()
-    cy.get('.dc-checkbox__box').click()
-    cy.findByText('Choose document').should('be.visible')
-    cy.findByText('Passport').click()
-    cy.findByText('or upload photo – no scans or photocopies').click()
-    cy.findByTestId('date_of_birth').type('2000-09-20')
-    cy.get('input[type=file]').selectFile(
-      'cypress/fixtures/kyc/testDocument.jpg',
-      { force: true }
-    )
-    cy.findByText('Confirm').click()
-    cy.findByText('Continue').click()
-    cy.findByText('Take a selfie').should('be.visible')
-    cy.get('.onfido-sdk-ui-Camera-btn').click()
-    cy.findByText('Confirm').click()
+    cy.c_onfidoSecondRun()
     cy.findByText('Your documents were submitted successfully').should(
       'be.visible'
     )
