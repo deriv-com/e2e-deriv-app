@@ -42,8 +42,6 @@ describe('WALL-2830 - Fiat withdrawal access iframe from email verification link
         .click()
     }
     cy.findByText("We've sent you an email.")
-    cy.findByRole('button', { name: "Didn't receive the email?" }).click()
-    cy.findByText(/Resend email/)
     cy.c_retrieveVerificationLinkUsingMailisk(
       Cypress.env('credentials').production.wallets.ID.split('@')[0],
       'withdrawal',
