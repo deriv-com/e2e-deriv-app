@@ -10,5 +10,10 @@ describe('Test API account creation and Login', () => {
 
   it('should set the oauth url after successful account creation and login', () => {
     cy.log('<E2EOAuthUrl - Test >' + Cypress.env('oAuthUrl'))
+    cy.log(
+      'Login: ' +
+        Cypress.env('credentials').test.masterUser.ID +
+        ' was created successfully'
+    )
   })
 })
