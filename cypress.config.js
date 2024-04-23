@@ -40,7 +40,7 @@ module.exports = defineConfig({
           return null;
         },
         wsDisconnect() {
-          if (connection && connection.readyState === WebSocket.OPEN) {
+          if (connection?.readyState === WebSocket.OPEN) {
             connection.close();
             console.log('Connection closed successfully');
           } else {
