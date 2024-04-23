@@ -24,7 +24,7 @@ module.exports = defineConfig({
       on('task', {
         wsConnect() {
           // Check if there is an existing connection and close it if open
-          if (connection && connection.readyState === WebSocket.OPEN) {
+          if(connection?.readyState === WebSocket.OPEN) {
             connection.close();
             console.log('Previous connection closed');
           }
