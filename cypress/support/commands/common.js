@@ -437,20 +437,15 @@ Cypress.Commands.add('c_loadingCheck', () => {
 
 Cypress.Commands.add('c_createRealAccount', () => {
   // Call Verify Email and then set the Verification code in env
-  try {
-    cy.task('wsConnect')
-    cy.task('verifyEmailTask').then((accountEmail) => {
-      cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
-      cy.task('createRealAccountTask').then(() => {
-        // Updating Cypress environment variables with the new email
-        const currentCredentials = Cypress.env('credentials')
-        currentCredentials.test.masterUser.ID = accountEmail
-        Cypress.env('credentials', currentCredentials)
-      })
+  cy.task('wsConnect')
+  cy.task('verifyEmailTask').then((accountEmail) => {
+    cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
+    cy.task('createRealAccountTask').then(() => {
+      // Updating Cypress environment variables with the new email
+      const currentCredentials = Cypress.env('credentials')
+      currentCredentials.test.masterUser.ID = accountEmail
+      Cypress.env('credentials', currentCredentials)
     })
-  } catch (e) {
-    console.error('An error occurred during the account creation process:', e)
-  } finally {
-    cy.task('wsDisconnect')
-  }
+  })
+  cy.task('wsDisconnect')
 })
