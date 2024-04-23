@@ -1,11 +1,26 @@
-Cypress.Commands.add('c_checkTradersHubHomePage', () => {
-  cy.findByText('Options & Multipliers').should('be.visible')
-  cy.findByText('CFDs').should('be.visible')
-  cy.findAllByText('Deriv cTrader')
-    .eq(0)
-    .scrollIntoView({ position: 'bottom' })
-    .should('be.visible')
-  cy.findByText('Other CFD Platforms').scrollIntoView({ position: 'bottom' })
+Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
+  if (isMobile) {
+    cy.findByRole('button', { name: 'Options & Multipliers' }).should(
+      'be.visible'
+    )
+    cy.findByRole('button', { name: 'CFDs' }).click()
+    cy.findAllByText('Deriv cTrader')
+      .first()
+      .scrollIntoView({ position: 'bottom' })
+      .should('be.visible')
+    cy.findByText('Other CFD Platforms').scrollIntoView({ position: 'bottom' })
+  } else {
+    cy.findByText('Options & Multipliers').should('be.visible')
+    cy.findByText('CFDs').should('be.visible')
+    cy.findAllByText('Deriv cTrader')
+      .first()
+      .scrollIntoView({ position: 'bottom' })
+      .should('be.visible')
+    cy.findByText('Other CFD Platforms').scrollIntoView({
+      position: 'bottom',
+    })
+    cy.findByText('Options & Multipliers').click()
+  }
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
 })
 
@@ -268,34 +283,40 @@ Cypress.Commands.add('c_addAccountMF', (type) => {
   cy.findByRole('button', { name: 'OK' }).click()
 })
 
-Cypress.Commands.add('c_demoAccountSignup', (country, accountEmail) => {
-  cy.c_emailVerification('account_opening_new.html', accountEmail)
-  cy.then(() => {
-    cy.c_visitResponsive(Cypress.env('verificationUrl'), 'desktop').then(() => {
-      cy.window().then((win) => {
-        win.localStorage.setItem(
-          'config.server_url',
-          Cypress.env('stdConfigServer')
-        )
-        win.localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
+Cypress.Commands.add(
+  'c_demoAccountSignup',
+  (country, accountEmail, size = 'desktop') => {
+    cy.c_emailVerification('account_opening_new.html', accountEmail)
+    cy.then(() => {
+      cy.c_visitResponsive(Cypress.env('verificationUrl'), size).then(() => {
+        cy.window().then((win) => {
+          win.localStorage.setItem(
+            'config.server_url',
+            Cypress.env('stdConfigServer')
+          )
+          win.localStorage.setItem(
+            'config.app_id',
+            Cypress.env('stdConfigAppId')
+          )
+        })
       })
+      cy.c_visitResponsive(Cypress.env('verificationUrl'), size)
+      cy.get('h1').contains('Select your country and').should('be.visible')
+      cy.c_selectCountryOfResidence(country)
+      cy.c_selectCitizenship(country)
+      cy.c_enterPassword()
+      if (country !== Cypress.env('countries').ES) {
+        cy.c_completeOnboarding()
+      }
     })
-    cy.c_visitResponsive(Cypress.env('verificationUrl'), 'desktop')
-    cy.get('h1').contains('Select your country and').should('be.visible')
-    cy.c_selectCountryOfResidence(country)
-    cy.c_selectCitizenship(country)
-    cy.c_enterPassword()
-    if (country !== Cypress.env('countries').ES) {
-      cy.c_completeOnboarding()
-    }
-  })
-})
+  }
+)
 
-Cypress.Commands.add('c_setEndpoint', (signUpMail) => {
+Cypress.Commands.add('c_setEndpoint', (signUpMail, size = 'desktop') => {
   localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
   localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
   const mainURL = Cypress.config('baseUrl')
-  cy.c_visitResponsive(mainURL + 'endpoint', 'desktop')
+  cy.c_visitResponsive(mainURL + 'endpoint', size)
   cy.findByRole('button', { name: 'Sign up' }).should('not.be.disabled')
   cy.c_enterValidEmail(signUpMail)
 })
