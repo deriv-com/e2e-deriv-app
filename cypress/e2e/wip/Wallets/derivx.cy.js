@@ -49,7 +49,7 @@ function expandDemoWallet() {
 
 describe('WALL-3252 - Add derivx account', () => {
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ app: 'wallets', user: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')
   })
 

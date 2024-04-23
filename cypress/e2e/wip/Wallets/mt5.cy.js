@@ -77,7 +77,7 @@ function closeModal() {
 }
 describe('WALL-2000 - Create MT5 account', () => {
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ app: 'wallets', user: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')
   })
 

@@ -2,7 +2,7 @@ import '@testing-library/cypress/add-commands'
 
 describe('WALL-2830 - Crypto withdrawal send email', () => {
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ app: 'wallets', user: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')
   })
 

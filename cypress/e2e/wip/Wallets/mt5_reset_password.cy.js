@@ -51,7 +51,7 @@ function changeMT5Password() {
 }
 describe('WALL-3255 - Reset MT5 password', () => {
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ app: 'wallets', user: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')
   })
 
