@@ -13,7 +13,7 @@ describe('QATEST-715 - Load crypto deposit page', () => {
       'Litecoin',
       'Tether ERC20',
       'USD Coin',
-      //'Tether TRC20',
+      'Tether TRC20',
     ]
     cryptocurrencies.forEach((crypto) => {
       cy.findByText('Options & Multipliers').should('be.visible')
