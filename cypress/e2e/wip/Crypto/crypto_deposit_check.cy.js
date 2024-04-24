@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
 
-describe('QATEST-707 - Create crypto account', () => {
+describe('QATEST-715 - Load crypto deposit page', () => {
   beforeEach(() => {
     cy.c_login({ user: 'allcrypto' })
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
@@ -27,8 +27,8 @@ describe('QATEST-707 - Create crypto account', () => {
       cy.findByRole('button', { name: 'Deposit' }).click()
 
       // To check for QR code and compare with the code generated
-      cy.xpath('//canvas[contains(@class,"qrcode")]').should('be.visible') // assert that the QR code element exists
-      cy.xpath('//canvas[contains(@class,"qrcode")]').then(($canvas) => {
+      cy.get("canvas[class*='qrcode']").should('be.visible') // assert that the QR code element exists
+      cy.get("canvas[class*='qrcode']").then(($canvas) => {
         // Get the image data from the canvas
         const imageData = $canvas[0]
           .getContext('2d')
