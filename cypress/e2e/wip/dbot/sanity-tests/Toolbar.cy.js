@@ -12,8 +12,8 @@ describe('QATEST-99418: Verify toolbar on bot builder page', () => {
   let strategyName = 'Stock_Netherland_25' + Math.random().toString()
 
   beforeEach(() => {
-    cy.c_login({ user: 'dBot', rateLimit: 'check' })
-    cy.c_visitResponsive('/appstore/traders-hub', 'large')
+    cy.c_login({ user: 'dBot' })
+    cy.c_visitResponsive('/appstore/traders-hub', 'large', 'check')
     tradersHub.openBotButton.click()
     cy.c_loadingCheck()
     common.skipTour()
@@ -25,7 +25,6 @@ describe('QATEST-99418: Verify toolbar on bot builder page', () => {
   it('Save a strategy to local', () => {
     botBuilder.changeMarketOnBlocklyWorkspace(1, 'Stock Indices')
     botBuilder.changeMarketOnBlocklyWorkspace(2, 'European indices')
-    botBuilder.changeMarketOnBlocklyWorkspace(3, 'Netherlands 25')
     botBuilder.saveStrategyFromToolbar(strategyName)
     cy.wait(5000)
     botDashboard.goToDashboard()
