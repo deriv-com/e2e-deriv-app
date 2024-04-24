@@ -17,12 +17,15 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       on('before:browser:launch', (browser = {}, launchOptions) => {
         if (browser.family === 'chromium') {
-          launchOptions.args.push('--use-fake-ui-for-media-stream')
-          launchOptions.args.push('--use-fake-device-for-media-stream')
-          launchOptions.args.push('--use-file-for-fake-video-capture=cypress/fixtures/kyc/pass_1.y4m')
-        }
-        
-        return launchOptions
+          // Apply flags specific to Chromium browsers
+          launchOptions.args.push('--use-fake-ui-for-media-stream');
+          launchOptions.args.push('--use-fake-device-for-media-stream');
+          launchOptions.args.push('--use-file-for-fake-video-capture=cypress/fixtures/kyc/fakeVideo.y4m');
+      } else {
+          // Log or handle other browsers (not applying these specific flags)
+          console.log(`No Chromium-specific flags added for ${browser.name}`);
+      }
+      return launchOptions;
       })
     },
     baseUrl: "https://staging-app.deriv.com",

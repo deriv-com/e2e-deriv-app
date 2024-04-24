@@ -499,3 +499,45 @@ Cypress.Commands.add('c_waitUntilElementIsFound', (options = {}) => {
     }
   }
 })
+Cypress.Commands.add('c_waitUntilElementIsFoundV2', (options = {}) => {
+  const {
+    cyLocator,
+    locator,
+    text,
+    retry = 0,
+    maxRetries = 3,
+    timeout = 500,
+  } = options
+  let found = false
+  if (locator) {
+    cy.document().then((doc) => {
+      const elements = doc.querySelectorAll(locator)
+      for (const element of elements) {
+        if (element.textContent.trim() === text) {
+          recurse(element)
+        }
+      }
+    })
+  } else {
+    cyLocator()
+      .should((_) => {})
+      .then(($el) => {
+        recurse($el.length)
+      })
+  }
+
+  const recurse = (el) => {
+    if (el) {
+      cy.log(`Element found in attempt number ${retry}!`)
+      found = true
+      return
+    } else if (!el && retry < maxRetries && !found) {
+      cy.log(`Retrying... Attempt number: ${retry + 1}`)
+      cy.wait(timeout)
+      cy.reload()
+      cy.c_waitUntilElementIsFound({ ...options, retry: retry + 1 })
+    } else {
+      throw new Error(`Element not found after ${maxRetries} attempt(s)!`)
+    }
+  }
+})
