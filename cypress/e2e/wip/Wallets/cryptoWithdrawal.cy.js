@@ -33,7 +33,7 @@ describe('WALL-2830 - Crypto withdrawal content access from email', () => {
     cy.findByText('Withdraw').should('be.visible').click()
   })
 
-  it('should be able to access crypto withdrawal content and perform withdrawal', () => {
+  it.only('should be able to access crypto withdrawal content and perform withdrawal', () => {
     cy.log('Access Crypto Withdrawal Content Through Email Link')
     cy.c_emailVerification(
       'request_payment_withdraw.html',
@@ -49,7 +49,21 @@ describe('WALL-2830 - Crypto withdrawal content access from email', () => {
       cy.contains('Your Bitcoin cryptocurrency wallet address').click().type(
         '1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71' //Example bitcoin wallet address
       )
-      cy.contains('Amount (BTC)').click().type('0.005')
+      cy.contains('Amount (BTC)').click().type('0.00005')
+      if (cy.contains('The current allowed withdraw amount is')) {
+        cy.get('.wallets-textfield__message-container')
+          .invoke('text')
+          .then((text) => {
+            var fullText = text
+            var pattern = /[0-9]+/g
+            var number = fullText.match(pattern)
+            console.log(number)
+            cy.findByTestId('dt_withdrawal_crypto_amount_input').click().clear()
+            cy.findByTestId('dt_withdrawal_crypto_amount_input')
+              .click()
+              .type(number[1])
+          })
+      }
       cy.get('form').findByRole('button', { name: 'Withdraw' }).click()
       cy.get('#modal_root, .modal-root', { timeout: 10000 }).then(() => {
         if (cy.get('.wallets-button__loader')) {
