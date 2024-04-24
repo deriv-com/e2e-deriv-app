@@ -371,6 +371,50 @@ Cypress.Commands.add(
 )
 
 Cypress.Commands.add(
+  'c_emailVerificationV2',
+  (requestType, accountEmail, options = {}) => {
+    const { baseUrl = Cypress.env('configServer') + '/events' } = options
+    cy.visit(
+      `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
+        'qaBoxLoginPassword'
+      )}@${baseUrl}`
+    )
+    const sentArgs = { requestType, accountEmail }
+    cy.document().then((doc) => {
+      let verification_code
+      const allRelatedEmails = Array.from(
+        doc.querySelectorAll(`a[href*="${requestType}"]`)
+      )
+      if (allRelatedEmails.length) {
+        const verificationEmail = allRelatedEmails.pop()
+        cy.wrap(verificationEmail).click()
+        cy.get('table').last().as('lastTable')
+        cy.get('@lastTable')
+          .contains('p', `${accountEmail}`)
+          .should('be.visible')
+          .parent()
+          .children()
+          .contains('a', Cypress.config('baseUrl'))
+          .invoke('attr', 'href')
+          .then((href) => {
+            if (href) {
+              Cypress.env('verificationUrl', href)
+              const code = href.match(/code=([A-Za-z0-9]{8})/)
+              verification_code = code[1]
+              cy.task('setVerificationCode', verification_code)
+              cy.log('Verification link found')
+            } else {
+              cy.log('Verification link not found')
+            }
+          })
+      } else {
+        cy.log('email not found')
+      }
+    })
+  }
+)
+
+Cypress.Commands.add(
   'c_retrieveVerificationLinkUsingMailisk',
   (account, subject, timestamp) => {
     cy.mailiskSearchInbox(Cypress.env('mailiskNamespace'), {
@@ -392,18 +436,23 @@ Cypress.Commands.add('c_loadingCheck', () => {
 })
 
 Cypress.Commands.add('c_createRealAccount', () => {
-  cy.task('createRealAccountTask').then((realAccountDetails) => {
-    // Assuming realAccountDetails is an array where the first element is email
-    const [email] = realAccountDetails
-    cy.wrap(realAccountDetails).as('realAccountDetails') // Wrap and alias for later use
-
-    cy.log(email) // Logging the email for debugging
-
-    // Updating Cypress environment variables with the new email
-    const currentCredentials = Cypress.env('credentials')
-    currentCredentials.test.masterUser.ID = email
-    Cypress.env('credentials', currentCredentials)
-  })
+  // Call Verify Email and then set the Verification code in env
+  try {
+    cy.task('wsConnect')
+    cy.task('verifyEmailTask').then((accountEmail) => {
+      cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
+      cy.task('createRealAccountTask').then(() => {
+        // Updating Cypress environment variables with the new email
+        const currentCredentials = Cypress.env('credentials')
+        currentCredentials.test.masterUser.ID = accountEmail
+        Cypress.env('credentials', currentCredentials)
+      })
+    })
+  } catch (e) {
+    console.error('An error occurred during the account creation process:', e)
+  } finally {
+    cy.task('wsDisconnect')
+  }
 })
 
 Cypress.Commands.add('c_closeModal', () => {
