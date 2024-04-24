@@ -20,7 +20,7 @@ screenSizes.forEach((screenSize) => {
   describe(`QATEST-20036 - Transfer: Enter USD amount when Transfer Fiat to Crypto in screen size: ${screenSize}`, () => {
     beforeEach(() => {
       cy.clearAllSessionStorage()
-      cy.c_login({ user: 'cashierLegacy', rateLimit: 'check' })
+      cy.c_login({ user: 'cashierLegacy', checkRateLimit: true })
       cy.c_visitResponsive('appstore/traders-hub', screenSize, {
         rateLimitCheck: true,
       })

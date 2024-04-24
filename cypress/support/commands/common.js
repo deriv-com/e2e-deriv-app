@@ -70,12 +70,12 @@ Cypress.Commands.add('c_login', (options = {}) => {
     user = 'masterUser',
     app = '',
     backEndProd = false,
-    rateLimitCheck = false,
+    checkRateLimit = false,
   } = options
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
   })
-  cy.c_visitResponsive('/endpoint', 'large', rateLimitCheck)
+  cy.c_visitResponsive('/endpoint', 'large', { rateLimitCheck: checkRateLimit })
 
   if (app == 'doughflow') {
     Cypress.env('configServer', Cypress.env('doughflowConfigServer'))
