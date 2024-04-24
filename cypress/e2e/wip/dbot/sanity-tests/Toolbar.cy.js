@@ -13,7 +13,7 @@ describe('QATEST-99418: Verify toolbar on bot builder page', () => {
 
   beforeEach(() => {
     cy.c_login({ user: 'dBot' })
-    cy.c_visitResponsive('/appstore/traders-hub', 'large', 'check')
+    cy.c_visitResponsive('/appstore/traders-hub', 'large')
     tradersHub.openBotButton.click()
     cy.c_loadingCheck()
     common.skipTour()
