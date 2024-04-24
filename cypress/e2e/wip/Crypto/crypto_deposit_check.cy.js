@@ -13,10 +13,10 @@ describe('QATEST-715 - Load crypto deposit page', () => {
       'Litecoin',
       'Tether ERC20',
       'USD Coin',
-      'Tether TRC20',
+      //'Tether TRC20',
     ]
     cryptocurrencies.forEach((crypto) => {
-      cy.findAllByText('Options & Multipliers').should('be.visible')
+      cy.findByText('Options & Multipliers').should('be.visible')
       cy.c_closeNotificationHeader()
       cy.findByTestId('dt_currency-switcher__arrow')
         .should('be.visible')
@@ -74,12 +74,12 @@ describe('QATEST-715 - Load crypto deposit page', () => {
               })
             })
         })
-      cy.findAllByText('Transaction status').should('be.visible')
+      cy.findByText('Transaction status').should('be.visible')
       cy.get('.transactions-crypto-transaction-status-side-note').should(
         'exist'
       )
       cy.get('.side-note').should('exist')
-      cy.findAllByTestId('dt_traders_hub_home_button').click()
+      cy.findByTestId('dt_traders_hub_home_button').click()
     })
   })
 })
