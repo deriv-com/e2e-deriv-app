@@ -405,20 +405,38 @@ Cypress.Commands.add('c_getCurrencyBalance', (currency, options = {}) => {
  *  code: "USD"
  * }
  */
-Cypress.Commands.add('c_createNewCurrencyAccount', (currency) => {
+Cypress.Commands.add('c_createNewCurrencyAccount', (currency, options = {}) => {
+  const { size = 'large' } = options
   cy.log(`Creating ${currency.name} account`)
   cy.get('.dc-modal').within(() => {
     cy.findByRole('button', { name: 'Add or manage account' }).click()
-    cy.findByRole('heading', {
-      name: 'Choose your preferred cryptocurrency',
-    }).should('exist')
-    cy.findByText(currency.name).click()
-    cy.findByRole('button', { name: 'Add account' }).click()
-    cy.findByText('Success!').should('exist')
-    cy.findByText(`You have added a ${currency.code} account.`).should(
-      'be.visible'
-    )
-    cy.findByRole('button', { name: 'Maybe later' }).click()
+    if (size == 'small') {
+      cy.get('form', { withinSubject: null }).within(() => {
+        cy.findByText('Choose your preferred cryptocurrency').should(
+          'be.visible'
+        )
+        cy.findByText(currency.name).click()
+        cy.findByRole('button', { name: 'Add account' }).click()
+        cy.get('body', { withinSubject: null }).within(() => {
+          cy.findByText('Success!').should('exist')
+          cy.findByText(`You have added a ${currency.code} account.`).should(
+            'be.visible'
+          )
+          cy.findByRole('button', { name: 'Maybe later' }).click()
+        })
+      })
+    } else {
+      cy.findByRole('heading', {
+        name: 'Choose your preferred cryptocurrency',
+      }).should('exist')
+      cy.findByText(currency.name).click()
+      cy.findByRole('button', { name: 'Add account' }).click()
+      cy.findByText('Success!').should('exist')
+      cy.findByText(`You have added a ${currency.code} account.`).should(
+        'be.visible'
+      )
+      cy.findByRole('button', { name: 'Maybe later' }).click()
+    }
   })
 })
 

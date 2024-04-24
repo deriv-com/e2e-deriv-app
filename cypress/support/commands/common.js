@@ -20,7 +20,8 @@ const setLoginUser = (user = 'masterUser', options = {}) => {
   }
 }
 
-Cypress.Commands.add('c_visitResponsive', (path, size, rateLimit = '') => {
+Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
+  const { rateLimitCheck = false } = options
   //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
   cy.log(path)
   if (size === undefined) size = Cypress.env('viewPortSize')
@@ -30,12 +31,16 @@ Cypress.Commands.add('c_visitResponsive', (path, size, rateLimit = '') => {
   else cy.viewport('macbook-16')
 
   cy.visit(path)
-  if (rateLimit == 'check') {
+  if (rateLimitCheck == true) {
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
       maxRetries: 5,
     })
-    cy.visit(path)
+    cy.then(() => {
+      if (sessionStorage.getItem('c_rateLimitOnVisitOccured') == 'true') {
+        cy.visit(path)
+      }
+    })
   }
 
   if (path.includes('region')) {
@@ -61,11 +66,16 @@ Cypress.Commands.add('c_visitResponsive', (path, size, rateLimit = '') => {
 })
 
 Cypress.Commands.add('c_login', (options = {}) => {
-  const { user = 'masterUser', app = '', backEndProd = false } = options
+  const {
+    user = 'masterUser',
+    app = '',
+    backEndProd = false,
+    rateLimitCheck = false,
+  } = options
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
   })
-  cy.c_visitResponsive('/endpoint', 'large')
+  cy.c_visitResponsive('/endpoint', 'large', rateLimitCheck)
 
   if (app == 'doughflow') {
     Cypress.env('configServer', Cypress.env('doughflowConfigServer'))
@@ -216,6 +226,7 @@ Cypress.Commands.add('c_rateLimit', (options = {}) => {
             cy.log(
               `Rate limit detected, waiting for ${waitTimeAfterError / 1000}s before retrying...`
             )
+            sessionStorage.setItem('c_rateLimitOnVisitOccured', true)
             cy.wait(waitTimeAfterError, { log: false })
             cy.get('div[class="unhandled-error"]').within(() => {
               cy.get('button[type="submit"]', { log: false }).click({
@@ -498,4 +509,44 @@ Cypress.Commands.add('c_waitUntilElementIsFound', (options = {}) => {
       throw new Error(`Element not found after ${maxRetries} attempt(s)!`)
     }
   }
+})
+
+Cypress.Commands.add('c_getCurrentExchangeRate', (fromCurrency, toCurrency) => {
+  cy.request({
+    url: `https://api.coinbase.com/v2/exchange-rates?currency=${fromCurrency}`,
+  }).then((response) => {
+    const responseBody = response.body
+    expect(response.status).to.be.eq(200)
+    expect(responseBody.data.currency).to.be.eql(fromCurrency)
+    let exchangeRate = responseBody.data.rates[toCurrency]
+    sessionStorage.setItem(
+      `c_conversionRate${fromCurrency}To${toCurrency}`,
+      exchangeRate
+    )
+  })
+})
+
+Cypress.Commands.add('c_closeNotificationHeader', () => {
+  cy.document().then((doc) => {
+    let notification = doc.querySelector('.notification__header')
+    if (notification) {
+      cy.log('Notification header appeared')
+      cy.get('.notification__text-body')
+        .invoke('text')
+        .then((text) => {
+          cy.log(text)
+        })
+      cy.findAllByRole('button', { name: 'Close' })
+        .first()
+        .should('be.visible')
+        .click()
+        .and('not.exist')
+      notification = null
+      cy.then(() => {
+        cy.c_closeNotificationHeader()
+      })
+    } else {
+      cy.log('Notification header did not appear')
+    }
+  })
 })
