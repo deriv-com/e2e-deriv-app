@@ -49,7 +49,7 @@ describe('WALL-2830 - Crypto withdrawal content access from email', () => {
       cy.contains('Your Bitcoin cryptocurrency wallet address').click().type(
         '1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71' //Example bitcoin wallet address
       )
-      cy.contains('Amount (BTC)').click().type('0.00005')
+      cy.contains('Amount (BTC)').click().type('0.005')
       if (cy.contains('The current allowed withdraw amount is')) {
         cy.get('.wallets-textfield__message-container')
           .invoke('text')
