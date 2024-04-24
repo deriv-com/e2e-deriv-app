@@ -49,8 +49,9 @@ describe('WALL-2830 - Crypto withdrawal content access from email', () => {
       cy.contains('Your Bitcoin cryptocurrency wallet address').click().type(
         '1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71' //Example bitcoin wallet address
       )
-      cy.contains('Amount (BTC)').click().type('0.005')
-      if (cy.contains('The current allowed withdraw amount is')) {
+      cy.contains('Amount (BTC)').click().type('0.00005')
+      if (cy.get('.wallets-textfield__message-container')) {
+        cy.log('textttttt')
         cy.get('.wallets-textfield__message-container')
           .invoke('text')
           .then((text) => {
@@ -61,7 +62,7 @@ describe('WALL-2830 - Crypto withdrawal content access from email', () => {
             cy.findByTestId('dt_withdrawal_crypto_amount_input').click().clear()
             cy.findByTestId('dt_withdrawal_crypto_amount_input')
               .click()
-              .type(number[1])
+              .type('0.' + number[1])
           })
       }
       cy.get('form').findByRole('button', { name: 'Withdraw' }).click()
