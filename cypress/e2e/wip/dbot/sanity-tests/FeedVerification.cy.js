@@ -2,7 +2,6 @@ import charts from '../pageobjects/charts'
 import '@testing-library/cypress/add-commands'
 import TradersHub from '../pageobjects/traders_hub'
 import Common from '../pageobjects/common'
-import { createAccountVirtual } from '../../../../support/helper/accountCreationUtility'
 
 describe('QATEST-99340: Verify feed is loading on charts tab', () => {
   const tradersHub = new TradersHub()
