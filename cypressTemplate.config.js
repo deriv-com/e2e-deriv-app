@@ -7,7 +7,7 @@ module.exports = defineConfig({
   e2e: {
     projectId: 'rjvf4u',
     setupNodeEvents(on, config) {},
-    baseUrl: 'https://staging-app.deriv.com',
+    baseUrl: 'https://staging-app.deriv.com/',
     defaultCommandTimeout: 15000,
     supportFile: "cypress_template/support/e2e.js",
     specPattern: "cypress_template/e2e/**/*.js",
