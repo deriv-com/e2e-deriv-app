@@ -231,11 +231,10 @@ Cypress.Commands.add('c_postAd', () => {
 })
 
 Cypress.Commands.add('c_removeExistingAds', (adType) => {
-  cy.get('.my-ads-table__row')
-    .trigger('touchstart', 'right', { timeout: 1000 })
-    .trigger('touchmove', 'left')
-    .trigger('touchend')
-  cy.get('.my-ads-table__popovers-delete>svg').click({ force: true })
+  cy.get('.my-ads-table__row .dc-dropdown-container')
+    .should('be.visible')
+    .click()
+  cy.findByText('Delete').parent().click()
   cy.findByText('Do you want to delete this ad?').should('be.visible')
   cy.findByText('You will NOT be able to restore it.').should('be.visible')
   cy.findByRole('button', { name: 'Delete' })

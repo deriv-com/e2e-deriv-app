@@ -1,7 +1,14 @@
 require("dotenv").config()
 const { defineConfig } = require("cypress")
-const {createAccountReal, createAccountVirtual} = require('./cypress/support/helper/accountCreationUtility');
+const {createAccountReal, createAccountVirtual, verifyEmail} = require('./cypress/support/helper/accountCreationUtility');
 
+const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI')
+const WebSocket = require('ws');
+
+const appId = process.env.E2E_STD_CONFIG_APPID
+const websocketURL = `wss://${process.env.E2E_STD_CONFIG_SERVER}/websockets/v3`
+let connection;
+let api;
 //const gViewPortSize = {small: 'phone-xr', large: 'macbook-16'} //TODO Use enum
  
 module.exports = defineConfig({
@@ -25,9 +32,39 @@ module.exports = defineConfig({
     chromeWebSecurity: false,
     setupNodeEvents(on, config) {
       on('task', {
+        wsConnect() {
+          // Check if there is an existing connection and close it if open
+          if(connection?.readyState === WebSocket.OPEN) {
+            connection.close();
+            console.log('Previous connection closed');
+          }
+          // Establish a new connection
+          connection = new WebSocket(
+            `${websocketURL}?l=EN&app_id=${appId}&brand=deriv`
+          );
+          connection.onopen = () => console.log('Connection opened successfully');
+          connection.onerror = error => console.error('Connection error:', error);
+
+          api = new DerivAPI({ connection });
+
+          return null;
+        },
+        wsDisconnect() {
+          if (connection?.readyState === WebSocket.OPEN) {
+            connection.close();
+            console.log('Connection closed successfully');
+          } else {
+            console.log('Connection is not open or has already been closed');
+          }
+          // Reset connection and api to ensure clean state
+          connection = null;
+          api = null;
+        
+          return null;
+        },
         async createRealAccountTask() {
           try {
-            const realAccountDetails = await createAccountReal();
+            const realAccountDetails = await createAccountReal(api);
             return realAccountDetails;
           } catch (error) {
             console.error('Error creating account:', error);
@@ -36,13 +73,26 @@ module.exports = defineConfig({
         },
         async createVirtualAccountTask() {
           try {
-              const virtualAccountDetails = await createAccountVirtual();
+              const virtualAccountDetails = await createAccountVirtual(api);
               return virtualAccountDetails;
           } catch (error) {
               console.error('Error creating virtual account:', error);
               throw error;
           }
       },
+        async verifyEmailTask() {
+        try {
+          const accountEmail = await verifyEmail(api);
+          return accountEmail;
+        } catch (error) {
+          console.error('Error verifying email:', error);
+          throw error;
+      }
+      },
+      setVerificationCode: (verificationCode) => {
+        process.env.E2E_EMAIL_VERIFICATION_CODE = verificationCode;
+        return null;
+      }
       });
 
       return config;  // Return the config object is important for custom configurations to take effect
@@ -72,19 +122,19 @@ module.exports = defineConfig({
       },
       p2pStandardAccountWithAds: {
         ID: process.env.E2E_LOGIN_ID_P2P_STANDARDACCOUNTWITHADS,
-        PSWD: process.env.E2E_PSWD_P2P
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       p2pStandardAccountWithoutAds: {
         ID: process.env.E2E_LOGIN_ID_P2P_STANDARDACCOUNTWITHOUTADS,
-        PSWD: process.env.E2E_PSWD_P2P
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       p2pFixedRate: {
         ID: process.env.E2E_LOGIN_ID_P2P_FIXEDRATE,
-        PSWD: process.env.E2E_PSWD_P2P
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       p2pFloating: {
         ID: process.env.E2E_P2P_FLOATING,
-        PSWD: process.env.E2E_PSWD_P2P
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       diel: {
         ID: process.env.E2E_DIEL_LOGIN,
