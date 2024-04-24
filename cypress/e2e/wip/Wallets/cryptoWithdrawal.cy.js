@@ -33,7 +33,7 @@ describe('WALL-2830 - Crypto withdrawal content access from email', () => {
     cy.findByText('Withdraw').should('be.visible').click()
   })
 
-  it.only('should be able to access crypto withdrawal content and perform withdrawal', () => {
+  it('should be able to access crypto withdrawal content and perform withdrawal', () => {
     cy.log('Access Crypto Withdrawal Content Through Email Link')
     cy.c_emailVerification(
       'request_payment_withdraw.html',
