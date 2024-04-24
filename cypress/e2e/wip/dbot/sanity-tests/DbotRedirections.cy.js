@@ -7,7 +7,7 @@ describe('QATEST-136582: Redirection to other pages from dbot', () => {
   const common = new Common()
   beforeEach(() => {
     cy.c_login({ user: 'dBot' })
-    cy.c_visitResponsive('/appstore/traders-hub', 'large', 'check')
+    cy.c_visitResponsive('/appstore/traders-hub', 'large')
     tradersHub.openBotButton.click()
     common.skipTour()
   })
@@ -18,12 +18,10 @@ describe('QATEST-136582: Redirection to other pages from dbot', () => {
     cy.findByText('Deposit via bank wire, credit card, and e-wallet').should(
       'be.visible'
     )
-    cy.c_rateLimit()
   })
 
   it('Switching from Dbot to Dtrader', () => {
     cy.findByTestId('dt_platform_switcher').click()
-    cy.c_rateLimit()
     cy.findByTestId('dt_div_100_vh').should('be.visible')
     cy.findByText(
       'A whole new trading experience on a powerful yet easy to use platform.'
