@@ -9,9 +9,13 @@ describe('QATEST-99340: Verify feed is loading on charts tab', () => {
   const common = new Common()
 
   beforeEach(() => {
-    cy.c_visitResponsive('/')
-    cy.c_createRealAccount()
-    cy.c_login()
+    if (Cypress.config().baseUrl === Cypress.env('prodURL')) {
+      cy.c_login({ user: 'dBot' }, 'check')
+    } else {
+      cy.c_visitResponsive('/')
+      cy.c_createRealAccount()
+      cy.c_login()
+    }
     cy.c_visitResponsive('/bot', 'large')
     cy.c_loadingCheck()
     common.skipTour()
