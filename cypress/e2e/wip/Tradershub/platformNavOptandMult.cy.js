@@ -1,8 +1,12 @@
 import '@testing-library/cypress/add-commands'
 
 describe('QATEST-5948: Verify platforms navigations on Options and Multipliers', () => {
-  it('Should navigate to correct platform on clicking Open button', () => {
+  beforeEach(() => {
     cy.c_login()
+  })
+
+  //TODO fix the issue reported in https://app.clickup.com/t/20696747/TRAH-3245 and then update it.skip to it
+  it.skip('Should navigate to correct platform on clicking Open button', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     const derivAppProdUrl = Cypress.env('prodURL')
     const derivAppStagingUrl = Cypress.env('stagingUrl')
@@ -60,5 +64,23 @@ describe('QATEST-5948: Verify platforms navigations on Options and Multipliers',
     if (Cypress.config().baseUrl.includes('staging'))
       cy.url().should('eq', bBotStagingUrl)
     else cy.url().should('eq', bBotProdUrl)
+  })
+  it('should remain logged in after redirection to another platform', () => {
+    cy.findByTestId('dt_platform_switcher').click()
+    cy.findByText(
+      'Automated trading at your fingertips. No coding needed.'
+    ).click()
+    cy.findByRole('button', { name: 'Skip' }).click()
+    cy.findByText('Charts').click()
+    cy.get('.cq-symbol-select-btn').click()
+    cy.get('#dbot').findByText('Volatility 10 (1s) Index').click()
+    cy.findByTestId('dt_platform_switcher').click()
+    cy.findByText(
+      'A whole new trading experience on a powerful yet easy to use platform.'
+    ).click()
+    // Verify the chart loaded
+    cy.get('.chart-container__loader').should('not.exist', { timeout: 10000 })
+    // Verify account remained logged in
+    cy.findByRole('button', { name: 'Deposit' }).should('exist')
   })
 })
