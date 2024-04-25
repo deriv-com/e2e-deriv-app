@@ -314,15 +314,18 @@ Cypress.Commands.add(
       maxRetries = 3,
       baseUrl = Cypress.env('configServer') + '/events',
     } = options
+    cy.log(`Visit ${baseUrl}`)
     cy.visit(
       `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
         'qaBoxLoginPassword'
-      )}@${baseUrl}`
+      )}@${baseUrl}`,
+      { log: false }
     )
     const sentArgs = { requestType, accountEmail }
     cy.origin(
-      `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
-        'qaBoxLoginPassword'
+      `https://${Cypress.env('qaBoxLoginEmail', { log: false })}:${Cypress.env(
+        'qaBoxLoginPassword',
+        { log: false }
       )}@${baseUrl}`,
       { args: [requestType, accountEmail] },
       ([requestType, accountEmail]) => {
@@ -380,10 +383,12 @@ Cypress.Commands.add(
   'c_emailVerificationV2',
   (requestType, accountEmail, options = {}) => {
     const { baseUrl = Cypress.env('configServer') + '/events' } = options
+    cy.log(`Visit ${baseUrl}`)
     cy.visit(
       `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
         'qaBoxLoginPassword'
-      )}@${baseUrl}`
+      )}@${baseUrl}`,
+      { log: false }
     )
     const sentArgs = { requestType, accountEmail }
     cy.document().then((doc) => {
