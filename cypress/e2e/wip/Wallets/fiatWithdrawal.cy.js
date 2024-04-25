@@ -31,7 +31,9 @@ describe('QATEST-98812 - Fiat withdrawal access iframe from email verification l
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
     cy.findByText('Withdraw').click()
-    cy.findByText(/Please help us verify/).should('be.visible')
+    cy.findByText('Confirm your identity to make a withdrawal.').should(
+      'be.visible'
+    )
     if (cy.findByRole('button', { name: 'Send email' }).should('be.visible')) {
       cy.findByRole('button', { name: 'Send email' })
         .should('be.visible')
@@ -40,8 +42,6 @@ describe('QATEST-98812 - Fiat withdrawal access iframe from email verification l
         .click()
     }
     cy.findByText("We've sent you an email.")
-    cy.findByRole('button', { name: "Didn't receive the email?" }).click()
-    cy.findByText(/Resend email/)
     cy.c_retrieveVerificationLinkUsingMailisk(
       Cypress.env('credentials').production.wallets.ID.split('@')[0],
       'withdrawal',
