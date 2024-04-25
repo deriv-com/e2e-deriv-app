@@ -35,7 +35,7 @@ describe('QATEST-22853 Onfido (2 attempts) failed clients are redirected to manu
 
     cy.findByText('Proof of address required').should('exist')
     cy.c_closeNotificationHeader()
-    cy.c_onfidoSecondRun()
+    cy.c_onfidoSecondRun('Colombia')
     cy.findByText('Your documents were submitted successfully').should(
       'be.visible'
     )

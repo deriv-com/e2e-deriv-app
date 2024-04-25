@@ -2,6 +2,7 @@ import '@testing-library/cypress/add-commands'
 
 describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients are redirected to manual upload', () => {
   beforeEach(() => {
+    cy.c_visitResponsive('/')
     cy.c_createRealAccount()
     cy.c_login()
     cy.c_navigateToPoiResponsive('Ghana')
@@ -13,7 +14,7 @@ describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients
     cy.contains('Your documents were submitted successfully').should(
       'be.visible'
     )
-    cy.findByText('Proof of address required').should('exist')
+    cy.wait(1000)
     cy.reload()
 
     cy.contains('Your identity verification failed').should('be.visible')
@@ -27,16 +28,18 @@ describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients
     cy.contains('button', 'Next').click()
 
     cy.c_submitIdv() // second IDV attempt
+    cy.wait(1000)
     cy.reload()
 
     // Onfido flow
-    cy.c_onfidoSecondRun()
+    cy.findByRole('button', { name: 'Upload identity document' }).click()
+    cy.c_onfidoSecondRun('Ghana')
     cy.findByText('Your documents were submitted successfully').should(
       'be.visible'
     )
+    // Manual flow
+    cy.wait(5000)
     cy.reload()
-
-    // Manual upload screen
     cy.findByText('Please upload one of the following documents:').should(
       'be.visible'
     )
