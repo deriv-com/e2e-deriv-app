@@ -1,5 +1,4 @@
 export const languages = {
-  EN: { lang: 'English', langChangeCheck: 'Cashier' },
   ES: { lang: 'Español', langChangeCheck: 'Cajero' },
   BN: { lang: 'বাংলা', langChangeCheck: 'ক্যাশিয়ার' },
   DE: { lang: 'Deutsch', langChangeCheck: 'Kassierer' },
