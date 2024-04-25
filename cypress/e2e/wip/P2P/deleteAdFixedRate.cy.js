@@ -13,7 +13,7 @@ function verifyAdOnMyAdsScreen(fiatCurrency, localCurrency) {
   )
 }
 
-describe('QATEST-2403 - Create a Buy type Advert - Fixed Rate', () => {
+describe('QATEST-2482 - Delete Advert - Fixed Rate', () => {
   beforeEach(() => {
     cy.clearAllLocalStorage()
     cy.clearAllSessionStorage()
@@ -21,7 +21,7 @@ describe('QATEST-2403 - Create a Buy type Advert - Fixed Rate', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
 
-  it('Should be able to create buy type advert and verify all fields and messages for fixed rate.', () => {
+  it('Should be able to delete newly created advert for fixed rate.', () => {
     cy.c_navigateToDerivP2P()
     cy.c_closeSafetyInstructions()
     cy.findByText('Deriv P2P').should('exist')
