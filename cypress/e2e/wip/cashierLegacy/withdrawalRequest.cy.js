@@ -203,7 +203,7 @@ describe('QATEST-20010 Withdrawal Request: Fiat - Different language', () => {
       cy.c_visitResponsive(
         `cashier/withdrawal/?lang=${languageDetails.english.urlCode}`,
         'small',
-        'check'
+        { rateLimitCheck: true }
       )
       cy.c_loadingCheck()
       prevLanguage = languageDetails.english.urlCode
@@ -218,8 +218,14 @@ describe('QATEST-20010 Withdrawal Request: Fiat - Different language', () => {
       cy.c_visitResponsive(
         `cashier/withdrawal/?lang=${languageDetails.english.urlCode}`,
         'large',
-        'check'
+        { rateLimitCheck: true }
       )
+      cy.then(() => {
+        if (sessionStorage.getItem('c_rateLimitOnVisitOccured') == 'true') {
+          cy.reload()
+          sessionStorage.removeItem('c_rateLimitOnVisitOccured')
+        }
+      })
       cy.c_loadingCheck()
       prevLanguage = languageDetails.english.urlCode
       const languageDetailsArray = Object.entries(languageDetails)
