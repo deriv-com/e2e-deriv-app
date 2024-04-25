@@ -304,31 +304,6 @@ Cypress.Commands.add('c_closeSafetyInstructions', () => {
   cy.c_skipPasskey()
 })
 
-Cypress.Commands.add('c_closeNotificationHeader', () => {
-  cy.document().then((doc) => {
-    let notification = doc.querySelector('.notification__header')
-    if (notification) {
-      cy.log('Notification header appeared')
-      cy.get('.notification__text-body')
-        .invoke('text')
-        .then((text) => {
-          cy.log(text)
-        })
-      cy.findAllByRole('button', { name: 'Close' })
-        .first()
-        .should('be.visible')
-        .click()
-        .and('not.exist')
-      notification = null
-      cy.then(() => {
-        cy.c_closeNotificationHeader()
-      })
-    } else {
-      cy.log('Notification header did not appear')
-    }
-  })
-})
-
 Cypress.Commands.add('c_addPaymentMethod', (paymentID, paymentMethod) => {
   if (paymentMethod == 'Bank Transfer') {
     cy.findByRole('textbox', { name: 'Payment method' })

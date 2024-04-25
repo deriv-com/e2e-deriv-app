@@ -8,6 +8,7 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
     toAccount = '',
     withExtraVerifications = false,
     transferAmount = 10,
+    size = 'large',
   } = options
   const fromAccountBalance = {
     withCurrency: sessionStorage.getItem(`c_balance${fromAccount.code}`),
@@ -63,9 +64,13 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
         .toAmountField()
         .should('not.have.value', '')
         .then((toAmountElement) => {
-          sessionStorage.setItem(
-            `c_conversionRate${fromAccount.code}To${toAccount.code}`,
-            toAmountElement.val()
+          expect(parseFloat(toAmountElement.val())).to.be.closeTo(
+            parseFloat(
+              sessionStorage.getItem(
+                `c_conversionRate${fromAccount.code}To${toAccount.code}`
+              )
+            ),
+            toAccount.accurateDelta
           )
         })
       cy.c_verifypercentageSelectorSection(fromAccountBalance)
@@ -103,7 +108,7 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
             parseFloat(
               sessionStorage.getItem(`c_conversionRateUSDTo${toAccount.code}`)
             ),
-          0.0001
+          toAccount.delta
         )
         let balanceToAccounAfterTransfer =
           toAccountBalance.withoutCurrency +
@@ -131,6 +136,9 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
     })
     transferScreen.sharedLocators.transferButton().should('be.enabled').click()
   })
+  if (size == 'small') {
+    cy.c_verifyTransferDetails(transferAmount, fromAccount.code, toAccount.code)
+  }
 })
 
 Cypress.Commands.add(
@@ -217,7 +225,7 @@ Cypress.Commands.add(
             parseFloat(
               sessionStorage.getItem(`c_conversionRateUSDTo${toAccount.code}`)
             ),
-          0.0001
+          toAccount.delta
         )
         transferScreen.sharedLocators.percentageSelectorText(
           Math.round(
@@ -235,7 +243,7 @@ Cypress.Commands.add(
             parseFloat(
               sessionStorage.getItem(`c_conversionRateUSDTo${toAccount.code}`)
             ).toFixed(8),
-          0.1
+          fromAccount.delta
         )
         transferScreen.sharedLocators.percentageSelectorText(
           Math.round(
@@ -287,5 +295,21 @@ Cypress.Commands.add(
       .within(() => {
         transferScreen.sharedLocators.rangeError().should('be.visible')
       })
+  }
+)
+
+Cypress.Commands.add(
+  'c_verifyTransferDetails',
+  (transferAmount, fromCurrency, toCurrency) => {
+    cy.findByText('Transfer').should('be.visible')
+    cy.findByText('Your funds have been transferred').should('be.visible')
+    cy.findByText(`${transferAmount.toFixed(2)} ${fromCurrency}`)
+    cy.get('.crypto-transfer-from').within(() => {
+      cy.findByText(fromCurrency).should('be.visible')
+    })
+    cy.get('.crypto-transfer-to').within(() => {
+      cy.findByText(toCurrency).should('be.visible')
+    })
+    cy.findByRole('button', { name: 'Make a new transfer' }).click()
   }
 )
