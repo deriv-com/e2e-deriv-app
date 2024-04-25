@@ -134,10 +134,6 @@ module.exports = defineConfig({
         ID: process.env.E2E_EU_LOGIN,
         PSWD: process.env.E2E_EU_PASSWORD,
       },
-      wallets: {
-        ID: process.env.E2E_WALLETS_LOGIN,
-        PSWD: process.env.E2E_WALLETS_PASSWORD,
-      },
     },
     production:{
       masterUser:{
