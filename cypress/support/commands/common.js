@@ -506,7 +506,7 @@ Cypress.Commands.add('c_waitUntilElementIsFoundV2', (options = {}) => {
     text,
     retry = 0,
     maxRetries = 3,
-    timeout = 500,
+    timeout = 2000,
   } = options
   let found = false
   if (locator) {
@@ -535,7 +535,7 @@ Cypress.Commands.add('c_waitUntilElementIsFoundV2', (options = {}) => {
       cy.log(`Retrying... Attempt number: ${retry + 1}`)
       cy.wait(timeout)
       cy.reload()
-      cy.c_waitUntilElementIsFound({ ...options, retry: retry + 1 })
+      cy.c_waitUntilElementIsFoundV2({ ...options, retry: retry + 1 })
     } else {
       throw new Error(`Element not found after ${maxRetries} attempt(s)!`)
     }
