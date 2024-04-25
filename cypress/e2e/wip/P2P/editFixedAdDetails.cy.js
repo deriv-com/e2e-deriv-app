@@ -3,8 +3,6 @@ import '@testing-library/cypress/add-commands'
 let fixedRate = 1.25
 let minOrder = 5
 let maxOrder = 10
-let newMinOrder = 10
-let newMaxOrder = 10
 
 function verifyAdOnMyAdsScreen(fiatCurrency, localCurrency) {
   cy.findByText('Active').should('be.visible')
@@ -69,14 +67,16 @@ describe('QATEST-2469 - Edit Advert Details - Fixed Rate', () => {
         .click()
       cy.findByText('Edit').parent().click()
       cy.findByTestId('offer_amount').should('be.disabled')
-      cy.findByTestId('min_transaction').clear().type(newMinOrder)
-      cy.findByTestId('max_transaction').clear().type(newMaxOrder)
+      cy.findByTestId('min_transaction')
+        .clear()
+        .type(minOrder + 1)
+      cy.findByTestId('max_transaction').clear().type(maxOrder)
       cy.findByTestId('dt_dropdown_display').click()
       cy.get('#2700').should('be.visible').click()
       cy.findByRole('button', { name: 'Save changes' })
         .should('be.enabled')
         .click()
-      cy.findByText(`${newMinOrder.toFixed(2)} - ${newMaxOrder.toFixed(2)} USD`)
+      cy.findByText(`${(minOrder + 1).toFixed(2)} - ${maxOrder.toFixed(2)} USD`)
     })
   })
 })
