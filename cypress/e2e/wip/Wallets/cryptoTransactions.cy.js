@@ -21,7 +21,7 @@ function crypto_transfer(to_account, transferAmount) {
   cy.c_transferLimit(transferAmount)
 }
 
-describe('QATEST-98789 - Transfer to crypto accounts', () => {
+describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypto transactions and QATEST-99429 Transfer conversion rate and QATEST-99714 Life time transfer limit message', () => {
   //Prerequisites: Crypto wallet account in any qa box with 1.00000000 BTC balance and USD, ETH and LTC wallets
   let transferAmount = '0.00003000 BTC'
   beforeEach(() => {
