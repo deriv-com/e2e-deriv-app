@@ -29,7 +29,6 @@ describe('QATEST-2482 - Delete Advert - Fixed Rate', () => {
     cy.c_closeNotificationHeader()
     cy.c_clickMyAdTab()
     cy.c_checkForExistingAds().then((returnedValue) => {
-      cy.log('hello ' + returnedValue)
       if (returnedValue === 0) {
         cy.c_createNewAd('buy')
         cy.findByText('Buy USD').click()
