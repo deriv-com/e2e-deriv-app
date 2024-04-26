@@ -1,7 +1,13 @@
 export const commonPageLocators = {
   mobileLocators: {
-    header: {},
+    header: {
+      hamburgerMenuButton: () => cy.get('#dt_mobile_drawer_toggle'),
+    },
     footer: {},
+    sideMenu: {
+      sidePanel: () => cy.get('#dt_mobile_drawer'),
+      tradersHubButton: () => cy.findByText("Trader's Hub"),
+    },
     //commonMobileLocator1 : () => cy.findByTestId('abc')
     //commonMobileLocator2 : () => cy.findByTestId('xyz')
   },

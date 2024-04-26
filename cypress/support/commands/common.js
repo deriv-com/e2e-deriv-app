@@ -20,7 +20,8 @@ const setLoginUser = (user = 'masterUser', options = {}) => {
   }
 }
 
-Cypress.Commands.add('c_visitResponsive', (path, size, rateLimit = '') => {
+Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
+  const { rateLimitCheck = false } = options
   //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
   cy.log(path)
   if (size === undefined) size = Cypress.env('viewPortSize')
@@ -30,12 +31,16 @@ Cypress.Commands.add('c_visitResponsive', (path, size, rateLimit = '') => {
   else cy.viewport('macbook-16')
 
   cy.visit(path)
-  if (rateLimit == 'check') {
+  if (rateLimitCheck == true) {
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
       maxRetries: 5,
     })
-    cy.visit(path)
+    cy.then(() => {
+      if (sessionStorage.getItem('c_rateLimitOnVisitOccured') == 'true') {
+        cy.visit(path)
+      }
+    })
   }
 
   if (path.includes('region')) {
@@ -63,11 +68,16 @@ Cypress.Commands.add('c_visitResponsive', (path, size, rateLimit = '') => {
 })
 
 Cypress.Commands.add('c_login', (options = {}) => {
-  const { user = 'masterUser', app = '', backEndProd = false } = options
+  const {
+    user = 'masterUser',
+    app = '',
+    backEndProd = false,
+    checkRateLimit = false,
+  } = options
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
   })
-  cy.c_visitResponsive('/endpoint', 'large')
+  cy.c_visitResponsive('/endpoint', 'large', { rateLimitCheck: checkRateLimit })
 
   if (app == 'doughflow') {
     Cypress.env('configServer', Cypress.env('doughflowConfigServer'))
@@ -218,6 +228,7 @@ Cypress.Commands.add('c_rateLimit', (options = {}) => {
             cy.log(
               `Rate limit detected, waiting for ${waitTimeAfterError / 1000}s before retrying...`
             )
+            sessionStorage.setItem('c_rateLimitOnVisitOccured', true)
             cy.wait(waitTimeAfterError, { log: false })
             cy.get('div[class="unhandled-error"]').within(() => {
               cy.get('button[type="submit"]', { log: false }).click({
@@ -311,15 +322,18 @@ Cypress.Commands.add(
       maxRetries = 3,
       baseUrl = Cypress.env('configServer') + '/events',
     } = options
+    cy.log(`Visit ${baseUrl}`)
     cy.visit(
       `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
         'qaBoxLoginPassword'
-      )}@${baseUrl}`
+      )}@${baseUrl}`,
+      { log: false }
     )
     const sentArgs = { requestType, accountEmail }
     cy.origin(
-      `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
-        'qaBoxLoginPassword'
+      `https://${Cypress.env('qaBoxLoginEmail', { log: false })}:${Cypress.env(
+        'qaBoxLoginPassword',
+        { log: false }
       )}@${baseUrl}`,
       { args: [requestType, accountEmail] },
       ([requestType, accountEmail]) => {
@@ -331,6 +345,7 @@ Cypress.Commands.add(
             const verificationEmail = allRelatedEmails.pop()
             cy.wrap(verificationEmail).click()
             cy.contains('p', `${accountEmail}`)
+              .last()
               .should('be.visible')
               .parent()
               .children()
@@ -373,6 +388,52 @@ Cypress.Commands.add(
 )
 
 Cypress.Commands.add(
+  'c_emailVerificationV2',
+  (requestType, accountEmail, options = {}) => {
+    const { baseUrl = Cypress.env('configServer') + '/events' } = options
+    cy.log(`Visit ${baseUrl}`)
+    cy.visit(
+      `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
+        'qaBoxLoginPassword'
+      )}@${baseUrl}`,
+      { log: false }
+    )
+    const sentArgs = { requestType, accountEmail }
+    cy.document().then((doc) => {
+      let verification_code
+      const allRelatedEmails = Array.from(
+        doc.querySelectorAll(`a[href*="${requestType}"]`)
+      )
+      if (allRelatedEmails.length) {
+        const verificationEmail = allRelatedEmails.pop()
+        cy.wrap(verificationEmail).click()
+        cy.get('table').last().as('lastTable')
+        cy.get('@lastTable')
+          .contains('p', `${accountEmail}`)
+          .should('be.visible')
+          .parent()
+          .children()
+          .contains('a', Cypress.config('baseUrl'))
+          .invoke('attr', 'href')
+          .then((href) => {
+            if (href) {
+              Cypress.env('verificationUrl', href)
+              const code = href.match(/code=([A-Za-z0-9]{8})/)
+              verification_code = code[1]
+              cy.task('setVerificationCode', verification_code)
+              cy.log('Verification link found')
+            } else {
+              cy.log('Verification link not found')
+            }
+          })
+      } else {
+        cy.log('email not found')
+      }
+    })
+  }
+)
+
+Cypress.Commands.add(
   'c_retrieveVerificationLinkUsingMailisk',
   (account, subject, timestamp) => {
     cy.mailiskSearchInbox(Cypress.env('mailiskNamespace'), {
@@ -394,23 +455,106 @@ Cypress.Commands.add('c_loadingCheck', () => {
 })
 
 Cypress.Commands.add('c_createRealAccount', () => {
-  cy.task('createRealAccountTask').then((realAccountDetails) => {
-    // Assuming realAccountDetails is an array where the first element is email
-    const [email] = realAccountDetails
-    cy.wrap(realAccountDetails).as('realAccountDetails') // Wrap and alias for later use
-
-    cy.log(email) // Logging the email for debugging
-
-    // Updating Cypress environment variables with the new email
-    const currentCredentials = Cypress.env('credentials')
-    currentCredentials.test.masterUser.ID = email
-    Cypress.env('credentials', currentCredentials)
-  })
+  // Call Verify Email and then set the Verification code in env
+  try {
+    cy.task('wsConnect')
+    cy.task('verifyEmailTask').then((accountEmail) => {
+      cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
+      cy.task('createRealAccountTask').then(() => {
+        // Updating Cypress environment variables with the new email
+        const currentCredentials = Cypress.env('credentials')
+        currentCredentials.test.masterUser.ID = accountEmail
+        Cypress.env('credentials', currentCredentials)
+      })
+    })
+  } catch (e) {
+    console.error('An error occurred during the account creation process:', e)
+  } finally {
+    cy.task('wsDisconnect')
+  }
 })
 
 Cypress.Commands.add('c_closeModal', () => {
   cy.log('Closing the modal')
   cy.get('.dc-modal').within(() => {
     cy.get('.currency-selection-modal__header .close-icon').click()
+  })
+})
+
+Cypress.Commands.add('c_waitUntilElementIsFound', (options = {}) => {
+  const {
+    cyLocator,
+    locator,
+    retry = 0,
+    maxRetries = 3,
+    timeout = 500,
+  } = options
+  let found = false
+  if (locator) {
+    cy.document().then((doc) => {
+      const element = doc.querySelector(locator)
+      recurse(element)
+    })
+  } else {
+    cyLocator()
+      .should((_) => {})
+      .then(($el) => {
+        recurse($el.length)
+      })
+  }
+
+  const recurse = (el) => {
+    if (el) {
+      cy.log(`Element found in attempt number ${retry}!`)
+      found = true
+      return
+    } else if (!el && retry < maxRetries && !found) {
+      cy.log(`Retrying... Attempt number: ${retry + 1}`)
+      cy.wait(timeout)
+      cy.reload()
+      cy.c_waitUntilElementIsFound({ ...options, retry: retry + 1 })
+    } else {
+      throw new Error(`Element not found after ${maxRetries} attempt(s)!`)
+    }
+  }
+})
+
+Cypress.Commands.add('c_getCurrentExchangeRate', (fromCurrency, toCurrency) => {
+  cy.request({
+    url: `https://api.coinbase.com/v2/exchange-rates?currency=${fromCurrency}`,
+  }).then((response) => {
+    const responseBody = response.body
+    expect(response.status).to.be.eq(200)
+    expect(responseBody.data.currency).to.be.eql(fromCurrency)
+    let exchangeRate = responseBody.data.rates[toCurrency]
+    sessionStorage.setItem(
+      `c_conversionRate${fromCurrency}To${toCurrency}`,
+      exchangeRate
+    )
+  })
+})
+
+Cypress.Commands.add('c_closeNotificationHeader', () => {
+  cy.document().then((doc) => {
+    let notification = doc.querySelector('.notification__header')
+    if (notification) {
+      cy.log('Notification header appeared')
+      cy.get('.notification__text-body')
+        .invoke('text')
+        .then((text) => {
+          cy.log(text)
+        })
+      cy.findAllByRole('button', { name: 'Close' })
+        .first()
+        .should('be.visible')
+        .click()
+        .and('not.exist')
+      notification = null
+      cy.then(() => {
+        cy.c_closeNotificationHeader()
+      })
+    } else {
+      cy.log('Notification header did not appear')
+    }
   })
 })
