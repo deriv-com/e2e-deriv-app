@@ -111,6 +111,17 @@ Cypress.Commands.add('c_verifyTextAreaLength', (blockName, textLength) => {
     .should('contain.text', `${textLength}/300`)
 })
 
+Cypress.Commands.add('c_checkForExistingAds', () => {
+  cy.findByTestId('dt_initial_loader').should('not.exist')
+  return cy.get('body', { timeout: 10000 }).then((body) => {
+    if (body.find('.no-ads__message', { timeout: 10000 }).length > 0) {
+      return 0 // No ads found
+    } else if (body.find('#toggle-my-ads', { timeout: 10000 }).length > 0) {
+      return 1 // Ads found
+    }
+  })
+})
+
 Cypress.Commands.add('c_verifyRate', () => {
   cy.findByTestId('float_rate_type').click().clear()
   cy.findByText('Floating rate is required').should('be.visible')
