@@ -3,7 +3,6 @@ import '@testing-library/cypress/add-commands'
 let fixedRate = 1.25
 let minOrder = 5
 let maxOrder = 10
-let boolAdExistence
 
 function verifyAdOnMyAdsScreen(fiatCurrency, localCurrency) {
   cy.findByText('Active').should('be.visible')
