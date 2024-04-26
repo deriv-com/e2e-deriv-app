@@ -321,13 +321,14 @@ Cypress.Commands.add(
       baseUrl = Cypress.env('configServer') + '/events',
     } = options
     cy.log(`Visit ${baseUrl}`)
+    const userID = Cypress.env('qaBoxLoginEmail')
+    const userPSWD = Cypress.env('qaBoxLoginPassword')
     cy.visit(
       `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
         'qaBoxLoginPassword'
       )}@${baseUrl}`,
       { log: false }
     )
-    const sentArgs = { requestType, accountEmail }
     cy.origin(
       `https://${Cypress.env('qaBoxLoginEmail', { log: false })}:${Cypress.env(
         'qaBoxLoginPassword',
@@ -367,6 +368,9 @@ Cypress.Commands.add(
       }
     )
     cy.then(() => {
+      //Rotating credentials
+      Cypress.env('qaBoxLoginEmail', userID)
+      Cypress.env('qaBoxLoginPassword', userPSWD)
       //Retry finding email after 1 second interval
       if (retryCount < maxRetries && !Cypress.env('verificationUrl')) {
         cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
@@ -396,7 +400,6 @@ Cypress.Commands.add(
       )}@${baseUrl}`,
       { log: false }
     )
-    const sentArgs = { requestType, accountEmail }
     cy.document().then((doc) => {
       let verification_code
       const allRelatedEmails = Array.from(
@@ -555,4 +558,15 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
       cy.log('Notification header did not appear')
     }
   })
+})
+
+Cypress.Commands.add('skipPasskeysV2', () => {
+  cy.findByText('Effortless login with passkeys')
+    .should(() => {})
+    .then(($el) => {
+      if ($el.length) {
+        cy.findByText('Maybe later').click()
+        cy.log('Skipped Passkeys prompt !!!')
+      }
+    })
 })

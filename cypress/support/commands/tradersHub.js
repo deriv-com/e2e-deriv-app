@@ -1,3 +1,5 @@
+import { derivApp } from '../locators'
+
 Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
   if (isMobile) {
     cy.c_closeNotificationHeader()
@@ -37,6 +39,10 @@ Cypress.Commands.add('c_switchToDemo', () => {
 
 Cypress.Commands.add('c_completeTradersHubTour', () => {
   cy.findByRole('button', { name: 'Next' }).click()
+  if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
+    cy.contains('Choice of regulation').should('be.visible')
+    cy.contains('button', 'Next').click()
+  }
   cy.findByRole('button', { name: 'OK' }).click()
 })
 
@@ -94,6 +100,7 @@ Cypress.Commands.add('c_completeOnboarding', () => {
   }
   cy.contains("Trader's Hub tour").should('be.visible')
   cy.contains('button', 'OK').click()
+  cy.skipPasskeysV2()
 })
 
 // TODO move to Utility finction
@@ -120,8 +127,6 @@ Cypress.Commands.add(
     options = {}
   ) => {
     let { isMobile = false } = options
-
-    cy.log(`INSIDE FUNCTION isMOBILE>>>>${typeof isMobile}`)
     cy.findByText(currency).click()
     cy.findByRole('button', { name: 'Next' }).click()
     if (identity == 'Onfido') {
@@ -129,9 +134,7 @@ Cypress.Commands.add(
         'be.visible'
       )
     } else if (identity == 'IDV') {
-      cy.log(`OUTSIDE IF isMOBILE>>>>${isMobile}`)
       if (isMobile) {
-        cy.log(`INSIDE IF isMOBILE>>>>${isMobile}`)
         cy.get(`select[name='document_type']`).select('National ID Number')
       } else {
         cy.findByLabelText('Choose the document type').click()
@@ -179,16 +182,21 @@ Cypress.Commands.add(
 
     cy.findByTestId('tax_identification_number').type(taxIDNum)
     if (identity == 'MF') {
-      cy.findByTestId('dt_personal_details_container')
-        .findAllByTestId('dt_dropdown_display')
-        .eq(0)
-        .click()
-      cy.get('#Employed').click()
-      cy.findByTestId('dt_personal_details_container')
-        .findAllByTestId('dt_dropdown_display')
-        .eq(1)
-        .click()
-      cy.get('#Hedging').click()
+      if (isMobile) {
+        cy.get(`select[name='employment_status']`).select('Employed')
+        cy.findByTestId(/account_opening_reason/).select('Hedging')
+      } else {
+        cy.findByTestId('dt_personal_details_container')
+          .findAllByTestId('dt_dropdown_display')
+          .eq(0)
+          .click()
+        cy.get('#Employed').click()
+        cy.findByTestId('dt_personal_details_container')
+          .findAllByTestId('dt_dropdown_display')
+          .eq(1)
+          .click()
+        cy.get('#Hedging').click()
+      }
     } else {
       if (isMobile) cy.findByTestId(/account_opening_reason/).select('Hedging')
       else {
@@ -244,29 +252,44 @@ Cypress.Commands.add('c_addAccount', () => {
 Cypress.Commands.add('c_manageAccountsetting', (CoR, options = {}) => {
   const { isMobile = false } = options
   if (isMobile) {
+    derivApp.commonPage.mobileLocators.header.hamburgerMenuButton().click()
+    cy.findByRole('heading', { name: 'Account Settings' }).click()
+  } else {
+    cy.get('.traders-hub-header__setting').click()
   }
-  cy.get('.traders-hub-header__setting').click()
   cy.findByRole('link', { name: 'Proof of identity' }).click()
   cy.findByText('In which country was your document issued?').should(
     'be.visible'
   )
   cy.findByRole('button', { name: 'Next' }).should('be.disabled')
-  cy.findByLabelText('Country').type(CoR)
-  cy.findByText(CoR).click()
+  if (isMobile) cy.get(`select[name='country_input']`).select(CoR)
+  else {
+    cy.findByLabelText('Country').type(CoR)
+    cy.findByText(CoR).click()
+  }
   cy.findByRole('button', { name: 'Next' }).should('not.be.disabled')
 })
 
-Cypress.Commands.add('c_completeTradingAssessment', () => {
-  let count = 1
+Cypress.Commands.add('c_completeTradingAssessment', (options = {}) => {
+  const { isMobile = false } = options
+
   cy.get('[type="radio"]').first().click({ force: true })
   cy.findByRole('button', { name: 'Next' }).click()
   cy.get('[type="radio"]').eq(1).click({ force: true })
   cy.findByRole('button', { name: 'Next' }).click()
+  let count = 1
   while (count < 5) {
-    cy.findAllByTestId('dt_dropdown_display').eq(count).click()
-    cy.findAllByTestId('dti_list_item').eq(2).click()
+    if (isMobile) {
+      cy.get('.dc-select-native__picker')
+        .eq(count - 1)
+        .select(2)
+    } else {
+      cy.findAllByTestId('dt_dropdown_display').eq(count).click()
+      cy.findAllByTestId('dti_list_item').eq(2).click()
+    }
     count++
   }
+
   cy.findByRole('button', { name: 'Next' }).click()
   cy.get('[type="radio"]').eq(2).click({ force: true })
   cy.findByRole('button', { name: 'Next' }).click()
@@ -278,11 +301,19 @@ Cypress.Commands.add('c_completeTradingAssessment', () => {
   cy.findByRole('button', { name: 'Next' }).click()
 })
 
-Cypress.Commands.add('c_completeFinancialAssessment', () => {
+Cypress.Commands.add('c_completeFinancialAssessment', (options = {}) => {
+  const { isMobile = false } = options
   let count = 1
   while (count < 9) {
-    cy.findAllByTestId('dt_dropdown_display').eq(count).click()
-    cy.findAllByTestId('dti_list_item').eq(1).click()
+    if (isMobile) {
+      cy.get('.dc-select-native__picker')
+        .eq(count - 1)
+        .select(1)
+    } else {
+      cy.findAllByTestId('dt_dropdown_display').eq(count).click()
+      cy.findAllByTestId('dti_list_item').eq(1).click()
+    }
+
     count++
   }
   cy.findByRole('button', { name: 'Next' }).click()
@@ -293,7 +324,8 @@ Cypress.Commands.add('c_completeFatcaDeclarationAgreement', () => {
   cy.findAllByTestId('dti_list_item').eq(0).click()
 })
 
-Cypress.Commands.add('c_addAccountMF', (type) => {
+Cypress.Commands.add('c_addAccountMF', (type, options = {}) => {
+  const { isMobile = false } = options
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
   cy.get('.dc-checkbox__box').eq(0).click()
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
@@ -305,17 +337,21 @@ Cypress.Commands.add('c_addAccountMF', (type) => {
   }
   cy.findByRole('button', { name: 'Add account' }).click()
   cy.findByRole('heading', { name: 'Deposit' }).should('be.visible')
-  cy.findByTestId('dt_modal_close_icon').click()
-  cy.findByRole('heading', { name: 'Account added' }).should('be.visible')
-  cy.findByRole('button', { name: 'Verify now' }).should('be.visible')
-  cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
-  cy.url().should('be.equal', Cypress.env('baseUrl') + 'appstore/traders-hub')
-  cy.findByRole('button', { name: 'Next' }).click()
-  if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
-    cy.contains('Choice of regulation').should('be.visible')
-    cy.contains('button', 'Next').click()
+  if (isMobile) {
+    cy.findByTestId('dt_page_overlay_header_close').click()
+  } else {
+    cy.findByTestId('dt_modal_close_icon').click()
   }
-  cy.findByRole('button', { name: 'OK' }).click()
+  cy.url().should('be.equal', Cypress.env('baseUrl') + 'appstore/traders-hub')
+  cy.findByRole('heading', { name: 'Account added' }).should('be.visible')
+  cy.findByText(
+    'Your account will be available for trading once the verification of your account is complete.'
+  ).should('be.visible')
+  cy.findByRole('button', { name: 'Verify now' })
+    .should('be.visible')
+    .and('be.enabled')
+  cy.findByRole('button', { name: 'Maybe later' }).click()
+  cy.c_completeTradersHubTour()
 })
 
 Cypress.Commands.add(
@@ -335,7 +371,7 @@ Cypress.Commands.add(
           )
         })
       })
-      cy.c_visitResponsive(Cypress.env('verificationUrl'), size)
+      // cy.c_visitResponsive(Cypress.env('verificationUrl'), size)
       cy.get('h1').contains('Select your country and').should('be.visible')
       cy.c_selectCountryOfResidence(country)
       cy.c_selectCitizenship(country)
@@ -350,8 +386,7 @@ Cypress.Commands.add(
 Cypress.Commands.add('c_setEndpoint', (signUpMail, size = 'desktop') => {
   localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
   localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
-  const mainURL = Cypress.config('baseUrl')
-  cy.c_visitResponsive(mainURL + 'endpoint', size)
+  cy.c_visitResponsive(`${Cypress.config('baseUrl')}endpoint`, size)
   cy.findByRole('button', { name: 'Sign up' }).should('not.be.disabled')
   cy.c_enterValidEmail(signUpMail)
 })
