@@ -1,6 +1,8 @@
 require("dotenv").config()
 const { defineConfig } = require("cypress")
-const {createAccountReal, createAccountVirtual, verifyEmail} = require('./cypress/support/helper/accountCreationUtility');
+const {createAccountReal, createAccountVirtual, verifyEmail } = require('./cypress/support/helper/accountCreationUtility');
+const {authorizeCall, checkBalance } = require('./cypress/support/helper/balanceCall');
+
 
 const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI')
 const WebSocket = require('ws');
@@ -82,9 +84,28 @@ module.exports = defineConfig({
       setVerificationCode: (verificationCode) => {
         process.env.E2E_EMAIL_VERIFICATION_CODE = verificationCode;
         return null;
+      },
+      async authorizeCallTask(){
+        try {
+          console.log("The Auth TOken is : ", Cypress.env('oAuthUrl'));
+          const authCall = await authorizeCall(api, Cypress.env('oAuthUrl'));  // API authentication
+          return null;
+        } catch (e) {
+          console.error('Authorization failed', e)
+          throw e
+        }
+      },
+      async checkBalanceTask(){ 
+        try {
+          const balance_stream = await checkBalance(api, Cypress.env('oAuthUrl'));
+          console.log(balance_stream);
+          return null;
+        } catch (e) {
+          console.error('Operation failed', e)
+          throw e
+        }
       }
       });
-
       return config;  // Return the config object is important for custom configurations to take effect
     },
   },
