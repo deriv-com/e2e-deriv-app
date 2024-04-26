@@ -9,6 +9,9 @@ const appId = process.env.E2E_STD_CONFIG_APPID
 const websocketURL = `wss://${process.env.E2E_STD_CONFIG_SERVER}/websockets/v3`
 let connection;
 let api;
+
+const { instrumentCoverage } = require('@cypress/code-coverage/task');
+
 //const gViewPortSize = {small: 'phone-xr', large: 'macbook-16'} //TODO Use enum
  
 module.exports = defineConfig({
@@ -21,6 +24,7 @@ module.exports = defineConfig({
     experimentalWebKitSupport: true,
     chromeWebSecurity: false,
     setupNodeEvents(on, config) {
+      require('@cypress/code-coverage/task')(on, config)
       on('task', {
         wsConnect() {
           // Check if there is an existing connection and close it if open
@@ -89,6 +93,13 @@ module.exports = defineConfig({
     },
   },
   env: {
+    coverageFolder: "coverage",
+    nyc: {
+      "report-dir": "coverage",
+      "reporter": [
+        "text-summary",
+        "html"
+      ]},
     stagingUrl: "https://staging-app.deriv.com/",
     prodURL: "https://app.deriv.com/",
     derivComProdURL: "https://deriv.com/",
@@ -208,8 +219,8 @@ module.exports = defineConfig({
     password: process.env.E2E_PASS_BOT,
     tradersHubUrl: "appstore/traders-hub",
     emailVerificationCode: process.env.E2E_EMAIL_VERIFICATION_CODE,
-    emailUser: process.env.E2E_AUTH_EMAIL_USER,
-    emailPassword: process.env.E2E_AUTH_EMAIL_PASSWORD,
+    // emailUser: process.env.E2E_AUTH_EMAIL_USER,  //deleted in GA secret
+    // emailPassword: process.env.E2E_AUTH_EMAIL_PASSWORD, //deleted in GA secret
     event_email_url: process.env.E2E_EVENTS_EMAIL,
     MAILISK_API_KEY: process.env.E2E_MAILISK_API_KEY, // the variable name should be like MAILISK_API_KEY as per mailisk documentation
     mailiskNamespace: process.env.E2E_MAILISK_NAMESPACE,
@@ -259,4 +270,5 @@ module.exports = defineConfig({
     runMode: 2,
     openMode: 0,
   },
+  
 })
