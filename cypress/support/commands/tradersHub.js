@@ -126,7 +126,7 @@ Cypress.Commands.add(
     currency = Cypress.env('accountCurrency').USD,
     options = {}
   ) => {
-    let { isMobile = false } = options
+    const { isMobile = false } = options
     cy.findByText(currency).click()
     cy.findByRole('button', { name: 'Next' }).click()
     if (identity == 'Onfido') {
