@@ -27,6 +27,7 @@ describe('QATEST-99340: Verify feed is loading on charts tab', () => {
 
     charts.selectSymbolOnCharts('Gold Basket')
     charts.verifyTickChange(5000)
+    //testttt
 
     common.switchToDemo()
     charts.openChartsTab()
