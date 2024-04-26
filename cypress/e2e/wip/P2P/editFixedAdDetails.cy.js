@@ -43,19 +43,21 @@ describe('QATEST-2469 - Edit Advert Details - Fixed Rate', () => {
         sessionStorage.setItem('c_localCurrency', localCurrency.trim())
       })
     cy.then(() => {
-      cy.c_verifyAmountFiled()
-      cy.c_verifyFixedRate(
-        'buy',
-        10,
-        fixedRate,
-        sessionStorage.getItem('c_fiatCurrency'),
-        sessionStorage.getItem('c_localCurrency')
-      )
-      cy.c_verifyMaxMin('min_transaction', minOrder, 'Min')
-      cy.c_verifyMaxMin('max_transaction', maxOrder, 'Max')
-      cy.c_verifyTextAreaBlock('default_advert_description')
-      cy.c_verifyTooltip()
-      cy.c_verifyCompletionOrderDropdown()
+      cy.findByTestId('offer_amount').type('10').should('have.value', '10')
+      cy.findByTestId('fixed_rate_type')
+        .type(fixedRate)
+        .should('have.value', fixedRate)
+      cy.findByTestId('min_transaction')
+        .type(minOrder)
+        .should('have.value', minOrder)
+      cy.findByTestId('max_transaction')
+        .type(maxOrder)
+        .should('have.value', maxOrder)
+      cy.findByTestId('default_advert_description')
+        .type('Description Block')
+        .should('have.value', 'Description Block')
+      cy.findByTestId('dt_dropdown_display').click()
+      cy.get('#900').should('be.visible').click()
       cy.c_PaymentMethod()
       cy.c_verifyPostAd()
       verifyAdOnMyAdsScreen(
