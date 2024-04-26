@@ -126,6 +126,10 @@ module.exports = defineConfig({
         ID: process.env.E2E_P2P_FLOATING,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
+      cashierLegacy: {
+        ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
       diel: {
         ID: process.env.E2E_DIEL_LOGIN,
         PSWD: process.env.E2E_DIEL_PASSWORD,
@@ -162,6 +166,7 @@ module.exports = defineConfig({
     baseUrl: process.env.CYPRESS_BASE_URL,
     loginEmail: process.env.E2E_DERIV_LOGIN,
     walletloginEmail: process.env.E2E_DERIV_LOGIN_WALLET,
+    walletloginPassword:process.env.E2E_QA_ACCOUNT_PASSWORD,
     loginPassword: process.env.E2E_DERIV_PASSWORD,
     p2pbuyloginEmail: process.env.E2E_P2P_BUY,
     p2psellloginEmail: process.env.E2E_P2P_SELL,
