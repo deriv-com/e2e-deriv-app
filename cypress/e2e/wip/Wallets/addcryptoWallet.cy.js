@@ -42,10 +42,14 @@ function addcryptowallet() {
 describe('WALL-3094 - Add wallets from wallets carousels', () => {
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
-    cy.c_visitResponsive('/wallets', 'large')
   })
 
   it('should be able to add more wallets', () => {
+    cy.c_visitResponsive('/wallets', 'large')
+    addcryptowallet()
+  })
+  it('should be able to add more wallets in Responsive', () => {
+    cy.c_visitResponsive('/wallets', 'small')
     addcryptowallet()
   })
 })
