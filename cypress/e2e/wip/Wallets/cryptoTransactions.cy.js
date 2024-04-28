@@ -77,7 +77,7 @@ describe('WALL-2858 - Crypto transfer and transactions', () => {
     crypto_transfer('LTC', transferAmount)
   })
 
-  it.only('should be able to view transactions of crypto account in responsive', () => {
+  it('should be able to view transactions of crypto account in responsive', () => {
     cy.log('View Transactions of Crypto account')
     cy.c_visitResponsive('/wallets', 'small')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')

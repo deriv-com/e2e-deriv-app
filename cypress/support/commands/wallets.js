@@ -40,29 +40,3 @@ Cypress.Commands.add('c_switchWalletsAccountResponsive', (account) => {
   keepClickingNext()
   cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
 })
-
-function scrollInSliderUntilTextVisible(sliderSelector, text) {
-  const checkForTextVisibility = () => {
-    return new Cypress.Promise((resolve) => {
-      const elementsWithText = Cypress.$(`:contains("${text}")`) // Find all elements containing the specified text
-      const visibleElementsWithText = elementsWithText.filter(
-        (index, element) => Cypress.$(element).is(':visible')
-      ) // Filter visible elements
-      if (visibleElementsWithText.length > 0) {
-        // Check if any visible element contains the specified text
-        resolve(true)
-      } else {
-        resolve(false)
-      }
-    })
-  }
-  const scrollAndCheckForText = () => {
-    scrollInSlider(sliderSelector)
-    checkForTextVisibility().then((isTextVisible) => {
-      if (!isTextVisible) {
-        scrollAndCheckForText() // Keep scrolling until text is visible
-      }
-    })
-  }
-  scrollAndCheckForText()
-}

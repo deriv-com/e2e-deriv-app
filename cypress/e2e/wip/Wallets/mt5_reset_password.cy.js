@@ -52,11 +52,17 @@ function changeMT5Password() {
 describe('WALL-3255 - Reset MT5 password', () => {
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
-    cy.c_visitResponsive('/wallets', 'large')
   })
 
   it('should be able to change mt5 password', () => {
     cy.log('change mt5 password')
+    cy.c_visitResponsive('/wallets', 'large')
+    cy.findByText('CFDs', { exact: true }).should('be.visible')
+    changeMT5Password()
+  })
+  it('should be able to change mt5 password', () => {
+    cy.log('change mt5 password')
+    cy.c_visitResponsive('/wallets', 'small')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
     changeMT5Password()
   })

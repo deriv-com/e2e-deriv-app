@@ -50,11 +50,11 @@ function expandDemoWallet() {
 describe('WALL-3252 - Add derivx account', () => {
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
-    cy.c_visitResponsive('/wallets', 'large')
   })
 
   it('should be able to add DerivX USD account', () => {
     cy.log('add derivx account')
+    cy.c_visitResponsive('/wallets', 'large')
     const Text = Cypress.$(
       ":contains('This account offers CFDs on a highly customisable CFD trading platform.')"
     )
@@ -66,6 +66,18 @@ describe('WALL-3252 - Add derivx account', () => {
       clickAddDerivxButton()
       verifyDerivxCreation('Demo')
       verifyTransferFundsMessage('Demo')
+    }
+  })
+  it('should be able to add DerivX USD account in responsive', () => {
+    cy.log('add derivx account')
+    cy.c_visitResponsive('/wallets', 'small')
+    const Text = Cypress.$(
+      ":contains('This account offers CFDs on a highly customisable CFD trading platform.')"
+    )
+    if (Text.length > 0) {
+      clickAddDerivxButton()
+      verifyDerivxCreation('Real')
+      verifyTransferFundsMessage('Real')
     }
   })
 })
