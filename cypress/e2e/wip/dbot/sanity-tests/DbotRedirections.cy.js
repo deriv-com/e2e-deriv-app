@@ -9,7 +9,7 @@ describe('QATEST-136582: Redirection to other pages from dbot', () => {
     cy.c_login({ user: 'dBot' }, 'check')
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     tradersHub.openBotButton.click()
-    common.skipTour()
+    cy.findByText('Skip').should('be.visible').click({ force: true })
   })
 
   it('Redirect to deposit page from Dbot', () => {

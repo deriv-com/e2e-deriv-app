@@ -16,10 +16,10 @@ describe('QATEST-99418: Verify toolbar on bot builder page', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     tradersHub.openBotButton.click()
     cy.c_loadingCheck()
-    common.skipTour()
-    common.switchToDemo()
+    cy.findByText('Skip').should('be.visible').click({ force: true })
+    cy.c_switchToDemoBot()
     botBuilder.openBotBuilderTab()
-    common.skipTour()
+    cy.findByText('Skip').should('be.visible').click({ force: true })
   })
 
   it('Save a strategy to local', () => {
@@ -33,6 +33,9 @@ describe('QATEST-99418: Verify toolbar on bot builder page', () => {
 
   it('Import strategy from local', () => {
     botBuilder.importStrategyFromToolbar('MartingaleOld')
-    common.snackBar.should('have.text', 'You’ve successfully imported a bot.')
+    cy.get('.notification-content').should(
+      'have.text',
+      'You’ve successfully imported a bot.'
+    )
   })
 })

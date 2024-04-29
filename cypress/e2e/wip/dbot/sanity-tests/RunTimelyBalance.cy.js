@@ -18,24 +18,24 @@ describe('QATEST-99419: Import and run custom strategy', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     tradersHub.openBotButton.click()
     cy.c_loadingCheck()
-    common.skipTour()
-    common.switchToDemo()
+    cy.findByText('Skip').should('be.visible').click({ force: true })
+    cy.c_switchToDemoBot()
   })
 
   it('Run Timely Balance Strategy', () => {
     botDashboard.importStrategy('TimelyBalance')
-    common.blockDashboardLoad()
-    common.skipTour()
+    cy.get('.bot-dashboard.bot').should('be.visible')
+    cy.findByText('Skip').should('be.visible').click({ force: true })
 
-    common.accountBalance.then(($el) => {
+    cy.get('.acc-info__balance').then(($el) => {
       beforePurchaseBalanceString = $el.text()
       beforePurchaseBalanceNumber = parseFloat(
         common.removeCurrencyCode(common.removeComma($el.text()))
       )
     })
 
-    common.runBot()
-    common.stopBot(7000)
+    cy.c_runBot()
+    cy.c_stopBot(7000)
     runPanel.journalTab.click()
     runPanel.runPanelScrollbar
       .scrollTo('bottom', { ensureScrollable: false })

@@ -17,7 +17,7 @@ describe('QATEST-99340: Verify feed is loading on charts tab', () => {
     }
     cy.c_visitResponsive('/bot', 'large')
     cy.c_loadingCheck()
-    common.skipTour()
+    cy.findByText('Skip').should('be.visible').click({ force: true })
   })
 
   it('Verify feed for real and demo account', () => {
@@ -28,7 +28,7 @@ describe('QATEST-99340: Verify feed is loading on charts tab', () => {
     charts.selectSymbolOnCharts('Gold Basket')
     charts.verifyTickChange(5000)
 
-    common.switchToDemo()
+    cy.c_switchToDemoBot()
     charts.openChartsTab()
 
     charts.selectSymbolOnCharts('AUD/JPY')

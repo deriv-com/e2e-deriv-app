@@ -15,11 +15,11 @@ describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
     cy.c_login({ user: 'dBot' })
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     tradersHub.openBotButton.click()
-    common.blockDashboardLoad()
-    common.skipTour()
-    common.switchToDemo()
+    cy.get('.bot-dashboard.bot').should('be.visible')
+    cy.findByText('Skip').should('be.visible').click({ force: true })
+    cy.c_switchToDemoBot()
     botBuilder.openBotBuilderTab()
-    common.skipTour()
+    cy.findByText('Skip').should('be.visible').click({ force: true })
   })
 
   it('Run Martingale Quick Strategy', () => {

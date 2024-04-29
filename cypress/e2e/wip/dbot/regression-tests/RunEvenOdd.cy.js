@@ -13,13 +13,13 @@ describe('QATEST-109419: Run custom strategy Even Odd', () => {
   beforeEach(() => {
     cy.c_login()
     cy.c_visitResponsive('/bot', 'large')
-    common.skipTour()
-    common.switchToDemo()
+    cy.findByText('Skip').should('be.visible').click({ force: true })
+    cy.c_switchToDemoBot()
   })
 
   it('Run Even and Odd Purchase', () => {
     botDashboard.importStrategy('EvenOdd')
-    common.skipTour()
+    cy.findByText('Skip').should('be.visible').click({ force: true })
     cy.reload() // adding this until bug BOT-1147 is fixed
     cy.c_loadingCheck()
     common.runBot()
