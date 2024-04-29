@@ -13,13 +13,12 @@ describe('QATEST-99418: Verify toolbar on bot builder page', () => {
 
   beforeEach(() => {
     cy.c_login({ user: 'dBot' })
-    cy.c_visitResponsive('/appstore/traders-hub', 'large')
-    tradersHub.openBotButton.click()
+    cy.c_visitResponsive('/bot', 'large')
     cy.c_loadingCheck()
     cy.findByText('Skip').should('be.visible').click({ force: true })
-    cy.c_switchToDemoBot()
     botBuilder.openBotBuilderTab()
     cy.findByText('Skip').should('be.visible').click({ force: true })
+    cy.c_switchToDemoBot()
   })
 
   it('Save a strategy to local', () => {
