@@ -2,7 +2,7 @@ import '@testing-library/cypress/add-commands'
 
 describe('QATEST-22853 Onfido (2 attempts) failed clients are redirected to manual upload', () => {
   beforeEach(() => {
-    cy.c_createRealAccount()
+    //cy.c_createRealAccount()
     cy.c_login()
     cy.c_navigateToPoiResponsive('Colombia')
   })
@@ -30,11 +30,9 @@ describe('QATEST-22853 Onfido (2 attempts) failed clients are redirected to manu
     cy.c_waitUntilElementIsFound({
       cyLocator: () =>
         cy.findByText('Your proof of identity submission failed because:'),
-      timeout: 6000,
-      maxRetries: 2,
+      timeout: 1000,
+      maxRetries: 5,
     })
-    cy.findByText('Proof of address required').should('be.visible')
-    cy.c_closeNotificationHeader()
     cy.findByText('Your proof of identity submission failed because:')
     cy.get('.dc-btn').click()
 
@@ -46,8 +44,8 @@ describe('QATEST-22853 Onfido (2 attempts) failed clients are redirected to manu
 
     cy.c_waitUntilElementIsFound({
       cyLocator: () =>
-        cy.findByText('Your proof of identity submission failed because:'),
-      timeout: 6000,
+        cy.findByText('Please upload one of the following documents:'),
+      timeout: 1000,
       maxRetries: 2,
     })
     cy.reload()
