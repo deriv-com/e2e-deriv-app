@@ -408,9 +408,6 @@ Cypress.Commands.add(
       if (allRelatedEmails.length) {
         const verificationEmail = allRelatedEmails.pop()
         cy.wrap(verificationEmail).click()
-        // cy.get('table').last().as('lastTable')
-        // cy.get('@lastTable')
-
         cy.contains('p', `${accountEmail}`)
           .last()
           .should('be.visible')
