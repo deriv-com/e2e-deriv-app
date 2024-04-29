@@ -1,8 +1,8 @@
 import '@testing-library/cypress/add-commands'
 
-function performCryptoDeposit() {
+function performCryptoDeposit(platform) {
   cy.contains('Wallet', { timeout: 10000 }).should('exist')
-  if (Cypress.config('viewportWidth') < 1100) {
+  if (`${platform}` == `mobile`) {
     cy.log('mobile view')
     cy.c_switchWalletsAccountResponsive('BTC')
   } else {
@@ -18,9 +18,9 @@ function performCryptoDeposit() {
   cy.findByText('Banxa')
 }
 
-function performCryptoDepositFiatonRamp() {
+function performCryptoDepositFiatonRamp(platform) {
   cy.contains('Wallet', { timeout: 10000 }).should('exist')
-  if (Cypress.config('viewportWidth') < 1100) {
+  if (`${platform}` == `mobile`) {
     cy.log('mobile view')
     cy.c_switchWalletsAccountResponsive('BTC')
   } else {
@@ -48,23 +48,23 @@ describe('WALL-2831 - Crypto deposit and fiat onramp', () => {
   it('should be able to view crypto deposit details', () => {
     cy.c_visitResponsive('/wallets', 'large')
     cy.log('Crypto Deposit')
-    performCryptoDeposit()
+    performCryptoDeposit('desktop')
   })
 
   it('should be able to deposit into crypto account through fiat onramp', () => {
     cy.c_visitResponsive('/wallets', 'large')
     cy.log('Access Fiat OnRamp Provider')
-    performCryptoDepositFiatonRamp()
+    performCryptoDepositFiatonRamp('desktop')
   })
   it('should be able to view crypto deposit details in responsive', () => {
     cy.c_visitResponsive('/wallets', 'small')
     cy.log('Crypto Deposit')
-    performCryptoDeposit()
+    performCryptoDeposit('mobile')
   })
 
   it('should be able to deposit into crypto account through fiat onramp in responsive', () => {
     cy.c_visitResponsive('/wallets', 'small')
     cy.log('Access Fiat OnRamp Provider')
-    performCryptoDeposit()
+    performCryptoDeposit('mobile')
   })
 })
