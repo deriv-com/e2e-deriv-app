@@ -7,6 +7,11 @@ const {createAccountReal, createAccountVirtual} = require('./cypress/support/hel
 module.exports = defineConfig({
   e2e: {
     projectId: "rjvf4u",
+    baseUrl: "https://staging-app.deriv.com",
+    defaultCommandTimeout: 15000,
+    supportFile: "cypress/support/e2e.js",
+    experimentalWebKitSupport: true,
+    chromeWebSecurity: false,
     setupNodeEvents(on, config) {
       on('before:browser:launch', (browser = {}, launchOptions) => {
         if (browser.family === 'chromium') {
@@ -16,14 +21,7 @@ module.exports = defineConfig({
         }
         
         return launchOptions
-      })
-    },
-    baseUrl: "https://staging-app.deriv.com",
-    defaultCommandTimeout: 15000,
-    supportFile: "cypress/support/e2e.js",
-    experimentalWebKitSupport: true,
-    chromeWebSecurity: false,
-    setupNodeEvents(on, config) {
+      }),
       on('task', {
         async createRealAccountTask() {
           try {
