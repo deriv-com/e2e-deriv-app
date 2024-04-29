@@ -249,24 +249,3 @@ function extractCsrfToken(response) {
 
   return found[1]
 }
-
-/**
- * @description Used to generate a random name
- * @returns {string}
- * @example generateRandomName() // aighkbiu
- */
-export function generateRandomName() {
-  const vowels = 'aeiou'
-  const consonants = 'bcdfghjklmnpqrstvwxyz'
-  let name = ''
-  let useConsonant = true // Start with a consonant
-
-  for (let i = 0; i < 8; i++) {
-    name += useConsonant
-      ? consonants[Math.floor(Math.random() * consonants.length)]
-      : vowels[Math.floor(Math.random() * vowels.length)]
-    useConsonant = !useConsonant // Alternate between consonant and vowel
-  }
-
-  return name
-}
