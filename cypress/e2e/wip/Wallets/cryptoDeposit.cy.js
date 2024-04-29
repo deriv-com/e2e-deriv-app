@@ -41,7 +41,7 @@ function performCryptoDepositFiatonRamp(platform) {
     .click()
 }
 
-describe('WALL-2831 - Crypto deposit and fiat onramp', () => {
+describe('QATEST-98781 - Crypto deposit and fiat onramp', () => {
   //Prerequisites: Crypto wallet account with access to banxa provider in any qa box with app id 11780
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
