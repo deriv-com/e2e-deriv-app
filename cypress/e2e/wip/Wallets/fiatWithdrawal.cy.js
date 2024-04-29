@@ -51,7 +51,7 @@ function performFiatWithdraw() {
   )
 }
 
-describe('WALL-2830 - Fiat withdrawal access iframe from email verification link', () => {
+describe('QATEST-98812 - Fiat withdrawal access iframe from email verification link', () => {
   //Prerequisites: Fiat wallet account in backend prod staging with USD wallet
   beforeEach(() => {
     cy.c_login({ user: 'wallets', backEndProd: true })

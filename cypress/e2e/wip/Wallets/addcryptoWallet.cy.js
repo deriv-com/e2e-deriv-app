@@ -39,7 +39,7 @@ function addcryptowallet() {
     })
 }
 
-describe('WALL-3094 - Add wallets from wallets carousels', () => {
+describe('QATEST-98773 - Add crypto wallet account', () => {
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
   })

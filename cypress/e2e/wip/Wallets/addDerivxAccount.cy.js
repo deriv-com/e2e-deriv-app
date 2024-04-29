@@ -47,7 +47,7 @@ function expandDemoWallet() {
   cy.contains('USD Demo Wallet').should('be.visible')
 }
 
-describe('WALL-3252 - Add derivx account', () => {
+describe('QATEST-98821 - Add demo derivx account and QATEST-98824 add real derivx account', () => {
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
   })

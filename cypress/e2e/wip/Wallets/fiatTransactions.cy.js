@@ -30,7 +30,7 @@ function fiat_transfer(to_account) {
   cy.c_transferLimit('10.00 USD')
 }
 
-describe('WALL-2858 - Fiat transfer and transactions', () => {
+describe('QATEST-141444 Fiat to Cryptpo wallet transfer and QATEST-98808 - View Fiat transaction', () => {
   //Prerequisites: Fiat wallet account in any qa box with 10,000.00 USD balance and BTC, ETH and LTC wallets
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })

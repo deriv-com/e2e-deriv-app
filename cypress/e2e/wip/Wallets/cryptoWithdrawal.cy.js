@@ -99,7 +99,7 @@ describe('WALL-2830 - Crypto withdrawal send email', () => {
   })
 })
 
-describe('WALL-2830 - Crypto withdrawal content access from email', () => {
+describe('QATEST-98698 - Crypto withdrawal content access from email', () => {
   //Prerequisites: Crypto wallet account in qa29 with BTC balance
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })

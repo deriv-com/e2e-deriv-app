@@ -49,7 +49,7 @@ function changeMT5Password() {
       }
     })
 }
-describe('WALL-3255 - Reset MT5 password', () => {
+describe('QATEST-99774 - MT5 reset password', () => {
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
   })
