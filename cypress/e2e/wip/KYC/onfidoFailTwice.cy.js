@@ -27,10 +27,7 @@ describe('QATEST-22853 Onfido (2 attempts) failed clients are redirected to manu
 
     cy.wait(5000)
     cy.reload()
-
-    cy.findByText('Your proof of identity submission failed because:').should(
-      'be.visible'
-    )
+    cy.findByText('Your identity verification failed:').should('be.visible')
     cy.findByRole('button', { name: 'Verify again' }).click()
 
     cy.findByText('Proof of address required').should('exist')

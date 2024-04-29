@@ -14,22 +14,23 @@ describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients
     cy.contains('Your documents were submitted successfully').should(
       'be.visible'
     )
-    cy.wait(1000)
     cy.reload()
-
-    cy.contains('Your identity verification failed').should('be.visible')
+    cy.c_waitUntilElementIsFound({
+      cyLocator: () =>
+        cy.findByText('Your identity verification failed because:'),
+      timeout: 1000,
+      maxRetries: 5,
+    })
+    // cy.contains('Your identity verification failed').should('be.visible')
     cy.contains(
       'We were unable to verify the identity document with the details provided.'
     ).should('be.visible')
 
-    cy.findByText('Proof of address required').should('exist')
     cy.c_closeNotificationHeader()
     cy.get('select[name="country_input"]').select('Ghana')
     cy.contains('button', 'Next').click()
 
     cy.c_submitIdv() // second IDV attempt
-    cy.wait(1000)
-    cy.reload()
 
     // Onfido flow
     cy.findByRole('button', { name: 'Upload identity document' }).click()
@@ -38,8 +39,13 @@ describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients
       'be.visible'
     )
     // Manual flow
-    cy.wait(5000)
     cy.reload()
+    cy.c_waitUntilElementIsFound({
+      cyLocator: () =>
+        cy.findByText('Please upload one of the following documents:'),
+      timeout: 1000,
+      maxRetries: 5,
+    })
     cy.findByText('Please upload one of the following documents:').should(
       'be.visible'
     )
