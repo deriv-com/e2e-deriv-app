@@ -2,16 +2,19 @@ import { derivApp } from '../locators'
 
 Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
   if (isMobile) {
-    cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'Options & Multipliers' }).should(
       'be.visible'
     )
+    cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'CFDs' }).click()
     cy.findAllByText('Deriv cTrader')
       .first()
       .scrollIntoView({ position: 'bottom' })
       .should('be.visible')
     cy.findByText('Other CFD Platforms').scrollIntoView({ position: 'bottom' })
+    cy.findByRole('button', { name: 'CFDs' }).click()
+    cy.c_closeNotificationHeader()
+    cy.findByRole('button', { name: 'Options & Multipliers' }).click()
   } else {
     cy.findByText('Options & Multipliers').should('be.visible')
     cy.findByText('CFDs').should('be.visible')

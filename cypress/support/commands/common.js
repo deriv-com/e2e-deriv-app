@@ -408,9 +408,11 @@ Cypress.Commands.add(
       if (allRelatedEmails.length) {
         const verificationEmail = allRelatedEmails.pop()
         cy.wrap(verificationEmail).click()
-        cy.get('table').last().as('lastTable')
-        cy.get('@lastTable')
-          .contains('p', `${accountEmail}`)
+        // cy.get('table').last().as('lastTable')
+        // cy.get('@lastTable')
+
+        cy.contains('p', `${accountEmail}`)
+          .last()
           .should('be.visible')
           .parent()
           .children()
@@ -466,6 +468,8 @@ Cypress.Commands.add('c_createRealAccount', () => {
         const currentCredentials = Cypress.env('credentials')
         currentCredentials.test.masterUser.ID = accountEmail
         Cypress.env('credentials', currentCredentials)
+        //Reset oAuthUrl otherwise it will use the previous URL
+        Cypress.env('oAuthUrl', '<empty>')
       })
     })
   } catch (e) {
