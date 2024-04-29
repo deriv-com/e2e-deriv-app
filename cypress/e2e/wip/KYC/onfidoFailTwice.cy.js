@@ -24,9 +24,15 @@ describe('QATEST-22853 Onfido (2 attempts) failed clients are redirected to manu
     cy.get('.onfido-sdk-ui-Camera-btn').click()
     cy.findByText('Confirm').click()
     cy.findByText('Account verification required').should('be.visible')
-    cy.wait(5000)
+
     cy.reload()
     cy.c_closeNotificationHeader()
+    cy.c_waitUntilElementIsFound({
+      cyLocator: () =>
+        cy.findByText('Your proof of identity submission failed because:'),
+      timeout: 6000,
+      maxRetries: 2,
+    })
     cy.findByText('Proof of address required').should('be.visible')
     cy.c_closeNotificationHeader()
     cy.findByText('Your proof of identity submission failed because:')
@@ -37,7 +43,13 @@ describe('QATEST-22853 Onfido (2 attempts) failed clients are redirected to manu
     cy.findByText('Your documents were submitted successfully').should(
       'be.visible'
     )
-    cy.wait(6000)
+
+    cy.c_waitUntilElementIsFound({
+      cyLocator: () =>
+        cy.findByText('Your proof of identity submission failed because:'),
+      timeout: 6000,
+      maxRetries: 2,
+    })
     cy.reload()
     cy.findByText('Please upload one of the following documents:').should(
       'be.visible'
