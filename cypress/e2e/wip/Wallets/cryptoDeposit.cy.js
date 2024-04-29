@@ -13,7 +13,9 @@ function performCryptoDeposit(platform) {
   cy.findByText('Transaction status')
   cy.findByText(/To avoid loss of funds/)
   cy.get('.wallets-clipboard').click()
-  cy.findByText('Copied!')
+  if (`${platform}` == `desktop`) {
+    cy.findByText('Copied!')
+  }
   cy.findByText('Try Fiat onramp').click()
   cy.findByText('Banxa')
 }

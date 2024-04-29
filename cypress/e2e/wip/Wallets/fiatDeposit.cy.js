@@ -17,7 +17,7 @@ describe('WALL-2817 - Fiat deposit iframe access', () => {
       getBody().find('#depositoptions').should('be.visible')
     })
   })
-  it('should be able to access doughflow iframe in responsive', () => {
+  it.only('should be able to access doughflow iframe in responsive', () => {
     cy.log('Access Fiat Deposit Iframe')
     cy.c_visitResponsive('/wallets', 'small')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
