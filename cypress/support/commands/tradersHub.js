@@ -368,7 +368,6 @@ Cypress.Commands.add(
           )
         })
       })
-      // cy.c_visitResponsive(Cypress.env('verificationUrl'), size)
       cy.get('h1').contains('Select your country and').should('be.visible')
       cy.c_selectCountryOfResidence(country)
       cy.c_selectCitizenship(country)
