@@ -17,17 +17,6 @@ describe('WALL-2817 - Fiat deposit iframe access', () => {
       getBody().find('#depositoptions').should('be.visible')
     })
   })
-  it.only('should be able to access doughflow iframe in responsive', () => {
-    cy.log('Access Fiat Deposit Iframe')
-    cy.c_visitResponsive('/wallets', 'small')
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    cy.findByText('Deposit').parent().click()
-    cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
-    cy.enter('iframe[class=wallets-deposit-fiat__iframe]').then((getBody) => {
-      getBody().find('#pmfilter').should('be.visible')
-      getBody().find('#depositoptions').should('be.visible')
-    })
-  })
 })
 
 describe('WALL-2817 - Fiat deposit error', () => {

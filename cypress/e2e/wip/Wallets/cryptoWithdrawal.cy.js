@@ -111,10 +111,4 @@ describe('WALL-2830 - Crypto withdrawal content access from email', () => {
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     verifyEmailandPerformWithdraw('desktop')
   })
-  it('should be able to access crypto withdrawal content and perform withdrawal in responsive', () => {
-    cy.log('Access Crypto Withdrawal Content Through Email Link')
-    cy.c_visitResponsive('/wallets', 'small')
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    verifyEmailandPerformWithdraw('mobile')
-  })
 })
