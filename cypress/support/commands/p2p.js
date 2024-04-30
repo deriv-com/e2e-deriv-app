@@ -115,9 +115,9 @@ Cypress.Commands.add('c_checkForExistingAds', () => {
   cy.c_loadingCheck()
   return cy.get('body', { timeout: 10000 }).then((body) => {
     if (body.find('.no-ads__message', { timeout: 10000 }).length > 0) {
-      return false // No ads found
+      return false
     } else if (body.find('#toggle-my-ads', { timeout: 10000 }).length > 0) {
-      return true // Ads found
+      return true
     }
   })
 })
