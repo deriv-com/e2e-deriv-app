@@ -485,6 +485,30 @@ Cypress.Commands.add(
   }
 )
 
+Cypress.Commands.add('c_authorizeCall', () => {
+  // Call Verify Email and then set the Verification code in env
+  try {
+    cy.task('wsConnect')
+    cy.task('authorizeCallTask').then(() => {})
+  } catch (e) {
+    console.error('An error occurred during the account creation process:', e)
+  } finally {
+    cy.task('wsDisconnect')
+  }
+})
+
+Cypress.Commands.add('c_getBalance', () => {
+  // Call Verify Email and then set the Verification code in env
+  try {
+    cy.task('wsConnect')
+    cy.task('checkBalanceTask').then(() => {})
+  } catch (e) {
+    console.error('An error occurred during the account creation process:', e)
+  } finally {
+    cy.task('wsDisconnect')
+  }
+})
+
 Cypress.Commands.add('c_closeModal', () => {
   cy.log('Closing the modal')
   cy.get('.dc-modal').within(() => {
