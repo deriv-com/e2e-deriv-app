@@ -17,7 +17,7 @@ function reset_balance_demo() {
     .should('include', 'wallets-cashier-header__tab--active') //find if the class has "active" string
 }
 
-describe('WALL-2760 - Reset Balance for Demo wallet', () => {
+describe('QATEST-98815 - Demo reset balance', () => {
   //Prerequisites: Demo wallet account in any qa box with USD demo funds
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })

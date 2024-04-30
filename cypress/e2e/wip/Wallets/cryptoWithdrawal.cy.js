@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
 
-describe('WALL-2830 - Crypto withdrawal send email', () => {
+describe('QATEST-98698 - Crypto withdrawal send email', () => {
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')
@@ -11,7 +11,9 @@ describe('WALL-2830 - Crypto withdrawal send email', () => {
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccount('BTC')
     cy.findByText('Withdraw').should('be.visible').click()
-    cy.contains('Please help us verify').should('be.visible')
+    cy.findByText('Confirm your identity to make a withdrawal.').should(
+      'be.visible'
+    )
     if (cy.findByRole('button', { name: 'Send email' }).should('be.visible')) {
       cy.findByRole('button', { name: 'Send email' }).click()
     }
@@ -21,7 +23,7 @@ describe('WALL-2830 - Crypto withdrawal send email', () => {
   })
 })
 
-describe('WALL-2830 - Crypto withdrawal content access from email', () => {
+describe('QATEST-98698 - Crypto withdrawal content access from email', () => {
   //Prerequisites: Crypto wallet account in qa29 with BTC balance
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
@@ -48,6 +50,28 @@ describe('WALL-2830 - Crypto withdrawal content access from email', () => {
         '1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71' //Example bitcoin wallet address
       )
       cy.contains('Amount (BTC)').click().type('0.005')
+      cy.get('.wallets-textfield__message-container')
+        .eq(1)
+        .invoke('text')
+        .then(($text) => {
+          cy.log($text)
+          if ($text != '') {
+            cy.get('.wallets-textfield__message-container')
+              .invoke('text')
+              .then((text) => {
+                var fullText = text
+                var pattern = /[0-9]+/g
+                var number = fullText.match(pattern)
+                console.log(number)
+                cy.findByTestId('dt_withdrawal_crypto_amount_input')
+                  .click()
+                  .clear()
+                cy.findByTestId('dt_withdrawal_crypto_amount_input')
+                  .click()
+                  .type('0.' + number[1])
+              })
+          }
+        })
       cy.get('form').findByRole('button', { name: 'Withdraw' }).click()
       cy.get('#modal_root, .modal-root', { timeout: 10000 }).then(() => {
         if (cy.get('.wallets-button__loader')) {

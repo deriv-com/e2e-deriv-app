@@ -75,7 +75,7 @@ describe('QATEST-5014, QATEST-5055 - Verify Main Page and Multipliers', () => {
     let payoutValueUp
 
     cy.c_selectTradeType('Options', tradeType)
-    cy.c_selectStakeTab()
+    cy.findByRole('button', { name: 'Stake' }).click()
     cy.get(tradeTypeParentLocator).contains(
       '.trade-container__price-info-basis',
       'Payout'
@@ -88,7 +88,7 @@ describe('QATEST-5014, QATEST-5055 - Verify Main Page and Multipliers', () => {
       .invoke('text')
       .then((textValue) => {
         stakeValueUp = textValue.trim().split(' ')[0]
-        cy.c_selectPayoutTab()
+        cy.findByRole('button', { name: 'Payout' }).click()
         cy.get(tradeTypeParentLocator).contains(
           '.trade-container__price-info-basis',
           'Stake'
@@ -106,7 +106,7 @@ describe('QATEST-5014, QATEST-5055 - Verify Main Page and Multipliers', () => {
       })
   }
 
-  it.only('To check on switching Stake and Payout tab', () => {
+  it('To check on switching Stake and Payout tab', () => {
     cy.c_selectDemoAccount()
     cy.c_selectSymbol('Volatility 100 (1s) Index')
 
