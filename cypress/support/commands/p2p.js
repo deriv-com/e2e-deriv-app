@@ -112,12 +112,12 @@ Cypress.Commands.add('c_verifyTextAreaLength', (blockName, textLength) => {
 })
 
 Cypress.Commands.add('c_checkForExistingAds', () => {
-  cy.findByTestId('dt_initial_loader').should('not.exist')
+  cy.c_loadingCheck()
   return cy.get('body', { timeout: 10000 }).then((body) => {
     if (body.find('.no-ads__message', { timeout: 10000 }).length > 0) {
-      return 0 // No ads found
+      return false // No ads found
     } else if (body.find('#toggle-my-ads', { timeout: 10000 }).length > 0) {
-      return 1 // Ads found
+      return true // Ads found
     }
   })
 })

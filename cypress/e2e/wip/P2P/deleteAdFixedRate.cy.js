@@ -27,8 +27,8 @@ describe('QATEST-2482 - Delete Advert - Fixed Rate', () => {
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
     cy.c_clickMyAdTab()
-    cy.c_checkForExistingAds().then((returnedValue) => {
-      if (returnedValue === 0) {
+    cy.c_checkForExistingAds().then((adExists) => {
+      if (adExists == false) {
         cy.c_createNewAd('buy')
         cy.findByText('Buy USD').click()
         cy.findByText("You're creating an ad to buy...").should('be.visible')
@@ -66,11 +66,9 @@ describe('QATEST-2482 - Delete Advert - Fixed Rate', () => {
             sessionStorage.getItem('c_fiatCurrency'),
             sessionStorage.getItem('c_localCurrency')
           )
-          cy.c_removeExistingAds()
         })
-      } else if (returnedValue === 1) {
-        cy.c_removeExistingAds()
       }
+      cy.c_removeExistingAds()
     })
   })
 })
