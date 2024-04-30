@@ -467,6 +467,7 @@ Cypress.Commands.add('c_loadingCheck', () => {
 Cypress.Commands.add(
   'c_createRealAccount',
   (country_code = 'id', currency = 'USD') => {
+    cy.c_visitResponsive('/')
     // Call Verify Email and then set the Verification code in env
     try {
       cy.task('wsConnect')
