@@ -66,9 +66,7 @@ screenSizes.forEach((screenSize) => {
       cy.findByRole('heading', {
         name: 'Transfer between your accounts in Deriv',
       }).should('exist')
-      cy.c_getCurrentExchangeRate(fromAccount.code, toAccount.code, {
-        roundTo: 2,
-      })
+      cy.c_getCurrentExchangeRate(fromAccount.code, toAccount.code)
       cy.c_TransferBetweenAccounts({
         fromAccount: fromAccount,
         toAccount: toAccount,

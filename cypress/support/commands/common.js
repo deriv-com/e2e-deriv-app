@@ -538,24 +538,20 @@ Cypress.Commands.add('c_waitUntilElementIsFound', (options = {}) => {
   }
 })
 
-Cypress.Commands.add(
-  'c_getCurrentExchangeRate',
-  (fromCurrency, toCurrency, options = {}) => {
-    const { roundTo = 8 } = options
-    cy.request({
-      url: `https://api.coinbase.com/v2/exchange-rates?currency=${fromCurrency}`,
-    }).then((response) => {
-      const responseBody = response.body
-      expect(response.status).to.be.eq(200)
-      expect(responseBody.data.currency).to.be.eql(fromCurrency)
-      let exchangeRate = responseBody.data.rates[toCurrency]
-      sessionStorage.setItem(
-        `c_conversionRate${fromCurrency}To${toCurrency}`,
-        exchangeRate
-      )
-    })
-  }
-)
+Cypress.Commands.add('c_getCurrentExchangeRate', (fromCurrency, toCurrency) => {
+  cy.request({
+    url: `https://api.coinbase.com/v2/exchange-rates?currency=${fromCurrency}`,
+  }).then((response) => {
+    const responseBody = response.body
+    expect(response.status).to.be.eq(200)
+    expect(responseBody.data.currency).to.be.eql(fromCurrency)
+    let exchangeRate = responseBody.data.rates[toCurrency]
+    sessionStorage.setItem(
+      `c_conversionRate${fromCurrency}To${toCurrency}`,
+      exchangeRate
+    )
+  })
+})
 
 Cypress.Commands.add('c_closeNotificationHeader', () => {
   cy.document().then((doc) => {
