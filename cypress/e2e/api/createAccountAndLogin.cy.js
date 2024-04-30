@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
 
-describe('Test API account creation and Login', () => {
+describe('QATEST-145406 - Test API account creation and Login', () => {
   beforeEach(() => {
     cy.log('<E2EOAuthUrl - beforeEach>' + Cypress.env('oAuthUrl'))
     cy.c_visitResponsive('/')
