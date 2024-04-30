@@ -22,10 +22,10 @@ describe('QATEST-99419: Import and run custom strategy', () => {
 
   it('Run Timely Balance Strategy', () => {
     botDashboard.importStrategy('TimelyBalance')
-    cy.get('.bot-dashboard.bot').should('be.visible')
+    cy.get('.bot-dashboard.bot').should('be.visible') //TODO:Update once BOT-1469 done
     cy.c_skipTour()
 
-    cy.get('.acc-info__balance').then(($el) => {
+    cy.findByTestId('dt_balance').then(($el) => {
       beforePurchaseBalanceString = $el.text()
       beforePurchaseBalanceNumber = parseFloat(
         $el.text().replace('USD', '').replace(/,/g, '').trim()

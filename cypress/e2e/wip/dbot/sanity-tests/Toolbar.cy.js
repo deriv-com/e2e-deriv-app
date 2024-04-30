@@ -28,6 +28,7 @@ describe('QATEST-99418: Verify toolbar on bot builder page', () => {
 
   it('Import strategy from local', () => {
     botBuilder.importStrategyFromToolbar('MartingaleOld')
+    //TODO:Update once BOT-1469 done
     cy.get('.notification-content').should(
       'have.text',
       'You’ve successfully imported a bot.'

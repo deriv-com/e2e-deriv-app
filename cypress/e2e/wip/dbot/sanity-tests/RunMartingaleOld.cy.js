@@ -40,7 +40,7 @@ describe('QATEST-99420: Import and run custom strategy', () => {
       totalPL = $value.text()
     })
 
-    cy.get("div[data-testid='dt_themed_scrollbars']")
+    cy.findAllByTestId('dt_themed_scrollbars')
       .last({ timeout: 120000 })
       .then(($amt) => {
         if ($amt.hasClass('run-panel__stat-amount--positive')) {

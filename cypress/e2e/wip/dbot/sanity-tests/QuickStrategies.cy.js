@@ -14,7 +14,7 @@ describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
     cy.c_switchToDemoBot()
     botBuilder.openBotBuilderTab()
     cy.c_skipTour()
-    cy.get('.bot-dashboard.bot').should('be.visible')
+    cy.get('.bot-dashboard.bot').should('be.visible') //TODO:Update once BOT-1469 done
   })
 
   it('Run Martingale Quick Strategy', () => {
