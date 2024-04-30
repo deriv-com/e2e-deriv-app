@@ -11,6 +11,7 @@ describe('QATEST-5569: Verify MF Signup flow', () => {
 
   size.forEach((size) => {
     it(`Verify I can signup for an MF demo and real account on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
+      const isMobile = size == 'small' ? true : false
       const signUpEmail = `sanity${generateEpoch()}mf@deriv.com`
       cy.c_setEndpoint(signUpEmail, size)
       cy.c_demoAccountSignup(country, signUpEmail, size)
@@ -22,18 +23,18 @@ describe('QATEST-5569: Verify MF Signup flow', () => {
           nationalIDNum,
           taxIDNum,
           currency,
-          { isMobile: size == 'small' ? true : false }
+          { isMobile: isMobile }
         )
       })
       cy.c_addressDetails()
       cy.c_completeTradingAssessment({
-        isMobile: size == 'small' ? true : false,
+        isMobile: isMobile,
       })
       cy.c_completeFinancialAssessment({
-        isMobile: size == 'small' ? true : false,
+        isMobile: isMobile,
       })
       cy.c_completeFatcaDeclarationAgreement()
-      cy.c_addAccountMF('MF', { isMobile: size == 'small' ? true : false })
+      cy.c_addAccountMF('MF', { isMobile: isMobile })
       if (size == 'desktop') {
         cy.get('#traders-hub').scrollIntoView({ position: 'top' })
         cy.findByText('Total assets').should('be.visible')
@@ -43,7 +44,7 @@ describe('QATEST-5569: Verify MF Signup flow', () => {
         '0.00EUR'
       )
       cy.c_manageAccountsetting(country, {
-        isMobile: size == 'small' ? true : false,
+        isMobile: isMobile,
       })
     })
   })
