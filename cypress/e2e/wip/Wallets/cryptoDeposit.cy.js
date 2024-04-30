@@ -4,7 +4,7 @@ function performCryptoDeposit(platform) {
   cy.contains('Wallet', { timeout: 10000 }).should('exist')
   if (`${platform}` == `mobile`) {
     cy.contains('Deposit', { timeout: 10000 }).should('exist')
-    cy.log('Perform crypto withdarw in mobile mode')
+    cy.log('Perform crypto deposit in mobile mode')
     cy.c_switchWalletsAccountResponsive('BTC')
   } else {
     cy.c_switchWalletsAccount('BTC')
