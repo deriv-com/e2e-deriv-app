@@ -17,7 +17,6 @@ Cypress.Commands.add('c_navigateToPoiResponsive', (country) => {
 
 Cypress.Commands.add('c_onfidoSecondRun', () => {
   cy.get('select[name="country_input"]').select('Colombia')
-  //cy.contains('button', 'Next').click()
   cy.findByRole('button', { name: 'Next' }).click()
   cy.get('.dc-checkbox__box').click()
   cy.findByText('Passport').click()
