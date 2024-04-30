@@ -75,7 +75,7 @@ function closeModal() {
   cy.findByRole('button', { name: 'Transfer funds' }).should('exist')
   cy.findByRole('button', { name: 'Maybe later' }).click()
 }
-describe('WALL-2000 - Create MT5 account', () => {
+describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG MT5 account and QATEST-115487 Add real BVI MT5 account', () => {
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')

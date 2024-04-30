@@ -2,6 +2,7 @@ import { derivApp } from '../locators'
 
 Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
   if (isMobile) {
+    cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'Options & Multipliers' }).should(
       'be.visible'
     )
