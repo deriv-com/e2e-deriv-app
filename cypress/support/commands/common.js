@@ -467,7 +467,7 @@ Cypress.Commands.add(
       cy.task('wsConnect')
       cy.task('verifyEmailTask').then((accountEmail) => {
         cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
-        cy.task('createVirtualAccountTask', {
+        cy.task('createRealAccountTask', {
           country_code: country_code,
           currency: currency,
         }).then(() => {
