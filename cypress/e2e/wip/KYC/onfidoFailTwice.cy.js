@@ -2,6 +2,8 @@ import '@testing-library/cypress/add-commands'
 
 describe('QATEST-127508 - Onfido (2 attempts) failed clients are redirected to manual upload', () => {
   beforeEach(() => {
+    cy.c_visitResponsive('/')
+    cy.c_createRealAccount('co')
     cy.c_login()
     cy.c_navigateToPoiResponsive('Colombia')
   })
@@ -23,21 +25,29 @@ describe('QATEST-127508 - Onfido (2 attempts) failed clients are redirected to m
     cy.get('.onfido-sdk-ui-Camera-btn').click()
     cy.findByText('Confirm').click()
     cy.findByText('Account verification required').should('be.visible')
-    cy.c_closeNotificationHeader()
-
-    cy.wait(5000)
     cy.reload()
-    cy.findByText('Your identity verification failed:').should('be.visible')
-    cy.findByRole('button', { name: 'Verify again' }).click()
-
-    cy.findByText('Proof of address required').should('exist')
     cy.c_closeNotificationHeader()
-    cy.c_onfidoSecondRun('Colombia')
+    cy.c_waitUntilElementIsFound({
+      cyLocator: () =>
+        cy.findByText('Your proof of identity submission failed because:'),
+      timeout: 1000,
+      maxRetries: 5,
+    })
+    cy.findByText('Your proof of identity submission failed because:')
+    cy.get('.dc-btn').click()
+
+    // Second onfido attempt
+    cy.c_onfidoSecondRun()
     cy.findByText('Your documents were submitted successfully').should(
       'be.visible'
     )
 
-    cy.wait(5000)
+    cy.c_waitUntilElementIsFound({
+      cyLocator: () =>
+        cy.findByText('Please upload one of the following documents:'),
+      timeout: 1000,
+      maxRetries: 2,
+    })
     cy.reload()
     cy.findByText('Please upload one of the following documents:').should(
       'be.visible'

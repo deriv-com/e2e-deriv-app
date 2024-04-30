@@ -111,6 +111,17 @@ Cypress.Commands.add('c_verifyTextAreaLength', (blockName, textLength) => {
     .should('contain.text', `${textLength}/300`)
 })
 
+Cypress.Commands.add('c_checkForExistingAds', () => {
+  cy.c_loadingCheck()
+  return cy.get('body', { timeout: 10000 }).then((body) => {
+    if (body.find('.no-ads__message', { timeout: 10000 }).length > 0) {
+      return false
+    } else if (body.find('#toggle-my-ads', { timeout: 10000 }).length > 0) {
+      return true
+    }
+  })
+})
+
 Cypress.Commands.add('c_verifyRate', () => {
   cy.findByTestId('float_rate_type').click().clear()
   cy.findByText('Floating rate is required').should('be.visible')
@@ -304,31 +315,6 @@ Cypress.Commands.add('c_closeSafetyInstructions', () => {
   cy.c_skipPasskey()
 })
 
-Cypress.Commands.add('c_closeNotificationHeader', () => {
-  cy.document().then((doc) => {
-    let notification = doc.querySelector('.notification__header')
-    if (notification) {
-      cy.log('Notification header appeared')
-      cy.get('.notification__text-body')
-        .invoke('text')
-        .then((text) => {
-          cy.log(text)
-        })
-      cy.findAllByRole('button', { name: 'Close' })
-        .first()
-        .should('be.visible')
-        .click()
-        .and('not.exist')
-      notification = null
-      cy.then(() => {
-        cy.c_closeNotificationHeader()
-      })
-    } else {
-      cy.log('Notification header did not appear')
-    }
-  })
-})
-
 Cypress.Commands.add('c_addPaymentMethod', (paymentID, paymentMethod) => {
   if (paymentMethod == 'Bank Transfer') {
     cy.findByRole('textbox', { name: 'Payment method' })
@@ -432,4 +418,43 @@ Cypress.Commands.add('c_skipPasskey', (adType) => {
       cy.log('Passkey is disable')
     }
   })
+})
+
+Cypress.Commands.add('c_adDetailsFieldLength', (blockName, textLength) => {
+  cy.get(`textarea[name=${blockName}]`)
+    .parents('.dc-input__wrapper')
+    .find('.dc-input__footer .dc-input__counter')
+    .should('contain.text', `${textLength}/300`)
+})
+
+Cypress.Commands.add('c_adDetailsFieldText', (blockName) => {
+  cy.get(`textarea[name=${blockName}]`)
+    .invoke('val')
+    .then((text) => {
+      let textLength = text.length
+      cy.c_adDetailsFieldLength(blockName, textLength)
+    })
+  cy.get(`textarea[name=${blockName}]`).clear()
+  cy.get(`textarea[name=${blockName}]`)
+    .clear()
+    .type('abc')
+    .should('have.value', 'abc')
+  cy.c_adDetailsFieldLength(blockName, 'abc'.length)
+  let textLimitCheck = generateAccountNumberString(300)
+  cy.get(`textarea[name=${blockName}]`)
+    .clear()
+    .type(textLimitCheck)
+    .should('have.value', textLimitCheck)
+  cy.c_adDetailsFieldLength(blockName, textLimitCheck.length)
+  cy.get(`textarea[name=${blockName}]`)
+    .clear()
+    .type(textLimitCheck + '1')
+    .should('have.value', textLimitCheck)
+  cy.c_adDetailsFieldLength(blockName, textLimitCheck.length)
+  let textForField = generateAccountNumberString(20)
+  cy.get(`textarea[name=${blockName}]`)
+    .clear()
+    .type(textForField)
+    .should('have.value', textForField)
+  cy.c_adDetailsFieldLength(blockName, textForField.length)
 })

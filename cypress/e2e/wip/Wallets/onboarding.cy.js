@@ -86,7 +86,7 @@ function onboardingfiatwallet() {
   onboardingcfdtrading()
 }
 
-describe('WALL-3037 & 3039- User Onboarding on Desktop for Fiat Wallets', () => {
+describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets', () => {
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
     cy.c_visitResponsive('/wallets', 'large')

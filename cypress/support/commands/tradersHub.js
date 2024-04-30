@@ -1,5 +1,8 @@
+import { derivApp } from '../locators'
+
 Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
   if (isMobile) {
+    cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'Options & Multipliers' }).should(
       'be.visible'
     )
@@ -36,6 +39,10 @@ Cypress.Commands.add('c_switchToDemo', () => {
 
 Cypress.Commands.add('c_completeTradersHubTour', () => {
   cy.findByRole('button', { name: 'Next' }).click()
+  if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
+    cy.contains('Choice of regulation').should('be.visible')
+    cy.contains('button', 'Next').click()
+  }
   cy.findByRole('button', { name: 'OK' }).click()
 })
 
@@ -93,6 +100,7 @@ Cypress.Commands.add('c_completeOnboarding', () => {
   }
   cy.contains("Trader's Hub tour").should('be.visible')
   cy.contains('button', 'OK').click()
+  cy.skipPasskeysV2()
 })
 
 // TODO move to Utility finction
@@ -115,8 +123,10 @@ Cypress.Commands.add(
     taxResi,
     nationalIDNum,
     taxIDNum,
-    currency = Cypress.env('accountCurrency').USD
+    currency = Cypress.env('accountCurrency').USD,
+    options = {}
   ) => {
+    const { isMobile = false } = options
     cy.findByText(currency).click()
     cy.findByRole('button', { name: 'Next' }).click()
     if (identity == 'Onfido') {
@@ -124,8 +134,12 @@ Cypress.Commands.add(
         'be.visible'
       )
     } else if (identity == 'IDV') {
-      cy.findByLabelText('Choose the document type').click()
-      cy.findByText('National ID Number').click()
+      if (isMobile) {
+        cy.get(`select[name='document_type']`).select('National ID Number')
+      } else {
+        cy.findByLabelText('Choose the document type').click()
+        cy.findByText('National ID Number').click()
+      }
       cy.findByLabelText('Enter your document number').type(nationalIDNum)
     } else {
       cy.log('Not IDV or Onfido')
@@ -133,39 +147,64 @@ Cypress.Commands.add(
     }
     cy.findByTestId('first_name').type(firstName)
     cy.findByTestId('last_name').type('automation acc')
-    cy.findByTestId('date_of_birth').click()
-    cy.findByText('2006').click()
-    cy.findByText('Feb').click()
-    cy.findByText('9', { exact: true }).click()
+    if (isMobile) cy.findByTestId('date_of_birth').type('2006-02-09')
+    else {
+      cy.findByTestId('date_of_birth').click()
+      cy.findByText('2006').click()
+      cy.findByText('Feb').click()
+      cy.findByText('9', { exact: true }).click()
+    }
     if (identity == 'IDV') {
       cy.get('.dc-checkbox__box').click()
     }
     cy.findByTestId('phone').type('12345678')
-    cy.findByTestId('place_of_birth').type(taxResi)
-    cy.findByText(taxResi).click()
-    if (identity == 'MF') {
-      cy.findByTestId('citizenship').clear().type(taxResi)
+    if (isMobile) cy.findByTestId(/place_of_birth/).select(taxResi)
+    else {
+      cy.findByTestId('place_of_birth').type(taxResi)
       cy.findByText(taxResi).click()
     }
-    cy.findByTestId('tax_residence').clear().type(taxResi)
-    cy.findByText(taxResi).click()
+
+    if (identity == 'MF') {
+      if (isMobile) cy.findByTestId(/citizenship/).select(taxResi)
+      else {
+        cy.findByTestId('citizenship').clear().type(taxResi)
+        cy.findByText(taxResi).click()
+      }
+    }
+    if (isMobile) {
+      cy.findAllByTestId(/tax_residence/i)
+        .first()
+        .select(taxResi)
+    } else {
+      cy.findByTestId('tax_residence').clear().type(taxResi)
+      cy.findByText(taxResi).click()
+    }
+
     cy.findByTestId('tax_identification_number').type(taxIDNum)
     if (identity == 'MF') {
-      cy.findByTestId('dt_personal_details_container')
-        .findAllByTestId('dt_dropdown_display')
-        .eq(0)
-        .click()
-      cy.get('#Employed').click()
-      cy.findByTestId('dt_personal_details_container')
-        .findAllByTestId('dt_dropdown_display')
-        .eq(1)
-        .click()
-      cy.get('#Hedging').click()
+      if (isMobile) {
+        cy.get(`select[name='employment_status']`).select('Employed')
+        cy.findByTestId(/account_opening_reason/).select('Hedging')
+      } else {
+        cy.findByTestId('dt_personal_details_container')
+          .findAllByTestId('dt_dropdown_display')
+          .eq(0)
+          .click()
+        cy.get('#Employed').click()
+        cy.findByTestId('dt_personal_details_container')
+          .findAllByTestId('dt_dropdown_display')
+          .eq(1)
+          .click()
+        cy.get('#Hedging').click()
+      }
     } else {
-      cy.findByTestId('dt_personal_details_container')
-        .findByTestId('dt_dropdown_display')
-        .click()
-      cy.get('#Hedging').click()
+      if (isMobile) cy.findByTestId(/account_opening_reason/).select('Hedging')
+      else {
+        cy.findByTestId('dt_personal_details_container')
+          .findByTestId('dt_dropdown_display')
+          .click()
+        cy.get('#Hedging').click()
+      }
     }
     if (identity == 'Onfido') {
       cy.get('.dc-checkbox__box').click()
@@ -199,9 +238,7 @@ Cypress.Commands.add('c_addAccount', () => {
   cy.findByRole('heading', { name: 'Your account is ready' }).should(
     'be.visible'
   )
-  cy.get('#real_account_signup_modal')
-    .findByRole('button', { name: 'Deposit' })
-    .should('be.visible')
+  cy.findByRole('button', { name: 'Deposit' }).should('be.visible')
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
   cy.url().should('be.equal', Cypress.env('baseUrl') + 'appstore/traders-hub')
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
@@ -209,29 +246,47 @@ Cypress.Commands.add('c_addAccount', () => {
   cy.findAllByTestId('dt_balance_text_container').eq(0).should('be.visible')
 })
 
-Cypress.Commands.add('c_manageAccountsetting', (CoR) => {
-  cy.get('.traders-hub-header__setting').click()
+Cypress.Commands.add('c_manageAccountsetting', (CoR, options = {}) => {
+  const { isMobile = false } = options
+  if (isMobile) {
+    derivApp.commonPage.mobileLocators.header.hamburgerMenuButton().click()
+    cy.findByRole('heading', { name: 'Account Settings' }).click()
+  } else {
+    cy.get('.traders-hub-header__setting').click()
+  }
   cy.findByRole('link', { name: 'Proof of identity' }).click()
   cy.findByText('In which country was your document issued?').should(
     'be.visible'
   )
   cy.findByRole('button', { name: 'Next' }).should('be.disabled')
-  cy.findByLabelText('Country').type(CoR)
-  cy.findByText(CoR).click()
+  if (isMobile) cy.get(`select[name='country_input']`).select(CoR)
+  else {
+    cy.findByLabelText('Country').type(CoR)
+    cy.findByText(CoR).click()
+  }
   cy.findByRole('button', { name: 'Next' }).should('not.be.disabled')
 })
 
-Cypress.Commands.add('c_completeTradingAssessment', () => {
-  let count = 1
+Cypress.Commands.add('c_completeTradingAssessment', (options = {}) => {
+  const { isMobile = false } = options
+
   cy.get('[type="radio"]').first().click({ force: true })
   cy.findByRole('button', { name: 'Next' }).click()
   cy.get('[type="radio"]').eq(1).click({ force: true })
   cy.findByRole('button', { name: 'Next' }).click()
+  let count = 1
   while (count < 5) {
-    cy.findAllByTestId('dt_dropdown_display').eq(count).click()
-    cy.findAllByTestId('dti_list_item').eq(2).click()
+    if (isMobile) {
+      cy.get('.dc-select-native__picker')
+        .eq(count - 1)
+        .select(2)
+    } else {
+      cy.findAllByTestId('dt_dropdown_display').eq(count).click()
+      cy.findAllByTestId('dti_list_item').eq(2).click()
+    }
     count++
   }
+
   cy.findByRole('button', { name: 'Next' }).click()
   cy.get('[type="radio"]').eq(2).click({ force: true })
   cy.findByRole('button', { name: 'Next' }).click()
@@ -243,11 +298,19 @@ Cypress.Commands.add('c_completeTradingAssessment', () => {
   cy.findByRole('button', { name: 'Next' }).click()
 })
 
-Cypress.Commands.add('c_completeFinancialAssessment', () => {
+Cypress.Commands.add('c_completeFinancialAssessment', (options = {}) => {
+  const { isMobile = false } = options
   let count = 1
   while (count < 9) {
-    cy.findAllByTestId('dt_dropdown_display').eq(count).click()
-    cy.findAllByTestId('dti_list_item').eq(1).click()
+    if (isMobile) {
+      cy.get('.dc-select-native__picker')
+        .eq(count - 1)
+        .select(1)
+    } else {
+      cy.findAllByTestId('dt_dropdown_display').eq(count).click()
+      cy.findAllByTestId('dti_list_item').eq(1).click()
+    }
+
     count++
   }
   cy.findByRole('button', { name: 'Next' }).click()
@@ -258,7 +321,8 @@ Cypress.Commands.add('c_completeFatcaDeclarationAgreement', () => {
   cy.findAllByTestId('dti_list_item').eq(0).click()
 })
 
-Cypress.Commands.add('c_addAccountMF', (type) => {
+Cypress.Commands.add('c_addAccountMF', (type, options = {}) => {
+  const { isMobile = false } = options
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
   cy.get('.dc-checkbox__box').eq(0).click()
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
@@ -270,17 +334,21 @@ Cypress.Commands.add('c_addAccountMF', (type) => {
   }
   cy.findByRole('button', { name: 'Add account' }).click()
   cy.findByRole('heading', { name: 'Deposit' }).should('be.visible')
-  cy.findByTestId('dt_modal_close_icon').click()
-  cy.findByRole('heading', { name: 'Account added' }).should('be.visible')
-  cy.findByRole('button', { name: 'Verify now' }).should('be.visible')
-  cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
-  cy.url().should('be.equal', Cypress.env('baseUrl') + 'appstore/traders-hub')
-  cy.findByRole('button', { name: 'Next' }).click()
-  if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
-    cy.contains('Choice of regulation').should('be.visible')
-    cy.contains('button', 'Next').click()
+  if (isMobile) {
+    cy.findByTestId('dt_page_overlay_header_close').click()
+  } else {
+    cy.findByTestId('dt_modal_close_icon').click()
   }
-  cy.findByRole('button', { name: 'OK' }).click()
+  cy.url().should('be.equal', Cypress.env('baseUrl') + 'appstore/traders-hub')
+  cy.findByRole('heading', { name: 'Account added' }).should('be.visible')
+  cy.findByText(
+    'Your account will be available for trading once the verification of your account is complete.'
+  ).should('be.visible')
+  cy.findByRole('button', { name: 'Verify now' })
+    .should('be.visible')
+    .and('be.enabled')
+  cy.findByRole('button', { name: 'Maybe later' }).click()
+  cy.c_completeTradersHubTour()
 })
 
 Cypress.Commands.add(
@@ -300,7 +368,6 @@ Cypress.Commands.add(
           )
         })
       })
-      cy.c_visitResponsive(Cypress.env('verificationUrl'), size)
       cy.get('h1').contains('Select your country and').should('be.visible')
       cy.c_selectCountryOfResidence(country)
       cy.c_selectCitizenship(country)
@@ -315,8 +382,7 @@ Cypress.Commands.add(
 Cypress.Commands.add('c_setEndpoint', (signUpMail, size = 'desktop') => {
   localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
   localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
-  const mainURL = Cypress.config('baseUrl')
-  cy.c_visitResponsive(mainURL + 'endpoint', size)
+  cy.c_visitResponsive(`${Cypress.config('baseUrl')}endpoint`, size)
   cy.findByRole('button', { name: 'Sign up' }).should('not.be.disabled')
   cy.c_enterValidEmail(signUpMail)
 })
@@ -405,20 +471,38 @@ Cypress.Commands.add('c_getCurrencyBalance', (currency, options = {}) => {
  *  code: "USD"
  * }
  */
-Cypress.Commands.add('c_createNewCurrencyAccount', (currency) => {
+Cypress.Commands.add('c_createNewCurrencyAccount', (currency, options = {}) => {
+  const { size = 'large' } = options
   cy.log(`Creating ${currency.name} account`)
   cy.get('.dc-modal').within(() => {
     cy.findByRole('button', { name: 'Add or manage account' }).click()
-    cy.findByRole('heading', {
-      name: 'Choose your preferred cryptocurrency',
-    }).should('exist')
-    cy.findByText(currency.name).click()
-    cy.findByRole('button', { name: 'Add account' }).click()
-    cy.findByText('Success!').should('exist')
-    cy.findByText(`You have added a ${currency.code} account.`).should(
-      'be.visible'
-    )
-    cy.findByRole('button', { name: 'Maybe later' }).click()
+    if (size == 'small') {
+      cy.get('form', { withinSubject: null }).within(() => {
+        cy.findByText('Choose your preferred cryptocurrency').should(
+          'be.visible'
+        )
+        cy.findByText(currency.name).click()
+        cy.findByRole('button', { name: 'Add account' }).click()
+        cy.get('body', { withinSubject: null }).within(() => {
+          cy.findByText('Success!').should('exist')
+          cy.findByText(`You have added a ${currency.code} account.`).should(
+            'be.visible'
+          )
+          cy.findByRole('button', { name: 'Maybe later' }).click()
+        })
+      })
+    } else {
+      cy.findByRole('heading', {
+        name: 'Choose your preferred cryptocurrency',
+      }).should('exist')
+      cy.findByText(currency.name).click()
+      cy.findByRole('button', { name: 'Add account' }).click()
+      cy.findByText('Success!').should('exist')
+      cy.findByText(`You have added a ${currency.code} account.`).should(
+        'be.visible'
+      )
+      cy.findByRole('button', { name: 'Maybe later' }).click()
+    }
   })
 })
 
