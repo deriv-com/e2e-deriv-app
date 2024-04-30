@@ -1,7 +1,11 @@
 import '@testing-library/cypress/add-commands'
 
-function reset_balance_demo() {
-  cy.c_switchWalletsAccount('USD Demo')
+function reset_balance_demo(platform) {
+  if (`${platform}` == `mobile`) {
+    cy.c_switchWalletsAccountResponsive('USD Demo')
+  } else {
+    cy.c_switchWalletsAccount('USD Demo')
+  }
   cy.findByText('Reset balance').should('be.visible').click()
   cy.get('[class="wallets-cashier-content"]')
     .findByRole('button', { name: 'Reset balance' })
@@ -21,12 +25,12 @@ describe('QATEST-98815 - Demo reset balance', () => {
   //Prerequisites: Demo wallet account in any qa box with USD demo funds
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
-    cy.c_visitResponsive('/wallets', 'large')
   })
 
   it('should be able to reset balance for demo wallet', () => {
     cy.log('Reset Balance for Demo Account')
+    cy.c_visitResponsive('/wallets', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    reset_balance_demo()
+    reset_balance_demo('desktop')
   })
 })
