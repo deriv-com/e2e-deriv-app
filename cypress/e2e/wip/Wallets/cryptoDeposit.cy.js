@@ -3,6 +3,7 @@ import '@testing-library/cypress/add-commands'
 function performCryptoDeposit(platform) {
   cy.contains('Wallet', { timeout: 10000 }).should('exist')
   if (`${platform}` == `mobile`) {
+    cy.contains('Deposit', { timeout: 10000 }).should('exist')
     cy.log('Perform crypto withdarw in mobile mode')
     cy.c_switchWalletsAccountResponsive('BTC')
   } else {
@@ -23,12 +24,13 @@ function performCryptoDeposit(platform) {
 function performCryptoDepositFiatonRamp(platform) {
   cy.contains('Wallet', { timeout: 10000 }).should('exist')
   if (`${platform}` == `mobile`) {
+    cy.contains('Deposit', { timeout: 10000 }).should('exist')
     cy.log('perform crypto deposit in responsive mode')
     cy.c_switchWalletsAccountResponsive('BTC')
   } else {
     cy.c_switchWalletsAccount('BTC')
   }
-  cy.findByText('Deposit').should('be.visible').click()
+  cy.findByText('Deposit').parent().should('be.visible').click()
   cy.findByText('Try Fiat onramp').click()
   cy.findByText('Banxa')
   cy.findByRole('button', { name: 'Select' }).click()
@@ -67,6 +69,6 @@ describe('QATEST-98781 - Crypto deposit and fiat onramp', () => {
   it('should be able to deposit into crypto account through fiat onramp in responsive', () => {
     cy.c_visitResponsive('/wallets', 'small')
     cy.log('Access Fiat OnRamp Provider')
-    performCryptoDeposit('mobile')
+    performCryptoDepositFiatonRamp('mobile')
   })
 })

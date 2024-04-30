@@ -22,7 +22,11 @@ Cypress.Commands.add('c_switchWalletsAccountResponsive', (account) => {
     })
   }
   const clickNext = () => {
-    cy.get('.wallets-progress-bar-inactive').first().click()
+    return cy
+      .get('div.wallets-progress-bar')
+      .find('div.wallets-progress-bar-inactive')
+      .first()
+      .click()
   }
   const keepClickingNext = () => {
     clickNext().then(() => {
