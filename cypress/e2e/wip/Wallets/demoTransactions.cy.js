@@ -40,7 +40,7 @@ function demoTransfer(transferToAccount) {
   }
 }
 
-describe('WALL-2760 - Transfer and check transactions for Demo wallet', () => {
+describe('QATEST-98798 - Transfer and QATEST-98801 View demo transaction', () => {
   //Prerequisites: Demo wallet account in any qa box with USD demo funds
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })

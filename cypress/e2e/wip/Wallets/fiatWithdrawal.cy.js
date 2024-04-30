@@ -19,7 +19,7 @@ Cypress.Commands.add('c_verifyWalletsWithdrawalScreenContentAfterLink', () => {
   })
 })
 
-describe('WALL-2830 - Fiat withdrawal access iframe from email verification link', () => {
+describe('QATEST-98812 - Fiat withdrawal access iframe from email verification link', () => {
   //Prerequisites: Fiat wallet account in backend prod staging with USD wallet
   beforeEach(() => {
     cy.c_login({ user: 'wallets', backEndProd: true })
@@ -31,7 +31,9 @@ describe('WALL-2830 - Fiat withdrawal access iframe from email verification link
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
     cy.findByText('Withdraw').click()
-    cy.findByText(/Please help us verify/).should('be.visible')
+    cy.findByText('Confirm your identity to make a withdrawal.').should(
+      'be.visible'
+    )
     if (cy.findByRole('button', { name: 'Send email' }).should('be.visible')) {
       cy.findByRole('button', { name: 'Send email' })
         .should('be.visible')
@@ -40,8 +42,6 @@ describe('WALL-2830 - Fiat withdrawal access iframe from email verification link
         .click()
     }
     cy.findByText("We've sent you an email.")
-    cy.findByRole('button', { name: "Didn't receive the email?" }).click()
-    cy.findByText(/Resend email/)
     cy.c_retrieveVerificationLinkUsingMailisk(
       Cypress.env('credentials').production.wallets.ID.split('@')[0],
       'withdrawal',
