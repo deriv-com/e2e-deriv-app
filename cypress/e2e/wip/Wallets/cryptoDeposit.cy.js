@@ -1,40 +1,68 @@
 import '@testing-library/cypress/add-commands'
 
-describe('QATEST-98781 Crypto deposit and QATEST-98785 - Crypto deposit using fiat onramp', () => {
+function performCryptoDeposit(platform) {
+  cy.contains('Wallet', { timeout: 10000 }).should('exist')
+  if (`${platform}` == `mobile`) {
+    cy.contains('Deposit', { timeout: 10000 }).should('exist')
+    cy.c_switchWalletsAccountResponsive('BTC')
+  } else {
+    cy.c_switchWalletsAccount('BTC')
+  }
+  cy.findByText('Deposit').parent().should('be.visible').click()
+  cy.get('canvas').should('be.visible')
+  cy.findByText('Transaction status')
+  cy.findByText(/To avoid loss of funds/)
+  cy.get('.wallets-clipboard').click()
+  if (`${platform}` == `desktop`) {
+    cy.findByText('Copied!')
+  }
+  cy.findByText('Try Fiat onramp').click()
+  cy.findByText('Banxa')
+}
+
+function performCryptoDepositFiatonRamp(platform) {
+  cy.contains('Wallet', { timeout: 10000 }).should('exist')
+  if (`${platform}` == `mobile`) {
+    cy.contains('Deposit', { timeout: 10000 }).should('exist')
+    cy.c_switchWalletsAccountResponsive('BTC')
+  } else {
+    cy.c_switchWalletsAccount('BTC')
+  }
+  cy.findByText('Deposit').parent().should('be.visible').click()
+  cy.findByText('Try Fiat onramp').click()
+  cy.findByText('Banxa')
+  cy.findByRole('button', { name: 'Select' }).click()
+  cy.findByText('Disclaimer')
+  cy.findByRole('button', { name: 'Back' }).click()
+  cy.findByRole('button', { name: 'Select' }).click()
+  cy.findByRole('button', { name: 'Continue' })
+    .should('be.enabled')
+    .invoke('removeAttr', 'target')
+    .click()
+}
+
+describe('QATEST-98781 - Crypto deposit and fiat onramp', () => {
   //Prerequisites: Crypto wallet account with access to banxa provider in any qa box with app id 11780
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
-    cy.c_visitResponsive('/wallets', 'large')
   })
 
   it('should be able to view crypto deposit details', () => {
-    cy.log('Crypto Deposit')
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    cy.c_switchWalletsAccount('BTC')
-    cy.findByText('Deposit').should('be.visible').click()
-    cy.get('canvas').should('be.visible')
-    cy.findByText('Transaction status')
-    cy.findByText(/To avoid loss of funds/)
-    cy.get('.wallets-clipboard').click()
-    cy.findByText('Copied!')
-    cy.findByText('Try Fiat onramp').click()
-    cy.findByText('Banxa')
+    cy.c_visitResponsive('/wallets', 'large')
+    performCryptoDeposit('desktop')
   })
 
   it('should be able to deposit into crypto account through fiat onramp', () => {
-    cy.log('Access Fiat OnRamp Provider')
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    cy.c_switchWalletsAccount('BTC')
-    cy.findByText('Deposit').should('be.visible').click()
-    cy.findByText('Try Fiat onramp').click()
-    cy.findByText('Banxa')
-    cy.findByRole('button', { name: 'Select' }).click()
-    cy.findByText('Disclaimer')
-    cy.findByRole('button', { name: 'Back' }).click()
-    cy.findByRole('button', { name: 'Select' }).click()
-    cy.findByRole('button', { name: 'Continue' })
-      .should('be.enabled')
-      .invoke('removeAttr', 'target')
-      .click()
+    cy.c_visitResponsive('/wallets', 'large')
+    performCryptoDepositFiatonRamp('desktop')
+  })
+  it('should be able to view crypto deposit details in responsive', () => {
+    cy.c_visitResponsive('/wallets', 'small')
+    performCryptoDeposit('mobile')
+  })
+
+  it('should be able to deposit into crypto account through fiat onramp in responsive', () => {
+    cy.c_visitResponsive('/wallets', 'small')
+    performCryptoDepositFiatonRamp('mobile')
   })
 })
