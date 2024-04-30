@@ -2,6 +2,7 @@ import '@testing-library/cypress/add-commands'
 
 describe('QATEST-22808 IDV Expired scenario', () => {
   beforeEach(() => {
+    cy.c_createRealAccount()
     cy.c_login()
     cy.c_navigateToPoiResponsive('Kenya')
   })
@@ -14,6 +15,7 @@ describe('QATEST-22808 IDV Expired scenario', () => {
     cy.findByTestId('date_of_birth').type('2000-09-20')
     cy.get('.dc-checkbox__box').click()
     cy.findByRole('button', { name: 'Verify' }).click()
+    cy.wait(3000)
     cy.reload()
     cy.contains('In which country was your document issued?').should(
       'be.visible'

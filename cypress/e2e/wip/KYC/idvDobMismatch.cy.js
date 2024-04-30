@@ -2,14 +2,15 @@ import '@testing-library/cypress/add-commands'
 
 describe('QATEST-23042 IDV DOB Mismatch by Smile Identity provider', () => {
   beforeEach(() => {
+    cy.c_createRealAccount()
     cy.c_login()
     cy.c_navigateToPoiResponsive('Ghana')
   })
 
-  it('Should return Document Rejected', () => {
-    cy.get('select[name="document_type"]').select('Passport')
-    cy.findByLabelText('Enter your document number').type('G0000001')
-    cy.findByTestId('first_name').clear().type('Joe Doe')
+  it('Should return Date of birth mismatch', () => {
+    cy.get('select[name="document_type"]').select('SSNIT')
+    cy.findByLabelText('Enter your document number').type('C0000000000000')
+    cy.findByTestId('first_name').clear().type('Doe Joe')
     cy.findByTestId('last_name').clear().type('Leo')
     cy.findByTestId('date_of_birth').type('1991-08-23')
 
