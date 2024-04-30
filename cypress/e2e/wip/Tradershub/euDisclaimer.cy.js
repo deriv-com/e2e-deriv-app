@@ -9,17 +9,11 @@ describe(`QATEST-42150 Validate the EU statutory disclaimer in footer for EU use
     it(`Should validate the EU statutory disclaimer in footer for EU users`, () => {
       cy.c_visitResponsive('/appstore/traders-hub', size)
       cy.c_validateEUDisclaimer()
-      // cy.c_visitResponsive('/appstore/traders-hub', 'small')
-      // cy.c_validateEUDisclaimer()
     })
   })
 })
 
 describe(`QATEST-37723 Validate the EU statutory disclaimer in footer of EU account for DIEL users ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
-  // beforeEach(() => {
-  //   Cypress.env('oAuthUrl', '<empty>')
-  // })
-
   beforeEach(() => {
     cy.c_login({ user: 'diel' })
   })
@@ -30,9 +24,6 @@ describe(`QATEST-37723 Validate the EU statutory disclaimer in footer of EU acco
       cy.findByText('EU', { exact: true }).click()
       cy.c_closeNotificationHeader()
       cy.c_validateEUDisclaimer()
-      // cy.c_visitResponsive('/appstore/traders-hub', 'small')
-      // cy.findByText('EU', { exact: true }).click()
-      // cy.c_validateEUDisclaimer()
     })
   })
 })
