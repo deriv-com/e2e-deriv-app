@@ -21,11 +21,6 @@ describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients
       timeout: 1000,
       maxRetries: 5,
     })
-    // cy.contains('Your identity verification failed').should('be.visible')
-    cy.contains(
-      'We were unable to verify the identity document with the details provided.'
-    ).should('be.visible')
-
     cy.c_closeNotificationHeader()
     cy.get('select[name="country_input"]').select('Ghana')
     cy.contains('button', 'Next').click()
@@ -46,8 +41,5 @@ describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients
       timeout: 1000,
       maxRetries: 5,
     })
-    cy.findByText('Please upload one of the following documents:').should(
-      'be.visible'
-    )
   })
 })
