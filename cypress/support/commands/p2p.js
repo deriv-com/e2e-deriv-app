@@ -408,3 +408,42 @@ Cypress.Commands.add('c_skipPasskey', (adType) => {
     }
   })
 })
+
+Cypress.Commands.add('c_adDetailsFieldLength', (blockName, textLength) => {
+  cy.get(`textarea[name=${blockName}]`)
+    .parents('.dc-input__wrapper')
+    .find('.dc-input__footer .dc-input__counter')
+    .should('contain.text', `${textLength}/300`)
+})
+
+Cypress.Commands.add('c_adDetailsFieldText', (blockName) => {
+  cy.get(`textarea[name=${blockName}]`)
+    .invoke('val')
+    .then((text) => {
+      let textLength = text.length
+      cy.c_adDetailsFieldLength(blockName, textLength)
+    })
+  cy.get(`textarea[name=${blockName}]`).clear()
+  cy.get(`textarea[name=${blockName}]`)
+    .clear()
+    .type('abc')
+    .should('have.value', 'abc')
+  cy.c_adDetailsFieldLength(blockName, 'abc'.length)
+  let textLimitCheck = generateAccountNumberString(300)
+  cy.get(`textarea[name=${blockName}]`)
+    .clear()
+    .type(textLimitCheck)
+    .should('have.value', textLimitCheck)
+  cy.c_adDetailsFieldLength(blockName, textLimitCheck.length)
+  cy.get(`textarea[name=${blockName}]`)
+    .clear()
+    .type(textLimitCheck + '1')
+    .should('have.value', textLimitCheck)
+  cy.c_adDetailsFieldLength(blockName, textLimitCheck.length)
+  let textForField = generateAccountNumberString(20)
+  cy.get(`textarea[name=${blockName}]`)
+    .clear()
+    .type(textForField)
+    .should('have.value', textForField)
+  cy.c_adDetailsFieldLength(blockName, textForField.length)
+})
