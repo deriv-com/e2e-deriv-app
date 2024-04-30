@@ -1,6 +1,7 @@
 import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
+Cypress.prevUser = ''
 
 const setLoginUser = (user = 'masterUser', options = {}) => {
   const { backEndProd = false } = options
@@ -95,9 +96,14 @@ Cypress.Commands.add('c_login', (options = {}) => {
     Cypress.env('configAppId', Cypress.env('stdConfigAppId'))
   }
 
-  //If we're switching between apps, we'll need to re-authenticate
-  if (Cypress.prevAppId != Cypress.env('configAppId')) {
+  //If we're switching between apps or users, we'll need to re-authenticate
+  if (
+    Cypress.prevAppId != Cypress.env('configAppId') ||
+    Cypress.prevUser != user
+  ) {
     cy.log('prevAppId: ' + Cypress.prevAppId)
+    cy.log(`Prev User: ${Cypress.prevUser}`)
+    Cypress.prevUser = user
     Cypress.prevAppId = Cypress.env('configAppId')
     Cypress.env('oAuthUrl', '<empty>')
   }
