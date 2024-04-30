@@ -7,7 +7,7 @@ Cypress.Commands.add(
     const code = verification_url.match(/code=([A-Za-z0-9]{8})/)
     const verification_code = code[1]
     if (`${platform}` == `mobile`) {
-      cy.log('mobile view')
+      cy.log('demo reset balance in responsive')
       cy.c_visitResponsive(
         `/wallets/cashier/withdraw?verification=${verification_code}`,
         'small'
@@ -18,7 +18,7 @@ Cypress.Commands.add(
         'large'
       )
     }
-    cy.findByTestId('dt_initial_loader').should('not.exist')
+    cy.c_loadingCheck()
     cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
     cy.get('iframe[class=wallets-withdrawal-fiat__iframe]').should('be.visible')
     cy.enter('iframe[class=wallets-withdrawal-fiat__iframe]').then(

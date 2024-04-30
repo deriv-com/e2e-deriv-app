@@ -4,7 +4,7 @@ function sendWithdrawEmail() {
   cy.log('view port size is')
   cy.log(Cypress.config('viewportWidth'))
   if (Cypress.config('viewportWidth') < 900) {
-    cy.log('mobile view')
+    cy.log('cyrpto withdraw in responsive mode')
     cy.c_switchWalletsAccountResponsive('BTC')
   } else {
     cy.c_switchWalletsAccount('BTC')
@@ -22,7 +22,7 @@ function sendWithdrawEmail() {
 }
 function verifyEmailandPerformWithdraw(platform) {
   if (`${platform}` == `mobile`) {
-    cy.log('mobile view')
+    cy.log('verify withdraw email in responsive mode')
     cy.c_switchWalletsAccountResponsive('BTC')
   } else {
     cy.c_switchWalletsAccount('BTC')

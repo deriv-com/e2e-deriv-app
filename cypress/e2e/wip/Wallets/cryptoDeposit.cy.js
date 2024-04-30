@@ -3,7 +3,7 @@ import '@testing-library/cypress/add-commands'
 function performCryptoDeposit(platform) {
   cy.contains('Wallet', { timeout: 10000 }).should('exist')
   if (`${platform}` == `mobile`) {
-    cy.log('mobile view')
+    cy.log('Perform crypto withdarw in mobile mode')
     cy.c_switchWalletsAccountResponsive('BTC')
   } else {
     cy.c_switchWalletsAccount('BTC')
@@ -23,7 +23,7 @@ function performCryptoDeposit(platform) {
 function performCryptoDepositFiatonRamp(platform) {
   cy.contains('Wallet', { timeout: 10000 }).should('exist')
   if (`${platform}` == `mobile`) {
-    cy.log('mobile view')
+    cy.log('perform crypto deposit in responsive mode')
     cy.c_switchWalletsAccountResponsive('BTC')
   } else {
     cy.c_switchWalletsAccount('BTC')

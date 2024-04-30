@@ -32,9 +32,7 @@ function verifyTransferFundsMessage(accountType) {
     cy.findByRole('button', { name: 'Transfer funds' }).should('exist')
     cy.findByRole('button', { name: 'Maybe later' }).click()
   } else {
-    cy.contains('div', "Your Deriv X demo account is readyLet's").should(
-      'be.visible'
-    )
+    cy.findByText('Your Deriv X demo account is ready').should('be.visible')
     cy.findByRole('button', { name: 'OK' }).click()
   }
 }
@@ -44,7 +42,7 @@ function expandDemoWallet() {
   cy.get('.wallets-list-card-dropdown__item-content')
     .contains('USD Demo Wallet')
     .click()
-  cy.contains('USD Demo Wallet').should('be.visible')
+  cy.findByText('USD Demo Wallet').should('be.visible')
 }
 
 describe('QATEST-98821 - Add demo derivx account and QATEST-98824 add real derivx account', () => {
