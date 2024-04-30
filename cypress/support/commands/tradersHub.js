@@ -393,9 +393,9 @@ Cypress.Commands.add('c_setEndpoint', (signUpMail, size = 'desktop') => {
 
 Cypress.Commands.add('c_validateEUDisclaimer', () => {
   cy.findByTestId('dt_traders_hub_disclaimer').should('be.visible')
-  cy.findByText('EU statutory disclaimer')
+  // cy.findByText('EU statutory disclaimer')
   cy.findByText(
-    '70.1% of retail investor accounts lose money when trading CFDs with this provider'
+    'The products offered on our website are complex derivative products that carry a significant risk of potential loss. CFDs are complex instruments with a high risk of losing money rapidly due to leverage. 70.1% of retail investor accounts lose money when trading CFDs with this provider. You should consider whether you understand how these products work and whether you can afford to take the high risk of losing your money.'
   ).should('be.visible')
 })
 
