@@ -1,28 +1,30 @@
 Cypress.Commands.add('c_switchToDemoBot', () => {
-  cy.get('div.acc-info').click({ force: true })
+  cy.findByTestId('dt_acc_info').click()
   cy.xpath("//li[text()='Demo']").click()
   cy.xpath("//span[@class='acc-switcher__id']/span[text()='Demo']").click()
-  cy.get('div.acc-info').should('be.visible')
+  cy.findByTestId('dt_acc_info').should('be.visible')
 })
 
 Cypress.Commands.add('c_runBot', () => {
   cy.get('.bot-dashboard.bot').should('be.visible')
-  cy.get("button[id='db-animation__run-button']").click()
+  cy.findAllByRole('button', { name: 'Run' }).click()
 })
 
 Cypress.Commands.add('c_stopBot', (waitduration = undefined) => {
   if (waitduration) {
     cy.wait(waitduration)
   }
-  cy.get("button[id='db-animation__stop-button']").should('exist').click()
+  cy.findAllByRole('button', { name: 'Stop' }).click()
 })
 
 Cypress.Commands.add('c_setBlockDuration', () => {
   cy.xpath(
     "(//*[@class='blocklyText' and text()='Duration:']/..)/*[@class='blocklyEditableText']"
   ).click()
-  cy.get('.goog-menuitem.goog-option').contains('Ticks').click()
-  cy.xpath(
-    "((//*[@class='blocklyText' and text()='Duration:']/..)//*[@data-argument-type='text number'])[1]"
-  ).type('2')
+  cy.findByRole('menuitemcheckbox', { name: 'Ticks' }).click()
+  cy.findByRole('textbox').nth(1).type('2')
+})
+
+Cypress.Commands.add('c_skipTour', () => {
+  cy.findByText('Skip').should('be.visible').click({ force: true })
 })

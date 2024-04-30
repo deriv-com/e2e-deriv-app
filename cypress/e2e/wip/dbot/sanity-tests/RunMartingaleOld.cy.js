@@ -14,13 +14,13 @@ describe('QATEST-99420: Import and run custom strategy', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     tradersHub.openBotButton.click()
     cy.c_loadingCheck()
-    cy.findByText('Skip').should('be.visible').click({ force: true })
+    cy.c_skipTour()
     cy.c_switchToDemoBot()
   })
 
   it('Run Martingale Old Strategy', () => {
     botDashboard.importStrategy('MartingaleOld')
-    cy.findByText('Skip').should('be.visible').click({ force: true })
+    cy.c_skipTour()
 
     //Enter Expected profit, expected Loss, and Trade Amount
     cy.window().then((win) => {
@@ -33,7 +33,7 @@ describe('QATEST-99420: Import and run custom strategy', () => {
     })
 
     //Wait for bot to complete
-    cy.get("button[id='db-animation__run-button']", { timeout: 120000 }).should(
+    cy.findByRole('button', { name: 'Run' }, { timeout: 120000 }).should(
       'be.visible'
     )
     runPanel.profitLossValue.then(($value) => {

@@ -10,13 +10,13 @@ describe('QATEST-4128: Dashboard quick action to Quick Strategy and Bot Builder'
   beforeEach(() => {
     cy.c_login()
     cy.c_visitResponsive('/bot', 'large')
-    cy.findByText('Skip').should('be.visible').click({ force: true })
+    cy.c_skipTour()
     cy.c_closeNotificationHeader()
   })
 
   it('Go to bot builder page', () => {
     botDashboard.openBotBuilderQaction()
-    cy.findByText('Skip').should('be.visible').click({ force: true })
+    cy.c_skipTour()
     botDashboard.botBuilderActiveTab.should('exist')
   })
 

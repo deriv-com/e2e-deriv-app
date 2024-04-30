@@ -1,11 +1,9 @@
 import charts from '../pageobjects/charts'
 import '@testing-library/cypress/add-commands'
 import TradersHub from '../pageobjects/traders_hub'
-import Common from '../pageobjects/common'
 
 describe('QATEST-99340: Verify feed is loading on charts tab', () => {
   const tradersHub = new TradersHub()
-  const common = new Common()
 
   beforeEach(() => {
     if (Cypress.config().baseUrl === Cypress.env('prodURL')) {
@@ -17,7 +15,7 @@ describe('QATEST-99340: Verify feed is loading on charts tab', () => {
     }
     cy.c_visitResponsive('/bot', 'large')
     cy.c_loadingCheck()
-    cy.findByText('Skip').should('be.visible').click({ force: true })
+    cy.c_skipTour()
   })
 
   it('Verify feed for real and demo account', () => {

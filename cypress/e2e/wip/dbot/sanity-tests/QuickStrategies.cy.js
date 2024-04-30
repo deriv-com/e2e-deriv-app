@@ -1,25 +1,20 @@
 import '@testing-library/cypress/add-commands'
-import TradersHub from '../pageobjects/traders_hub'
-import Common from '../pageobjects/common'
 import RunPanel from '../pageobjects/run_panel'
 import BotBuilder from '../pageobjects/bot_builder_page'
 import quickStrategy from '../pageobjects/quick_strategy'
 
 describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
-  const tradersHub = new TradersHub()
-  const common = new Common()
   const runPanel = new RunPanel()
   const botBuilder = new BotBuilder()
 
   beforeEach(() => {
     cy.c_login({ user: 'dBot' })
-    cy.c_visitResponsive('/appstore/traders-hub', 'large')
-    tradersHub.openBotButton.click()
-    cy.get('.bot-dashboard.bot').should('be.visible')
-    cy.findByText('Skip').should('be.visible').click({ force: true })
+    cy.c_visitResponsive('/bot', 'large')
+    cy.c_skipTour()
     cy.c_switchToDemoBot()
     botBuilder.openBotBuilderTab()
-    cy.findByText('Skip').should('be.visible').click({ force: true })
+    cy.c_skipTour()
+    cy.get('.bot-dashboard.bot').should('be.visible')
   })
 
   it('Run Martingale Quick Strategy', () => {
