@@ -465,9 +465,10 @@ Cypress.Commands.add('c_createRealAccount', () => {
     cy.task('wsDisconnect')
   }
 })
-
+/**
+ * Method to perform Authorization Call
+ */
 Cypress.Commands.add('c_authorizeCall', () => {
-  // Call Verify Email and then set the Verification code in env
   try {
     cy.task('wsConnect')
     cy.task('authorizeCallTask').then(() => {})
@@ -478,8 +479,10 @@ Cypress.Commands.add('c_authorizeCall', () => {
   }
 })
 
+/**
+ * Method to perform Balance Call
+ */
 Cypress.Commands.add('c_getBalance', () => {
-  // Call Verify Email and then set the Verification code in env
   try {
     cy.task('wsConnect')
     cy.task('checkBalanceTask').then(() => {})

@@ -87,8 +87,7 @@ module.exports = defineConfig({
       },
       async authorizeCallTask(){
         try {
-          console.log("The Auth TOken is : ", Cypress.env('oAuthUrl'));
-          const authCall = await authorizeCall(api, Cypress.env('oAuthUrl'));  // API authentication
+          await authorizeCall(api, Cypress.env('oAuthUrl'));
           return null;
         } catch (e) {
           console.error('Authorization failed', e)
@@ -98,8 +97,7 @@ module.exports = defineConfig({
       async checkBalanceTask(){ 
         try {
           const balance_stream = await checkBalance(api, Cypress.env('oAuthUrl'));
-          console.log(balance_stream);
-          return null;
+          return balance_stream;
         } catch (e) {
           console.error('Operation failed', e)
           throw e

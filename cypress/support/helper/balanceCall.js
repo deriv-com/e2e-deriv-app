@@ -12,9 +12,6 @@ const authorizeCall = async (api, authToken) => {
 const checkBalance = async (api, authToken) => {
   try {
     const authorizeAccount = await api.account(authToken)
-    console.log('This is Authorization Stream: ', authorizeAccount)
-
-    // Account also provides a balance stream
     const balance_stream = await api.basic.balance()
     console.log('This is Balance Stream: ', balance_stream)
   } catch (e) {
