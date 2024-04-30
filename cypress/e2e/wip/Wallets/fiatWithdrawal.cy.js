@@ -7,7 +7,6 @@ Cypress.Commands.add(
     const code = verification_url.match(/code=([A-Za-z0-9]{8})/)
     const verification_code = code[1]
     if (`${platform}` == `mobile`) {
-      cy.log('fiat withdraw in responsive')
       cy.c_visitResponsive(
         `/wallets/cashier/withdraw?verification=${verification_code}`,
         'small'

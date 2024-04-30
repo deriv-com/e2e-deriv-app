@@ -2,7 +2,6 @@ import '@testing-library/cypress/add-commands'
 
 function reset_balance_demo(platform) {
   if (`${platform}` == `mobile`) {
-    cy.log('reset demo balance responsive mode')
     cy.c_switchWalletsAccountResponsive('USD Demo')
   } else {
     cy.c_switchWalletsAccount('USD Demo')
