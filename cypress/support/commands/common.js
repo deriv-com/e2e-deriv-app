@@ -1,6 +1,7 @@
 import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
+Cypress.prevUser = ''
 
 const setLoginUser = (user = 'masterUser', options = {}) => {
   const { backEndProd = false } = options
@@ -96,8 +97,13 @@ Cypress.Commands.add('c_login', (options = {}) => {
   }
 
   //If we're switching between apps, we'll need to re-authenticate
-  if (Cypress.prevAppId != Cypress.env('configAppId')) {
+  if (
+    Cypress.prevAppId != Cypress.env('configAppId') ||
+    Cypress.prevUser != user
+  ) {
     cy.log('prevAppId: ' + Cypress.prevAppId)
+    cy.log(`Prev User: ${Cypress.prevUser}`)
+    Cypress.prevUser = user
     Cypress.prevAppId = Cypress.env('configAppId')
     Cypress.env('oAuthUrl', '<empty>')
   }
@@ -466,7 +472,7 @@ Cypress.Commands.add(
       cy.task('wsConnect')
       cy.task('verifyEmailTask').then((accountEmail) => {
         cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
-        cy.task('createVirtualAccountTask', {
+        cy.task('createRealAccountTask', {
           country_code: country_code,
           currency: currency,
         }).then(() => {
