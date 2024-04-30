@@ -578,7 +578,7 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
   })
 })
 
-Cypress.Commands.add('skipPasskeysV2', () => {
+Cypress.Commands.add('c_skipPasskeysV2', () => {
   cy.findByText('Effortless login with passkeys')
     .should(() => {})
     .then(($el) => {

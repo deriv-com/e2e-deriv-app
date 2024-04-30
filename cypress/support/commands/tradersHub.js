@@ -42,6 +42,7 @@ Cypress.Commands.add('c_switchToDemo', () => {
 })
 
 Cypress.Commands.add('c_completeTradersHubTour', () => {
+  cy.c_skipPasskeysV2()
   cy.findByRole('button', { name: 'Next' }).click()
   if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
     cy.contains('Choice of regulation').should('be.visible')
@@ -104,7 +105,7 @@ Cypress.Commands.add('c_completeOnboarding', () => {
   }
   cy.contains("Trader's Hub tour").should('be.visible')
   cy.contains('button', 'OK').click()
-  cy.skipPasskeysV2()
+  cy.c_skipPasskeysV2()
 })
 
 // TODO move to Utility finction
