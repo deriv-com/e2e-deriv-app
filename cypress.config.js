@@ -52,18 +52,18 @@ module.exports = defineConfig({
         
           return null;
         },
-        async createRealAccountTask() {
+        async createRealAccountTask({country_code, currency}) {
           try {
-            const realAccountDetails = await createAccountReal(api);
+            const realAccountDetails = await createAccountReal(api, country_code, currency);
             return realAccountDetails;
           } catch (error) {
             console.error('Error creating account:', error);
             throw error;
           }
         },
-        async createVirtualAccountTask() {
+        async createVirtualAccountTask({country_code}) {
           try {
-              const virtualAccountDetails = await createAccountVirtual(api);
+              const virtualAccountDetails = await createAccountVirtual(api, country_code);
               return virtualAccountDetails;
           } catch (error) {
               console.error('Error creating virtual account:', error);
