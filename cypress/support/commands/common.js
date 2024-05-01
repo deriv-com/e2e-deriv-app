@@ -323,13 +323,14 @@ Cypress.Commands.add(
       baseUrl = Cypress.env('configServer') + '/events',
     } = options
     cy.log(`Visit ${baseUrl}`)
+    const userID = Cypress.env('qaBoxLoginEmail')
+    const userPSWD = Cypress.env('qaBoxLoginPassword')
     cy.visit(
       `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
         'qaBoxLoginPassword'
       )}@${baseUrl}`,
       { log: false }
     )
-    const sentArgs = { requestType, accountEmail }
     cy.origin(
       `https://${Cypress.env('qaBoxLoginEmail', { log: false })}:${Cypress.env(
         'qaBoxLoginPassword',
@@ -369,6 +370,9 @@ Cypress.Commands.add(
       }
     )
     cy.then(() => {
+      //Rotating credentials
+      Cypress.env('qaBoxLoginEmail', userID)
+      Cypress.env('qaBoxLoginPassword', userPSWD)
       //Retry finding email after 1 second interval
       if (retryCount < maxRetries && !Cypress.env('verificationUrl')) {
         cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
@@ -398,7 +402,6 @@ Cypress.Commands.add(
       )}@${baseUrl}`,
       { log: false }
     )
-    const sentArgs = { requestType, accountEmail }
     cy.document().then((doc) => {
       let verification_code
       const allRelatedEmails = Array.from(
@@ -454,25 +457,35 @@ Cypress.Commands.add('c_loadingCheck', () => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
 })
 
-Cypress.Commands.add('c_createRealAccount', () => {
-  // Call Verify Email and then set the Verification code in env
-  try {
-    cy.task('wsConnect')
-    cy.task('verifyEmailTask').then((accountEmail) => {
-      cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
-      cy.task('createRealAccountTask').then(() => {
-        // Updating Cypress environment variables with the new email
-        const currentCredentials = Cypress.env('credentials')
-        currentCredentials.test.masterUser.ID = accountEmail
-        Cypress.env('credentials', currentCredentials)
+/*
+  Usage cy.c_createRealAccount('co', 'EUR') or you may not pass in anything to go with default.
+  Currently works for CR countries as well as DIEL - non-EU account.
+*/
+Cypress.Commands.add(
+  'c_createRealAccount',
+  (country_code = 'id', currency = 'USD') => {
+    // Call Verify Email and then set the Verification code in env
+    try {
+      cy.task('wsConnect')
+      cy.task('verifyEmailTask').then((accountEmail) => {
+        cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
+        cy.task('createRealAccountTask', {
+          country_code: country_code,
+          currency: currency,
+        }).then(() => {
+          // Updating Cypress environment variables with the new email
+          const currentCredentials = Cypress.env('credentials')
+          currentCredentials.test.masterUser.ID = accountEmail
+          Cypress.env('credentials', currentCredentials)
+        })
       })
-    })
-  } catch (e) {
-    console.error('An error occurred during the account creation process:', e)
-  } finally {
-    cy.task('wsDisconnect')
+    } catch (e) {
+      console.error('An error occurred during the account creation process:', e)
+    } finally {
+      cy.task('wsDisconnect')
+    }
   }
-})
+)
 
 Cypress.Commands.add('c_closeModal', () => {
   cy.log('Closing the modal')
@@ -490,6 +503,8 @@ Cypress.Commands.add('c_waitUntilElementIsFound', (options = {}) => {
     timeout = 500,
   } = options
   let found = false
+  cy.c_loadingCheck()
+  cy.c_closeNotificationHeader()
   if (locator) {
     cy.document().then((doc) => {
       const element = doc.querySelector(locator)
@@ -512,6 +527,8 @@ Cypress.Commands.add('c_waitUntilElementIsFound', (options = {}) => {
       cy.log(`Retrying... Attempt number: ${retry + 1}`)
       cy.wait(timeout)
       cy.reload()
+      cy.c_loadingCheck()
+      cy.c_closeNotificationHeader()
       cy.c_waitUntilElementIsFound({ ...options, retry: retry + 1 })
     } else {
       throw new Error(`Element not found after ${maxRetries} attempt(s)!`)
@@ -557,4 +574,15 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
       cy.log('Notification header did not appear')
     }
   })
+})
+
+Cypress.Commands.add('skipPasskeysV2', () => {
+  cy.findByText('Effortless login with passkeys')
+    .should(() => {})
+    .then(($el) => {
+      if ($el.length) {
+        cy.findByText('Maybe later').click()
+        cy.log('Skipped Passkeys prompt !!!')
+      }
+    })
 })

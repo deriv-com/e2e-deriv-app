@@ -6,7 +6,7 @@ describe('QATEST-23042 IDV DOB Mismatch by Smile Identity provider', () => {
     cy.c_navigateToPoiResponsive('Ghana')
   })
 
-  it('Should return Document Rejected', () => {
+  it('Should return Date of Birth Mismatch', () => {
     cy.get('select[name="document_type"]').select('Passport')
     cy.findByLabelText('Enter your document number').type('G0000001')
     cy.findByTestId('first_name').clear().type('Joe Doe')

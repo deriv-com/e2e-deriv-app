@@ -17,22 +17,22 @@ const verifyEmail = async (api) => {
 
 const createAccountVirtual = async (
   api,
-  password = process.env.E2E_DERIV_PASSWORD,
-  residence = 'id'
+  country_code,
+  password = process.env.E2E_DERIV_PASSWORD
 ) => {
   try {
     const response = await api.basic.newAccountVirtual({
       new_account_virtual: 1,
       type: 'trading',
       client_password: password,
-      residence: residence,
+      residence: country_code,
       verification_code: process.env.E2E_EMAIL_VERIFICATION_CODE,
     })
     const {
       new_account_virtual: { oauth_token },
     } = response
     return {
-      residence: residence,
+      residence: country_code,
       oauthToken: oauth_token,
     }
   } catch (e) {
@@ -41,13 +41,9 @@ const createAccountVirtual = async (
   }
 }
 
-const createAccountReal = async (
-  api,
-  clientResidence = 'id',
-  currency = 'USD'
-) => {
+const createAccountReal = async (api, country_code, currency) => {
   try {
-    const resp = await createAccountVirtual(api)
+    const resp = await createAccountVirtual(api, country_code)
     const { oauthToken } = resp
     await api.account(oauthToken) // API authentication
 
@@ -59,8 +55,8 @@ const createAccountReal = async (
       first_name: 'Auto Gen',
       last_name: nameGenerator(),
       date_of_birth: '2000-09-20',
-      place_of_birth: clientResidence,
-      residence: clientResidence,
+      place_of_birth: country_code,
+      residence: country_code,
       phone: `+${numbersGenerator()}`,
       address_line_1: '20 Broadway Av',
       address_city: 'Cyber',

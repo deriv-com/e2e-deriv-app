@@ -14,13 +14,21 @@ let api;
 module.exports = defineConfig({
   e2e: {
     projectId: "rjvf4u",
-    setupNodeEvents(on, config) {},
     baseUrl: "https://staging-app.deriv.com",
     defaultCommandTimeout: 15000,
     supportFile: "cypress/support/e2e.js",
     experimentalWebKitSupport: true,
     chromeWebSecurity: false,
     setupNodeEvents(on, config) {
+      on('before:browser:launch', (browser = {}, launchOptions) => {
+        if (browser.family === 'chromium') {
+          launchOptions.args.push('--use-fake-ui-for-media-stream')
+          launchOptions.args.push('--use-fake-device-for-media-stream')
+          launchOptions.args.push('--use-file-for-fake-video-capture=cypress/fixtures/kyc/pass_1.y4m')
+        }
+        
+        return launchOptions
+      }),
       on('task', {
         wsConnect() {
           // Check if there is an existing connection and close it if open
@@ -52,18 +60,18 @@ module.exports = defineConfig({
         
           return null;
         },
-        async createRealAccountTask() {
+        async createRealAccountTask({country_code, currency}) {
           try {
-            const realAccountDetails = await createAccountReal(api);
+            const realAccountDetails = await createAccountReal(api, country_code, currency);
             return realAccountDetails;
           } catch (error) {
             console.error('Error creating account:', error);
             throw error;
           }
         },
-        async createVirtualAccountTask() {
+        async createVirtualAccountTask({country_code}) {
           try {
-              const virtualAccountDetails = await createAccountVirtual(api);
+              const virtualAccountDetails = await createAccountVirtual(api, country_code);
               return virtualAccountDetails;
           } catch (error) {
               console.error('Error creating virtual account:', error);
