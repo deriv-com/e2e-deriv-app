@@ -2,7 +2,7 @@ import '@testing-library/cypress/add-commands'
 
 function fiat_transfer(to_account) {
   cy.findByText('Transfer to').click()
-  cy.findByText(`${to_account} Wallet`).click()
+  cy.findByText(`${to_account}`).click()
   //transfer more than account balance error verification
   cy.get('input[class="wallets-atm-amount-input__input"]')
     .eq(1)
@@ -20,14 +20,24 @@ function fiat_transfer(to_account) {
     .click()
     .type('1.000')
   //Check the transfer limit message
-  cy.contains(
-    'lifetime transfer limit from USD Wallet to any cryptocurrency Wallets is'
-  ).should('exist')
+  if (`${to_account}` == 'Options') {
+    cy.contains(
+      'transfer limit between your USD Wallet and Options is '
+    ).should('exist')
+  } else {
+    cy.contains(
+      'lifetime transfer limit from USD Wallet to any cryptocurrency Wallets is'
+    ).should('exist')
+  }
   cy.get('form')
     .findByRole('button', { name: 'Transfer', exact: true })
     .should('be.enabled')
     .click()
   cy.c_transferLimit('10.00 USD')
+  if (`${to_account}` != 'Options') {
+    cy.contains('Transfer fees:')
+  }
+  cy.findByRole('button', { name: 'Make a new transfer' }).click()
 }
 
 describe('QATEST-141444 Fiat to Cryptpo wallet transfer and QATEST-98808 - View Fiat transaction', () => {
@@ -41,9 +51,10 @@ describe('QATEST-141444 Fiat to Cryptpo wallet transfer and QATEST-98808 - View 
     cy.c_visitResponsive('/wallets', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.findByText('Transfer').first().click()
-    fiat_transfer('BTC')
-    fiat_transfer('ETH')
-    fiat_transfer('LTC')
+    fiat_transfer('Options')
+    fiat_transfer('BTC Wallet')
+    fiat_transfer('ETH Wallet')
+    fiat_transfer('LTC Wallet')
   })
 
   it('should be able to view transactions of fiat account', () => {
@@ -66,6 +77,9 @@ describe('QATEST-141444 Fiat to Cryptpo wallet transfer and QATEST-98808 - View 
       .findByRole('button')
       .click()
     cy.findByRole('option', { name: 'Transfer' }).click()
+    cy.findAllByText(/Options/)
+      .first()
+      .should('be.visible')
     cy.findAllByText(/LTC Wallet/)
       .first()
       .should('be.visible')
@@ -84,9 +98,10 @@ describe('QATEST-141444 Fiat to Cryptpo wallet transfer and QATEST-98808 - View 
     cy.c_visitResponsive('/wallets', 'small')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.findByText('Transfer').parent().click()
-    fiat_transfer('BTC')
-    fiat_transfer('ETH')
-    fiat_transfer('LTC')
+    fiat_transfer('Options')
+    fiat_transfer('BTC Wallet')
+    fiat_transfer('ETH Wallet')
+    fiat_transfer('LTC Wallet')
   })
   it('should be able to view transactions of fiat account in responsive', () => {
     cy.log('View Transactions of Fiat account')
@@ -108,6 +123,9 @@ describe('QATEST-141444 Fiat to Cryptpo wallet transfer and QATEST-98808 - View 
       .findByRole('button')
       .click()
     cy.findByRole('option', { name: 'Transfer' }).click()
+    cy.findAllByText(/Options/)
+      .first()
+      .should('be.visible')
     cy.findAllByText(/LTC Wallet/)
       .first()
       .should('be.visible')

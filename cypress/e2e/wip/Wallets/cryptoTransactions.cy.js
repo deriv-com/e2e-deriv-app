@@ -19,6 +19,8 @@ function crypto_transfer(to_account, transferAmount) {
     .should('be.enabled')
     .click()
   cy.c_transferLimit(transferAmount)
+  cy.contains('Transfer fees:')
+  cy.findByRole('button', { name: 'Make a new transfer' }).click()
 }
 
 describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypto transactions and QATEST-99429 Transfer conversion rate and QATEST-99714 Life time transfer limit message', () => {
