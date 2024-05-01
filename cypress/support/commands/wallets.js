@@ -52,6 +52,6 @@ Cypress.Commands.add('c_switchWalletsAccountResponsive', (account) => {
 Cypress.Commands.add('c_switchWalletsAccountDemo', () => {
   cy.get('div.wallets-progress-bar')
     .find('div.wallets-progress-bar-inactive')
-    .eq(3)
+    .last()
     .click()
 })

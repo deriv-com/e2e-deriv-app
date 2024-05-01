@@ -38,7 +38,7 @@ describe('QATEST-98815 - Demo reset balance', () => {
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     reset_balance_demo('desktop')
   })
-  it('should be able to reset balance for demo wallet in responsive', () => {
+  it.only('should be able to reset balance for demo wallet in responsive', () => {
     cy.log('Reset Balance for Demo Account')
     cy.c_visitResponsive('/wallets', 'small')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
