@@ -25,7 +25,7 @@ screenSizes.forEach((screenSize) => {
   describe(`QATEST-34982 - Transfer: Perform Transfer from Fiat non-USD to MT5 in screen size: ${screenSize}`, () => {
     beforeEach(() => {
       cy.clearAllSessionStorage()
-      cy.c_login({ user: 'cashierLegacyNonUSD', rateLimitCheck: 'check' })
+      cy.c_login({ user: 'cashierLegacyNonUSD', rateLimitCheck: true })
       cy.c_visitResponsive('appstore/traders-hub', screenSize, {
         rateLimitCheck: true,
       })
