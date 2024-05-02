@@ -6,12 +6,16 @@ Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
     cy.findByRole('button', { name: 'Options & Multipliers' }).should(
       'be.visible'
     )
+    cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'CFDs' }).click()
     cy.findAllByText('Deriv cTrader')
       .first()
       .scrollIntoView({ position: 'bottom' })
       .should('be.visible')
     cy.findByText('Other CFD Platforms').scrollIntoView({ position: 'bottom' })
+    cy.findByRole('button', { name: 'CFDs' }).click()
+    cy.c_closeNotificationHeader()
+    cy.findByRole('button', { name: 'Options & Multipliers' }).click()
   } else {
     cy.findByText('Options & Multipliers').should('be.visible')
     cy.findByText('CFDs').should('be.visible')
@@ -38,6 +42,7 @@ Cypress.Commands.add('c_switchToDemo', () => {
 })
 
 Cypress.Commands.add('c_completeTradersHubTour', () => {
+  cy.c_skipPasskeysV2()
   cy.findByRole('button', { name: 'Next' }).click()
   if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
     cy.contains('Choice of regulation').should('be.visible')
@@ -100,7 +105,7 @@ Cypress.Commands.add('c_completeOnboarding', () => {
   }
   cy.contains("Trader's Hub tour").should('be.visible')
   cy.contains('button', 'OK').click()
-  cy.skipPasskeysV2()
+  cy.c_skipPasskeysV2()
 })
 
 // TODO move to Utility finction
@@ -389,9 +394,8 @@ Cypress.Commands.add('c_setEndpoint', (signUpMail, size = 'desktop') => {
 
 Cypress.Commands.add('c_validateEUDisclaimer', () => {
   cy.findByTestId('dt_traders_hub_disclaimer').should('be.visible')
-  cy.findByText('EU statutory disclaimer')
   cy.findByText(
-    '70.1% of retail investor accounts lose money when trading CFDs with this provider'
+    'The products offered on our website are complex derivative products that carry a significant risk of potential loss. CFDs are complex instruments with a high risk of losing money rapidly due to leverage. 70.1% of retail investor accounts lose money when trading CFDs with this provider. You should consider whether you understand how these products work and whether you can afford to take the high risk of losing your money.'
   ).should('be.visible')
 })
 

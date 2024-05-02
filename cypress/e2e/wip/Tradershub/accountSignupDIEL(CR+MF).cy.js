@@ -22,7 +22,9 @@ describe('QATEST-5554: Verify DIEL Signup flow - CR + MF', () => {
           'dc-tabs__item--is-scrollable-and-active'
         )
       else cy.findByText('Non-EU').parent().should('have.class', 'is-selected')
-      cy.findByRole('button', { name: 'Get a Deriv account' }).click()
+      cy.findByTestId('dt_trading-app-card_real_deriv-account')
+        .findByRole('button', { name: 'Get' })
+        .click()
       cy.c_generateRandomName().then((firstName) => {
         cy.c_personalDetails(
           firstName,

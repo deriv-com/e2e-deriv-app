@@ -414,9 +414,8 @@ Cypress.Commands.add(
       if (allRelatedEmails.length) {
         const verificationEmail = allRelatedEmails.pop()
         cy.wrap(verificationEmail).click()
-        cy.get('table').last().as('lastTable')
-        cy.get('@lastTable')
-          .contains('p', `${accountEmail}`)
+        cy.contains('p', `${accountEmail}`)
+          .last()
           .should('be.visible')
           .parent()
           .children()
@@ -468,6 +467,7 @@ Cypress.Commands.add('c_loadingCheck', () => {
 Cypress.Commands.add(
   'c_createRealAccount',
   (country_code = 'id', currency = 'USD') => {
+    cy.c_visitResponsive('/')
     // Call Verify Email and then set the Verification code in env
     try {
       cy.task('wsConnect')
@@ -481,6 +481,8 @@ Cypress.Commands.add(
           const currentCredentials = Cypress.env('credentials')
           currentCredentials.test.masterUser.ID = accountEmail
           Cypress.env('credentials', currentCredentials)
+          //Reset oAuthUrl otherwise it will use the previous URL
+          Cypress.env('oAuthUrl', '<empty>')
         })
       })
     } catch (e) {
@@ -580,7 +582,7 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
   })
 })
 
-Cypress.Commands.add('skipPasskeysV2', () => {
+Cypress.Commands.add('c_skipPasskeysV2', () => {
   cy.findByText('Effortless login with passkeys')
     .should(() => {})
     .then(($el) => {
