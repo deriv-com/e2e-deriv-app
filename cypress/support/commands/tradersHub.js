@@ -46,29 +46,51 @@ Cypress.Commands.add('c_completeTradersHubTour', () => {
   cy.findByRole('button', { name: 'OK' }).click()
 })
 
-Cypress.Commands.add('c_enterValidEmail', (signUpMail) => {
+Cypress.Commands.add('c_enterValidEmail', (signUpMail, options = {}) => {
+  const { language = 'english' } = options
   {
-    cy.visit('https://deriv.com/signup/', {
-      onBeforeLoad(win) {
-        win.localStorage.setItem(
-          'config.server_url',
-          Cypress.env('configServer')
-        )
-        win.localStorage.setItem('config.app_id', Cypress.env('configAppId'))
-      },
+    cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
+      const lang = langData[language]
+      if (language != 'english') {
+        cy.visit(`https://deriv.com/${lang.shortCode}/`, {
+          onBeforeLoad(win) {
+            win.localStorage.setItem(
+              'config.server_url',
+              Cypress.env('configServer')
+            )
+            win.localStorage.setItem(
+              'config.app_id',
+              Cypress.env('configAppId')
+            )
+          },
+        })
+      }
+      cy.visit(`https://deriv.com/${lang.shortCode}/signup/`, {
+        onBeforeLoad(win) {
+          win.localStorage.setItem(
+            'config.server_url',
+            Cypress.env('configServer')
+          )
+          win.localStorage.setItem('config.app_id', Cypress.env('configAppId'))
+        },
+      })
+      //Wait for the signup page to load completely
+      cy.findByRole(
+        'button',
+        { name: 'whatsapp icon' },
+        { timeout: 30000 }
+      ).should('be.visible')
+      cy.findByPlaceholderText(`${lang.emailTxtBox}`)
+        .as('email')
+        .should('be.visible')
+      cy.get('@email').type(signUpMail)
+      cy.findByRole('checkbox').click()
+      cy.get('.error').should('not.exist')
+      cy.findByRole('button', { name: 'Create demo account' }).click()
+      cy.findByRole('heading', { name: 'Check your email' }).should(
+        'be.visible'
+      )
     })
-    //Wait for the signup page to load completely
-    cy.findByRole(
-      'button',
-      { name: 'whatsapp icon' },
-      { timeout: 30000 }
-    ).should('be.visible')
-    cy.findByPlaceholderText('Email').as('email').should('be.visible')
-    cy.get('@email').type(signUpMail)
-    cy.findByRole('checkbox').click()
-    cy.get('.error').should('not.exist')
-    cy.findByRole('button', { name: 'Create demo account' }).click()
-    cy.findByRole('heading', { name: 'Check your email' }).should('be.visible')
   }
 })
 
@@ -381,13 +403,31 @@ Cypress.Commands.add(
   }
 )
 
-Cypress.Commands.add('c_setEndpoint', (signUpMail, size = 'desktop') => {
-  localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
-  localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
-  cy.c_visitResponsive(`${Cypress.config('baseUrl')}endpoint`, size)
-  cy.findByRole('button', { name: 'Sign up' }).should('not.be.disabled')
-  cy.c_enterValidEmail(signUpMail)
-})
+Cypress.Commands.add(
+  'c_setEndpoint',
+  (
+    signUpMail,
+    size = 'desktop',
+    mainURL = Cypress.config('baseUrl'),
+    options = {}
+  ) => {
+    const { language = 'english' } = options
+    cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
+      const lang = langData[language]
+      localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
+      localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
+      if (language != 'english') {
+        cy.c_visitResponsive(`${mainURL}endpoint?lang=${lang.shortCode}`, size)
+      } else {
+        cy.c_visitResponsive(`${mainURL}endpoint`, size)
+      }
+      cy.findByRole('button', { name: `${lang.signUpBtn}` }).should(
+        'not.be.disabled'
+      )
+      cy.c_enterValidEmail(signUpMail)
+    })
+  }
+)
 
 Cypress.Commands.add('c_validateEUDisclaimer', () => {
   cy.findByTestId('dt_traders_hub_disclaimer').should('be.visible')

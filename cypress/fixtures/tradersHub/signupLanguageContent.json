@@ -1,0 +1,14 @@
+{
+    "spanish": {
+        "shortCode": "ES",
+        "signUpBtn": "Iniciar sesión",
+        "emailTxtBox": "Correo electrónico",
+        "createDemoAccTxt": "Crear cuenta demo"
+    },
+    "english": {
+        "shortCode": "EN",
+        "signUpBtn": "Sign up",
+        "emailTxtBox": "Email",
+        "createDemoAccTxt": "Create demo account"
+    }
+}

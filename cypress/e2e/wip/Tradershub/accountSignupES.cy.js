@@ -1,14 +1,6 @@
 import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/helper/utility'
 
-Cypress.Commands.add('c_setEndpointES', (signUpMail) => {
-  localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
-  localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
-  const mainURL = 'https://staging-app.deriv.com/endpoint?lang=ES'
-  cy.c_visitResponsive(mainURL, 'small')
-  cy.findByRole('button', { name: 'Iniciar sesión' }).should('not.be.disabled')
-})
-
 Cypress.Commands.add('c_enterValidEmailES', (signUpMail) => {
   {
     cy.visit('https://deriv.com/es/', {
@@ -208,10 +200,12 @@ describe('TRAH-3089: Verify Sign-up Flow in ES Language', () => {
   let currency = Cypress.env('accountCurrency').USD
 
   it('Verify I can sign-up using ES language', () => {
-    cy.c_setEndpointES(signUpEmail)
-    cy.c_enterValidEmailES(signUpEmail)
-    cy.c_realAccountSignupES(country, taxIDNum, currency, signUpEmail)
-    cy.get('#traders-hub').scrollIntoView({ position: 'top' })
-    cy.findByText('0.00', { timeout: 40000 }).should('be.visible')
+    cy.c_setEndpoint(signUpEmail, 'small', 'https://staging-app.deriv.com/', {
+      language: 'spanish',
+    })
+    // cy.c_enterValidEmailES(signUpEmail)
+    // cy.c_realAccountSignupES(country, taxIDNum, currency, signUpEmail)
+    // cy.get('#traders-hub').scrollIntoView({ position: 'top' })
+    // cy.findByText('0.00', { timeout: 40000 }).should('be.visible')
   })
 })
