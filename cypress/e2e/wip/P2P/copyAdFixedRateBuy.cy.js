@@ -68,7 +68,7 @@ describe('QATEST-145618 - Copy Ad - Fixed Rate - Buy Ad', () => {
           )
         })
       }
-      cy.c_copyExistingAds()
+      cy.c_copyExistingAd()
     })
   })
 })
