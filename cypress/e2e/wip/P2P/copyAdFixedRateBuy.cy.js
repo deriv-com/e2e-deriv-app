@@ -68,7 +68,22 @@ describe('QATEST-145618 - Copy Ad - Fixed Rate - Buy Ad', () => {
           )
         })
       }
-      cy.c_copyExistingAd()
+      cy.contains('span[class="dc-text"]', 'Buy USD')
+        .siblings('.dc-dropdown-container')
+        .should('be.visible')
+        .click()
+      cy.findByText('Copy').parent().click()
+      cy.get('.dc-text')
+        .contains('Ad type')
+        .next('.copy-advert-form__field')
+        .invoke('text')
+        .then((adType) => {
+          sessionStorage.setItem('c_adType', adType.trim())
+        })
+      cy.then(() => {
+        cy.log(sessionStorage.getItem('c_adType'))
+      })
+      //cy.c_copyExistingAd(sessionStorage.getItem('c_adType'))
     })
   })
 })
