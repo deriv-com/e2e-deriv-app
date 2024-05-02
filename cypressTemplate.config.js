@@ -71,7 +71,21 @@ module.exports = defineConfig({
     citizenshipOnfidoROW: process.env.E2E_CITIZENSHIP_ROW_ONFIDO,
     citizenshipIDVROW: process.env.E2E_CITIZENSHIP_ROW_IDV,
     citizenshipMF: process.env.E2E_CITIZENSHIP_MF,
-    dielCountry: 'South Africa'
+    dielCountry: 'South Africa',
+    balanceAmount: process.env.E2E_BALANCE_AMOUNT,
+    newAppId: "E2E_NEW_OAUTH_APPID",
+    appRegisterID: process.env.E2E_APP_REGISTER,
+    appRegisterHomePage: process.env.E2E_APP_REGISTER_HOMEPAGE,
+    appRegisterName: process.env.E2E_APP_REGISTER_NAME,
+    appRegisterReDirectUri: process.env.E2E_APP_REGISTER_REDIRECT_URI,
+    appRegisterVerificationUri: process.env.E2E_APP_REGISTER_VERIFICATION_URI,
+    appRegistersScope: process.env.E2E_APP_REGISTER_SCOPE [
+      "read",
+      "trade",
+      "payments",
+      "trading_information",
+      "admin"
+    ],
   },  
   retries: {
       "runMode": 2,

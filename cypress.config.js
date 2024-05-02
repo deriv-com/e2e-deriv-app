@@ -2,7 +2,7 @@ require("dotenv").config()
 const { defineConfig } = require("cypress")
 const {createAccountReal, createAccountVirtual, verifyEmail } = require('./cypress/support/helper/accountCreationUtility');
 const {authorizeCall, checkBalance } = require('./cypress/support/helper/balanceCall');
-
+const { registerNewApplicationId } = require('./cypress/support/helper/applicationRegister');
 
 const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI')
 const WebSocket = require('ws');
@@ -98,6 +98,18 @@ module.exports = defineConfig({
         try {
           const balance_stream = await checkBalance(api, Cypress.env('oAuthUrl'));
           return balance_stream;
+        } catch (e) {
+          console.error('Operation failed', e)
+          throw e
+        }
+      },
+      async registerNewAppIDTask(){ 
+        try {
+          const newApplicationID = await registerNewApplicationId(api, Cypress.env('appRegisterID'), 
+          Cypress.env('appRegisterHomePage'),Cypress.env('appRegisterName'), 
+          Cypress.env('appRegisterReDirectUri'), Cypress.env('appRegistersScope'), Cypress.env('appRegisterVerificationUri')
+        );
+          return newApplicationID;
         } catch (e) {
           console.error('Operation failed', e)
           throw e
@@ -243,6 +255,21 @@ module.exports = defineConfig({
     citizenshipIDVROW: process.env.E2E_CITIZENSHIP_ROW_IDV,
     citizenshipMF: process.env.E2E_CITIZENSHIP_MF,
     dielCountry: "South Africa",
+    balanceAmount: process.env.E2E_BALANCE_AMOUNT,
+    newAppId: "E2E_NEW_OAUTH_APPID",
+    appRegisterID: process.env.E2E_APP_REGISTER,
+    appRegisterHomePage: process.env.E2E_APP_REGISTER_HOMEPAGE,
+    appRegisterName: process.env.E2E_APP_REGISTER_NAME,
+    appRegisterReDirectUri: process.env.E2E_APP_REGISTER_REDIRECT_URI,
+    appRegisterVerificationUri: process.env.E2E_APP_REGISTER_VERIFICATION_URI,
+    appRegistersScope: process.env.E2E_APP_REGISTER_SCOPE [
+      "read",
+      "trade",
+      "payments",
+      "trading_information",
+      "admin"
+    ],
+appRegister: process.env.E2E_APP_REGISTER,
     countries: {
       ZA: "South Africa",
       CO: "Colombia",

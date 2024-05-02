@@ -9,11 +9,9 @@ const authorizeCall = async (api, authToken) => {
   }
 }
 
-const checkBalance = async (api, authToken) => {
+const checkBalance = async (api) => {
   try {
-    const authorizeAccount = await api.account(authToken)
-    const balance_stream = await api.basic.balance()
-    console.log('This is Balance Stream: ', balance_stream)
+    await api.basic.balance()
   } catch (e) {
     console.error('Operation failed', e)
     throw e

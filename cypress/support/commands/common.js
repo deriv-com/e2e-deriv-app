@@ -470,12 +470,9 @@ Cypress.Commands.add('c_createRealAccount', () => {
  */
 Cypress.Commands.add('c_authorizeCall', () => {
   try {
-    cy.task('wsConnect')
     cy.task('authorizeCallTask').then(() => {})
   } catch (e) {
     console.error('An error occurred during the account creation process:', e)
-  } finally {
-    cy.task('wsDisconnect')
   }
 })
 
@@ -484,13 +481,39 @@ Cypress.Commands.add('c_authorizeCall', () => {
  */
 Cypress.Commands.add('c_getBalance', () => {
   try {
-    cy.task('wsConnect')
-    cy.task('checkBalanceTask').then(() => {})
+    cy.task('checkBalanceTask').then((response) => {
+      const balance = response.data[1].contains(Cypress.config('balanceAmount'))
+      cy.log(balance)
+    })
   } catch (e) {
     console.error('An error occurred during the account creation process:', e)
-  } finally {
-    cy.task('wsDisconnect')
   }
+})
+
+/**
+ * Method to Register a New Apllication ID
+ */
+Cypress.Commands.add('c_registerNewApplicationID', () => {
+  cy.task('registerNewAppIDTask')
+    .then(() => {})
+    .then((response) => {
+      const appId = response.data[1]
+      cy.log(appId)
+    })
+})
+
+/**
+ * Method to Connect to WebSocket
+ */
+Cypress.Commands.add('c_wsConnect', () => {
+  cy.task('wsConnect')
+})
+
+/**
+ * Method to Disconnect from WebSocket
+ */
+Cypress.Commands.add('c_wsDisconnect', () => {
+  cy.task('wsDisconnect')
 })
 
 Cypress.Commands.add('c_closeModal', () => {
