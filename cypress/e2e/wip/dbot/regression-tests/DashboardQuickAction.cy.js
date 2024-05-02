@@ -6,7 +6,6 @@ describe('QATEST-4128: Dashboard quick action to Quick Strategy and Bot Builder'
   const botDashboard = new BotDashboard()
 
   beforeEach(() => {
-    cy.c_login()
     cy.c_visitResponsive('/bot', 'large')
     cy.c_skipTour()
     cy.c_closeNotificationHeader()

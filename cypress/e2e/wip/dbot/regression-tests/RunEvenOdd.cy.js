@@ -9,7 +9,7 @@ describe('QATEST-109419: Run custom strategy Even Odd', () => {
   const botBuilder = new BotBuilder()
 
   beforeEach(() => {
-    cy.c_login()
+    cy.c_login({ user: 'dBot' }, 'check')
     cy.c_visitResponsive('/bot', 'large')
     cy.c_skipTour()
     cy.c_switchToDemoBot()
