@@ -1,17 +1,25 @@
 import '@testing-library/cypress/add-commands'
 
 describe('QATEST 54262 - Verify deposit functionality from account switcher', () => {
-  it('Should validate the deposit button from account switcher in desktop', () => {
+  const size = ['small', 'desktop']
+
+  beforeEach(() => {
+    cy.c_createRealAccount()
     cy.c_login()
-    cy.c_visitResponsive('/appstore/traders-hub', 'large')
-    cy.c_checkTradersHubHomePage()
-    cy.findByTestId('dt_dropdown_display').click()
-    cy.get('#real').click()
-    cy.c_closeNotificationHeader()
-    cy.findByRole('button', { name: 'Deposit' }).click()
-    cy.url().should('include', '/cashier/deposit')
-    cy.findByText('Deposit via bank wire, credit card, and e-wallet').should(
-      'be.visible'
-    )
+  })
+
+  size.forEach((size) => {
+    it(`Should validate the deposit button from account switcher on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
+      const isMobile = size == 'small' ? true : false
+      cy.c_visitResponsive('/appstore/traders-hub', size)
+      cy.c_checkTradersHubHomePage(isMobile)
+      cy.c_switchToReal()
+      cy.c_closeNotificationHeader()
+      cy.findByRole('button', { name: 'Deposit' }).click()
+      cy.url().should('include', '/cashier/deposit')
+      cy.findByText('Deposit via bank wire, credit card, and e-wallet').should(
+        'be.visible'
+      )
+    })
   })
 })

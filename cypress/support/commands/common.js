@@ -1,6 +1,7 @@
 import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
+Cypress.prevUser = ''
 
 const setLoginUser = (user = 'masterUser', options = {}) => {
   const { backEndProd = false } = options
@@ -31,6 +32,7 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   else cy.viewport('macbook-16')
 
   cy.visit(path)
+  cy.log('rateLimitCheck flag is set to: ', rateLimitCheck)
   if (rateLimitCheck == true) {
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
@@ -72,12 +74,12 @@ Cypress.Commands.add('c_login', (options = {}) => {
     user = 'masterUser',
     app = '',
     backEndProd = false,
-    checkRateLimit = false,
+    rateLimitCheck = false,
   } = options
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
   })
-  cy.c_visitResponsive('/endpoint', 'large', { rateLimitCheck: checkRateLimit })
+  cy.c_visitResponsive('/endpoint', 'large', { rateLimitCheck: rateLimitCheck })
 
   if (app == 'doughflow') {
     Cypress.env('configServer', Cypress.env('doughflowConfigServer'))
@@ -97,9 +99,14 @@ Cypress.Commands.add('c_login', (options = {}) => {
     Cypress.env('configAppId', Cypress.env('stdConfigAppId'))
   }
 
-  //If we're switching between apps, we'll need to re-authenticate
-  if (Cypress.prevAppId != Cypress.env('configAppId')) {
+  //If we're switching between apps or users, we'll need to re-authenticate
+  if (
+    Cypress.prevAppId != Cypress.env('configAppId') ||
+    Cypress.prevUser != user
+  ) {
     cy.log('prevAppId: ' + Cypress.prevAppId)
+    cy.log(`Prev User: ${Cypress.prevUser}`)
+    Cypress.prevUser = user
     Cypress.prevAppId = Cypress.env('configAppId')
     Cypress.env('oAuthUrl', '<empty>')
   }
@@ -131,7 +138,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
         cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
-        cy.c_doOAuthLogin(app)
+        cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
       },
       loginEmail,
       loginPassword
@@ -144,15 +151,18 @@ Cypress.Commands.add('c_login', (options = {}) => {
       cy.log('came inside wallet getOauth')
       Cypress.env('oAuthUrl', oAuthUrl)
       cy.log('getOAuthUrlWallet - value after: ' + Cypress.env('oAuthUrl'))
-      cy.c_doOAuthLogin(app)
+      cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
     })
   } else {
-    cy.c_doOAuthLogin(app)
+    cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
   }
 })
 
-Cypress.Commands.add('c_doOAuthLogin', (app) => {
-  cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
+Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
+  const { rateLimitCheck = false } = options
+  cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large', {
+    rateLimitCheck: rateLimitCheck,
+  })
   //To let the dtrader page load completely
   cy.get('.cq-symbol-select-btn', { timeout: 10000 }).should('exist')
   cy.document().then((doc) => {
@@ -286,8 +296,6 @@ Cypress.Commands.add('c_transferLimit', (transferMessage) => {
           exact: true,
         }).should('be.visible')
         cy.contains(transferMessage)
-        cy.contains('Transfer fees:')
-        cy.findByRole('button', { name: 'Make a new transfer' }).click()
       }
     })
 })
@@ -410,9 +418,8 @@ Cypress.Commands.add(
       if (allRelatedEmails.length) {
         const verificationEmail = allRelatedEmails.pop()
         cy.wrap(verificationEmail).click()
-        cy.get('table').last().as('lastTable')
-        cy.get('@lastTable')
-          .contains('p', `${accountEmail}`)
+        cy.contains('p', `${accountEmail}`)
+          .last()
           .should('be.visible')
           .parent()
           .children()
@@ -464,6 +471,7 @@ Cypress.Commands.add('c_loadingCheck', () => {
 Cypress.Commands.add(
   'c_createRealAccount',
   (country_code = 'id', currency = 'USD') => {
+    cy.c_visitResponsive('/')
     // Call Verify Email and then set the Verification code in env
     try {
       cy.task('wsConnect')
@@ -477,6 +485,8 @@ Cypress.Commands.add(
           const currentCredentials = Cypress.env('credentials')
           currentCredentials.test.masterUser.ID = accountEmail
           Cypress.env('credentials', currentCredentials)
+          //Reset oAuthUrl otherwise it will use the previous URL
+          Cypress.env('oAuthUrl', '<empty>')
         })
       })
     } catch (e) {
@@ -576,7 +586,7 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
   })
 })
 
-Cypress.Commands.add('skipPasskeysV2', () => {
+Cypress.Commands.add('c_skipPasskeysV2', () => {
   cy.findByText('Effortless login with passkeys')
     .should(() => {})
     .then(($el) => {

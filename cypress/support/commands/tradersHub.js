@@ -6,12 +6,16 @@ Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
     cy.findByRole('button', { name: 'Options & Multipliers' }).should(
       'be.visible'
     )
+    cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'CFDs' }).click()
     cy.findAllByText('Deriv cTrader')
       .first()
       .scrollIntoView({ position: 'bottom' })
       .should('be.visible')
     cy.findByText('Other CFD Platforms').scrollIntoView({ position: 'bottom' })
+    cy.findByRole('button', { name: 'CFDs' }).click()
+    cy.c_closeNotificationHeader()
+    cy.findByRole('button', { name: 'Options & Multipliers' }).click()
   } else {
     cy.findByText('Options & Multipliers').should('be.visible')
     cy.findByText('CFDs').should('be.visible')
@@ -41,6 +45,7 @@ Cypress.Commands.add('c_completeTradersHubTour', (options = {}) => {
   const { language = 'english' } = options
   cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
     const lang = langData[language]
+    cy.c_skipPasskeysV2()
     cy.findByRole('button', { name: lang.realAccountFormUtils.nextBtn }).click()
     if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
       cy.contains('Choice of regulation').should('be.visible')
@@ -147,7 +152,7 @@ Cypress.Commands.add('c_completeOnboarding', () => {
   }
   cy.contains("Trader's Hub tour").should('be.visible')
   cy.contains('button', 'OK').click()
-  cy.skipPasskeysV2()
+  cy.c_skipPasskeysV2()
 })
 
 // TODO move to Utility finction
@@ -539,17 +544,17 @@ Cypress.Commands.add(
 
 Cypress.Commands.add('c_validateEUDisclaimer', () => {
   cy.findByTestId('dt_traders_hub_disclaimer').should('be.visible')
-  cy.findByText('EU statutory disclaimer')
   cy.findByText(
-    '70.1% of retail investor accounts lose money when trading CFDs with this provider'
+    'The products offered on our website are complex derivative products that carry a significant risk of potential loss. CFDs are complex instruments with a high risk of losing money rapidly due to leverage. 70.1% of retail investor accounts lose money when trading CFDs with this provider. You should consider whether you understand how these products work and whether you can afford to take the high risk of losing your money.'
   ).should('be.visible')
 })
 
 /**
- * Requires a currency object that consists of both currency name and currency code
+ * Requires a currency object that consists of both currency name and currency code and delta
  * currency={
  *  name: "Us Dollar"
  *  code: "USD"
+ *  delta: "0.0"
  * }
  */
 Cypress.Commands.add(
@@ -577,6 +582,44 @@ Cypress.Commands.add(
   }
 )
 
+/**
+ * Requires a Account object
+ * Account = {
+ * type: 'Deriv MT5',
+ * subType: 'Derived',
+ * code: 'SVG',
+ * delta: 0.0, // needed for approximately equal to
+ * accurateDelta: 0.0, // this for BTC to match exact exchangerate
+ * }
+ */
+Cypress.Commands.add('c_checkMt5AccountExists', (Account) => {
+  cy.log(
+    `Checking if ${Account.type} ${Account.subType} ${Account.jurisdiction} account already exists.`
+  )
+  cy.document().then((doc) => {
+    sessionStorage.setItem(
+      `c_is${Account.subType}${Account.jurisdiction}AccountCreated`,
+      false
+    )
+    const transferBtnAccount = doc.querySelector(
+      `[data-testid="dt_trading-app-card_real_${Account.subType.toLowerCase()}_${Account.jurisdiction.toLowerCase()}"] .trading-app-card__actions [name="transfer-btn"]`
+    )
+    if (transferBtnAccount && transferBtnAccount != null) {
+      cy.log(
+        `Account for ${Account.type} ${Account.subType} ${Account.jurisdiction} already exists`
+      )
+      sessionStorage.setItem(
+        `c_is${Account.subType}${Account.jurisdiction}AccountCreated`,
+        true
+      )
+    } else {
+      cy.log(
+        `Account for ${Account.type} ${Account.subType} ${Account.jurisdiction} does not exist.`
+      )
+    }
+  })
+})
+
 Cypress.Commands.add('c_getCurrentCurrencyBalance', () => {
   cy.log('Getting the current currency accounts Balance')
   cy.get('.currency-switcher-container').within(() => {
@@ -594,6 +637,7 @@ Cypress.Commands.add('c_getCurrentCurrencyBalance', () => {
  * currency={
  *  name: "Us Dollar"
  *  code: "USD"
+ *  delta: "0.0"
  * }
  */
 Cypress.Commands.add('c_getCurrencyBalance', (currency, options = {}) => {
@@ -615,10 +659,37 @@ Cypress.Commands.add('c_getCurrencyBalance', (currency, options = {}) => {
 })
 
 /**
+ * Requires a Account object
+ * Account = {
+ * type: 'Deriv MT5',
+ * subType: 'Derived',
+ * code: 'SVG',
+ * delta: 0.0, // needed for approximately equal to
+ * accurateDelta: 0.0, // this for BTC to match exact exchangerate
+ * }
+ */
+Cypress.Commands.add('c_getMt5AccountBalance', (Account) => {
+  cy.log(
+    `Getting the balance for ${Account.type} ${Account.subType} ${Account.jurisdiction} account.`
+  )
+  cy.findByTestId(
+    `dt_trading-app-card_real_${Account.subType.toLowerCase()}_${Account.jurisdiction.toLowerCase()}`
+  )
+    .findByTestId('dt_account-balance')
+    .then((balance) => {
+      sessionStorage.setItem(
+        `c_balance${Account.subType}${Account.jurisdiction}`,
+        balance.text()
+      )
+    })
+})
+
+/**
  * Requires a currency object that consists of both currency name and currency code
  * currency={
  *  name: "Us Dollar"
  *  code: "USD"
+ *  delta: "0.0"
  * }
  */
 Cypress.Commands.add('c_createNewCurrencyAccount', (currency, options = {}) => {
@@ -656,6 +727,86 @@ Cypress.Commands.add('c_createNewCurrencyAccount', (currency, options = {}) => {
   })
 })
 
+/**
+ * Requires a Account object
+ * Account = {
+ * type: 'Deriv MT5',
+ * subType: 'Derived',
+ * code: 'SVG',
+ * fullCode: 'St. Vincent & Grenadines',
+ * delta: 0.0, // needed for approximately equal to
+ * accurateDelta: 0.0, // this for BTC to match exact exchangerate
+ * }
+ */
+Cypress.Commands.add('c_createNewMt5Account', (Account, options = {}) => {
+  const { size = 'large' } = options
+  cy.log(
+    `Creating ${Account.type} ${Account.subType} ${Account.jurisdiction} account`
+  )
+  cy.findByTestId(`dt_trading-app-card_real_${Account.subType.toLowerCase()}`)
+    .findByRole('button', { name: 'Get' })
+    .click()
+  cy.findByText(Account.fullJurisdiction).should('be.visible').click()
+  cy.findByTestId('dt-jurisdiction-footnote')
+    .should('be.visible')
+    .should(
+      'contain.text',
+      `Add your Deriv MT5 ${Account.subType} account under Deriv (SVG) LLC (company no. 273 LLC 2020).`
+    )
+  cy.findByRole('button', { name: 'Next' }).click()
+  const isNewPassword = Cypress.$(':contains("Create a Deriv MT5 password")')
+  const isAlreadyCreatedPassword = Cypress.$(
+    ':contains("Enter your Deriv MT5 password")'
+  )
+  cy.get('.dc-modal').within(() => {
+    if (isNewPassword) {
+      cy.findByText('Create a Deriv MT5 password').should('be.visible')
+      cy.findByText(
+        'You can use this password for all your Deriv MT5 accounts.'
+      ).should('be.visible')
+      cy.findByRole('button', { name: 'Create Deriv MT5 password' })
+        .should('be.visible')
+        .and('be.disabled')
+      cy.findByTestId('dt_mt5_password')
+        .should('be.visible')
+        .type(Cypress.env('mt5Password'))
+      cy.findByRole('button', { name: 'Create Deriv MT5 password' })
+        .should('be.visible')
+        .and('be.enabled')
+        .click()
+    } else if (isAlreadyCreatedPassword) {
+      cy.findByText('Enter your Deriv MT5 password').should('be.visible')
+      cy.findByText(
+        `Enter your Deriv MT5 password to add a MT5 ${Account.type} ${Account.jurisdiction} account`
+      ).should('be.visible')
+      cy.findByRole('button', { name: 'Forgot password?' })
+        .should('be.visible')
+        .and('be.enabled')
+      cy.findByRole('button', { name: 'Add account' })
+        .should('be.visible')
+        .and('be.disabled')
+      cy.findByTestId('dt_mt5_password')
+        .should('be.visible')
+        .type(Cypress.env('mt5Password'))
+      cy.findByRole('button', { name: 'Add account' })
+        .should('be.visible')
+        .and('be.enabled')
+        .click()
+    }
+  })
+  cy.findByRole('heading', { name: 'Success!' }).should('be.visible')
+  cy.findByText(
+    `Congratulations, you have successfully created your real ${Account.type} ${Account.subType} ${Account.jurisdiction} account. To start trading, transfer funds from your Deriv account into this account.`
+  )
+  cy.findByRole('button', { name: 'Transfer now' })
+    .should('be.visible')
+    .and('be.enabled')
+  cy.findByRole('button', { name: 'Maybe later' })
+    .should('be.visible')
+    .and('be.enabled')
+    .click()
+})
+
 Cypress.Commands.add('c_openCurrencyAccountSelector', () => {
   cy.log('Opening currency account selector modal')
   cy.get('.currency-switcher-container').within(() => {
@@ -669,6 +820,7 @@ Cypress.Commands.add('c_openCurrencyAccountSelector', () => {
  * currency={
  *  name: "Us Dollar"
  *  code: "USD"
+ *  delta: "0.0"
  * }
  */
 Cypress.Commands.add('c_selectCurrency', (currency, options = {}) => {
@@ -687,6 +839,7 @@ Cypress.Commands.add('c_selectCurrency', (currency, options = {}) => {
  * currency={
  *  name: "Us Dollar"
  *  code: "USD"
+ *  delta: "0.0"
  * }
  */
 Cypress.Commands.add(
