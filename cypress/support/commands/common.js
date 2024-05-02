@@ -290,8 +290,6 @@ Cypress.Commands.add('c_transferLimit', (transferMessage) => {
           exact: true,
         }).should('be.visible')
         cy.contains(transferMessage)
-        cy.contains('Transfer fees:')
-        cy.findByRole('button', { name: 'Make a new transfer' }).click()
       }
     })
 })

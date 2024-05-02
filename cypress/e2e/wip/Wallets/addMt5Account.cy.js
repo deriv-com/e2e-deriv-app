@@ -95,7 +95,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
       closeModal()
     }
     const financialText = Cypress.$(
-      ":contains('This account offers CFDs on derived instruments.')"
+      ":contains('This account offers CFDs on financial instruments.')"
     )
     if (financialText.length > 0) {
       clickAddMt5Button()

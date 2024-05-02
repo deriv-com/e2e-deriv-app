@@ -1,8 +1,17 @@
 import '@testing-library/cypress/add-commands'
 
-function resetBalanceDemo() {
-  cy.c_switchWalletsAccount('USD Demo')
-  cy.findByText('Reset balance').should('be.visible').click()
+function resetBalanceDemo(platform) {
+  if (`${platform}` == `mobile`) {
+    cy.c_switchWalletsAccountDemo()
+    cy.contains('Reset balance', { timeout: 10000 }).should('be.visible')
+    cy.findByTestId('dt_wallets_carousel_header_button')
+      .should('be.visible')
+      .click()
+    cy.findByText('Reset Balance').click()
+  } else {
+    cy.c_switchWalletsAccount('USD Demo')
+    cy.findByText('Reset balance').should('be.visible').click()
+  }
   cy.get('[class="wallets-cashier-content"]')
     .findByRole('button', { name: 'Reset balance' })
     .click()
@@ -44,7 +53,6 @@ describe('QATEST-98798 - Transfer and QATEST-98801 View demo transaction', () =>
   //Prerequisites: Demo wallet account in any qa box with USD demo funds
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
-    cy.c_visitResponsive('/wallets', 'large')
   })
 
   let firstAccount = /MT5 Derived/
@@ -52,8 +60,9 @@ describe('QATEST-98798 - Transfer and QATEST-98801 View demo transaction', () =>
 
   it('should be able to transfer demo funds', () => {
     cy.log('Transfer Demo Funds for Demo Account')
+    cy.c_visitResponsive('/wallets', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    resetBalanceDemo()
+    resetBalanceDemo('desktop')
     cy.findByText(/Transfer from/).click()
     cy.get('button[class=wallets-transfer-form-account-selection__account]')
       .last()
@@ -68,8 +77,57 @@ describe('QATEST-98798 - Transfer and QATEST-98801 View demo transaction', () =>
 
   it('should be able to view demo transactions', () => {
     cy.log('View Transactions for Demo Account')
+    cy.c_visitResponsive('/wallets', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    resetBalanceDemo()
+    resetBalanceDemo('desktop')
+    cy.findByRole('button', { name: 'Transactions' }).click()
+    cy.findByTestId('dt_wallets_textfield_icon_right')
+      .findByRole('button')
+      .click()
+    cy.findByRole('option', { name: 'Reset balance' }).click()
+    cy.findByText('+10,000.00 USD')
+    cy.findByTestId('dt_wallets_textfield_icon_right')
+      .findByRole('button')
+      .click()
+    cy.findByRole('option', { name: 'Transfer' }).click()
+    const firstAccountText = Cypress.$(`:contains(${firstAccount})`)
+    if (firstAccountText.length > 0) {
+      cy.findAllByText(firstAccount).first().should('be.visible')
+      cy.findAllByText(/-10.00 USD/)
+        .first()
+        .should('be.visible')
+    }
+    const secondAccountText = Cypress.$(`:contains(${secondAccount})`)
+    if (secondAccountText.length > 0) {
+      cy.findAllByText(secondAccount).first().should('be.visible')
+      cy.findAllByText(/-10.00 USD/)
+        .first()
+        .should('be.visible')
+    }
+  })
+
+  it('should be able to transfer demo funds in responsive', () => {
+    cy.log('Transfer Demo Funds for Demo Account in responsive')
+    cy.c_visitResponsive('/wallets', 'small')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    resetBalanceDemo('mobile')
+    cy.findByText(/Transfer from/).click()
+    cy.get('button[class=wallets-transfer-form-account-selection__account]')
+      .last()
+      .click()
+    demoTransfer(firstAccount)
+    cy.findByText(/Transfer from/).click()
+    cy.get('button[class=wallets-transfer-form-account-selection__account]')
+      .last()
+      .click()
+    demoTransfer(secondAccount)
+  })
+
+  it('should be able to view demo transactions in responsive', () => {
+    cy.log('View Transactions for Demo Account in responsive')
+    cy.c_visitResponsive('/wallets', 'small')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    resetBalanceDemo('mobile')
     cy.findByRole('button', { name: 'Transactions' }).click()
     cy.findByTestId('dt_wallets_textfield_icon_right')
       .findByRole('button')
