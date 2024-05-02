@@ -1,6 +1,7 @@
 import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
+Cypress.prevUser = ''
 
 const setLoginUser = (user = 'masterUser', options = {}) => {
   const { backEndProd = false } = options
@@ -95,9 +96,14 @@ Cypress.Commands.add('c_login', (options = {}) => {
     Cypress.env('configAppId', Cypress.env('stdConfigAppId'))
   }
 
-  //If we're switching between apps, we'll need to re-authenticate
-  if (Cypress.prevAppId != Cypress.env('configAppId')) {
+  //If we're switching between apps or users, we'll need to re-authenticate
+  if (
+    Cypress.prevAppId != Cypress.env('configAppId') ||
+    Cypress.prevUser != user
+  ) {
     cy.log('prevAppId: ' + Cypress.prevAppId)
+    cy.log(`Prev User: ${Cypress.prevUser}`)
+    Cypress.prevUser = user
     Cypress.prevAppId = Cypress.env('configAppId')
     Cypress.env('oAuthUrl', '<empty>')
   }
@@ -408,9 +414,8 @@ Cypress.Commands.add(
       if (allRelatedEmails.length) {
         const verificationEmail = allRelatedEmails.pop()
         cy.wrap(verificationEmail).click()
-        cy.get('table').last().as('lastTable')
-        cy.get('@lastTable')
-          .contains('p', `${accountEmail}`)
+        cy.contains('p', `${accountEmail}`)
+          .last()
           .should('be.visible')
           .parent()
           .children()
@@ -462,6 +467,7 @@ Cypress.Commands.add('c_loadingCheck', () => {
 Cypress.Commands.add(
   'c_createRealAccount',
   (country_code = 'id', currency = 'USD') => {
+    cy.c_visitResponsive('/')
     // Call Verify Email and then set the Verification code in env
     try {
       cy.task('wsConnect')
@@ -475,6 +481,8 @@ Cypress.Commands.add(
           const currentCredentials = Cypress.env('credentials')
           currentCredentials.test.masterUser.ID = accountEmail
           Cypress.env('credentials', currentCredentials)
+          //Reset oAuthUrl otherwise it will use the previous URL
+          Cypress.env('oAuthUrl', '<empty>')
         })
       })
     } catch (e) {
@@ -574,7 +582,7 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
   })
 })
 
-Cypress.Commands.add('skipPasskeysV2', () => {
+Cypress.Commands.add('c_skipPasskeysV2', () => {
   cy.findByText('Effortless login with passkeys')
     .should(() => {})
     .then(($el) => {
