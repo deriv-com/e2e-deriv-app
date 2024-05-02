@@ -58,7 +58,13 @@ export const cashierPageLocators = {
       },
       fieldRequiredError: () => cy.findByText('This field is required.'),
       validNumberError: () => cy.findByText('Should be a valid number.'),
-      rangeError: () => cy.findByText('Should be between 1.00 and 5,000.00'),
+      rangeError: (currency, totalBalance) => {
+        if (currency == 'USD') {
+          return cy.findByText('Should be between 1.00 and 5,000.00')
+        } else if (currency == 'EUR') {
+          return cy.findByText(`Should be between 0.01 and ${totalBalance}`)
+        }
+      },
     },
   },
   commonMobileLocators: {

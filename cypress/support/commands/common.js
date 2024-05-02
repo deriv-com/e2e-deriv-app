@@ -32,6 +32,7 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   else cy.viewport('macbook-16')
 
   cy.visit(path)
+  cy.log('rateLimitCheck flag is set to: ', rateLimitCheck)
   if (rateLimitCheck == true) {
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
@@ -71,12 +72,12 @@ Cypress.Commands.add('c_login', (options = {}) => {
     user = 'masterUser',
     app = '',
     backEndProd = false,
-    checkRateLimit = false,
+    rateLimitCheck = false,
   } = options
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
   })
-  cy.c_visitResponsive('/endpoint', 'large', { rateLimitCheck: checkRateLimit })
+  cy.c_visitResponsive('/endpoint', 'large', { rateLimitCheck: rateLimitCheck })
 
   if (app == 'doughflow') {
     Cypress.env('configServer', Cypress.env('doughflowConfigServer'))
@@ -135,7 +136,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
         cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
-        cy.c_doOAuthLogin(app)
+        cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
       },
       loginEmail,
       loginPassword
@@ -148,15 +149,18 @@ Cypress.Commands.add('c_login', (options = {}) => {
       cy.log('came inside wallet getOauth')
       Cypress.env('oAuthUrl', oAuthUrl)
       cy.log('getOAuthUrlWallet - value after: ' + Cypress.env('oAuthUrl'))
-      cy.c_doOAuthLogin(app)
+      cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
     })
   } else {
-    cy.c_doOAuthLogin(app)
+    cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
   }
 })
 
-Cypress.Commands.add('c_doOAuthLogin', (app) => {
-  cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
+Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
+  const { rateLimitCheck = false } = options
+  cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large', {
+    rateLimitCheck: rateLimitCheck,
+  })
   //To let the dtrader page load completely
   cy.get('.cq-symbol-select-btn', { timeout: 10000 }).should('exist')
   cy.document().then((doc) => {
