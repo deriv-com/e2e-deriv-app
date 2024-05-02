@@ -68,22 +68,47 @@ describe('QATEST-145618 - Copy Ad - Fixed Rate - Buy Ad', () => {
           )
         })
       }
-      cy.contains('span[class="dc-text"]', 'Buy USD')
-        .siblings('.dc-dropdown-container')
+      cy.get('.my-ads-table__row .dc-dropdown-container')
         .should('be.visible')
         .click()
-      cy.findByText('Copy').parent().click()
-      cy.get('.dc-text')
-        .contains('Ad type')
-        .next('.copy-advert-form__field')
+      cy.findByText('Edit').parent().click()
+      cy.findByTestId('offer_amount')
+        .invoke('val')
+        .then((offerAmount) => {
+          sessionStorage.setItem('c_offerAmount', offerAmount)
+        })
+      cy.findByTestId('fixed_rate_type')
+        .invoke('val')
+        .then((rateValue) => {
+          sessionStorage.setItem('c_rateValue', rateValue.trim())
+        })
+      cy.findByTestId('description')
         .invoke('text')
-        .then((adType) => {
-          sessionStorage.setItem('c_adType', adType.trim())
+        .then((instructions) => {
+          sessionStorage.setItem('c_instructions', instructions.trim())
+        })
+      cy.get('span[name="order_completion_time"]')
+        .invoke('text')
+        .then((orderCompletionTime) => {
+          sessionStorage.setItem(
+            'c_orderCompletionTime',
+            orderCompletionTime.trim()
+          )
         })
       cy.then(() => {
-        cy.log(sessionStorage.getItem('c_adType'))
+        cy.findByTestId('dt_page_return_icon').click()
+        cy.contains('span[class="dc-text"]', 'Buy USD')
+          .siblings('.dc-dropdown-container')
+          .should('be.visible')
+          .click()
+        cy.findByText('Copy').parent().click()
+        cy.c_copyExistingAd(
+          sessionStorage.getItem('c_offerAmount'),
+          sessionStorage.getItem('c_rateValue'),
+          sessionStorage.getItem('c_instructions'),
+          sessionStorage.getItem('c_orderCompletionTime')
+        )
       })
-      //cy.c_copyExistingAd(sessionStorage.getItem('c_adType'))
     })
   })
 })

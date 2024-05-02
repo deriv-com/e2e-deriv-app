@@ -122,6 +122,82 @@ Cypress.Commands.add('c_checkForExistingAds', () => {
   })
 })
 
+Cypress.Commands.add('c_getAdTypeAndRateType', () => {
+  cy.get('.dc-text')
+    .contains('Ad type')
+    .next('.copy-advert-form__field')
+    .invoke('text')
+    .then((adType) => {
+      sessionStorage.setItem('c_adType', adType.trim())
+    })
+  cy.get('.dc-input__container')
+    .children('.dc-input__label')
+    .eq(1)
+    .invoke('text')
+    .then((rateType) => {
+      sessionStorage.setItem('c_rateType', rateType.trim())
+    })
+  cy.then(() => {
+    return cy.wrap({
+      adType: sessionStorage.getItem('c_adType'),
+      rateType: sessionStorage.getItem('c_rateType'),
+    })
+  })
+})
+
+Cypress.Commands.add(
+  'c_copyExistingAd',
+  (offerAmount, rateValue, instructions, orderCompletionTime) => {
+    cy.c_getAdTypeAndRateType().then(({ adType, rateType }) => {
+      if (adType == 'Buy' && rateType == 'Fixed Rate') {
+        cy.findByTestId('offer_amount')
+          .invoke('val')
+          .then((offerAmountFromCopyAdScreen) => {
+            cy.log(
+              'Offer amounts match:',
+              offerAmount === offerAmountFromCopyAdScreen
+            )
+          })
+        cy.findByTestId('fixed_rate_type')
+          .invoke('val')
+          .then((rateValueFromCopyAdScreen) => {
+            cy.log(
+              'Offer amounts match:',
+              rateValue === rateValueFromCopyAdScreen
+            )
+          })
+        cy.get('span[class="dc-text"]')
+          .contains('Instructions')
+          .next()
+          .invoke('text')
+          .then((instructionsFromCopyAdScreen) => {
+            cy.log(
+              'Offer amounts match:',
+              instructions === instructionsFromCopyAdScreen
+            )
+          })
+        cy.get('span[class="dc-text"]')
+          .contains('Order must be completed in')
+          .next()
+          .invoke('text')
+          .then((orderCompletionTimeFromCopyAds) => {
+            cy.log(
+              'Offer amounts match:',
+              orderCompletionTime === orderCompletionTimeFromCopyAds
+            )
+          })
+        cy.findByTestId('offer_amount')
+          .clear()
+          .type(parseFloat(offerAmount) + 1)
+          .should('have.value', parseFloat(offerAmount) + 1)
+      } else if (adType == 'Sell' && rateType == 'Fixed Rate') {
+      } else if (adType == 'Buy' && rateType == 'Floating Rate') {
+      } else if (adType == 'Sell' && rateType == 'Floating Rate') {
+      }
+    })
+  }
+)
+
 Cypress.Commands.add('c_verifyRate', () => {
   cy.findByTestId('float_rate_type').click().clear()
   cy.findByText('Floating rate is required').should('be.visible')
