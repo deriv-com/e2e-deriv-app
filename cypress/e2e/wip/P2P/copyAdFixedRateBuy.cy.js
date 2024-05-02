@@ -68,42 +68,7 @@ describe('QATEST-145618 - Copy Ad - Fixed Rate - Buy Ad', () => {
           )
         })
       }
-    })
-    cy.c_createNewAd('buy')
-    cy.findByText('Buy USD').click()
-    cy.findByText("You're creating an ad to buy...").should('be.visible')
-    cy.findByTestId('offer_amount')
-      .next('span.dc-text')
-      .invoke('text')
-      .then((fiatCurrency) => {
-        sessionStorage.setItem('c_fiatCurrency', fiatCurrency.trim())
-      })
-    cy.findByTestId('fixed_rate_type')
-      .next('span.dc-text')
-      .invoke('text')
-      .then((localCurrency) => {
-        sessionStorage.setItem('c_localCurrency', localCurrency.trim())
-      })
-    cy.then(() => {
-      cy.c_verifyAmountFiled()
-      cy.c_verifyFixedRate(
-        'buy',
-        10,
-        fixedRate,
-        sessionStorage.getItem('c_fiatCurrency'),
-        sessionStorage.getItem('c_localCurrency')
-      )
-      cy.c_verifyMaxMin('min_transaction', minOrder, 'Min')
-      cy.c_verifyMaxMin('max_transaction', maxOrder, 'Max')
-      cy.c_verifyTextAreaBlock('default_advert_description')
-      cy.c_verifyTooltip()
-      cy.c_verifyCompletionOrderDropdown()
-      cy.c_PaymentMethod()
-      cy.c_verifyPostAd()
-      verifyAdOnMyAdsScreen(
-        sessionStorage.getItem('c_fiatCurrency'),
-        sessionStorage.getItem('c_localCurrency')
-      )
+      cy.c_copyExistingAds()
     })
   })
 })
