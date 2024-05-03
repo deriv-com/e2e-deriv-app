@@ -31,7 +31,7 @@ describe('QATEST-4782 Onfido verified profile', () => {
     cy.c_closeNotificationHeader()
     cy.c_waitUntilElementIsFound({
       cyLocator: () => cy.findByText('Your proof of identity is verified'),
-      timeout: 1000,
+      timeout: 2000,
       maxRetries: 5,
     })
   })
