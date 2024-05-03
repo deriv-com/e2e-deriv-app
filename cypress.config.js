@@ -1,38 +1,96 @@
 require("dotenv").config()
 const { defineConfig } = require("cypress")
-const {createAccountReal, createAccountVirtual} = require('./cypress/support/helper/accountCreationUtility');
+const {createAccountReal, createAccountVirtual, verifyEmail} = require('./cypress/support/helper/accountCreationUtility');
 
+const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI')
+const WebSocket = require('ws');
+
+const appId = process.env.E2E_STD_CONFIG_APPID
+const websocketURL = `wss://${process.env.E2E_STD_CONFIG_SERVER}/websockets/v3`
+let connection;
+let api;
 //const gViewPortSize = {small: 'phone-xr', large: 'macbook-16'} //TODO Use enum
  
 module.exports = defineConfig({
   e2e: {
     projectId: "rjvf4u",
-    setupNodeEvents(on, config) {},
     baseUrl: "https://staging-app.deriv.com",
     defaultCommandTimeout: 15000,
     supportFile: "cypress/support/e2e.js",
     experimentalWebKitSupport: true,
     chromeWebSecurity: false,
     setupNodeEvents(on, config) {
+      on('before:browser:launch', (browser = {}, launchOptions) => {
+        if (browser.family === 'chromium') {
+          launchOptions.args.push('--use-fake-ui-for-media-stream')
+          launchOptions.args.push('--use-fake-device-for-media-stream')
+          launchOptions.args.push('--use-file-for-fake-video-capture=cypress/fixtures/kyc/pass_1.y4m')
+        }
+        
+        return launchOptions
+      }),
       on('task', {
-        async createRealAccountTask() {
+        wsConnect() {
+          // Check if there is an existing connection and close it if open
+          if(connection?.readyState === WebSocket.OPEN) {
+            connection.close();
+            console.log('Previous connection closed');
+          }
+          // Establish a new connection
+          connection = new WebSocket(
+            `${websocketURL}?l=EN&app_id=${appId}&brand=deriv`
+          );
+          connection.onopen = () => console.log('Connection opened successfully');
+          connection.onerror = error => console.error('Connection error:', error);
+
+          api = new DerivAPI({ connection });
+
+          return null;
+        },
+        wsDisconnect() {
+          if (connection?.readyState === WebSocket.OPEN) {
+            connection.close();
+            console.log('Connection closed successfully');
+          } else {
+            console.log('Connection is not open or has already been closed');
+          }
+          // Reset connection and api to ensure clean state
+          connection = null;
+          api = null;
+        
+          return null;
+        },
+        async createRealAccountTask({country_code, currency}) {
           try {
-            const realAccountDetails = await createAccountReal();
+            const realAccountDetails = await createAccountReal(api, country_code, currency);
             return realAccountDetails;
           } catch (error) {
             console.error('Error creating account:', error);
             throw error;
           }
         },
-        async createVirtualAccountTask() {
+        async createVirtualAccountTask({country_code}) {
           try {
-              const virtualAccountDetails = await createAccountVirtual();
+              const virtualAccountDetails = await createAccountVirtual(api, country_code);
               return virtualAccountDetails;
           } catch (error) {
               console.error('Error creating virtual account:', error);
               throw error;
           }
       },
+        async verifyEmailTask() {
+        try {
+          const accountEmail = await verifyEmail(api);
+          return accountEmail;
+        } catch (error) {
+          console.error('Error verifying email:', error);
+          throw error;
+      }
+      },
+      setVerificationCode: (verificationCode) => {
+        process.env.E2E_EMAIL_VERIFICATION_CODE = verificationCode;
+        return null;
+      }
       });
 
       return config;  // Return the config object is important for custom configurations to take effect
@@ -79,14 +137,21 @@ module.exports = defineConfig({
       allcrypto: {
         ID: process.env.E2E_CRYPTO,
         PSWD: process.env.E2E_CRYPTO_PASSWORD,
+      cashierLegacy: {
+        ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      cashierLegacyNonUSD: {
+        ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY_NON_USD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       diel: {
         ID: process.env.E2E_DIEL_LOGIN,
-        PSWD: process.env.E2E_DIEL_PASSWORD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
       eu: {
         ID: process.env.E2E_EU_LOGIN,
-        PSWD: process.env.E2E_EU_PASSWORD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
     },
     production:{
@@ -116,6 +181,7 @@ module.exports = defineConfig({
     baseUrl: process.env.CYPRESS_BASE_URL,
     loginEmail: process.env.E2E_DERIV_LOGIN,
     walletloginEmail: process.env.E2E_DERIV_LOGIN_WALLET,
+    walletloginPassword:process.env.E2E_QA_ACCOUNT_PASSWORD,
     loginPassword: process.env.E2E_DERIV_PASSWORD,
     p2pbuyloginEmail: process.env.E2E_P2P_BUY,
     p2psellloginEmail: process.env.E2E_P2P_SELL,
