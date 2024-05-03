@@ -13,7 +13,7 @@ const registerNewApplicationId = async (
     const registerAppResponse = await api.basic({
       app_register: appRegisterID,
       homepage: appRegisterHomePage,
-      name: appRegisterName,
+      name: appRegisterName`+${numbersGeneratorForName()}`,
       redirect_uri: appRegisterReDirectUri,
       scopes: appRegistersScope,
       verification_uri: appRegisterVerificationUri,
@@ -26,6 +26,12 @@ const registerNewApplicationId = async (
     console.error('Operation failed', e)
     throw e
   }
+}
+
+const numbersGeneratorForName = () => {
+  let array = new Uint8Array(4)
+  crypto.randomFillSync(array) // Synchronously fill the array with random bytes
+  return Array.from(array, (byte) => byte % 10).join('')
 }
 
 module.exports = { registerNewApplicationId }

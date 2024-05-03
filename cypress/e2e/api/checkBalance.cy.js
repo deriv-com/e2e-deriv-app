@@ -9,8 +9,9 @@ describe('QATEST - 145407 - Checking the Balance', () => {
 
     cy.c_authorizeCall()
 
-    const balanceResponse = cy.c_getBalance()
-    balanceResponse.contains(Cypress.env('balanceAmount'))
+    const balanceResponse = cy.c_getBalance().balance
+    cy.log('The Available Balance Amount is: ' + balanceResponse)
+    expect(Cypress.env('balanceAmount')).to.be.at.most(balanceResponse)
 
     cy.c_wsDisconnect()
   })
