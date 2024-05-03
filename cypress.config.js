@@ -134,6 +134,10 @@ module.exports = defineConfig({
         ID: process.env.E2E_P2P_FLOATING,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
+      allcrypto: {
+        ID: process.env.E2E_CRYPTO,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
       cashierLegacy: {
         ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
