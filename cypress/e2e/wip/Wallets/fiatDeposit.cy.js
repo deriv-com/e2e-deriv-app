@@ -22,7 +22,10 @@ describe('QATEST-98805 - Fiat deposit iframe access', () => {
     cy.c_visitResponsive('/wallets', 'small')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.findAllByText('Financial', { timeout: 10000 }).should('exist')
-    cy.findByText('Deposit').parent().scrollIntoView().click()
+    cy.findByText('Deposit')
+      .prev('button')
+      .scrollIntoView()
+      .click({ force: true })
     cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
     cy.enter('iframe[class=wallets-deposit-fiat__iframe]').then((getBody) => {
       getBody().find('#pmfilter').should('be.visible')
