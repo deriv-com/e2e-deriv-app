@@ -34,7 +34,5 @@ describe('QATEST-4782 Onfido verified profile', () => {
       timeout: 1000,
       maxRetries: 5,
     })
-    // cy.findByText('Your proof of identity submission failed because:')
-    //cy.get('.dc-btn').click()
   })
 })
