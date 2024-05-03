@@ -169,6 +169,18 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
       cy.findByRole('button', { name: 'Ok' }).click()
     }
   })
+
+  //Complete trading assessment for EU accounts if it's there
+  cy.findByText('Trading Experience Assessment')
+    .should(() => {})
+    .then(($el) => {
+      if ($el.length) {
+        cy.findByRole('button', { name: 'OK' }).click()
+        cy.c_completeTradingAssessment()
+        cy.findByRole('button', { name: 'OK' }).click()
+        cy.log('Completed trading assessment!!!')
+      }
+    })
   cy.get('#modal_root, .modal-root', { timeout: 10000 }).then(($element) => {
     if ($element.children().length > 0) {
       cy.contains('Continue').then(($element) => {
