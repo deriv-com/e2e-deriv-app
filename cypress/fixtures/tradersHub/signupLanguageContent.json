@@ -1,0 +1,94 @@
+{
+    "spanish": {
+        "shortCode": "ES",
+        "urlCode": "es",
+        "signUpForm": {
+            "signUpBtn": "Iniciar sesión",
+            "emailTxtBox": "Correo electrónico",
+            "createDemoAccTxt": "Crear cuenta demo",
+            "checkMailTxt": "Revise su correo electrónico"
+        },
+        "demoAccountSignUp": {
+            "selectCountryDropdown": "Seleccione su país y su ciudadanía:",
+            "CoRTxt": "País de residencia",
+            "citizenshipTxt": "Nacionalidad",
+            "pwdTxtBox": "Cree una contraseña",
+            "startTradingBtn": "Comience a operar"
+        },
+        "realAccountFormUtils": {
+            "nextBtn": "Siguiente",
+            "prevBtn": "Anterior"
+        },
+        "personalDetailsForm": {
+            "employedTxt": "Empleado",
+            "hedgingTxt": "Cobertura",
+            "validTaxInfoChkBox": "Por la presente declaro que la información tributaria que he proporcionado es verdadera y completa. También informaré Deriv Investments (Europe) Limited acerca de cualquier cambio de esta información."
+        },
+        "addressDetailsForm": {
+            "firstLineAddressTxtBox": "Primera línea de dirección*",
+            "secondLineAddressTxtBox": "Segunda línea de dirección",
+            "cityTxtBox": "Pueblo/Ciudad*",
+            "zipTxtBox": "Código postal"
+        },
+        "addRealAccountTexts": {
+            "ownInitiativeVerify": "Por la presente confirmo que mi solicitud de apertura de una cuenta en Deriv Investments (Europe) Ltd se realiza por iniciativa propia.",
+            "addAccountBtn": "Añadir cuenta",
+            "depositeBtn": "Depositar",
+            "accAddedTxt": "Cuenta añadida",
+            "accVerificationTxt": "Su cuenta estará disponible para operar una vez se haya completado la verificación de la misma.",
+            "verifyNowBtn": "Verifique ahora",
+            "maybeLaterBtn": "Quizás más tarde"
+        },
+        "accountSettings": {
+            "accountSettingsTxt": "Configuración de cuenta",
+            "poiTxt": "Prueba de identidad",
+            "issuedCountryTxt": "¿En qué país se emitió su documento?"
+        }
+    },
+    "english": {
+        "shortCode": "EN",
+        "urlCode": "en",
+        "signUpForm": {
+            "signUpBtn": "Sign up",
+            "emailTxtBox": "Email",
+            "createDemoAccTxt": "Create demo account",
+            "checkMailTxt": "Check your email"
+        },
+        "demoAccountSignUp": {
+            "selectCountryDropdown": "Select your country and",
+            "CoRTxt": "Country of residence",
+            "citizenshipTxt": "Citizenship",
+            "pwdTxtBox": "Create a password",
+            "startTradingBtn": "Start trading"
+        },
+        "realAccountFormUtils": {
+            "nextBtn": "Next",
+            "prevBtn": "Previous"
+        },
+        "personalDetailsForm": {
+            "employedTxt": "Employed",
+            "hedgingTxt": "Hedging",
+            "validTaxInfoChkBox": "I hereby confirm that the tax information I provided is true and complete. I will also inform Deriv Investments (Europe) Limited about any changes to this information."
+        },
+        "addressDetailsForm": {
+            "firstLineAddressTxtBox": "First line of address*",
+            "secondLineAddressTxtBox": "Second line of address",
+            "cityTxtBox": "Town/City*",
+            "zipTxtBox": "Postal/ZIP Code"
+        },
+        "addRealAccountTexts": {
+            "ownInitiativeVerify": "I hereby confirm that my request for opening an account with Deriv Investments (Europe) Ltd is made on my own initiative.",
+            "addAccountBtn": "Add account",
+            "depositeBtn": "Deposit",
+            "accAddedTxt": "Account added",
+            "accVerificationTxt": "Your account will be available for trading once the verification of your account is complete.",
+            "verifyNowBtn": "Verify now",
+            "maybeLaterBtn": "Maybe later"
+        },
+        "accountSettings": {
+            "accountSettingsTxt": "Account Settings",
+            "poiTxt": "Proof of identity",
+            "issuedCountryTxt": "In which country was your document issued?"
+        }
+    }
+}

@@ -8,22 +8,67 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
     toAccount = '',
     withExtraVerifications = false,
     transferAmount = 10,
+    size = 'large',
   } = options
   const fromAccountBalance = {
-    withCurrency: sessionStorage.getItem(`c_balance${fromAccount.code}`),
-    withoutCurrency: parseFloat(
-      sessionStorage
-        .getItem(`c_balance${fromAccount.code}`)
-        .replace(/[^\d.]/g, '')
-    ),
+    withCurrency:
+      fromAccount.type == 'Deriv MT5'
+        ? sessionStorage.getItem(
+            `c_balance${fromAccount.subType}${fromAccount.jurisdiction}`
+          )
+        : sessionStorage.getItem(`c_balance${fromAccount.code}`),
+    withoutCurrency:
+      fromAccount.type == 'Deriv MT5'
+        ? parseFloat(
+            sessionStorage
+              .getItem(
+                `c_balance${fromAccount.subType}${fromAccount.jurisdiction}`
+              )
+              .replace(/[^\d.]/g, '')
+          )
+        : parseFloat(
+            sessionStorage
+              .getItem(`c_balance${fromAccount.code}`)
+              .replace(/[^\d.]/g, '')
+          ),
+    withoutCurrencyInString:
+      fromAccount.type == 'Deriv MT5'
+        ? sessionStorage
+            .getItem(
+              `c_balance${fromAccount.subType}${fromAccount.jurisdiction}`
+            )
+            .replace(/\s*(USD|EUR|GBP|AUD)\s*/g, '')
+        : sessionStorage
+            .getItem(`c_balance${fromAccount.code}`)
+            .replace(/\s*(USD|EUR|GBP|AUD)\s*/g, ''),
   }
   const toAccountBalance = {
-    withCurrency: sessionStorage.getItem(`c_balance${toAccount.code}`),
-    withoutCurrency: parseFloat(
-      sessionStorage
-        .getItem(`c_balance${toAccount.code}`)
-        .replace(/[^\d.]/g, '')
-    ),
+    withCurrency:
+      toAccount.type == 'Deriv MT5'
+        ? sessionStorage.getItem(
+            `c_balance${toAccount.subType}${toAccount.jurisdiction}`
+          )
+        : sessionStorage.getItem(`c_balance${toAccount.code}`),
+    withoutCurrency:
+      toAccount.type == 'Deriv MT5'
+        ? parseFloat(
+            sessionStorage
+              .getItem(`c_balance${toAccount.subType}${toAccount.jurisdiction}`)
+              .replace(/[^\d.]/g, '')
+          )
+        : parseFloat(
+            sessionStorage
+              .getItem(`c_balance${toAccount.code}`)
+              .replace(/[^\d.]/g, '')
+          ),
+    withoutCurrencyInString:
+      toAccount.type == 'Deriv MT5'
+        ? sessionStorage
+            .getItem(`c_balance${toAccount.subType}${toAccount.jurisdiction}`)
+            .replace(/\s*(USD|EUR|GBP|AUD)\s*/g, '')
+        : sessionStorage
+            .getItem(`c_balance${toAccount.code}`)
+            .replace(/\s*(USD|EUR|GBP|AUD)\s*/g, ''),
   }
   transferScreen.sharedLocators.transferForm().within(() => {
     if (withExtraVerifications == true) {
@@ -63,9 +108,13 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
         .toAmountField()
         .should('not.have.value', '')
         .then((toAmountElement) => {
-          sessionStorage.setItem(
-            `c_conversionRate${fromAccount.code}To${toAccount.code}`,
-            toAmountElement.val()
+          expect(parseFloat(toAmountElement.val())).to.be.closeTo(
+            parseFloat(
+              sessionStorage.getItem(
+                `c_conversionRate${fromAccount.code}To${toAccount.code}`
+              )
+            ),
+            toAccount.accurateDelta
           )
         })
       cy.c_verifypercentageSelectorSection(fromAccountBalance)
@@ -101,19 +150,29 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
         expect(parseFloat($toAmount.val())).to.be.closeTo(
           10 *
             parseFloat(
-              sessionStorage.getItem(`c_conversionRateUSDTo${toAccount.code}`)
+              sessionStorage.getItem(
+                `c_conversionRate${fromAccount.code}To${toAccount.code}`
+              )
             ),
-          0.0001
+          toAccount.delta
         )
         let balanceToAccounAfterTransfer =
-          toAccountBalance.withoutCurrency +
-          (parseFloat($toAmount.val()) -
-            calculateTransferFee(transferAmount) *
-              parseFloat(
-                sessionStorage.getItem(
-                  `c_conversionRate${fromAccount.code}To${toAccount.code}`
+          toAccount.type == 'Deriv MT5'
+            ? toAccountBalance.withoutCurrency +
+              parseFloat($toAmount.val()) *
+                parseFloat(
+                  sessionStorage.getItem(
+                    `c_conversionRate${fromAccount.code}To${toAccount.code}`
+                  )
                 )
-              ))
+            : toAccountBalance.withoutCurrency +
+              (parseFloat($toAmount.val()) -
+                calculateTransferFee(transferAmount) *
+                  parseFloat(
+                    sessionStorage.getItem(
+                      `c_conversionRate${fromAccount.code}To${toAccount.code}`
+                    )
+                  ))
         cy.log(
           'Expected balance in ToAccount after transfer',
           balanceToAccounAfterTransfer
@@ -131,6 +190,9 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
     })
     transferScreen.sharedLocators.transferButton().should('be.enabled').click()
   })
+  if (size == 'small') {
+    cy.c_verifyTransferDetails(transferAmount, fromAccount, toAccount)
+  }
 })
 
 Cypress.Commands.add(
@@ -198,9 +260,15 @@ Cypress.Commands.add(
 Cypress.Commands.add(
   'c_verifyConvertorSection',
   (fromAccountBalance, options = {}) => {
-    const { fromAccount = '', toAccount = '' } = options
-    const randomFromAmount = Math.floor(Math.random() * (5000 + 1))
-    const randomToAmount = (Math.random() * 0.0001).toFixed(8)
+    const { fromAccount = {}, toAccount = {} } = options
+    const randomFromAmount =
+      fromAccount.type != 'Cryptocurrencies'
+        ? Math.floor(Math.random() * (5000 + 1))
+        : (Math.random() * 0.0001).toFixed(8)
+    const randomToAmount =
+      toAccount.type != 'Cryptocurrencies'
+        ? (Math.random() * 0.0001).toFixed(2)
+        : (Math.random() * 0.0001).toFixed(8)
     transferScreen.sharedLocators
       .fromAmountField()
       .clear()
@@ -215,9 +283,11 @@ Cypress.Commands.add(
         expect(parseFloat($toAmount.val())).to.be.closeTo(
           randomFromAmount *
             parseFloat(
-              sessionStorage.getItem(`c_conversionRateUSDTo${toAccount.code}`)
+              sessionStorage.getItem(
+                `c_conversionRate${fromAccount.code}To${toAccount.code}`
+              )
             ),
-          0.0001
+          toAccount.delta
         )
         transferScreen.sharedLocators.percentageSelectorText(
           Math.round(
@@ -233,9 +303,11 @@ Cypress.Commands.add(
         expect(parseFloat($fromAmount.val())).to.be.closeTo(
           randomToAmount /
             parseFloat(
-              sessionStorage.getItem(`c_conversionRateUSDTo${toAccount.code}`)
+              sessionStorage.getItem(
+                `c_conversionRate${fromAccount.code}To${toAccount.code}`
+              )
             ).toFixed(8),
-          0.1
+          fromAccount.delta
         )
         transferScreen.sharedLocators.percentageSelectorText(
           Math.round(
@@ -263,14 +335,19 @@ Cypress.Commands.add(
       .within(() => {
         transferScreen.sharedLocators.validNumberError().should('be.visible')
       })
-    transferScreen.sharedLocators.fromAmountField().clear().type('5001')
-    transferScreen.sharedLocators
-      .fromAmountField()
-      .parent()
-      .next()
-      .within(() => {
-        transferScreen.sharedLocators.rangeError().should('be.visible')
-      })
+
+    if (fromAccount.code == 'USD') {
+      transferScreen.sharedLocators.fromAmountField().clear().type('5001')
+      transferScreen.sharedLocators
+        .fromAmountField()
+        .parent()
+        .next()
+        .within(() => {
+          transferScreen.sharedLocators
+            .rangeError(fromAccount.code)
+            .should('be.visible')
+        })
+    }
     transferScreen.sharedLocators.toAmountField().type('test Validation')
     transferScreen.sharedLocators
       .toAmountField()
@@ -285,7 +362,34 @@ Cypress.Commands.add(
       .parent()
       .next()
       .within(() => {
-        transferScreen.sharedLocators.rangeError().should('be.visible')
+        transferScreen.sharedLocators
+          .rangeError(
+            fromAccount.code,
+            fromAccountBalance.withoutCurrencyInString
+          )
+          .should('be.visible')
       })
+  }
+)
+
+Cypress.Commands.add(
+  'c_verifyTransferDetails',
+  (transferAmount, fromCurrency, toCurrency) => {
+    cy.findByText('Transfer').should('be.visible')
+    cy.findByText('Your funds have been transferred').should('be.visible')
+    cy.findByText(`${transferAmount.toFixed(2)} ${fromCurrency.code}`)
+    cy.get('.crypto-transfer-from').within(() => {
+      cy.findByText(fromCurrency.code).should('be.visible')
+    })
+    cy.get('.crypto-transfer-to').within(() => {
+      if (toCurrency.type == 'Deriv MT5') {
+        cy.findByText(
+          `${toCurrency.subType} ${toCurrency.jurisdiction}`
+        ).should('be.visible')
+      } else {
+        cy.findByText(toCurrency.code).should('be.visible')
+      }
+    })
+    cy.findByRole('button', { name: 'Make a new transfer' }).click()
   }
 )

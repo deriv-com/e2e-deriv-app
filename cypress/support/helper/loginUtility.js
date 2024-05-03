@@ -180,7 +180,7 @@ export function getWalletOAuthUrl(callback) {
     loginPassword = Cypress.env('loginPasswordProd')
   } else {
     loginEmail = Cypress.env('walletloginEmail')
-    loginPassword = Cypress.env('loginPassword')
+    loginPassword = Cypress.env('walletloginPassword')
   }
 
   // Step 1: Perform a GET on the OAuth Url in order to generate a CSRF token.

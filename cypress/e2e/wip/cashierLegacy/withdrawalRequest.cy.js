@@ -195,7 +195,11 @@ describe('QATEST-20010 Withdrawal Request: Fiat - Different language', () => {
     cy.clearAllCookies()
     cy.clearAllLocalStorage()
     cy.clearAllSessionStorage()
-    cy.c_login({ user: 'cashierWithdrawal', backEndProd: true })
+    cy.c_login({
+      user: 'cashierWithdrawal',
+      backEndProd: true,
+      rateLimitCheck: true,
+    })
     cy.fixture('cashierLegacy/withdrawalLanguageContent').as('languageDetails')
   })
   it(`should verify withdrawal request page with different languages for mobile screen size`, () => {
@@ -203,7 +207,7 @@ describe('QATEST-20010 Withdrawal Request: Fiat - Different language', () => {
       cy.c_visitResponsive(
         `cashier/withdrawal/?lang=${languageDetails.english.urlCode}`,
         'small',
-        'check'
+        { rateLimitCheck: true }
       )
       cy.c_loadingCheck()
       prevLanguage = languageDetails.english.urlCode
@@ -218,8 +222,14 @@ describe('QATEST-20010 Withdrawal Request: Fiat - Different language', () => {
       cy.c_visitResponsive(
         `cashier/withdrawal/?lang=${languageDetails.english.urlCode}`,
         'large',
-        'check'
+        { rateLimitCheck: true }
       )
+      cy.then(() => {
+        if (sessionStorage.getItem('c_rateLimitOnVisitOccured') == 'true') {
+          cy.reload()
+          sessionStorage.removeItem('c_rateLimitOnVisitOccured')
+        }
+      })
       cy.c_loadingCheck()
       prevLanguage = languageDetails.english.urlCode
       const languageDetailsArray = Object.entries(languageDetails)
