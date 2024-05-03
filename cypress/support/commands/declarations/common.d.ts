@@ -121,6 +121,13 @@ declare global {
         maxRetries?: number
         timeout?: number
       }): void
+
+      /**
+       * Create a demo account
+       * @param country_code Enter the country code (Default = )
+       * @param currency Enter the currency
+       */
+      c_createDemoAccount(country_code: string, currency: string): void
     }
   }
 }
