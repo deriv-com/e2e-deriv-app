@@ -30,12 +30,11 @@ describe('QATEST-4782 Onfido verified profile', () => {
     cy.reload()
     cy.c_closeNotificationHeader()
     cy.c_waitUntilElementIsFound({
-      cyLocator: () =>
-        cy.findByText('Your proof of identity submission failed because:'),
+      cyLocator: () => cy.findByText('Your proof of identity is verified'),
       timeout: 1000,
       maxRetries: 5,
     })
-    cy.findByText('Your proof of identity submission failed because:')
-    cy.get('.dc-btn').click()
+    // cy.findByText('Your proof of identity submission failed because:')
+    //cy.get('.dc-btn').click()
   })
 })
