@@ -11,7 +11,7 @@ describe('QATEST - 145407 - Checking the Balance', () => {
 
     const balanceResponse = cy.c_getBalance().balance
     cy.log('The Available Balance Amount is: ' + balanceResponse)
-    expect(Cypress.env('balanceAmount')).to.be.at.most(balanceResponse)
+    expect(balanceResponse).to.be.at.most(Cypress.env('balanceAmount'))
 
     cy.c_wsDisconnect()
   })
