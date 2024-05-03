@@ -4,15 +4,6 @@ let fixedRate = 1.25
 let minOrder = 6
 let maxOrder = 10
 
-function verifyAdOnMyAdsScreen(fiatCurrency, localCurrency) {
-  cy.findByText('Active').should('be.visible')
-  cy.findByText(`Buy ${fiatCurrency}`).should('be.visible')
-  cy.findByText(`${fixedRate} ${localCurrency}`)
-  cy.findByText(
-    `${minOrder.toFixed(2)} - ${maxOrder.toFixed(2)} ${fiatCurrency}`
-  )
-}
-
 describe('QATEST-145618 - Copy Ad - Fixed Rate - Buy Ad', () => {
   beforeEach(() => {
     cy.clearAllLocalStorage()
