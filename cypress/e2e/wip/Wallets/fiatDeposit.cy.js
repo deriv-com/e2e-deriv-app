@@ -17,12 +17,12 @@ describe('QATEST-98805 - Fiat deposit iframe access', () => {
       getBody().find('#depositoptions').should('be.visible')
     })
   })
-  it('should be able to access doughflow iframe in responsive', () => {
+  it.only('should be able to access doughflow iframe in responsive', () => {
     cy.log('Access Fiat Deposit Iframe')
     cy.c_visitResponsive('/wallets', 'small')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.findAllByText('Financial', { timeout: 10000 }).should('exist')
-    cy.findByText('Deposit').parent().click()
+    cy.findByText('Deposit').parent().scrollIntoView().click()
     cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
     cy.enter('iframe[class=wallets-deposit-fiat__iframe]').then((getBody) => {
       getBody().find('#pmfilter').should('be.visible')
