@@ -1,7 +1,7 @@
 import '@testing-library/cypress/add-commands'
 
 let fixedRate = 1.25
-let minOrder = 5
+let minOrder = 6
 let maxOrder = 10
 
 function verifyAdOnMyAdsScreen(fiatCurrency, localCurrency) {
@@ -30,71 +30,9 @@ describe('QATEST-145618 - Copy Ad - Fixed Rate - Buy Ad', () => {
     cy.c_checkForExistingAds().then((adExists) => {
       if (adExists == false) {
         cy.c_createNewAd('buy')
-        cy.findByText('Buy USD').click()
-        cy.findByText("You're creating an ad to buy...").should('be.visible')
-        cy.findByTestId('offer_amount')
-          .next('span.dc-text')
-          .invoke('text')
-          .then((fiatCurrency) => {
-            sessionStorage.setItem('c_fiatCurrency', fiatCurrency.trim())
-          })
-        cy.findByTestId('fixed_rate_type')
-          .next('span.dc-text')
-          .invoke('text')
-          .then((localCurrency) => {
-            sessionStorage.setItem('c_localCurrency', localCurrency.trim())
-          })
-        cy.then(() => {
-          cy.findByTestId('offer_amount').type('10').should('have.value', '10')
-          cy.findByTestId('fixed_rate_type')
-            .type(fixedRate)
-            .should('have.value', fixedRate)
-          cy.findByTestId('min_transaction')
-            .type(minOrder)
-            .should('have.value', minOrder)
-          cy.findByTestId('max_transaction')
-            .type(maxOrder)
-            .should('have.value', maxOrder)
-          cy.findByTestId('default_advert_description')
-            .type('Description Block')
-            .should('have.value', 'Description Block')
-          cy.findByTestId('dt_dropdown_display').click()
-          cy.get('#900').should('be.visible').click()
-          cy.c_PaymentMethod()
-          cy.c_verifyPostAd()
-          verifyAdOnMyAdsScreen(
-            sessionStorage.getItem('c_fiatCurrency'),
-            sessionStorage.getItem('c_localCurrency')
-          )
-        })
+        cy.c_inputAdDetails(fixedRate, minOrder, maxOrder, 'Buy', 'fixed')
       }
-      cy.get('.my-ads-table__row .dc-dropdown-container')
-        .should('be.visible')
-        .click()
-      cy.findByText('Edit').parent().click()
-      cy.findByTestId('offer_amount')
-        .invoke('val')
-        .then((offerAmount) => {
-          sessionStorage.setItem('c_offerAmount', offerAmount)
-        })
-      cy.findByTestId('fixed_rate_type')
-        .invoke('val')
-        .then((rateValue) => {
-          sessionStorage.setItem('c_rateValue', rateValue.trim())
-        })
-      cy.findByTestId('description')
-        .invoke('text')
-        .then((instructions) => {
-          sessionStorage.setItem('c_instructions', instructions.trim())
-        })
-      cy.get('span[name="order_completion_time"]')
-        .invoke('text')
-        .then((orderCompletionTime) => {
-          sessionStorage.setItem(
-            'c_orderCompletionTime',
-            orderCompletionTime.trim()
-          )
-        })
+      cy.c_getExistingAdDetailsForValidation('Buy')
       cy.then(() => {
         cy.findByTestId('dt_page_return_icon').click()
         cy.contains('span[class="dc-text"]', 'Buy USD')
@@ -106,8 +44,10 @@ describe('QATEST-145618 - Copy Ad - Fixed Rate - Buy Ad', () => {
           sessionStorage.getItem('c_offerAmount'),
           sessionStorage.getItem('c_rateValue'),
           sessionStorage.getItem('c_instructions'),
-          sessionStorage.getItem('c_orderCompletionTime')
+          sessionStorage.getItem('c_orderCompletionTime'),
+          null
         )
+        cy.c_deleteCopiedAd()
       })
     })
   })
