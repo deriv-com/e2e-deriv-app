@@ -8,8 +8,10 @@ describe('QATEST-23015 - IDV POI Name Mismatch - Mobile view', () => {
   })
 
   it('Should return Name mismatch', () => {
-    cy.get('select[name="document_type"]').select('National ID Number')
-    cy.findByLabelText('Enter your document number').type('00000000000000')
+    cy.get('select[name="document_type"]').select(
+      'Social Security and National Insurance Trust (SSNIT)'
+    )
+    cy.findByLabelText('Enter your SSNIT number').type('C000000000000')
     cy.findByTestId('first_name').clear().type('Test')
     cy.findByTestId('last_name').clear().type('Name')
     cy.findByTestId('date_of_birth').type('2000-09-20')
@@ -20,9 +22,11 @@ describe('QATEST-23015 - IDV POI Name Mismatch - Mobile view', () => {
     cy.contains('Your documents were submitted successfully').should(
       'be.visible'
     )
-    cy.findByText('Proof of address required', { timeout: 10000 }).should(
+    cy.findByText('Proof of address required', { timeout: 30000 }).should(
       'exist'
     )
+    cy.c_closeNotificationHeader()
+    cy.reload()
 
     cy.contains('Your identity verification failed').should('be.visible')
     cy.contains(
