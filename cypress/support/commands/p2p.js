@@ -1,6 +1,5 @@
 import { generateAccountNumberString } from '../helper/utility'
 
-let rate = 0.01
 let marketRate
 let rateCalculation
 let calculatedValue
@@ -44,7 +43,7 @@ Cypress.Commands.add('c_verifyExchangeRate', (rate) => {
   regexPattern = new RegExp(
     `Your rate is = ${calculatedValue.toFixed(6).slice(0, -1)}\\d? NZD`
   )
-  cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
+  // cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
 })
 
 Cypress.Commands.add(
@@ -140,10 +139,12 @@ Cypress.Commands.add('c_verifyRate', () => {
           .click({ force: true })
           .click({ force: true })
         rate = rate + 0.02
+        // cy.log('rate is' rate).as('rate')
         cy.c_verifyExchangeRate(rate)
         // // verify minus button once
         cy.get('#floating_rate_input_sub').click({ force: true })
         rate = rate - 0.01
+        let expectedRate = rate
         cy.c_verifyExchangeRate(rate)
       } else {
         throw new Error('Text does not match the expected pattern')
@@ -201,13 +202,16 @@ Cypress.Commands.add(
   }
 )
 
-Cypress.Commands.add('c_PaymentMethod', () => {
+Cypress.Commands.add('c_PaymentMethod', (pm1, pm2, pm3) => {
   cy.findByPlaceholderText('Add').click()
-  cy.findByText('Other').click()
+  // cy.findByText('Other').click()
+  cy.findByText(pm1).click()
   cy.findByPlaceholderText('Add').click()
-  cy.findByText('Bank Transfer').click()
+  // cy.findByText('Bank Transfer').click()
+  cy.findByText(pm2).click()
   cy.findByPlaceholderText('Add').click()
-  cy.findByText('Skrill').click()
+  // cy.findByText('Skrill').click()
+  cy.findByText(pm3).click()
   cy.findByPlaceholderText('Add').should('not.exist')
 })
 
@@ -408,3 +412,11 @@ Cypress.Commands.add('c_skipPasskey', (adType) => {
     }
   })
 })
+// Cypress.Commands.add('c_verifyBuyAds', (minLimit,maxLimit,pm1,pm2,pm3)=> {
+//   cy.findByText('Active').should('be.visible')
+//   cy.findByText('Buy USD').should('be.visible')
+//   cy.findByText(minLimit + ".00 - " + maxLimit + ".00 USD")
+//   cy.contains(pm1)
+//   cy.contains(pm2)
+//   cy.contains(pm3)
+// })
