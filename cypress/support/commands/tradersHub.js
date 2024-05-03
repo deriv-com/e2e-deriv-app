@@ -60,20 +60,15 @@ Cypress.Commands.add('c_enterValidEmail', (signUpMail, options = {}) => {
   {
     cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
       const lang = langData[language]
-      if (language != 'english') {
-        cy.visit(`https://deriv.com/${lang.urlCode}/`, {
-          onBeforeLoad(win) {
-            win.localStorage.setItem(
-              'config.server_url',
-              Cypress.env('configServer')
-            )
-            win.localStorage.setItem(
-              'config.app_id',
-              Cypress.env('configAppId')
-            )
-          },
-        })
-      }
+      cy.visit(`https://deriv.com/${lang.urlCode}/`, {
+        onBeforeLoad(win) {
+          win.localStorage.setItem(
+            'config.server_url',
+            Cypress.env('configServer')
+          )
+          win.localStorage.setItem('config.app_id', Cypress.env('configAppId'))
+        },
+      })
       cy.visit(`https://deriv.com/${lang.urlCode}/signup/`, {
         onBeforeLoad(win) {
           win.localStorage.setItem(
@@ -319,7 +314,10 @@ Cypress.Commands.add('c_addAccount', () => {
   )
   cy.findByRole('button', { name: 'Deposit' }).should('be.visible')
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
-  cy.url().should('be.equal', Cypress.env('baseUrl') + 'appstore/traders-hub')
+  cy.url().should(
+    'be.equal',
+    Cypress.config('baseUrl') + 'appstore/traders-hub'
+  )
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
   cy.c_closeNotificationHeader()
   cy.findAllByTestId('dt_balance_text_container').eq(0).should('be.visible')
