@@ -136,7 +136,7 @@ module.exports = defineConfig({
       },
       allcrypto: {
         ID: process.env.E2E_CRYPTO,
-        PSWD: process.env.E2E_CRYPTO_PASSWORD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       cashierLegacy: {
         ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
