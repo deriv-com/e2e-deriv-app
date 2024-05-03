@@ -178,9 +178,7 @@ Cypress.Commands.add(
     currency = Cypress.env('accountCurrency').USD,
     options = {}
   ) => {
-    const { isMobile = false } = options
-    const { language = 'english' } = options
-
+    const { isMobile = false, language = 'english' } = options
     cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
       const lang = langData[language]
       cy.findByText(currency).click()
@@ -328,8 +326,7 @@ Cypress.Commands.add('c_addAccount', () => {
 })
 
 Cypress.Commands.add('c_manageAccountsetting', (CoR, options = {}) => {
-  const { isMobile = false } = options
-  const { language = 'english' } = options
+  const { isMobile = false, language = 'english' } = options
   cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
     const lang = langData[language]
     if (isMobile) {
@@ -357,8 +354,7 @@ Cypress.Commands.add('c_manageAccountsetting', (CoR, options = {}) => {
 })
 
 Cypress.Commands.add('c_completeTradingAssessment', (options = {}) => {
-  const { isMobile = false } = options
-  const { language = 'english' } = options
+  const { isMobile = false, language = 'english' } = options
   cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
     const lang = langData[language]
     cy.get('[type="radio"]').first().click({ force: true })
@@ -391,8 +387,7 @@ Cypress.Commands.add('c_completeTradingAssessment', (options = {}) => {
 })
 
 Cypress.Commands.add('c_completeFinancialAssessment', (options = {}) => {
-  const { isMobile = false } = options
-  const { language = 'english' } = options
+  const { isMobile = false, language = 'english' } = options
   cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
     const lang = langData[language]
     let count = 1
@@ -418,8 +413,7 @@ Cypress.Commands.add('c_completeFatcaDeclarationAgreement', () => {
 })
 
 Cypress.Commands.add('c_addAccountMF', (type, options = {}) => {
-  const { isMobile = false } = options
-  const { language = 'english' } = options
+  const { isMobile = false, language = 'english' } = options
   cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
     const lang = langData[language]
     cy.findByRole('button', {
