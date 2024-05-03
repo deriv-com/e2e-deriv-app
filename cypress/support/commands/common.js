@@ -32,6 +32,7 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   else cy.viewport('macbook-16')
 
   cy.visit(path)
+  cy.log('rateLimitCheck flag is set to: ', rateLimitCheck)
   if (rateLimitCheck == true) {
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
@@ -47,9 +48,11 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   if (path.includes('region')) {
     //Wait for relevent elements to appear (based on page)
     cy.log('Home page Selected')
-    cy.findByRole('button', { name: 'whatsapp icon' }).should('be.visible', {
-      timeout: 30000,
-    }) //For the home page, this seems to be the best indicator that a page has fully loaded. It may change in the future.
+    cy.findByRole(
+      'button',
+      { name: 'whatsapp icon' },
+      { timeout: 30000 }
+    ).should('be.visible') //For the home page, this seems to be the best indicator that a page has fully loaded. It may change in the future.
   }
 
   if (path.includes('help-centre')) {
@@ -71,12 +74,12 @@ Cypress.Commands.add('c_login', (options = {}) => {
     user = 'masterUser',
     app = '',
     backEndProd = false,
-    checkRateLimit = false,
+    rateLimitCheck = false,
   } = options
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
   })
-  cy.c_visitResponsive('/endpoint', 'large', { rateLimitCheck: checkRateLimit })
+  cy.c_visitResponsive('/endpoint', 'large', { rateLimitCheck: rateLimitCheck })
 
   if (app == 'doughflow') {
     Cypress.env('configServer', Cypress.env('doughflowConfigServer'))
@@ -135,7 +138,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
         cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
-        cy.c_doOAuthLogin(app)
+        cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
       },
       loginEmail,
       loginPassword
@@ -148,15 +151,18 @@ Cypress.Commands.add('c_login', (options = {}) => {
       cy.log('came inside wallet getOauth')
       Cypress.env('oAuthUrl', oAuthUrl)
       cy.log('getOAuthUrlWallet - value after: ' + Cypress.env('oAuthUrl'))
-      cy.c_doOAuthLogin(app)
+      cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
     })
   } else {
-    cy.c_doOAuthLogin(app)
+    cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
   }
 })
 
-Cypress.Commands.add('c_doOAuthLogin', (app) => {
-  cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
+Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
+  const { rateLimitCheck = false } = options
+  cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large', {
+    rateLimitCheck: rateLimitCheck,
+  })
   //To let the dtrader page load completely
   cy.get('.cq-symbol-select-btn', { timeout: 10000 }).should('exist')
   cy.document().then((doc) => {
@@ -165,6 +171,18 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
       cy.findByRole('button', { name: 'Ok' }).click()
     }
   })
+
+  //Complete trading assessment for EU accounts if it's there
+  cy.findByText('Trading Experience Assessment')
+    .should(() => {})
+    .then(($el) => {
+      if ($el.length) {
+        cy.findByRole('button', { name: 'OK' }).click()
+        cy.c_completeTradingAssessment()
+        cy.findByRole('button', { name: 'OK' }).click()
+        cy.log('Completed trading assessment!!!')
+      }
+    })
   cy.get('#modal_root, .modal-root', { timeout: 10000 }).then(($element) => {
     if ($element.children().length > 0) {
       cy.contains('Continue').then(($element) => {

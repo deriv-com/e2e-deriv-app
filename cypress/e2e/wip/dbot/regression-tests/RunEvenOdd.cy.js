@@ -1,29 +1,25 @@
 import '@testing-library/cypress/add-commands'
-import Common from '../pageobjects/common'
 import BotDashboard from '../pageobjects/bot_dashboard_page'
 import RunPanel from '../pageobjects/run_panel'
 import BotBuilder from '../pageobjects/bot_builder_page'
 
 describe('QATEST-109419: Run custom strategy Even Odd', () => {
-  const common = new Common()
   const botDashboard = new BotDashboard()
   const runPanel = new RunPanel()
   const botBuilder = new BotBuilder()
 
   beforeEach(() => {
-    cy.c_login()
+    cy.c_login({ user: 'dBot' }, 'check')
     cy.c_visitResponsive('/bot', 'large')
-    common.skipTour()
-    common.switchToDemo()
+    cy.c_skipTour()
+    cy.c_switchToDemoBot()
   })
 
   it('Run Even and Odd Purchase', () => {
     botDashboard.importStrategy('EvenOdd')
-    common.skipTour()
-    cy.reload() // adding this until bug BOT-1147 is fixed
-    cy.c_loadingCheck()
-    common.runBot()
-    common.stopBot(10000)
+    cy.c_skipTour()
+    cy.c_runBot()
+    cy.c_stopBot(10000)
     runPanel.transactionsTab.click() //Switch to transactions tab
 
     //getting the positions of even and odd purchase conditions
