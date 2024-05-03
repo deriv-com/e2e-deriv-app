@@ -1,7 +1,7 @@
 import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/helper/utility'
 
-describe('TRAH-3089: Verify Sign-up Flow in ES Language', () => {
+describe('QATEST-146444: Verify Sign-up Flow in ES Language', () => {
   let country = 'España'
   let language = 'spanish'
   let size = 'small'
