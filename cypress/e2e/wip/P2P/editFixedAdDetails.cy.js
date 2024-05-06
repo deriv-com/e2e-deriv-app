@@ -78,7 +78,6 @@ describe('QATEST-2469 - Edit Advert Details - Fixed Rate', () => {
       cy.findByRole('button', { name: 'Save changes' })
         .should('be.enabled')
         .click()
-      //cy.findByText(`${(minOrder + 1).toFixed(2)} - ${maxOrder.toFixed(2)} USD`)
       cy.get('.my-ads-table__row .dc-dropdown-container')
         .should('be.visible')
         .click()

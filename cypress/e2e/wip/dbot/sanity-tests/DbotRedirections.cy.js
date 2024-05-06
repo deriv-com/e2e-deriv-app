@@ -1,15 +1,13 @@
 import '@testing-library/cypress/add-commands'
 import TradersHub from '../pageobjects/traders_hub'
-import Common from '../pageobjects/common'
 
 describe('QATEST-136582: Redirection to other pages from dbot', () => {
   const tradersHub = new TradersHub()
-  const common = new Common()
   beforeEach(() => {
-    cy.c_login({ user: 'dBot', checkRateLimit: true })
+    cy.c_login({ user: 'dBot', rateLimitCheck: true })
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     tradersHub.openBotButton.click()
-    common.skipTour()
+    cy.c_skipTour()
   })
 
   it('Redirect to deposit page from Dbot', () => {

@@ -14,13 +14,21 @@ let api;
 module.exports = defineConfig({
   e2e: {
     projectId: "rjvf4u",
-    setupNodeEvents(on, config) {},
-    baseUrl: "https://staging-app.deriv.com",
+    baseUrl: "https://staging-app.deriv.com/",
     defaultCommandTimeout: 15000,
     supportFile: "cypress/support/e2e.js",
     experimentalWebKitSupport: true,
     chromeWebSecurity: false,
     setupNodeEvents(on, config) {
+      on('before:browser:launch', (browser = {}, launchOptions) => {
+        if (browser.family === 'chromium') {
+          launchOptions.args.push('--use-fake-ui-for-media-stream')
+          launchOptions.args.push('--use-fake-device-for-media-stream')
+          launchOptions.args.push('--use-file-for-fake-video-capture=cypress/fixtures/kyc/pass_1.y4m')
+        }
+        
+        return launchOptions
+      }),
       on('task', {
         wsConnect() {
           // Check if there is an existing connection and close it if open
@@ -52,18 +60,18 @@ module.exports = defineConfig({
         
           return null;
         },
-        async createRealAccountTask() {
+        async createRealAccountTask({country_code, currency}) {
           try {
-            const realAccountDetails = await createAccountReal(api);
+            const realAccountDetails = await createAccountReal(api, country_code, currency);
             return realAccountDetails;
           } catch (error) {
             console.error('Error creating account:', error);
             throw error;
           }
         },
-        async createVirtualAccountTask() {
+        async createVirtualAccountTask({country_code}) {
           try {
-              const virtualAccountDetails = await createAccountVirtual(api);
+              const virtualAccountDetails = await createAccountVirtual(api, country_code);
               return virtualAccountDetails;
           } catch (error) {
               console.error('Error creating virtual account:', error);
@@ -126,17 +134,25 @@ module.exports = defineConfig({
         ID: process.env.E2E_P2P_FLOATING,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
+      allcrypto: {
+        ID: process.env.E2E_CRYPTO,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
       cashierLegacy: {
         ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
+      cashierLegacyNonUSD: {
+        ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY_NON_USD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
       diel: {
         ID: process.env.E2E_DIEL_LOGIN,
-        PSWD: process.env.E2E_DIEL_PASSWORD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
       eu: {
         ID: process.env.E2E_EU_LOGIN,
-        PSWD: process.env.E2E_EU_PASSWORD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
     },
     production:{

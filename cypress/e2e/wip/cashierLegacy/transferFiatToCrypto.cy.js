@@ -2,12 +2,14 @@ import '@testing-library/cypress/add-commands'
 import { derivApp } from '../../../support/locators'
 
 const toCurrency = {
+  type: 'Cryptocurrencies',
   name: 'Bitcoin',
   code: 'BTC',
   delta: 0.001, // needed for approximately equal to
   accurateDelta: 0.0000001, // this for BTc to match exact exchangerate
 }
 const fromCurrency = {
+  type: 'Fiat currencies',
   name: 'US Dollar',
   code: 'USD',
   delta: 0.5, // needed for approximately equal to
@@ -20,7 +22,7 @@ screenSizes.forEach((screenSize) => {
   describe(`QATEST-20036 - Transfer: Enter USD amount when Transfer Fiat to Crypto in screen size: ${screenSize}`, () => {
     beforeEach(() => {
       cy.clearAllSessionStorage()
-      cy.c_login({ user: 'cashierLegacy', checkRateLimit: true })
+      cy.c_login({ user: 'cashierLegacy', rateLimitCheck: true })
       cy.c_visitResponsive('appstore/traders-hub', screenSize, {
         rateLimitCheck: true,
       })
@@ -63,6 +65,10 @@ screenSizes.forEach((screenSize) => {
         rateLimitCheck: true,
       })
       cy.c_loadingCheck()
+      cy.c_rateLimit({
+        waitTimeAfterError: 15000,
+        maxRetries: 5,
+      })
       cy.findByRole('heading', {
         name: 'Transfer between your accounts in Deriv',
       }).should('exist')

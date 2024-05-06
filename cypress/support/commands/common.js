@@ -1,6 +1,7 @@
 import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
+Cypress.prevUser = ''
 
 const setLoginUser = (user = 'masterUser', options = {}) => {
   const { backEndProd = false } = options
@@ -31,6 +32,7 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   else cy.viewport('macbook-16')
 
   cy.visit(path)
+  cy.log('rateLimitCheck flag is set to: ', rateLimitCheck)
   if (rateLimitCheck == true) {
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
@@ -46,9 +48,11 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   if (path.includes('region')) {
     //Wait for relevent elements to appear (based on page)
     cy.log('Home page Selected')
-    cy.findByRole('button', { name: 'whatsapp icon' }).should('be.visible', {
-      timeout: 30000,
-    }) //For the home page, this seems to be the best indicator that a page has fully loaded. It may change in the future.
+    cy.findByRole(
+      'button',
+      { name: 'whatsapp icon' },
+      { timeout: 30000 }
+    ).should('be.visible') //For the home page, this seems to be the best indicator that a page has fully loaded. It may change in the future.
   }
 
   if (path.includes('help-centre')) {
@@ -70,12 +74,12 @@ Cypress.Commands.add('c_login', (options = {}) => {
     user = 'masterUser',
     app = '',
     backEndProd = false,
-    checkRateLimit = false,
+    rateLimitCheck = false,
   } = options
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
   })
-  cy.c_visitResponsive('/endpoint', 'large', { rateLimitCheck: checkRateLimit })
+  cy.c_visitResponsive('/endpoint', 'large', { rateLimitCheck: rateLimitCheck })
 
   if (app == 'doughflow') {
     Cypress.env('configServer', Cypress.env('doughflowConfigServer'))
@@ -95,9 +99,14 @@ Cypress.Commands.add('c_login', (options = {}) => {
     Cypress.env('configAppId', Cypress.env('stdConfigAppId'))
   }
 
-  //If we're switching between apps, we'll need to re-authenticate
-  if (Cypress.prevAppId != Cypress.env('configAppId')) {
+  //If we're switching between apps or users, we'll need to re-authenticate
+  if (
+    Cypress.prevAppId != Cypress.env('configAppId') ||
+    Cypress.prevUser != user
+  ) {
     cy.log('prevAppId: ' + Cypress.prevAppId)
+    cy.log(`Prev User: ${Cypress.prevUser}`)
+    Cypress.prevUser = user
     Cypress.prevAppId = Cypress.env('configAppId')
     Cypress.env('oAuthUrl', '<empty>')
   }
@@ -129,7 +138,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
         cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
-        cy.c_doOAuthLogin(app)
+        cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
       },
       loginEmail,
       loginPassword
@@ -142,15 +151,18 @@ Cypress.Commands.add('c_login', (options = {}) => {
       cy.log('came inside wallet getOauth')
       Cypress.env('oAuthUrl', oAuthUrl)
       cy.log('getOAuthUrlWallet - value after: ' + Cypress.env('oAuthUrl'))
-      cy.c_doOAuthLogin(app)
+      cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
     })
   } else {
-    cy.c_doOAuthLogin(app)
+    cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
   }
 })
 
-Cypress.Commands.add('c_doOAuthLogin', (app) => {
-  cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large')
+Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
+  const { rateLimitCheck = false } = options
+  cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large', {
+    rateLimitCheck: rateLimitCheck,
+  })
   //To let the dtrader page load completely
   cy.get('.cq-symbol-select-btn', { timeout: 10000 }).should('exist')
   cy.document().then((doc) => {
@@ -159,6 +171,18 @@ Cypress.Commands.add('c_doOAuthLogin', (app) => {
       cy.findByRole('button', { name: 'Ok' }).click()
     }
   })
+
+  //Complete trading assessment for EU accounts if it's there
+  cy.findByText('Trading Experience Assessment')
+    .should(() => {})
+    .then(($el) => {
+      if ($el.length) {
+        cy.findByRole('button', { name: 'OK' }).click()
+        cy.c_completeTradingAssessment()
+        cy.findByRole('button', { name: 'OK' }).click()
+        cy.log('Completed trading assessment!!!')
+      }
+    })
   cy.get('#modal_root, .modal-root', { timeout: 10000 }).then(($element) => {
     if ($element.children().length > 0) {
       cy.contains('Continue').then(($element) => {
@@ -284,8 +308,6 @@ Cypress.Commands.add('c_transferLimit', (transferMessage) => {
           exact: true,
         }).should('be.visible')
         cy.contains(transferMessage)
-        cy.contains('Transfer fees:')
-        cy.findByRole('button', { name: 'Make a new transfer' }).click()
       }
     })
 })
@@ -321,13 +343,14 @@ Cypress.Commands.add(
       baseUrl = Cypress.env('configServer') + '/events',
     } = options
     cy.log(`Visit ${baseUrl}`)
+    const userID = Cypress.env('qaBoxLoginEmail')
+    const userPSWD = Cypress.env('qaBoxLoginPassword')
     cy.visit(
       `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
         'qaBoxLoginPassword'
       )}@${baseUrl}`,
       { log: false }
     )
-    const sentArgs = { requestType, accountEmail }
     cy.origin(
       `https://${Cypress.env('qaBoxLoginEmail', { log: false })}:${Cypress.env(
         'qaBoxLoginPassword',
@@ -367,6 +390,9 @@ Cypress.Commands.add(
       }
     )
     cy.then(() => {
+      //Rotating credentials
+      Cypress.env('qaBoxLoginEmail', userID)
+      Cypress.env('qaBoxLoginPassword', userPSWD)
       //Retry finding email after 1 second interval
       if (retryCount < maxRetries && !Cypress.env('verificationUrl')) {
         cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
@@ -396,7 +422,6 @@ Cypress.Commands.add(
       )}@${baseUrl}`,
       { log: false }
     )
-    const sentArgs = { requestType, accountEmail }
     cy.document().then((doc) => {
       let verification_code
       const allRelatedEmails = Array.from(
@@ -405,9 +430,8 @@ Cypress.Commands.add(
       if (allRelatedEmails.length) {
         const verificationEmail = allRelatedEmails.pop()
         cy.wrap(verificationEmail).click()
-        cy.get('table').last().as('lastTable')
-        cy.get('@lastTable')
-          .contains('p', `${accountEmail}`)
+        cy.contains('p', `${accountEmail}`)
+          .last()
           .should('be.visible')
           .parent()
           .children()
@@ -452,25 +476,38 @@ Cypress.Commands.add('c_loadingCheck', () => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
 })
 
-Cypress.Commands.add('c_createRealAccount', () => {
-  // Call Verify Email and then set the Verification code in env
-  try {
-    cy.task('wsConnect')
-    cy.task('verifyEmailTask').then((accountEmail) => {
-      cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
-      cy.task('createRealAccountTask').then(() => {
-        // Updating Cypress environment variables with the new email
-        const currentCredentials = Cypress.env('credentials')
-        currentCredentials.test.masterUser.ID = accountEmail
-        Cypress.env('credentials', currentCredentials)
+/*
+  Usage cy.c_createRealAccount('co', 'EUR') or you may not pass in anything to go with default.
+  Currently works for CR countries as well as DIEL - non-EU account.
+*/
+Cypress.Commands.add(
+  'c_createRealAccount',
+  (country_code = 'id', currency = 'USD') => {
+    cy.c_visitResponsive('/')
+    // Call Verify Email and then set the Verification code in env
+    try {
+      cy.task('wsConnect')
+      cy.task('verifyEmailTask').then((accountEmail) => {
+        cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
+        cy.task('createRealAccountTask', {
+          country_code: country_code,
+          currency: currency,
+        }).then(() => {
+          // Updating Cypress environment variables with the new email
+          const currentCredentials = Cypress.env('credentials')
+          currentCredentials.test.masterUser.ID = accountEmail
+          Cypress.env('credentials', currentCredentials)
+          //Reset oAuthUrl otherwise it will use the previous URL
+          Cypress.env('oAuthUrl', '<empty>')
+        })
       })
-    })
-  } catch (e) {
-    console.error('An error occurred during the account creation process:', e)
-  } finally {
-    cy.task('wsDisconnect')
+    } catch (e) {
+      console.error('An error occurred during the account creation process:', e)
+    } finally {
+      cy.task('wsDisconnect')
+    }
   }
-})
+)
 
 Cypress.Commands.add('c_closeModal', () => {
   cy.log('Closing the modal')
@@ -488,6 +525,8 @@ Cypress.Commands.add('c_waitUntilElementIsFound', (options = {}) => {
     timeout = 500,
   } = options
   let found = false
+  cy.c_loadingCheck()
+  cy.c_closeNotificationHeader()
   if (locator) {
     cy.document().then((doc) => {
       const element = doc.querySelector(locator)
@@ -510,6 +549,8 @@ Cypress.Commands.add('c_waitUntilElementIsFound', (options = {}) => {
       cy.log(`Retrying... Attempt number: ${retry + 1}`)
       cy.wait(timeout)
       cy.reload()
+      cy.c_loadingCheck()
+      cy.c_closeNotificationHeader()
       cy.c_waitUntilElementIsFound({ ...options, retry: retry + 1 })
     } else {
       throw new Error(`Element not found after ${maxRetries} attempt(s)!`)
@@ -555,4 +596,15 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
       cy.log('Notification header did not appear')
     }
   })
+})
+
+Cypress.Commands.add('c_skipPasskeysV2', () => {
+  cy.findByText('Effortless login with passkeys')
+    .should(() => {})
+    .then(($el) => {
+      if ($el.length) {
+        cy.findByText('Maybe later').click()
+        cy.log('Skipped Passkeys prompt !!!')
+      }
+    })
 })
