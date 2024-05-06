@@ -47,7 +47,6 @@ Cypress.Commands.add('c_verifyExchangeRate', (rate) => {
   regexPattern = new RegExp(
     `Your rate is = ${calculatedValue.toFixed(6).slice(0, -1)}\\d? NZD`
   )
-  // cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
 })
 
 Cypress.Commands.add(
@@ -154,7 +153,6 @@ Cypress.Commands.add('c_verifyRate', () => {
           .click({ force: true })
           .click({ force: true })
         rate = rate + 0.02
-        // cy.log('rate is' rate).as('rate')
         cy.c_verifyExchangeRate(rate)
         // // verify minus button once
         cy.get('#floating_rate_input_sub').click({ force: true })
