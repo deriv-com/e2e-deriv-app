@@ -2,7 +2,8 @@ import '@testing-library/cypress/add-commands'
 
 describe('QATEST-22037 IDV verified by Smile Identity provider', () => {
   beforeEach(() => {
-    cy.c_createRealAccount()
+    cy.c_visitResponsive('/')
+    cy.c_createRealAccount('za')
     cy.c_login()
     cy.c_navigateToPoiResponsive('South Africa')
   })
