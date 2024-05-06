@@ -1,9 +1,15 @@
 import { generateAccountNumberString } from '../helper/utility'
 
+let rate = 0.01
 let marketRate
 let rateCalculation
 let calculatedValue
 let regexPattern
+const minLimit = 5
+const maxLimit = 10
+const pm1 = 'Other'
+const pm2 = 'Bank Transfer'
+const pm3 = 'Skrill'
 
 Cypress.Commands.add('c_createNewAd', (adType) => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
@@ -154,8 +160,8 @@ Cypress.Commands.add('c_verifyRate', () => {
         cy.c_verifyExchangeRate(rate)
         // // verify minus button once
         cy.get('#floating_rate_input_sub').click({ force: true })
+        cy.wrap(rate).as('expectedRate')
         rate = rate - 0.01
-        let expectedRate = rate
         cy.c_verifyExchangeRate(rate)
       } else {
         throw new Error('Text does not match the expected pattern')
@@ -424,14 +430,18 @@ Cypress.Commands.add('c_skipPasskey', (adType) => {
   })
 })
 
-// Cypress.Commands.add('c_verifyBuyAds', (minLimit,maxLimit,pm1,pm2,pm3)=> {
-//   cy.findByText('Active').should('be.visible')
-//   cy.findByText('Buy USD').should('be.visible')
-//   cy.findByText(minLimit + ".00 - " + maxLimit + ".00 USD")
-//   cy.contains(pm1)
-//   cy.contains(pm2)
-//   cy.contains(pm3)
-// })
+Cypress.Commands.add('c_verifyBuyAds', () => {
+  // Cypress.Commands.add('c_verifyBuyAds', (minLimit,maxLimit,pm1,pm2,pm3)=> {
+  cy.findByText('Active').should('be.visible')
+  cy.findByText('Buy USD').should('be.visible')
+  cy.get('@expectedRate').then((rate) => {
+    cy.get('element-selector').should('have.value', rate)
+    cy.findByText(minLimit + '.00 - ' + maxLimit + '.00 USD')
+    cy.contains(pm1)
+    cy.contains(pm2)
+    cy.contains(pm3)
+  })
+})
 
 Cypress.Commands.add('c_adDetailsFieldLength', (blockName, textLength) => {
   cy.get(`textarea[name=${blockName}]`)

@@ -1,20 +1,17 @@
 import '@testing-library/cypress/add-commands'
 
-const minLimit = 5
-const maxLimit = 10
-const pm1 = 'Other'
-const pm2 = 'Bank Transfer'
-const pm3 = 'Skrill'
-
-function verifyBuyAds(minLimit, maxLimit, pm1, pm2, pm3) {
-  cy.findByText('Active').should('be.visible')
-  cy.findByText('Buy USD').should('be.visible')
-  cy.findByText(minLimit + '.00 - ' + maxLimit + '.00 USD')
-  cy.contains(pm1)
-  cy.contains(pm2)
-  cy.contains(pm3)
-  // cy.contains(rate)
-}
+// function verifyBuyAds(minLimit, maxLimit, pm1, pm2, pm3) {
+//   cy.findByText('Active').should('be.visible')
+//   cy.findByText('Buy USD').should('be.visible')
+//   cy.findByText(minLimit + '.00 - ' + maxLimit + '.00 USD')
+//   cy.contains(pm1)
+//   cy.contains(pm2)
+//   cy.contains(pm3)
+//   cy.get('@expectedRate').then((rate) => {
+//     cy.get('element-selector').should('have.value', rate)
+//   // cy.contains(rate)
+//   })
+// }
 
 describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
   beforeEach(() => {
@@ -35,10 +32,11 @@ describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
     cy.c_verifyMaxMin('max_transaction', maxLimit, 'Max')
     cy.c_verifyTooltip()
     cy.c_verifyCompletionOrderDropdown()
-    // cy.c_PaymentMethod()
-    cy.c_PaymentMethod(pm1, pm2, pm3)
+    cy.c_PaymentMethod()
+    // cy.c_PaymentMethod(pm1, pm2, pm3)
     cy.c_verifyPostAd()
-    // cy.c_verifyBuyAds()
-    verifyBuyAds(minLimit, maxLimit, pm1, pm2, pm3)
+    // verifyBuyAds()
+    cy.c_verifyBuyAds()
+    // verifyBuyAds(minLimit, maxLimit, pm1, pm2, pm3)
   })
 })
