@@ -292,6 +292,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
     // Create Demo MT5 accounts
     cy.log('create demo mt5 svg account')
     cy.c_switchWalletsAccountDemo()
+    cy.c_skipPasskeysV2()
     cy.findByText('CFDs', { exact: true }).should('be.visible')
     cy.contains('Reset balance', { timeout: 10000 }).should('be.visible')
     cy.findByText('This account offers CFDs on derived instruments.')
