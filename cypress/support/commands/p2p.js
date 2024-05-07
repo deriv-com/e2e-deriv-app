@@ -124,8 +124,7 @@ Cypress.Commands.add('c_checkForExistingAds', () => {
 })
 
 Cypress.Commands.add('c_getAdTypeAndRateType', () => {
-  cy.get('.dc-text')
-    .contains('Ad type')
+  cy.contains('.dc-text', 'Ad type')
     .next('.copy-advert-form__field')
     .invoke('text')
     .then((adType) => {
