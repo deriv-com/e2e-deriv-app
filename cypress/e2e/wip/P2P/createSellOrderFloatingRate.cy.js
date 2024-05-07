@@ -41,14 +41,14 @@ function verifyOrderPlacementScreen() {
 }
 
 function verifyPaymentConfirmationScreenContent(sendAmount) {
-  cy.findByText('Payment confirmation')
+  cy.findByText('Payment confirmation').should('be.visible')
   cy.findByText(
     `Please make sure that you\'ve paid ${sendAmount} to ${nicknameAndAmount.seller}, and upload the receipt as proof of your payment`
-  )
+  ).should('be.visible')
   cy.findByText(
     'Sending forged documents will result in an immediate and permanent ban.'
-  )
-  cy.findByText('We accept JPG, PDF, or PNG (up to 5MB).')
+  ).should('be.visible')
+  cy.findByText('We accept JPG, PDF, or PNG (up to 5MB).').should('be.visible')
 }
 
 function c_verifyBuyOrderField(minOrder, maxOrder) {
@@ -75,6 +75,21 @@ function c_verifyBuyOrderField(minOrder, maxOrder) {
     .clear()
     .type(maxOrder)
     .should('have.value', maxOrder)
+}
+
+function giveRatingToBuyer() {
+  cy.log('implement to give rating and recommendation')
+  cy.get('.rating-modal__star')
+    .eq(1)
+    .within(() => {
+      cy.get('svg').eq(3).click({ force: true })
+    })
+  cy.findByText('Would you recommend this buyer?')
+  cy.findByRole('button', { name: 'Yes' }).should('be.enabled')
+  cy.findByRole('button', { name: 'Done' }).click()
+  cy.findByText('Your transaction experience').should('be.visible')
+  cy.get('span[title="4 out of 5"]').should('be.visible')
+  cy.findByText('Recommended').should('be.visible')
 }
 
 let isSellAdUser = true
@@ -255,13 +270,21 @@ describe('QATEST-50478 - Create a Sell type Advert - Floating Rate', () => {
             { force: true }
           )
           cy.findByTestId('dt_remove_file_icon').should('be.visible')
-          cy.findByRole('button', { name: 'Go Back' }).should('be.enabled')
+          cy.findByRole('button', { name: 'Go Back' })
+            .should('be.visible')
+            .and('be.enabled')
           cy.findByRole('button', { name: 'Confirm' })
-            .should('be.enabled')
+            .should('be.visible')
+            .and('be.enabled')
             .click()
           cy.findByText('Waiting for the seller to confirm').should(
             'be.visible'
           )
+          cy.findByTestId('testid').should('be.visible').click()
+          cy.findByPlaceholderText('Enter message').should('be.visible')
+          cy.findByText(
+            "Hello! This is where you can chat with the counterparty to confirm the order details.Note: In case of a dispute, we'll use this chat as a reference."
+          ).should('be.visible')
         })
       })
     })
@@ -278,6 +301,11 @@ describe('QATEST-50478 - Create a Sell type Advert - Floating Rate', () => {
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
     cy.findByText('Orders').should('be.visible').click()
+    cy.c_rateLimit({
+      waitTimeAfterError: 15000,
+      isLanguageTest: true,
+      maxRetries: 5,
+    })
     cy.findByText('Confirm payment').should('be.visible').click()
     cy.findByText(
       "Don't risk your funds with cash transactions. Use bank transfers or e-wallets instead."
@@ -304,7 +332,7 @@ describe('QATEST-50478 - Create a Sell type Advert - Floating Rate', () => {
       ).should('be.visible')
       cy.findByRole('button', { name: 'Confirm' }).should('be.enabled').click()
       cy.findByText('How would you rate this transaction?').should('be.visible')
-      cy.findByRole('button', { name: 'Skip' }).should('be.enabled').click()
+      giveRatingToBuyer()
       cy.findByText('Completed').should('be.visible')
     })
   })
