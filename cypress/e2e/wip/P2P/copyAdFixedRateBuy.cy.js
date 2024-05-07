@@ -8,12 +8,17 @@ describe('QATEST-145618 - Copy Ad - Fixed Rate - Buy Ad', () => {
   beforeEach(() => {
     cy.clearAllLocalStorage()
     cy.clearAllSessionStorage()
-    cy.c_login({ user: 'p2pFixedRate' })
+    cy.c_login({ user: 'p2pFixedRate', rateLimitCheck: true })
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
 
   it('Should be able to copy an already existing buy type advert successfully.', () => {
     cy.c_navigateToDerivP2P()
+    cy.c_rateLimit({
+      waitTimeAfterError: 15000,
+      isLanguageTest: true,
+      maxRetries: 5,
+    })
     cy.c_closeSafetyInstructions()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
