@@ -1,29 +1,30 @@
 import '@testing-library/cypress/add-commands'
 import { generateAccountNumberString } from '../../../support/helper/utility'
 
-let fixedRate = 1.25
+let floatRate = 1.25
 let minOrder = 1
 let maxOrder = 10
 let paymentName = 'Alipay'
-let nickname = {
+let nicknameAndAmount = {
   buyer: '',
   seller: '',
+  amount: '',
 }
 let paymentID = generateAccountNumberString(12)
 let fiatCurrency = 'USD'
 let localCurrency = 'MNT'
 
-function verifyAdOnMyAdsScreen(adType, fiatCurrency, localCurrency) {
+function verifyAdOnMyAdsScreenFloatingRateAd(adType, fiatCurrency) {
   cy.findByText('Active').should('be.visible')
   cy.findByText(`${adType} ${fiatCurrency}`).should('be.visible')
-  cy.findByText(`${fixedRate} ${localCurrency}`)
+  cy.findByText(`+${floatRate}%`)
   cy.findByText(
     `${minOrder.toFixed(2)} - ${maxOrder.toFixed(2)} ${fiatCurrency}`
   )
 }
 
 function verifyOrderPlacementScreen() {
-  cy.findByText(nickname.seller).should('be.visible')
+  cy.findByText(nicknameAndAmount.seller).should('be.visible')
   cy.findByText(sessionStorage.getItem('c_rateOfOneDollar')).should(
     'be.visible'
   )
@@ -39,30 +40,16 @@ function verifyOrderPlacementScreen() {
     .click()
 }
 
-function verifyPaymentConfirmationScreenContent() {
+function verifyPaymentConfirmationScreenContent(sendAmount) {
   cy.findByText('Payment confirmation')
   cy.findByText(
-    `Please make sure that you\'ve paid ${(parseFloat(fixedRate) * parseFloat(maxOrder)).toFixed(2)} ${localCurrency} to ${nickname.seller}, and upload the receipt as proof of your payment`
+    `Please make sure that you\'ve paid ${sendAmount} to ${nicknameAndAmount.seller}, and upload the receipt as proof of your payment`
   )
   cy.findByText(
     'Sending forged documents will result in an immediate and permanent ban.'
   )
   cy.findByText('We accept JPG, PDF, or PNG (up to 5MB).')
 }
-
-// function logoutAccount() {
-//   cy.findByTestId('dt_acc_info').should('be.visible').click()
-//   cy.findByText('Log out').click()
-//   cy.findByText('Log in to continue.')
-// }
-
-// function loginAccount() {
-//   cy.get('#txtEmail').type(Cypress.env('credentials').test.p2pFixedRate3.ID)
-//   cy.get('#txtPass').type(Cypress.env('credentials').test.p2pFixedRate3.PSWD)
-//   //cy.findByRole('input', { name: 'email' }).type(Cypress.env('credentials').test.p2pFixedRate3.ID)
-//   //cy.findByRole('input', { name: 'password' }).type(Cypress.env('credentials').test.p2pFixedRate3.PSWD)
-//   cy.findByRole('button', { name: 'Log in' }).click()
-// }
 
 function c_verifyBuyOrderField(minOrder, maxOrder) {
   cy.get('input[name="amount"]').clear().type('abc').should('have.value', '')
@@ -97,24 +84,22 @@ const loginWithNewUser = (userAccount, isSellAdUserAccount) => {
   isSellAdUser = isSellAdUserAccount
 }
 
-describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
+describe('QATEST-50478 - Create a Sell type Advert - Floating Rate', () => {
   before(() => {
     cy.clearAllSessionStorage()
   })
   beforeEach(() => {
-    if (expect.getState().currentTestIndex !== 4) {
-      if (isSellAdUser == true) {
-        loginWithNewUser('p2pFloatingSellAd1', false)
-      } else {
-        loginWithNewUser('p2pFloatingSellAd2', true)
-      }
-      cy.c_visitResponsive('/appstore/traders-hub', 'small'),
-        {
-          rateLimitCheck: true,
-        }
+    if (isSellAdUser == true) {
+      loginWithNewUser('p2pFloatingSellAd1', false)
+    } else {
+      loginWithNewUser('p2pFloatingSellAd2', true)
     }
+    cy.c_visitResponsive('/appstore/traders-hub', 'small'),
+      {
+        rateLimitCheck: true,
+      }
   })
-  it('Should be able to create sell type advert and verify all fields and messages for fixed rate.', () => {
+  it('Should be able to create sell type advert and verify all fields and messages for floating rate.', () => {
     cy.log("Seller's account")
     cy.c_navigateToDerivP2P()
     cy.c_closeSafetyInstructions()
@@ -126,9 +111,9 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
       .children('.dc-text')
       .invoke('text')
       .then((sellerName) => {
-        nickname.seller = sellerName
+        nicknameAndAmount.seller = sellerName
       })
-    cy.log(nickname.seller)
+    cy.log(nicknameAndAmount.seller)
     cy.c_clickMyAdTab()
     cy.c_createNewAd('sell')
     cy.findByText('Sell USD').click()
@@ -139,17 +124,19 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
       .then((fiatCurrency) => {
         sessionStorage.setItem('c_fiatCurrency', fiatCurrency.trim())
       })
-    cy.findByTestId('fixed_rate_type')
-      .next('span.dc-text')
+    cy.get('.floating-rate__hint')
       .invoke('text')
-      .then((localCurrency) => {
+      .then((textString) => {
+        const words = textString.split(' ')
+        const localCurrency = words[words.length - 1]
         sessionStorage.setItem('c_localCurrency', localCurrency.trim())
       })
     cy.then(() => {
       cy.findByTestId('offer_amount').type('10').should('have.value', '10')
-      cy.findByTestId('fixed_rate_type')
-        .type(fixedRate)
-        .should('have.value', fixedRate)
+      cy.findByTestId('float_rate_type')
+        .clear()
+        .type(floatRate)
+        .should('have.value', floatRate)
       cy.findByTestId('min_transaction')
         .type(minOrder)
         .should('have.value', minOrder)
@@ -178,15 +165,14 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
         .and('exist')
         .click()
       cy.c_verifyPostAd()
-      verifyAdOnMyAdsScreen(
+      verifyAdOnMyAdsScreenFloatingRateAd(
         'Sell',
-        sessionStorage.getItem('c_fiatCurrency'),
-        sessionStorage.getItem('c_localCurrency')
+        sessionStorage.getItem('c_fiatCurrency')
       )
     })
   })
-  it('Should be able to place an order for buy advert verify all fields and messages for fixed rate.', () => {
-    cy.log(nickname.seller)
+  it('Should be able to place an order for buy advert verify all fields and messages for floating rate.', () => {
+    cy.log(nicknameAndAmount.seller)
     cy.c_navigateToDerivP2P()
     cy.c_closeSafetyInstructions()
     cy.findByText('Deriv P2P').should('exist')
@@ -197,21 +183,23 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
       .children('.dc-text')
       .invoke('text')
       .then((buyerName) => {
-        nickname.buyer = buyerName
+        nicknameAndAmount.buyer = buyerName
       })
     cy.then(() => {
       cy.findByText('Buy / Sell').should('be.visible').click()
       cy.findByPlaceholderText('Search')
         .should('be.visible')
-        .type(nickname.seller)
-        .should('have.value', nickname.seller)
+        .type(nicknameAndAmount.seller)
+        .should('have.value', nicknameAndAmount.seller)
       cy.get('.buy-sell-row__advertiser')
         .next('.buy-sell-row__information')
         .find('button[type="submit"]')
         .should('be.visible')
         .click()
       cy.findByRole('button', { name: 'Confirm' }).should('be.visible')
-      cy.findByText('Seller').next('p').should('have.text', nickname.seller)
+      cy.findByText('Seller')
+        .next('p')
+        .should('have.text', nicknameAndAmount.seller)
       cy.findByText(
         `Limit: ${minOrder.toFixed(2)}–${maxOrder.toFixed(2)} ${fiatCurrency}`
       ).should('be.visible')
@@ -253,22 +241,32 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
         cy.findByRole('button', { name: 'Confirm' })
           .should('not.be.disabled')
           .click()
+        cy.findByText('Send')
+          .next('span')
+          .invoke('text')
+          .then((sendAmount) => {
+            nicknameAndAmount.amount = sendAmount
+          })
         verifyOrderPlacementScreen()
-        verifyPaymentConfirmationScreenContent()
-        cy.findByTestId('dt_file_upload_input').selectFile(
-          'cypress/fixtures/P2P/orderCompletion.png',
-          { force: true }
-        )
-        cy.findByTestId('dt_remove_file_icon').should('be.visible')
-        cy.findByRole('button', { name: 'Go Back' }).should('be.enabled')
-        cy.findByRole('button', { name: 'Confirm' })
-          .should('be.enabled')
-          .click()
-        cy.findByText('Waiting for the seller to confirm').should('be.visible')
+        cy.then(() => {
+          verifyPaymentConfirmationScreenContent(nicknameAndAmount.amount)
+          cy.findByTestId('dt_file_upload_input').selectFile(
+            'cypress/fixtures/P2P/orderCompletion.png',
+            { force: true }
+          )
+          cy.findByTestId('dt_remove_file_icon').should('be.visible')
+          cy.findByRole('button', { name: 'Go Back' }).should('be.enabled')
+          cy.findByRole('button', { name: 'Confirm' })
+            .should('be.enabled')
+            .click()
+          cy.findByText('Waiting for the seller to confirm').should(
+            'be.visible'
+          )
+        })
       })
     })
   })
-  it('Should be able to confirm sell order and then logout from session.', () => {
+  it('Should be able to confirm sell order.', () => {
     cy.log("Seller's Account")
     cy.c_navigateToDerivP2P()
     cy.c_rateLimit({
@@ -291,7 +289,6 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
       cy.findByText('Has the buyer paid you?').should('be.visible')
       cy.findByText('I didn’t receive the email').should('be.visible')
       cy.findByTestId('dt_modal_close_icon').should('be.visible').click()
-      //logoutAccount()
       cy.c_emailVerification(
         'track_p2p_order_confirm_verify.html',
         Cypress.env('credentials').test.p2pFloatingSellAd1.ID
@@ -299,12 +296,11 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
       cy.then(() => {
         cy.c_visitResponsive(Cypress.env('verificationUrl'), 'small')
       })
-      //loginAccount()
       cy.findByText('One last step before we close this order').should(
         'be.visible'
       )
       cy.findByText(
-        `If you’ve received ${parseFloat(fixedRate * maxOrder).toFixed(2)} ${localCurrency} from ${nickname.seller} in your bank account or e-wallet, hit the button below to complete the order.`
+        `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.seller} in your bank account or e-wallet, hit the button below to complete the order.`
       ).should('be.visible')
       cy.findByRole('button', { name: 'Confirm' }).should('be.enabled').click()
       cy.findByText('How would you rate this transaction?').should('be.visible')
