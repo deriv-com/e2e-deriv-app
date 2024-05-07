@@ -73,7 +73,7 @@ module.exports = defineConfig({
     citizenshipMF: process.env.E2E_CITIZENSHIP_MF,
     dielCountry: 'South Africa',
     balanceAmount: process.env.E2E_BALANCE_AMOUNT,
-    newAppId: "E2E_NEW_OAUTH_APPID",
+    newAppId: process.env.E2E_NEW_OAUTH_APPID,
     appRegisterID: process.env.E2E_APP_REGISTER,
     appRegisterHomePage: process.env.E2E_APP_REGISTER_HOMEPAGE,
     appRegisterName: process.env.E2E_APP_REGISTER_NAME,

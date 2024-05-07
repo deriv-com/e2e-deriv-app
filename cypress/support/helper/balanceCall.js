@@ -11,7 +11,8 @@ const authorizeCall = async (api, authToken) => {
 
 const checkBalance = async (api) => {
   try {
-    await api.basic.balance()
+    const balance = await api.basic.balance()
+    cy.log('The Balance is ------> : ', balance)
   } catch (e) {
     console.error('Operation failed', e)
     throw e

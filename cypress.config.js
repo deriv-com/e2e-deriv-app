@@ -9,6 +9,8 @@ const WebSocket = require('ws');
 
 const appId = process.env.E2E_STD_CONFIG_APPID
 const websocketURL = `wss://${process.env.E2E_STD_CONFIG_SERVER}/websockets/v3`
+const authID = process.env.E2E_NEW_OAUTH_APPID
+
 let connection;
 let api;
 //const gViewPortSize = {small: 'phone-xr', large: 'macbook-16'} //TODO Use enum
@@ -38,7 +40,7 @@ module.exports = defineConfig({
           connection.onerror = error => console.error('Connection error:', error);
 
           api = new DerivAPI({ connection });
-
+          console.log('wsConnect APP ID is : ', appId)
           return null;
         },
         wsDisconnect() {
@@ -87,8 +89,9 @@ module.exports = defineConfig({
       },
       async authorizeCallTask(){
         try {
-          await authorizeCall(api, Cypress.env('oAuthUrl'));
-          return null;
+          console.log('In authorizeCallTask, Auth Token is ', authID)
+          const authCall = await authorizeCall(api, authID);
+          return authCall;
         } catch (e) {
           console.error('Authorization failed', e)
           throw e
@@ -96,7 +99,7 @@ module.exports = defineConfig({
       },
       async checkBalanceTask(){ 
         try {
-          const balance_stream = await checkBalance(api, Cypress.env('oAuthUrl'));
+          const balance_stream = await checkBalance(api, process.env.E2E_NEW_OAUTH_APPID);
           return balance_stream;
         } catch (e) {
           console.error('Operation failed', e)
@@ -256,7 +259,7 @@ module.exports = defineConfig({
     citizenshipMF: process.env.E2E_CITIZENSHIP_MF,
     dielCountry: "South Africa",
     balanceAmount: process.env.E2E_BALANCE_AMOUNT,
-    newAppId: "E2E_NEW_OAUTH_APPID",
+    newAppId: process.env.E2E_NEW_OAUTH_APPID,
     appRegisterID: process.env.E2E_APP_REGISTER,
     appRegisterHomePage: process.env.E2E_APP_REGISTER_HOMEPAGE,
     appRegisterName: process.env.E2E_APP_REGISTER_NAME,
