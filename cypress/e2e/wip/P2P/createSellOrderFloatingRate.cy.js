@@ -277,6 +277,11 @@ describe('QATEST-50478 - Create a Sell type Advert - Floating Rate', () => {
             .should('be.visible')
             .and('be.enabled')
             .click()
+          cy.c_rateLimit({
+            waitTimeAfterError: 15000,
+            isLanguageTest: true,
+            maxRetries: 5,
+          })
           cy.findByText('Waiting for the seller to confirm').should(
             'be.visible'
           )
