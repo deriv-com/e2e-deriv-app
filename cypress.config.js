@@ -134,6 +134,14 @@ module.exports = defineConfig({
         ID: process.env.E2E_P2P_FLOATING,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
+      p2pFloatingSellAd1: {
+        ID: process.env.E2E_LOGIN_ID_P2P_FLOATINGRATE_SELLAD_1,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      p2pFloatingSellAd2: {
+        ID: process.env.E2E_LOGIN_ID_P2P_FLOATINGRATE_SELLAD_2,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
       allcrypto: {
         ID: process.env.E2E_CRYPTO,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
