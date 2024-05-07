@@ -41,7 +41,7 @@ describe('QATEST-121523 - Forget DerivX password', () => {
     cy.log('change derivx password')
     cy.c_visitResponsive('/wallets', 'large')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
-    cy.c_skipPasskeysV2()
+    cy.findByText('Deriv X', { timeout: 10000 }).should('exist')
     cy.findByText(
       'This account offers CFDs on a highly customisable CFD trading platform.'
     )
