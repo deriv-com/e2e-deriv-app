@@ -45,7 +45,7 @@ Cypress.Commands.add('c_completeTradersHubTour', (options = {}) => {
   const { language = 'english' } = options
   cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
     const lang = langData[language]
-    cy.c_skipPasskeysV2()
+    cy.c_skipPasskeysV2({ language: language })
     cy.findByRole('button', { name: lang.realAccountFormUtils.nextBtn }).click()
     if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
       cy.contains('Choice of regulation').should('be.visible')
@@ -138,7 +138,8 @@ Cypress.Commands.add('c_enterPassword', (options = {}) => {
   })
 })
 
-Cypress.Commands.add('c_completeOnboarding', () => {
+Cypress.Commands.add('c_completeOnboarding', (options = {}) => {
+  const { language = 'english' } = options
   cy.contains('Switch accounts').should('be.visible')
   cy.contains('button', 'Next').click()
   if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
@@ -147,7 +148,7 @@ Cypress.Commands.add('c_completeOnboarding', () => {
   }
   cy.contains("Trader's Hub tour").should('be.visible')
   cy.contains('button', 'OK').click()
-  cy.c_skipPasskeysV2()
+  cy.c_skipPasskeysV2({ language: language })
 })
 
 // TODO move to Utility finction

@@ -13,7 +13,9 @@ describe('QATEST-5695: Create a Derived Demo CFD account', () => {
     it(`Verify I can signup for a demo derived CFD account on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
       cy.c_visitResponsive('appstore/traders-hub', size)
+      cy.c_skipPasskeysV2()
       cy.c_checkTradersHubHomePage(isMobile)
+      cy.c_skipPasskeysV2()
       cy.c_switchToDemo()
       if (isMobile) cy.findByRole('button', { name: 'CFDs' }).click()
       cy.findByTestId('dt_trading-app-card_demo_derived')

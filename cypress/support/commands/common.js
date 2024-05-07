@@ -510,7 +510,7 @@ Cypress.Commands.add(
 )
 
 Cypress.Commands.add(
-  'c_createVirtualAccount',
+  'c_createDemoAccount',
   (country_code = 'id', currency = 'USD') => {
     cy.c_visitResponsive('/')
     // Call Verify Email and then set the Verification code in env
@@ -627,13 +627,23 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
   })
 })
 
-Cypress.Commands.add('c_skipPasskeysV2', () => {
-  cy.findByText('Effortless login with passkeys')
-    .should(() => {})
-    .then(($el) => {
-      if ($el.length) {
-        cy.findByText('Maybe later').click()
-        cy.log('Skipped Passkeys prompt !!!')
-      }
-    })
+Cypress.Commands.add('c_skipPasskeysV2', (options = {}) => {
+  const { language = 'english', retryCount = 0, maxRetries = 3 } = options
+  cy.fixture('common/common.json').then((langData) => {
+    const lang = langData[language]
+    cy.findByText(lang.passkeysModal.title)
+      .should(() => {})
+      .then(($el) => {
+        if ($el.length) {
+          cy.findByText(lang.passkeysModal.maybeLaterBtn).click()
+          cy.log('Skipped Passkeys prompt !!!')
+        } else if (retryCount < maxRetries) {
+          cy.wait(100)
+          cy.log(
+            `Passkeys prompt did not appear, Retrying... Attempt ${retryCount + 1}`
+          )
+          cy.c_skipPasskeysV2({ ...options, retryCount: retryCount + 1 })
+        }
+      })
+  })
 })

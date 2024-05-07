@@ -5,7 +5,7 @@ describe('QATEST-24444 - Verify the user is able to close the personal details p
   let countryCode = 'co'
 
   beforeEach(() => {
-    cy.c_createVirtualAccount(countryCode)
+    cy.c_createDemoAccount(countryCode)
     cy.c_login()
   })
   size.forEach((size) => {
@@ -15,6 +15,7 @@ describe('QATEST-24444 - Verify the user is able to close the personal details p
       cy.c_visitResponsive('appstore/traders-hub', size)
       cy.c_skipPasskeysV2()
       cy.c_switchToReal()
+
       // cy.findByRole('button', { name: 'Get a Deriv account' }).click()
       cy.findByTestId('dt_trading-app-card_real_deriv-account')
         .findByRole('button', { name: 'Get' })
