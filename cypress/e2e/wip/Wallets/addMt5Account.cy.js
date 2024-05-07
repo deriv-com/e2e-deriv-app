@@ -22,6 +22,8 @@ function selectBVIJurisdiction(accountType) {
 }
 function verifyDerivMT5Creation() {
   cy.findByText('Enter your Deriv MT5 password')
+  cy.findByPlaceholderText('Deriv MT5 password', { timeout: 10000 })
+    .should('be.visible')
     .should(() => {})
     .then((text) => {
       if (text.length) {
@@ -284,7 +286,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
                         '001234212343232'
                       )
                       cy.findByRole('button', { name: 'Next' }).click()
-                      verifyDerivMT5Creation('BVI')
+                      verifyDerivMT5Creation()
                       closeModal()
                     }
                   })
@@ -306,7 +308,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
       .then(($el) => {
         if ($el.length) {
           clickAddMt5Button('Derived')
-          verifyDerivMT5Creation('Demo')
+          verifyDerivMT5Creation()
           verifyDemoCreationsMessage('Derived')
         } else {
           cy.log('Demo derived SVG account not created. It already exists')
@@ -320,7 +322,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
       .then(($el) => {
         if ($el.lengthl) {
           clickAddMt5Button('Financial')
-          verifyDerivMT5Creation('Demo')
+          verifyDerivMT5Creation()
           verifyDemoCreationsMessage('Financial')
         } else {
           cy.log('demo Finnacial SVG account not created. It already exists')
@@ -335,7 +337,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
         if ($el.length) {
           clickAddMt5Button('Swap-Free')
           verifyJurisdictionSelection('Swap-Free')
-          verifyDerivMT5Creation('Swap-Free')
+          verifyDerivMT5Creation()
           verifyTransferFundsMessage('Deriv MT5')
           closeModal()
         } else {
