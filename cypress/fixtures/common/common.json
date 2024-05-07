@@ -1,0 +1,18 @@
+{
+    "english": {
+        "shortCode": "EN",
+        "urlCode": "en",
+        "passkeysModal": {
+            "title": "Effortless login with passkeys",
+            "maybeLaterBtn": "Maybe later"
+        }
+    },
+    "spanish": {
+        "shortCode": "ES",
+        "urlCode": "es",
+        "passkeysModal": {
+            "title": "Inicio de sesión sin esfuerzo con claves de acceso",
+            "maybeLaterBtn": "Quizás más tarde"
+        }
+    }
+}
