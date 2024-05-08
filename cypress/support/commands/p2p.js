@@ -5,6 +5,7 @@ let marketRate
 let rateCalculation
 let calculatedValue
 let regexPattern
+let paymentIDForCopyAdSell = generateAccountNumberString(12)
 const pm1 = 'Other'
 const pm2 = 'Bank Transfer'
 const pm3 = 'Skrill'
