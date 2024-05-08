@@ -200,7 +200,7 @@ describe('QATEST-50478 - Create a Sell type advert and order  - Floating Rate', 
       )
     })
   })
-  it('Should be able to place an order for buy advert verify all fields and messages for floating rate.', () => {
+  it('Should be able to place an order for advert and verify all fields and messages for floating rate.', () => {
     cy.c_navigateToDerivP2P()
     cy.c_closeSafetyInstructions()
     cy.findByText('Deriv P2P').should('exist')
