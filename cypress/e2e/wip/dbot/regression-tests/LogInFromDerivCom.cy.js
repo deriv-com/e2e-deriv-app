@@ -1,34 +1,34 @@
 import '@testing-library/cypress/add-commands'
+import BotDashboard from '../pageobjects/bot_dashboard_page'
 
 describe('QATEST-4126: Log in Deriv Bot platform page from deriv.com', () => {
+  const botDashboard = new BotDashboard()
   beforeEach(() => {
-    cy.c_visitResponsive('https://deriv.com', 'dektop')
+    cy.c_visitResponsive(Cypress.env('derivComProdURL'), 'desktop')
     cy.findByRole('link', { name: 'Learn more About Deriv Bot' }).click()
-    cy.findByRole('img', { name: 'Deriv Bot' }).should('be.visible')
+    cy.findByText('Get into the Deriv Bot experience').should('exist')
   })
 
   it('Login from deriv.com and redirect to dbot on app.deriv.com', () => {
     if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
       // added an if here so later can add on for staging check
-      cy.wait(3000)
+      cy.findByRole('button', { name: 'whatsapp icon' }).should('be.visible')
       cy.findByRole('button', { name: 'Log in' }).click({ force: true })
-      cy.get('input[id="txtEmail"]')
+      cy.findByLabelText('Email')
         .click()
         .type(Cypress.env('credentials').production.dBot.ID)
-      cy.get('input[id="txtPass"]')
+      cy.findByLabelText('Password')
         .click()
         .type(Cypress.env('credentials').production.dBot.PSWD)
       cy.findByRole('button', { name: 'Log in' })
         .invoke('attr', 'target', '_self')
         .click()
       cy.c_skipTour()
+      cy.c_visitResponsive(`${Cypress.env('derivComProdURL')}/dbot`, 'desktop')
+      cy.findAllByText('Go to live demo')
+        .invoke('attr', 'target', '_self')
+        .click()
+      botDashboard.botBuilderDash.should('be.visible')
     }
-  })
-
-  it('Go to dbot by choosing go to live demo', () => {
-    cy.findAllByText('Go to live demo')
-      .invoke('attr', 'target', '_self')
-      .click()
-    cy.c_skipTour()
   })
 })
