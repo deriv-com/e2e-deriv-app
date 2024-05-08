@@ -5,6 +5,9 @@ let marketRate
 let rateCalculation
 let calculatedValue
 let regexPattern
+const pm1 = 'Other'
+const pm2 = 'Bank Transfer'
+const pm3 = 'Skrill'
 
 Cypress.Commands.add('c_createNewAd', (adType) => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
