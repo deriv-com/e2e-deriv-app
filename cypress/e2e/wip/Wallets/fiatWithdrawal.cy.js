@@ -32,6 +32,7 @@ Cypress.Commands.add(
   }
 )
 function performFiatWithdraw() {
+  cy.c_skipPasskeysV2()
   cy.findByText('Withdraw').parent().click()
   cy.findByText('Confirm your identity to make a withdrawal.').should(
     'be.visible'
