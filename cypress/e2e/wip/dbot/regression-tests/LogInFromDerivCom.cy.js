@@ -18,11 +18,11 @@ describe('QATEST-4126: Log in Deriv Bot platform page from deriv.com', () => {
       cy.get('input[id="txtPass"]')
         .click()
         .type(Cypress.env('credentials').production.dBot.PSWD)
+      cy.findByRole('button', { name: 'Log in' })
+        .invoke('attr', 'target', '_self')
+        .click()
+      cy.c_skipTour()
     }
-    cy.findByRole('button', { name: 'Log in' })
-      .invoke('attr', 'target', '_self')
-      .click()
-    cy.c_skipTour()
   })
 
   it('Go to dbot by choosing go to live demo', () => {
