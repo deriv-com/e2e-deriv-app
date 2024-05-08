@@ -6,6 +6,9 @@ let rateCalculation
 let calculatedValue
 let regexPattern
 let paymentIDForCopyAdSell = generateAccountNumberString(12)
+const pm1 = 'Other'
+const pm2 = 'Bank Transfer'
+const pm3 = 'Skrill'
 
 Cypress.Commands.add('c_createNewAd', (adType) => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
@@ -487,11 +490,11 @@ Cypress.Commands.add(
 
 Cypress.Commands.add('c_PaymentMethod', () => {
   cy.findByPlaceholderText('Add').click()
-  cy.findByText('Other').click()
+  cy.findByText(pm1).click()
   cy.findByPlaceholderText('Add').click()
-  cy.findByText('Bank Transfer').click()
+  cy.findByText(pm2).click()
   cy.findByPlaceholderText('Add').click()
-  cy.findByText('Skrill').click()
+  cy.findByText(pm3).click()
   cy.findByPlaceholderText('Add').should('not.exist')
 })
 
@@ -691,6 +694,17 @@ Cypress.Commands.add('c_skipPasskey', (adType) => {
       cy.log('Passkey is disable')
     }
   })
+})
+
+Cypress.Commands.add('c_verifyBuyAds', () => {
+  cy.findByText('Active').should('be.visible')
+  cy.findByText('Buy USD').should('be.visible')
+  cy.findByText('Float').should('be.visible')
+  cy.findByText('+0.02%').should('be.visible')
+  cy.findByText(5 + '.00 - ' + 10 + '.00 USD')
+  cy.contains(pm1)
+  cy.contains(pm2)
+  cy.contains(pm3)
 })
 
 Cypress.Commands.add('c_adDetailsFieldLength', (blockName, textLength) => {
