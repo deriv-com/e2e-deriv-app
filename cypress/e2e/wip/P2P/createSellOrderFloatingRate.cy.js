@@ -104,7 +104,7 @@ const loginWithNewUser = (userAccount, isSellAdUserAccount) => {
   isSellAdUser = isSellAdUserAccount
 }
 
-describe('QATEST-50478 - Create a Sell type Advert - Floating Rate', () => {
+describe('QATEST-50478 - Create a Sell type advert and order  - Floating Rate', () => {
   before(() => {
     cy.clearAllSessionStorage()
   })
