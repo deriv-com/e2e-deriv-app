@@ -12,7 +12,7 @@ describe('QATEST-5972: Create a Derived SVG account', () => {
     it(`Verify I can signup for a real derived SVG CFD account on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
       cy.c_visitResponsive('appstore/traders-hub', size)
-      cy.c_skipPasskeysV2()
+      if (isMobile) cy.c_skipPasskeysV2()
       cy.c_checkTradersHubHomePage(isMobile)
       if (isMobile) cy.findByRole('button', { name: 'CFDs' }).click()
       cy.findByTestId('dt_trading-app-card_real_derived')
