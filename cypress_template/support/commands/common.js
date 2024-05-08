@@ -50,7 +50,7 @@ Cypress.Commands.add('c_login', (app) => {
       //Check if the element exists
       if ($element.length) {
         // If the element exists, click on it
-        cy.wrap($element).click()
+        cy.wrap($element).click({ force: true })
       }
     })
   }
