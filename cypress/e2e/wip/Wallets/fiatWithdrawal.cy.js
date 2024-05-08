@@ -19,6 +19,7 @@ Cypress.Commands.add(
     }
     cy.c_loadingCheck()
     cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
+    cy.c_skipPasskeysV2()
     cy.get('iframe[class=wallets-withdrawal-fiat__iframe]').should('be.visible')
     cy.enter('iframe[class=wallets-withdrawal-fiat__iframe]').then(
       (getBody) => {
