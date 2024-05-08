@@ -1,7 +1,9 @@
 import '@testing-library/cypress/add-commands'
 
 function createMT5Account() {
-  cy.findAllByRole('button', { name: 'Get' }).first().click()
+  cy.findByTestId('dt_trading-app-card_real_derived')
+    .findByRole('button', { name: 'Get' })
+    .click()
   cy.findByText('St. Vincent & Grenadines').click()
   cy.findByRole('button', { name: 'Next' }).click()
   cy.findByText('Create a Deriv MT5 password').should('be.visible')
@@ -49,15 +51,27 @@ function validateTransferwithBalance() {
 }
 
 describe('QATEST-6064 Validate the transfer from CR to MT5 when CR account is having account balance', () => {
-  it('Should validate the transfer functionality from CR to MT5 account when CR account is having balance in desktop ', () => {
+  beforeEach(() => {
     cy.c_login()
+  })
+  it('Should validate the transfer functionality from CR to MT5 account when CR account is having balance in desktop ', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
-    createMT5Account()
+    //Only create new mt5 account if it doesn't exist
+    cy.findByTestId('dt_trading-app-card_real_derived_svg')
+      .findByRole('button', {
+        name: 'Get',
+      })
+      .should(() => {})
+      .then(($el) => {
+        if ($el.length) {
+          createMT5Account()
+          cy.log('Added MT5 Account')
+        } else cy.log('MT5 account already exists')
+      })
     validateTransferwithBalance()
   })
 
   it('Should validate the transfer functionality from CR to MT5 account when CR account is having balance in mobile ', () => {
-    cy.c_login()
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
     cy.c_skipPasskeysV2()
     cy.findByRole('link', { name: 'options' }).should('be.visible')
@@ -68,19 +82,17 @@ describe('QATEST-6064 Validate the transfer from CR to MT5 when CR account is ha
 })
 
 describe('QATEST-6060 Validate the transfer from CR to MT5 when CR account is not having account balance', () => {
-  it('Should validate the transfer functionality from CR to MT5 account when CR account is not having balance in desktop ', () => {
-    cy.c_visitResponsive('/')
+  beforeEach(() => {
     cy.c_createRealAccount()
     cy.c_login()
+  })
+  it('Should validate the transfer functionality from CR to MT5 account when CR account is not having balance in desktop ', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     createMT5Account()
     validateTransferwithZeroBalance()
   })
 
   it('Should validate the transfer functionality from CR to MT5 account when CR account is not having balance in mobile ', () => {
-    cy.c_visitResponsive('/')
-    cy.c_createRealAccount()
-    cy.c_login()
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
     cy.c_skipPasskeysV2()
     cy.findByRole('link', { name: 'options' }).should('be.visible')
