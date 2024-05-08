@@ -104,7 +104,7 @@ const loginWithNewUser = (userAccount, isSellAdUserAccount) => {
   isSellAdUser = isSellAdUserAccount
 }
 
-describe("QATEST-50478 - Create a Sell type advert and order, QATEST-2709 - Search functionality for advertiser's name--Buy tab, QATEST-2542 Place a Buy Order with same currency, QATEST-2769 - User Ratings and Recommendation upon order completion for seller, QATEST-2610 - 2FA For Sellers to confirm an order - Successful link verification p2p authenticated user", () => {
+describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Advertise sell ad, search for advertiser and place buy order with same currency, confirm order with 2FA and give rating recommendation for both buyer and seller', () => {
   before(() => {
     cy.clearAllSessionStorage()
   })
