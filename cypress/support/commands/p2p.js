@@ -311,6 +311,11 @@ Cypress.Commands.add('c_closeSafetyInstructions', () => {
         cy.get('.dc-checkbox__box').should('be.visible').click()
       }
     })
+  cy.c_rateLimit({
+    waitTimeAfterError: 15000,
+    isLanguageTest: true,
+    maxRetries: 5,
+  })
   cy.findByRole('button', { name: 'Confirm' }).should('be.visible').click()
   cy.c_skipPasskey()
 })

@@ -5,14 +5,19 @@ let floatRate = 1.25
 let minOrder = 1
 let maxOrder = 10
 let paymentName = 'Alipay'
+let cleanedText = null
+let floatValue = null
 let nicknameAndAmount = {
+  sellerBalanceBeforeSelling: '',
+  sellerBalanceAfterSelling: '',
+  buyerBalanceBeforeBuying: '9750',
+  buyerBalanceAfterBuying: '',
   buyer: '',
   seller: '',
   amount: '',
 }
 let paymentID = generateAccountNumberString(12)
 let fiatCurrency = 'USD'
-let localCurrency = 'MNT'
 
 function verifyAdOnMyAdsScreenFloatingRateAd(adType, fiatCurrency) {
   cy.findByText('Active').should('be.visible')
@@ -77,16 +82,16 @@ function c_verifyBuyOrderField(minOrder, maxOrder) {
     .should('have.value', maxOrder)
 }
 
-function giveRatingToBuyer() {
-  cy.log('implement to give rating and recommendation')
+function giveRating(advertiserType) {
   cy.get('.rating-modal__star')
     .eq(1)
     .within(() => {
       cy.get('svg').eq(3).click({ force: true })
     })
-  cy.findByText('Would you recommend this buyer?')
-  cy.findByRole('button', { name: 'Yes' }).should('be.enabled')
-  cy.findByRole('button', { name: 'Done' }).click()
+  cy.findByText(`Would you recommend this ${advertiserType}?`)
+  cy.findByRole('button', { name: 'No' }).should('be.visible').click()
+  cy.findByRole('button', { name: 'Yes' }).should('be.visible').click()
+  cy.findByRole('button', { name: 'Done' }).should('be.visible').click()
   cy.findByText('Your transaction experience').should('be.visible')
   cy.get('span[title="4 out of 5"]').should('be.visible')
   cy.findByText('Recommended').should('be.visible')
@@ -115,7 +120,6 @@ describe('QATEST-50478 - Create a Sell type Advert - Floating Rate', () => {
       }
   })
   it('Should be able to create sell type advert and verify all fields and messages for floating rate.', () => {
-    cy.log("Seller's account")
     cy.c_navigateToDerivP2P()
     cy.c_closeSafetyInstructions()
     cy.findByText('Deriv P2P').should('exist')
@@ -128,7 +132,17 @@ describe('QATEST-50478 - Create a Sell type Advert - Floating Rate', () => {
       .then((sellerName) => {
         nicknameAndAmount.seller = sellerName
       })
-    cy.log(nicknameAndAmount.seller)
+    cy.get('.my-profile-balance__amount')
+      .children('span')
+      .invoke('text')
+      .then((sellerBalanceText) => {
+        cleanedText = sellerBalanceText
+          .replace(',', '')
+          .replace('USD', '')
+          .trim()
+        floatValue = parseFloat(cleanedText).toFixed(2)
+        nicknameAndAmount.sellerBalanceBeforeSelling = floatValue
+      })
     cy.c_clickMyAdTab()
     cy.c_createNewAd('sell')
     cy.findByText('Sell USD').click()
@@ -187,7 +201,6 @@ describe('QATEST-50478 - Create a Sell type Advert - Floating Rate', () => {
     })
   })
   it('Should be able to place an order for buy advert verify all fields and messages for floating rate.', () => {
-    cy.log(nicknameAndAmount.seller)
     cy.c_navigateToDerivP2P()
     cy.c_closeSafetyInstructions()
     cy.findByText('Deriv P2P').should('exist')
@@ -199,6 +212,17 @@ describe('QATEST-50478 - Create a Sell type Advert - Floating Rate', () => {
       .invoke('text')
       .then((buyerName) => {
         nicknameAndAmount.buyer = buyerName
+      })
+    cy.get('.my-profile-balance__amount')
+      .children('span')
+      .invoke('text')
+      .then((buyerBalanceText) => {
+        cleanedText = buyerBalanceText
+          .replace(',', '')
+          .replace('USD', '')
+          .trim()
+        floatValue = parseFloat(cleanedText).toFixed(2)
+        nicknameAndAmount.buyerBalanceBeforeBuying = floatValue
       })
     cy.then(() => {
       cy.findByText('Buy / Sell').should('be.visible').click()
@@ -294,8 +318,7 @@ describe('QATEST-50478 - Create a Sell type Advert - Floating Rate', () => {
       })
     })
   })
-  it('Should be able to confirm sell order.', () => {
-    cy.log("Seller's Account")
+  it("Should be able to confirm sell order from verification link, give rating to buyer and then confirm seller's balance.", () => {
     cy.c_navigateToDerivP2P()
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
@@ -337,8 +360,92 @@ describe('QATEST-50478 - Create a Sell type Advert - Floating Rate', () => {
       ).should('be.visible')
       cy.findByRole('button', { name: 'Confirm' }).should('be.enabled').click()
       cy.findByText('How would you rate this transaction?').should('be.visible')
-      giveRatingToBuyer()
+      giveRating('buyer')
       cy.findByText('Completed').should('be.visible')
+      cy.findByTestId('dt_mobile_full_page_return_icon')
+        .should('be.visible')
+        .click()
+      cy.findByText('My profile').should('be.visible').click()
+      cy.findByText('Available Deriv P2P balance').should('be.visible')
+      cy.get('.my-profile-balance__amount')
+        .children('span')
+        .invoke('text')
+        .then((sellerBalanceString) => {
+          cleanedText = sellerBalanceString
+            .replace(',', '')
+            .replace('USD', '')
+            .trim()
+          floatValue = parseFloat(cleanedText).toFixed(2)
+          nicknameAndAmount.sellerBalanceAfterSelling = floatValue
+        })
     })
+    cy.then(() => {
+      if (
+        nicknameAndAmount.sellerBalanceAfterSelling !=
+        (
+          parseFloat(nicknameAndAmount.sellerBalanceBeforeSelling) - maxOrder
+        ).toFixed(2)
+      ) {
+        throw new Error(
+          `Balance is not correct: Balance before selling = ${nicknameAndAmount.sellerBalanceBeforeSelling}, Balance after selling = ${nicknameAndAmount.sellerBalanceAfterSelling}, Selling amount = ${maxOrder}`
+        )
+      } else {
+        cy.log(
+          `Balance is correct: Balance before selling = ${nicknameAndAmount.sellerBalanceBeforeSelling}, Balance after selling = ${nicknameAndAmount.sellerBalanceAfterSelling}, Selling amount = ${maxOrder}`
+        )
+      }
+    })
+  })
+  it("Should be able to confirm buyer's balance and give rating to seller .", () => {
+    cy.c_navigateToDerivP2P()
+    cy.c_rateLimit({
+      waitTimeAfterError: 15000,
+      isLanguageTest: true,
+      maxRetries: 5,
+    })
+    cy.c_closeSafetyInstructions()
+    cy.findByText('Deriv P2P').should('exist')
+    cy.c_closeNotificationHeader()
+    cy.findByText('My profile').should('be.visible').click()
+    cy.findByText('Available Deriv P2P balance').should('be.visible')
+    cy.get('.my-profile-balance__amount')
+      .children('span')
+      .invoke('text')
+      .then((buyerBalanceString) => {
+        cleanedText = buyerBalanceString
+          .replace(',', '')
+          .replace('USD', '')
+          .trim()
+        floatValue = parseFloat(cleanedText).toFixed(2)
+        nicknameAndAmount.buyerBalanceAfterBuying = floatValue
+      })
+    cy.then(() => {
+      if (
+        nicknameAndAmount.buyerBalanceAfterBuying !=
+        (
+          parseFloat(nicknameAndAmount.buyerBalanceBeforeBuying) + maxOrder
+        ).toFixed(2)
+      ) {
+        throw new Error(
+          `Balance is not correct: Balance Before Buying = ${nicknameAndAmount.buyerBalanceBeforeBuying}, Balance After Buying = ${nicknameAndAmount.buyerBalanceAfterBuying}, Buying amount = ${maxOrder}`
+        )
+      } else {
+        cy.log(
+          `Balance is correct: Balance Before Buying = ${nicknameAndAmount.buyerBalanceBeforeBuying}, Balance After Buying = ${nicknameAndAmount.buyerBalanceAfterBuying}, Buying amount = ${maxOrder}`
+        )
+      }
+    })
+    cy.findByText('Orders').should('be.visible').click()
+    cy.findByRole('button', { name: 'Past orders' })
+      .should('be.visible')
+      .click()
+    cy.findAllByText('Completed').eq(0).should('be.visible').click()
+    cy.findByText('Buy USD order').should('be.visible')
+    cy.findByText(nicknameAndAmount.seller).should('be.visible')
+    cy.findByRole('button', { name: 'Rate this transaction' })
+      .should('be.visible')
+      .click()
+    cy.findByText('How would you rate this transaction?').should('be.visible')
+    giveRating('seller')
   })
 })
