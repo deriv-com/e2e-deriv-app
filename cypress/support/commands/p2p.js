@@ -48,6 +48,7 @@ Cypress.Commands.add('c_verifyExchangeRate', (rate) => {
   regexPattern = new RegExp(
     `Your rate is = ${calculatedValue.toFixed(6).slice(0, -1)}\\d? NZD`
   )
+  cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
 })
 
 Cypress.Commands.add(
