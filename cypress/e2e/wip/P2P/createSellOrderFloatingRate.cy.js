@@ -56,7 +56,7 @@ function verifyPaymentConfirmationScreenContent(sendAmount) {
   cy.findByText('We accept JPG, PDF, or PNG (up to 5MB).').should('be.visible')
 }
 
-function c_verifyBuyOrderField(minOrder, maxOrder) {
+function verifyBuyOrderField(minOrder, maxOrder) {
   cy.get('input[name="amount"]').clear().type('abc').should('have.value', '')
   cy.findByText('Enter a valid amount').should('be.visible')
   cy.get('input[name="amount"]').clear().type('5abc').should('have.value', '5')
@@ -242,7 +242,7 @@ describe('QATEST-50478 - Create a Sell type Advert - Floating Rate', () => {
       cy.findByText(
         `Limit: ${minOrder.toFixed(2)}–${maxOrder.toFixed(2)} ${fiatCurrency}`
       ).should('be.visible')
-      c_verifyBuyOrderField(minOrder, maxOrder)
+      verifyBuyOrderField(minOrder, maxOrder)
       cy.findAllByText('Rate (1 USD)')
         .eq(0)
         .next('p')
