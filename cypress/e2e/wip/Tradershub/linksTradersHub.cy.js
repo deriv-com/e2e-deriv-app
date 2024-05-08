@@ -60,6 +60,7 @@ describe("QATEST 5930 - Validate the hyperlinks on Trader's hub", () => {
 
   it('Should navigate to all links in traders hub home page and validate its redirection in mobile', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
+    cy.c_skipPasskeysV2()
     cy.c_closeNotificationHeader()
     checkHyperLinks('mobile')
   })

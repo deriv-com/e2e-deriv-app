@@ -60,7 +60,7 @@ Cypress.Commands.add('c_enterValidEmail', (signUpMail, options = {}) => {
   {
     cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
       const lang = langData[language]
-      cy.visit(`https://deriv.com/${lang.urlCode}/`, {
+      cy.visit(`${Cypress.env('derivComProdURL')}${lang.urlCode}/`, {
         onBeforeLoad(win) {
           win.localStorage.setItem(
             'config.server_url',
@@ -69,7 +69,7 @@ Cypress.Commands.add('c_enterValidEmail', (signUpMail, options = {}) => {
           win.localStorage.setItem('config.app_id', Cypress.env('configAppId'))
         },
       })
-      cy.visit(`https://deriv.com/${lang.urlCode}/signup/`, {
+      cy.visit(`${Cypress.env('derivComProdURL')}${lang.urlCode}/signup/`, {
         onBeforeLoad(win) {
           win.localStorage.setItem(
             'config.server_url',

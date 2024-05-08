@@ -10,13 +10,11 @@ describe('QATEST-24444 - Verify the user is able to close the personal details p
   })
   size.forEach((size) => {
     it(`Should validate the pop up functionality when user closes the personal details section  on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
-      // cy.c_demoAccountSignup(country, signUpMail)
       const isMobile = size == 'small' ? true : false
       cy.c_visitResponsive('appstore/traders-hub', size)
-      cy.c_skipPasskeysV2()
+      if (isMobile) cy.c_skipPasskeysV2()
       cy.c_switchToReal()
 
-      // cy.findByRole('button', { name: 'Get a Deriv account' }).click()
       cy.findByTestId('dt_trading-app-card_real_deriv-account')
         .findByRole('button', { name: 'Get' })
         .click()

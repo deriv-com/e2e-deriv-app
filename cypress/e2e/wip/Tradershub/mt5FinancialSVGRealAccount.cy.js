@@ -12,6 +12,7 @@ describe('QATEST-6000: Create a Financial SVG account', () => {
     it(`Verify I can signup for a real Financial SVG CFD account on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
       cy.c_visitResponsive('appstore/traders-hub', size)
+      if (isMobile) cy.c_skipPasskeysV2()
       cy.c_checkTradersHubHomePage(isMobile)
       if (isMobile) cy.findByRole('button', { name: 'CFDs' }).click()
       cy.findByTestId('dt_trading-app-card_real_financial')
@@ -32,7 +33,7 @@ describe('QATEST-6000: Create a Financial SVG account', () => {
       cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
       cy.get('.dc-modal-body').should(
         'contain.text',
-        'Success!Congratulations, you have successfully created your real Deriv MT5 Financial SVG account. To start trading, transfer funds from your Deriv account into this account.'
+        'Success!Your Deriv MT5 Financial account is ready. Enable trading with your first transfer.'
       )
       cy.findByRole('button', { name: 'Transfer now' }).should('exist')
       cy.findByRole('button', { name: 'Maybe later' }).click()

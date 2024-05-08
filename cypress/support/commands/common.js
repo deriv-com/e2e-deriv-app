@@ -638,7 +638,7 @@ Cypress.Commands.add('c_skipPasskeysV2', (options = {}) => {
           cy.findByText(lang.passkeysModal.maybeLaterBtn).click()
           cy.log('Skipped Passkeys prompt !!!')
         } else if (retryCount < maxRetries) {
-          cy.wait(100)
+          cy.wait(300)
           cy.log(
             `Passkeys prompt did not appear, Retrying... Attempt ${retryCount + 1}`
           )

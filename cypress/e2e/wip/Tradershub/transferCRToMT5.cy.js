@@ -59,6 +59,7 @@ describe('QATEST-6064 Validate the transfer from CR to MT5 when CR account is ha
   it('Should validate the transfer functionality from CR to MT5 account when CR account is having balance in mobile ', () => {
     cy.c_login()
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
+    cy.c_skipPasskeysV2()
     cy.findByRole('link', { name: 'options' }).should('be.visible')
     cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'CFDs' }).click()
@@ -81,6 +82,7 @@ describe('QATEST-6060 Validate the transfer from CR to MT5 when CR account is no
     cy.c_createRealAccount()
     cy.c_login()
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
+    cy.c_skipPasskeysV2()
     cy.findByRole('link', { name: 'options' }).should('be.visible')
     cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'CFDs' }).click()
