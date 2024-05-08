@@ -396,7 +396,7 @@ describe('QATEST-50478 - Create a Sell type Advert - Floating Rate', () => {
       }
     })
   })
-  it("Should be able to confirm buyer's balance and give rating to seller .", () => {
+  it("Should be able to confirm buyer's balance and give rating to seller.", () => {
     cy.c_navigateToDerivP2P()
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
