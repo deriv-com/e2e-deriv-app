@@ -1,10 +1,34 @@
 Cypress.Commands.add('c_switchWalletsAccount', (account) => {
-  cy.get('.wallets-dropdown__button').click()
-  cy.get('.wallets-list-card-dropdown__item-content')
-    .contains(`${account} Wallet`)
-    .click()
-  cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
+  if (account == 'USD Demo') {
+    cy.findByText('USD Demo Wallet')
+      .should(() => {})
+      .then((el) => {
+        if (el.length) {
+          cy.log('you are in demo wallet')
+        } else {
+          cy.get('.wallets-list-header__slider').click()
+        }
+      })
+  } else {
+    cy.findByText('USD Demo Wallet')
+      .should(() => {})
+      .then((el) => {
+        if (el.length) {
+          cy.log('you are in demo wallet')
+          cy.get('.wallets-list-header__slider').click()
+        } else {
+          cy.log('you are in real wallet')
+        }
+      })
+    cy.get('.wallets-dropdown__button', { timeout: 10000 }).should('be.visible')
+    cy.get('.wallets-dropdown__button').click()
+    cy.get('.wallets-list-card-dropdown__item-content')
+      .contains(`${account} Wallet`)
+      .click()
+    cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
+  }
 })
+
 Cypress.Commands.add('c_switchWalletsAccountResponsive', (account) => {
   let currentIndex = 0 // Initialize index counter
 

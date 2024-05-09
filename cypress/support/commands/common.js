@@ -48,9 +48,11 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   if (path.includes('region')) {
     //Wait for relevent elements to appear (based on page)
     cy.log('Home page Selected')
-    cy.findByRole('button', { name: 'whatsapp icon' }).should('be.visible', {
-      timeout: 30000,
-    }) //For the home page, this seems to be the best indicator that a page has fully loaded. It may change in the future.
+    cy.findByRole(
+      'button',
+      { name: 'whatsapp icon' },
+      { timeout: 30000 }
+    ).should('be.visible') //For the home page, this seems to be the best indicator that a page has fully loaded. It may change in the future.
   }
 
   if (path.includes('help-centre')) {
@@ -117,7 +119,11 @@ Cypress.Commands.add('c_login', (options = {}) => {
     localStorage.setItem('config.server_url', Cypress.env('configServer'))
     localStorage.setItem('config.app_id', Cypress.env('configAppId'))
   }
-  if (app == 'wallets' || app == 'doughflow' || app == 'demoonlywallet') {
+  if (
+    (app || user) == 'wallets' ||
+    app == 'doughflow' ||
+    app == 'demoonlywallet'
+  ) {
     cy.contains('next_wallet').then(($element) => {
       //Check if the element exists
       if ($element.length) {
@@ -169,6 +175,18 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
       cy.findByRole('button', { name: 'Ok' }).click()
     }
   })
+
+  //Complete trading assessment for EU accounts if it's there
+  cy.findByText('Trading Experience Assessment')
+    .should(() => {})
+    .then(($el) => {
+      if ($el.length) {
+        cy.findByRole('button', { name: 'OK' }).click()
+        cy.c_completeTradingAssessment()
+        cy.findByRole('button', { name: 'OK' }).click()
+        cy.log('Completed trading assessment!!!')
+      }
+    })
   cy.get('#modal_root, .modal-root', { timeout: 10000 }).then(($element) => {
     if ($element.children().length > 0) {
       cy.contains('Continue').then(($element) => {

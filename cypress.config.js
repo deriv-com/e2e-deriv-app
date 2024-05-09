@@ -14,7 +14,7 @@ let api;
 module.exports = defineConfig({
   e2e: {
     projectId: "rjvf4u",
-    baseUrl: "https://staging-app.deriv.com",
+    baseUrl: "https://staging-app.deriv.com/",
     defaultCommandTimeout: 15000,
     supportFile: "cypress/support/e2e.js",
     experimentalWebKitSupport: true,
@@ -133,6 +133,10 @@ module.exports = defineConfig({
       p2pFloating: {
         ID: process.env.E2E_P2P_FLOATING,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      allcrypto: {
+        ID: process.env.E2E_CRYPTO,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
       cashierLegacy: {
         ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY,
