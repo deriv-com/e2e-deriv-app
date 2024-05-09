@@ -23,10 +23,10 @@ function selectBVIJurisdiction(accountType) {
 function verifyDerivMT5Creation() {
   cy.findByPlaceholderText('Deriv MT5 password', { timeout: 10000 })
   cy.wait(2000) // this is needed since even for fisrt MT5 account creation, add mt5 modal opens for a second,
-    .should('be.visible')
+  cy.findByText('Enter your Deriv MT5 password')
     .should(() => {})
-    .then((text) => {
-      if (text.length) {
+    .then(($text) => {
+      if ($text.length) {
         cy.findByPlaceholderText('Deriv MT5 password')
           .click()
           .type(Cypress.env('mt5Password'))
