@@ -5,6 +5,10 @@ let marketRate
 let rateCalculation
 let calculatedValue
 let regexPattern
+let paymentIDForCopyAdSell = generateAccountNumberString(12)
+const pm1 = 'Other'
+const pm2 = 'Bank Transfer'
+const pm3 = 'Skrill'
 
 Cypress.Commands.add('c_createNewAd', (adType) => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
@@ -122,6 +126,278 @@ Cypress.Commands.add('c_checkForExistingAds', () => {
   })
 })
 
+Cypress.Commands.add('c_getAdTypeAndRateType', () => {
+  cy.contains('.dc-text', 'Ad type')
+    .next('.copy-advert-form__field')
+    .invoke('text')
+    .then((adType) => {
+      sessionStorage.setItem('c_adType', adType.trim())
+    })
+  cy.get('.dc-input__container')
+    .children('.dc-input__label')
+    .eq(1)
+    .invoke('text')
+    .then((rateType) => {
+      sessionStorage.setItem('c_rateType', rateType.trim())
+    })
+  cy.then(() => {
+    return cy.wrap({
+      adType: sessionStorage.getItem('c_adType'),
+      rateType: sessionStorage.getItem('c_rateType'),
+    })
+  })
+})
+
+Cypress.Commands.add(
+  'c_inputAdDetails',
+  (rateValue, minOrder, maxOrder, adType, rateType) => {
+    cy.findByText(`${adType} USD`).click()
+    cy.findByText(`You're creating an ad to ${adType.toLowerCase()}...`).should(
+      'be.visible'
+    )
+    cy.findByTestId('offer_amount')
+      .next('span.dc-text')
+      .invoke('text')
+      .then((fiatCurrency) => {
+        sessionStorage.setItem('c_fiatCurrency', fiatCurrency.trim())
+      })
+    if (rateType == 'fixed') {
+      cy.findByTestId('fixed_rate_type')
+        .next('span.dc-text')
+        .invoke('text')
+        .then((localCurrency) => {
+          sessionStorage.setItem('c_localCurrency', localCurrency.trim())
+        })
+    } else if (rateType == 'float') {
+      cy.findByTestId('float_rate_type')
+        .next('span.dc-text')
+        .invoke('text')
+        .then((localCurrency) => {
+          sessionStorage.setItem('c_localCurrency', localCurrency.trim())
+        })
+    }
+    cy.then(() => {
+      cy.findByTestId('offer_amount').type('10').should('have.value', '10')
+      if (rateType == 'fixed') {
+        cy.findByTestId('fixed_rate_type')
+          .type(rateValue)
+          .should('have.value', rateValue)
+      } else if (rateType == 'float') {
+        cy.findByTestId('float_rate_type')
+          .type(rateValue)
+          .should('have.value', rateValue)
+      }
+      cy.findByTestId('min_transaction')
+        .type(minOrder)
+        .should('have.value', minOrder)
+      cy.findByTestId('max_transaction')
+        .type(maxOrder)
+        .should('have.value', maxOrder)
+      if (adType == 'Sell') {
+        cy.findByTestId('contact_info')
+          .type('Contact Info Block')
+          .should('have.value', 'Contact Info Block')
+      }
+      cy.findByTestId('default_advert_description')
+        .type('Description Block')
+        .should('have.value', 'Description Block')
+      cy.findByTestId('dt_dropdown_display').click()
+      cy.get('#900').should('be.visible').click()
+      if (adType == 'Sell') {
+        cy.findByTestId('dt_payment_method_card_add_icon')
+          .should('be.visible')
+          .click()
+        cy.c_addPaymentMethod(paymentIDForCopyAdSell, 'PayPal')
+        cy.findByText(paymentIDForCopyAdSell)
+          .should('exist')
+          .parent()
+          .prev()
+          .find('.dc-checkbox')
+          .and('exist')
+          .click()
+      } else if (adType == 'Buy') {
+        cy.c_PaymentMethod()
+      }
+      cy.c_verifyPostAd()
+      cy.c_verifyAdOnMyAdsScreen(
+        adType,
+        sessionStorage.getItem('c_fiatCurrency'),
+        sessionStorage.getItem('c_localCurrency'),
+        rateValue,
+        minOrder,
+        maxOrder
+      )
+    })
+  }
+)
+
+Cypress.Commands.add(
+  'c_verifyAdOnMyAdsScreen',
+  (adType, fiatCurrency, localCurrency, rateValue, minOrder, maxOrder) => {
+    cy.findByText('Active').should('be.visible')
+    cy.findByText(`${adType} ${fiatCurrency}`).should('be.visible')
+    cy.findByText(`${rateValue} ${localCurrency}`)
+    cy.findByText(
+      `${minOrder.toFixed(2)} - ${maxOrder.toFixed(2)} ${fiatCurrency}`
+    )
+  }
+)
+
+Cypress.Commands.add('c_getExistingAdDetailsForValidation', (adType) => {
+  cy.get('.my-ads-table__row .dc-dropdown-container')
+    .should('be.visible')
+    .click()
+  cy.findByText('Edit').parent().click()
+  cy.findByTestId('offer_amount')
+    .invoke('val')
+    .then((offerAmount) => {
+      sessionStorage.setItem('c_offerAmount', offerAmount)
+    })
+  cy.findByTestId('fixed_rate_type')
+    .invoke('val')
+    .then((rateValue) => {
+      sessionStorage.setItem('c_rateValue', rateValue.trim())
+    })
+  if (adType == 'Sell') {
+    cy.findByTestId('contact_info')
+      .invoke('text')
+      .then((contactInfo) => {
+        sessionStorage.setItem('c_contactInfo', contactInfo.trim())
+      })
+  }
+  cy.findByTestId('description')
+    .invoke('text')
+    .then((instructions) => {
+      sessionStorage.setItem('c_instructions', instructions.trim())
+    })
+  cy.get('span[name="order_completion_time"]')
+    .invoke('text')
+    .then((orderCompletionTime) => {
+      sessionStorage.setItem(
+        'c_orderCompletionTime',
+        orderCompletionTime.trim()
+      )
+    })
+})
+
+Cypress.Commands.add(
+  'c_copyExistingAd',
+  (
+    offerAmount,
+    rateValue,
+    instructions,
+    orderCompletionTime,
+    contactDetails
+  ) => {
+    cy.c_getAdTypeAndRateType().then(({ adType, rateType }) => {
+      cy.findByTestId('offer_amount')
+        .invoke('val')
+        .then((offerAmountFromCopyAdScreen) => {
+          cy.log(
+            'Offer amounts match:',
+            offerAmount === offerAmountFromCopyAdScreen
+          )
+        })
+      if (rateType == 'Fixed Rate') {
+        cy.findByTestId('fixed_rate_type')
+          .invoke('val')
+          .then((rateValueFromCopyAdScreen) => {
+            cy.log(
+              'Offer amounts match:',
+              rateValue === rateValueFromCopyAdScreen
+            )
+          })
+      } else if (rateType == 'Floating Rate') {
+        cy.findByTestId('float_rate_type')
+          .invoke('val')
+          .then((rateValueFromCopyAdScreen) => {
+            cy.log(
+              'Offer amounts match:',
+              rateValue === rateValueFromCopyAdScreen
+            )
+          })
+      }
+      if (adType == 'Sell') {
+        cy.get('span[class="dc-text"]')
+          .contains('Contact details')
+          .next()
+          .invoke('text')
+          .then((contactDetailsFromCopyAdScreen) => {
+            cy.log(
+              'Offer amounts match:',
+              contactDetails === contactDetailsFromCopyAdScreen
+            )
+          })
+      }
+      cy.get('span[class="dc-text"]')
+        .contains('Instructions')
+        .next()
+        .invoke('text')
+        .then((instructionsFromCopyAdScreen) => {
+          cy.log(
+            'Offer amounts match:',
+            instructions === instructionsFromCopyAdScreen
+          )
+        })
+      cy.get('span[class="dc-text"]')
+        .contains('Order must be completed in')
+        .next()
+        .invoke('text')
+        .then((orderCompletionTimeFromCopyAds) => {
+          cy.log(
+            'Offer amounts match:',
+            orderCompletionTime === orderCompletionTimeFromCopyAds
+          )
+        })
+      cy.findByTestId('offer_amount')
+        .clear()
+        .type(parseFloat(offerAmount) + 1)
+        .should('have.value', parseFloat(offerAmount) + 1)
+      if (rateType == 'Fixed Rate') {
+        cy.findByTestId('fixed_rate_type')
+          .clear()
+          .type(parseFloat(rateValue) + 1)
+          .should('have.value', parseFloat(rateValue) + 1)
+      } else if (rateType == 'Floating Rate') {
+        cy.findByTestId('float_rate_type')
+          .clear()
+          .type(parseFloat(rateValue) + 1)
+          .should('have.value', parseFloat(rateValue) + 1)
+      }
+      cy.findByTestId('min_transaction')
+        .clear()
+        .type(parseFloat(offerAmount) + 1)
+        .should('have.value', parseFloat(offerAmount) + 1)
+      cy.findByTestId('max_transaction')
+        .clear()
+        .type(parseFloat(offerAmount) + 1)
+        .should('have.value', parseFloat(offerAmount) + 1)
+      cy.findByRole('button', { name: 'Create ad' })
+        .should('be.enabled')
+        .click()
+      cy.findByText("You've created an ad").should('be.visible')
+      cy.findByText(
+        "If the ad doesn't receive an order for 3 days, it will be deactivated."
+      ).should('be.visible')
+      cy.findByText('Don’t show this message again.').should('be.visible')
+      cy.findByRole('button', { name: 'Ok' }).should('be.enabled').click()
+    })
+  }
+)
+
+Cypress.Commands.add('c_deleteCopiedAd', () => {
+  cy.get('.my-ads-table__row .dc-dropdown-container')
+    .eq(0)
+    .should('be.visible')
+    .click()
+  cy.findByText('Delete').parent().click()
+  cy.findByText('Do you want to delete this ad?').should('be.visible')
+  cy.findByText('You will NOT be able to restore it.').should('be.visible')
+  cy.findByRole('button', { name: 'Cancel' }).should('be.enabled')
+  cy.findByRole('button', { name: 'Delete' }).should('be.enabled').click()
+  cy.findByText('Hide my ads').should('be.visible')
+})
+
 Cypress.Commands.add('c_verifyRate', () => {
   cy.findByTestId('float_rate_type').click().clear()
   cy.findByText('Floating rate is required').should('be.visible')
@@ -214,11 +490,11 @@ Cypress.Commands.add(
 
 Cypress.Commands.add('c_PaymentMethod', () => {
   cy.findByPlaceholderText('Add').click()
-  cy.findByText('Other').click()
+  cy.findByText(pm1).click()
   cy.findByPlaceholderText('Add').click()
-  cy.findByText('Bank Transfer').click()
+  cy.findByText(pm2).click()
   cy.findByPlaceholderText('Add').click()
-  cy.findByText('Skrill').click()
+  cy.findByText(pm3).click()
   cy.findByPlaceholderText('Add').should('not.exist')
 })
 
@@ -423,6 +699,17 @@ Cypress.Commands.add('c_skipPasskey', (adType) => {
       cy.log('Passkey is disable')
     }
   })
+})
+
+Cypress.Commands.add('c_verifyBuyAds', () => {
+  cy.findByText('Active').should('be.visible')
+  cy.findByText('Buy USD').should('be.visible')
+  cy.findByText('Float').should('be.visible')
+  cy.findByText('+0.02%').should('be.visible')
+  cy.findByText(5 + '.00 - ' + 10 + '.00 USD')
+  cy.contains(pm1)
+  cy.contains(pm2)
+  cy.contains(pm3)
 })
 
 Cypress.Commands.add('c_adDetailsFieldLength', (blockName, textLength) => {

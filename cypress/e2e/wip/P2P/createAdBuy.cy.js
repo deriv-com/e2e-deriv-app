@@ -21,5 +21,6 @@ describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
     cy.c_verifyCompletionOrderDropdown()
     cy.c_PaymentMethod()
     cy.c_verifyPostAd()
+    cy.c_verifyBuyAds()
   })
 })
