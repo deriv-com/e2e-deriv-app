@@ -2,13 +2,15 @@ import '@testing-library/cypress/add-commands'
 
 describe('QATEST-23042 IDV DOB Mismatch by Smile Identity provider', () => {
   beforeEach(() => {
+    cy.c_visitResponsive('/')
+    cy.c_createRealAccount('ke')
     cy.c_login()
-    cy.c_navigateToPoiResponsive('Ghana')
+    cy.c_navigateToPoiResponsive('Kenya')
   })
 
-  it('Should return Date of Birth Mismatch', () => {
-    cy.get('select[name="document_type"]').select('Passport')
-    cy.findByLabelText('Enter your document number').type('G0000001')
+  it('Should return Date of birth mismatch', () => {
+    cy.get('select[name="document_type"]').select('National ID Number')
+    cy.findByLabelText('Enter your document number').type('00000000')
     cy.findByTestId('first_name').clear().type('Joe Doe')
     cy.findByTestId('last_name').clear().type('Leo')
     cy.findByTestId('date_of_birth').type('1991-08-23')
@@ -19,11 +21,11 @@ describe('QATEST-23042 IDV DOB Mismatch by Smile Identity provider', () => {
     cy.findByText('Your documents were submitted successfully').should(
       'be.visible'
     )
-    cy.findByText('Proof of address required').should('be.visible')
-    cy.reload()
-
-    cy.findByText('Proof of address required').should('be.visible')
+    cy.findByText('Proof of address required', { timeout: 3000 }).should(
+      'be.visible'
+    )
     cy.c_closeNotificationHeader()
+    cy.reload()
     cy.findByText('Your date of birth does not match your profile').should(
       'be.visible'
     )
