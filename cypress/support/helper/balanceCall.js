@@ -1,18 +1,31 @@
 require('dotenv').config()
 
+/**
+ * Method to call authorize api. Need to pass api and authToken from login as parameter
+ * @param {Method } api
+ * @param {*} authToken
+ * @returns
+ */
 const authorizeCall = async (api, authToken) => {
   try {
     await api.account(authToken) // API authentication
+    return null
   } catch (e) {
     console.error('Operation failed', e)
     throw e
   }
 }
 
+/**
+ * Method to check Balance using Balance api call. This Balance call has to be combined along with Authorize else it will fail
+ * @param {*} api
+ * @returns
+ */
 const checkBalance = async (api) => {
   try {
-    const balance = await api.basic.balance()
-    cy.log('The Balance is ------> : ', balance)
+    const availableBal = await api.basic.balance()
+
+    return availableBal.balance.balance
   } catch (e) {
     console.error('Operation failed', e)
     throw e

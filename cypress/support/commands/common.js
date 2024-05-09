@@ -1,6 +1,7 @@
 import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
+let newApplicationId
 
 const setLoginUser = (user = 'masterUser', options = {}) => {
   const { backEndProd = false } = options
@@ -70,6 +71,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
   })
+
   cy.c_visitResponsive('/endpoint', 'large', rateLimit)
 
   if (app == 'doughflow') {
@@ -90,7 +92,6 @@ Cypress.Commands.add('c_login', (options = {}) => {
     Cypress.env('configAppId', Cypress.env('stdConfigAppId'))
   }
 
-  //If we're switching between apps, we'll need to re-authenticate
   if (Cypress.prevAppId != Cypress.env('configAppId')) {
     cy.log('prevAppId: ' + Cypress.prevAppId)
     Cypress.prevAppId = Cypress.env('configAppId')
@@ -474,16 +475,13 @@ Cypress.Commands.add('c_createRealAccount', () => {
  */
 Cypress.Commands.add('c_authorizeCall', () => {
   try {
+    // cy.c_login()
     cy.task('wsConnect')
 
-    cy.log('c_authorizeCall - value : ' + Cypress.env('oAuthUrl'))
-    cy.log('c_authorizeCall : The Auth Token is: ', Cypress.env('newAppId'))
     const authAppId = Cypress.env('newAppId')
     Cypress.env('newAppId', authAppId)
-    console.log('The Value of App ID in c_authorizeCall method : ', authAppId)
-    // authAppId.newAppId = Cypress.env('newAppId')
 
-    cy.task('authorizeCallTask').then((authAppId) => {})
+    cy.task('authorizeCallTask', authAppId)
   } catch (e) {
     console.error('An error occurred during the account creation process:', e)
   }
@@ -494,10 +492,10 @@ Cypress.Commands.add('c_authorizeCall', () => {
  */
 Cypress.Commands.add('c_getBalance', () => {
   try {
-    cy.task('wsConnect')
     cy.task('checkBalanceTask').then((response) => {
-      const balance = response.data[1].contains(Cypress.config('balanceAmount'))
+      const balance = response
       cy.log('Balance is -----> : ', balance)
+      Cypress.env('actualAmount', balance)
     })
   } catch (e) {
     console.error('An error occurred during the account creation process:', e)
@@ -508,12 +506,24 @@ Cypress.Commands.add('c_getBalance', () => {
  * Method to Register a New Apllication ID
  */
 Cypress.Commands.add('c_registerNewApplicationID', () => {
-  cy.task('registerNewAppIDTask')
-    .then(() => {})
-    .then((response) => {
-      const appId = response.data[1]
-      cy.log(appId)
-    })
+  cy.task('registerNewAppIDTask').then((response) => {
+    const appId = response
+    cy.log('In c_registerNewApplicationID method and App Id is: ', appId)
+    Cypress.env('updatedAppId', appId)
+    Cypress.prevAppId = appId
+    newApplicationId = appId
+  })
+})
+
+/**
+ * Method to Logout from Application.
+ * This will click on account dropdown and click on logout link
+ */
+Cypress.Commands.add('c_logout', () => {
+  cy.get('div.acc-info__wrapper').click()
+  cy.wait(1000)
+  cy.get('div#dt_logout_button.acc-switcher__logout').click()
+  cy.wait(1000)
 })
 
 /**

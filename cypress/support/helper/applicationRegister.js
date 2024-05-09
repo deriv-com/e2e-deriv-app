@@ -1,37 +1,57 @@
 require('dotenv').config()
+const crypto = require('crypto')
 
+const scopeParams = [
+  'read',
+  'trade',
+  'payments',
+  'trading_information',
+  'admin',
+]
+
+/**
+ * Method to register a new application id / appid. This call requires authorize call to be called first
+ * @param {Method } api
+ * @param {*} appRegisterID
+ * @param {*} appRegisterHomePage
+ * @param {*} appRegisterReDirectUri
+ * @param {*} appRegisterVerificationUri
+ * @returns appid
+ */
 const registerNewApplicationId = async (
   api,
   appRegisterID,
   appRegisterHomePage,
-  appRegisterName,
   appRegisterReDirectUri,
-  appRegistersScope,
   appRegisterVerificationUri
 ) => {
   try {
-    const registerAppResponse = await api.basic({
+    const registerAppResponse = await api.basic.appRegister({
       app_register: appRegisterID,
       homepage: appRegisterHomePage,
-      name: appRegisterName`+${numbersGeneratorForName()}`,
+      name: registerName(),
       redirect_uri: appRegisterReDirectUri,
-      scopes: appRegistersScope,
+      scopes: scopeParams,
       verification_uri: appRegisterVerificationUri,
     })
     console.log(
-      'The response of Register New Application Id is : ',
-      registerAppResponse
+      'The New Application is Registered. The Id is : ',
+      registerAppResponse.app_register.app_id
     )
+    return registerAppResponse.app_register.app_id
   } catch (e) {
     console.error('Operation failed', e)
     throw e
   }
 }
 
-const numbersGeneratorForName = () => {
-  let array = new Uint8Array(4)
-  crypto.randomFillSync(array) // Synchronously fill the array with random bytes
-  return Array.from(array, (byte) => byte % 10).join('')
+/**
+ * Method to generate 4-digit random number to be used for providing AppName to appid
+ * @returns 4-digit random runber
+ */
+const registerName = () => {
+  const randomNumber = crypto.randomInt(0, 10000)
+  return `AppName${randomNumber}`
 }
 
 module.exports = { registerNewApplicationId }

@@ -9,7 +9,6 @@ const WebSocket = require('ws');
 
 const appId = process.env.E2E_STD_CONFIG_APPID
 const websocketURL = `wss://${process.env.E2E_STD_CONFIG_SERVER}/websockets/v3`
-const authID = process.env.E2E_NEW_OAUTH_APPID
 
 let connection;
 let api;
@@ -19,7 +18,7 @@ module.exports = defineConfig({
   e2e: {
     projectId: "rjvf4u",
     setupNodeEvents(on, config) {},
-    baseUrl: "https://staging-app.deriv.com",
+    baseUrl: "https://deriv-app-git-fork-suisin-deriv-suisin-upm917addswahililanguage.binary.sx",
     defaultCommandTimeout: 15000,
     supportFile: "cypress/support/e2e.js",
     experimentalWebKitSupport: true,
@@ -87,10 +86,10 @@ module.exports = defineConfig({
         process.env.E2E_EMAIL_VERIFICATION_CODE = verificationCode;
         return null;
       },
-      async authorizeCallTask(){
+      async authorizeCallTask(authId){
         try {
-          console.log('In authorizeCallTask, Auth Token is ', authID)
-          const authCall = await authorizeCall(api, authID);
+          const authCall = await authorizeCall(api, authId);
+          process.env.E2E_NEW_OAUTH_APPID = authId
           return authCall;
         } catch (e) {
           console.error('Authorization failed', e)
@@ -108,11 +107,11 @@ module.exports = defineConfig({
       },
       async registerNewAppIDTask(){ 
         try {
-          const newApplicationID = await registerNewApplicationId(api, Cypress.env('appRegisterID'), 
-          Cypress.env('appRegisterHomePage'),Cypress.env('appRegisterName'), 
-          Cypress.env('appRegisterReDirectUri'), Cypress.env('appRegistersScope'), Cypress.env('appRegisterVerificationUri')
+          const newApplicationID = await registerNewApplicationId(api, process.env.E2E_APP_REGISTER, 
+            process.env.E2E_APP_REGISTER_HOMEPAGE, process.env.E2E_APP_REGISTER_REDIRECT_URI,
+             process.env.E2E_APP_REGISTER_VERIFICATION_URI
         );
-          return newApplicationID;
+        return newApplicationID;
         } catch (e) {
           console.error('Operation failed', e)
           throw e
@@ -258,20 +257,14 @@ module.exports = defineConfig({
     citizenshipIDVROW: process.env.E2E_CITIZENSHIP_ROW_IDV,
     citizenshipMF: process.env.E2E_CITIZENSHIP_MF,
     dielCountry: "South Africa",
-    balanceAmount: process.env.E2E_BALANCE_AMOUNT,
+    updatedAppId : process.env.E2E_UPDATED_APPID,
+    actualAmount : process.env.E2E_ACTUAL_AMOUNT,
     newAppId: process.env.E2E_NEW_OAUTH_APPID,
     appRegisterID: process.env.E2E_APP_REGISTER,
     appRegisterHomePage: process.env.E2E_APP_REGISTER_HOMEPAGE,
-    appRegisterName: process.env.E2E_APP_REGISTER_NAME,
     appRegisterReDirectUri: process.env.E2E_APP_REGISTER_REDIRECT_URI,
     appRegisterVerificationUri: process.env.E2E_APP_REGISTER_VERIFICATION_URI,
-    appRegistersScope: process.env.E2E_APP_REGISTER_SCOPE [
-      "read",
-      "trade",
-      "payments",
-      "trading_information",
-      "admin"
-    ],
+
 appRegister: process.env.E2E_APP_REGISTER,
     countries: {
       ZA: "South Africa",
