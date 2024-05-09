@@ -119,7 +119,11 @@ Cypress.Commands.add('c_login', (options = {}) => {
     localStorage.setItem('config.server_url', Cypress.env('configServer'))
     localStorage.setItem('config.app_id', Cypress.env('configAppId'))
   }
-  if (app == 'wallets' || app == 'doughflow' || app == 'demoonlywallet') {
+  if (
+    (app || user) == 'wallets' ||
+    app == 'doughflow' ||
+    app == 'demoonlywallet'
+  ) {
     cy.contains('next_wallet').then(($element) => {
       //Check if the element exists
       if ($element.length) {
