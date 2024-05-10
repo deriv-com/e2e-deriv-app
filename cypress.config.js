@@ -18,7 +18,7 @@ module.exports = defineConfig({
   e2e: {
     projectId: "rjvf4u",
     setupNodeEvents(on, config) {},
-    baseUrl: "https://deriv-app-git-fork-suisin-deriv-suisin-upm917addswahililanguage.binary.sx",
+    baseUrl: "https://staging-app.deriv.com",
     defaultCommandTimeout: 15000,
     supportFile: "cypress/support/e2e.js",
     experimentalWebKitSupport: true,

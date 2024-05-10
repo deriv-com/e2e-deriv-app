@@ -1,7 +1,7 @@
 import '@testing-library/cypress/add-commands'
 
 let updatedAppId
-describe('Register a New Application / App ID', () => {
+describe('QATEST - 148419 - Register a New Application / App ID', () => {
   it('Creation of New App ID should be successful. ', () => {
     cy.c_wsConnect()
     cy.c_login() // Here Login is required as we need Auth ID for running RegisterApplication API. We are updating the 'configAppId' with 'newAppId'
