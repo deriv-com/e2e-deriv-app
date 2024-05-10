@@ -57,7 +57,11 @@ describe('QATEST-6064 Validate the transfer from CR to MT5 when CR account is ha
   it('Should validate the transfer functionality from CR to MT5 account when CR account is having balance in desktop ', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     //Only create new mt5 account if it doesn't exist
-    cy.findByTestId('dt_trading-app-card_real_derived_svg')
+    cy.findByTestId('dt_traders_hub')
+      .findByText('Deriv MT5')
+      .should('be.visible')
+    cy.findByTestId('dt_trading-app-card_real_derived')
+      .should(() => {})
       .findByRole('button', {
         name: 'Get',
       })
