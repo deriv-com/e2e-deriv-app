@@ -5,7 +5,7 @@ function changeMT5Password() {
     .should(() => {})
     .then((el) => {
       if (el.length) {
-        cy.log('no MT5 account exisy')
+        cy.log('no MT5 account exist')
       } else {
         cy.log('changing MT5 password')
         cy.findAllByText('Derived')
@@ -61,7 +61,7 @@ describe('QATEST-99774 - MT5 reset password', () => {
     cy.findByText('CFDs', { exact: true }).should('be.visible')
     changeMT5Password()
   })
-  it.only('should be able to change mt5 password in responsive', () => {
+  it('should be able to change mt5 password in responsive', () => {
     cy.log('change mt5 password')
     cy.c_visitResponsive('/wallets', 'small')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
