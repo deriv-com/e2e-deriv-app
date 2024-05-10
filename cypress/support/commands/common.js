@@ -2,7 +2,7 @@ import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
 Cypress.prevUser = ''
-
+const expectedCookieValue = '{%22clients_country%22:%22br%22}'
 const setLoginUser = (user = 'masterUser', options = {}) => {
   const { backEndProd = false } = options
   if (
@@ -164,6 +164,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
     rateLimitCheck: rateLimitCheck,
   })
   //To let the dtrader page load completely
+  cy.c_fakeLinkPopUpCheck()
   cy.get('.cq-symbol-select-btn', { timeout: 10000 }).should('exist')
   cy.document().then((doc) => {
     const launchModal = doc.querySelector('[data-test-id="launch-modal"]')
@@ -607,4 +608,18 @@ Cypress.Commands.add('c_skipPasskeysV2', () => {
         cy.log('Skipped Passkeys prompt !!!')
       }
     })
+})
+
+Cypress.Commands.add('c_fakeLinkPopUpCheck', () => {
+  cy.getCookie('website_status').then((cookie) => {
+    if (cookie) {
+      expect(cookie.value).to.equal(expectedCookieValue)
+      cy.findByText('Beware of fake links.').should('exist', { timeout: 12000 })
+      cy.findByRole('checkbox').check()
+      cy.findByRole('button', { name: 'OK, got it' }).click()
+      cy.findAllByText('Beware of fake links.').should('not.exist')
+    } else {
+      cy.log('The fake link pop up does not exist')
+    }
+  })
 })
