@@ -28,75 +28,6 @@ function verifyAdOnMyAdsScreenFloatingRateAd(adType, fiatCurrency) {
   )
 }
 
-function verifyOrderPlacementScreen() {
-  cy.findByText(nicknameAndAmount.seller).should('be.visible')
-  cy.findByText(sessionStorage.getItem('c_rateOfOneDollar')).should(
-    'be.visible'
-  )
-  cy.findByText(sessionStorage.getItem('c_paymentMethods')).should('be.visible')
-  cy.findByText(sessionStorage.getItem('c_sellersInstructions')).should(
-    'be.visible'
-  )
-  cy.findByRole('button', { name: 'Expand all' }).click()
-  cy.findByRole('button', { name: 'Collapse all' }).click()
-  cy.findByRole('button', { name: 'Cancel order' }).should('be.enabled')
-  cy.findByRole('button', { name: "I've paid" })
-    .should('not.be.disabled')
-    .click()
-}
-
-function verifyPaymentConfirmationScreenContent(sendAmount) {
-  cy.findByText('Payment confirmation').should('be.visible')
-  cy.findByText(
-    `Please make sure that you\'ve paid ${sendAmount} to ${nicknameAndAmount.seller}, and upload the receipt as proof of your payment`
-  ).should('be.visible')
-  cy.findByText(
-    'Sending forged documents will result in an immediate and permanent ban.'
-  ).should('be.visible')
-  cy.findByText('We accept JPG, PDF, or PNG (up to 5MB).').should('be.visible')
-}
-
-function verifyBuyOrderField(minOrder, maxOrder) {
-  cy.get('input[name="amount"]').clear().type('abc').should('have.value', '')
-  cy.findByText('Enter a valid amount').should('be.visible')
-  cy.get('input[name="amount"]').clear().type('5abc').should('have.value', '5')
-  cy.get('input[name="amount"]').clear().type('!@#').should('have.value', '')
-  cy.findByText('Enter a valid amount').should('be.visible')
-  cy.get('input[name="amount"]')
-    .clear()
-    .type(maxOrder + 1)
-    .should('have.value', maxOrder + 1)
-  cy.findByText(`Maximum is ${maxOrder.toFixed(2)} ${fiatCurrency}`).should(
-    'be.visible'
-  )
-  cy.get('input[name="amount"]')
-    .clear()
-    .type(minOrder - 0.5)
-    .should('have.value', minOrder - 0.5)
-  cy.findByText(`Minimum is ${minOrder.toFixed(2)} ${fiatCurrency}`).should(
-    'be.visible'
-  )
-  cy.get('input[name="amount"]')
-    .clear()
-    .type(maxOrder)
-    .should('have.value', maxOrder)
-}
-
-function giveRating(advertiserType) {
-  cy.get('.rating-modal__star')
-    .eq(1)
-    .within(() => {
-      cy.get('svg').eq(3).click({ force: true })
-    })
-  cy.findByText(`Would you recommend this ${advertiserType}?`)
-  cy.findByRole('button', { name: 'No' }).should('be.visible').click()
-  cy.findByRole('button', { name: 'Yes' }).should('be.visible').click()
-  cy.findByRole('button', { name: 'Done' }).should('be.visible').click()
-  cy.findByText('Your transaction experience').should('be.visible')
-  cy.get('span[title="4 out of 5"]').should('be.visible')
-  cy.findByText('Recommended').should('be.visible')
-}
-
 let isSellAdUser = true
 const loginWithNewUser = (userAccount, isSellAdUserAccount) => {
   Cypress.prevAppId = 0
@@ -242,7 +173,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       cy.findByText(
         `Limit: ${minOrder.toFixed(2)}–${maxOrder.toFixed(2)} ${fiatCurrency}`
       ).should('be.visible')
-      verifyBuyOrderField(minOrder, maxOrder)
+      cy.c_verifyBuyOrderField(minOrder, maxOrder, fiatCurrency)
       cy.findAllByText('Rate (1 USD)')
         .eq(0)
         .next('p')
@@ -286,9 +217,17 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
           .then((sendAmount) => {
             nicknameAndAmount.amount = sendAmount
           })
-        verifyOrderPlacementScreen()
+        cy.c_verifyOrderPlacementScreen(
+          nicknameAndAmount.seller,
+          sessionStorage.getItem('c_rateOfOneDollar'),
+          sessionStorage.getItem('c_paymentMethods'),
+          sessionStorage.getItem('c_sellersInstructions')
+        )
         cy.then(() => {
-          verifyPaymentConfirmationScreenContent(nicknameAndAmount.amount)
+          cy.c_verifyPaymentConfirmationScreenContent(
+            nicknameAndAmount.amount,
+            nicknameAndAmount.seller
+          )
           cy.findByTestId('dt_file_upload_input').selectFile(
             'cypress/fixtures/P2P/orderCompletion.png',
             { force: true }
@@ -360,7 +299,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       ).should('be.visible')
       cy.findByRole('button', { name: 'Confirm' }).should('be.enabled').click()
       cy.findByText('How would you rate this transaction?').should('be.visible')
-      giveRating('buyer')
+      cy.c_giveRating('buyer')
       cy.findByText('Completed').should('be.visible')
       cy.findByTestId('dt_mobile_full_page_return_icon')
         .should('be.visible')
@@ -446,6 +385,6 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       .should('be.visible')
       .click()
     cy.findByText('How would you rate this transaction?').should('be.visible')
-    giveRating('seller')
+    cy.c_giveRating('seller')
   })
 })
