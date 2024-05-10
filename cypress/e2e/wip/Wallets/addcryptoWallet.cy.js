@@ -39,7 +39,7 @@ function addcryptowallet() {
     })
 }
 
-describe('QATEST-98773 - Add crypto wallet account', () => {
+describe('QATEST-98773 - Add crypto wallet account and QATEST-124514 wallet account switcher', () => {
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
   })
