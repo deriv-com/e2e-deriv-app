@@ -1,6 +1,8 @@
 require("dotenv").config()
 const { defineConfig } = require("cypress")
 const {createAccountReal, createAccountVirtual, verifyEmail} = require('./cypress/support/helper/accountCreationUtility');
+const {authorizeCall, checkBalance } = require('./cypress/support/helper/balanceCall');
+const { registerNewApplicationId } = require('./cypress/support/helper/applicationRegister');
 
 const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI')
 const WebSocket = require('ws');
@@ -90,6 +92,37 @@ module.exports = defineConfig({
       setVerificationCode: (verificationCode) => {
         process.env.E2E_EMAIL_VERIFICATION_CODE = verificationCode;
         return null;
+      },
+      async authorizeCallTask(authId){
+        try {
+          const authCall = await authorizeCall(api, authId);
+          process.env.E2E_NEW_OAUTH_APPID = authId
+          return authCall;
+        } catch (e) {
+          console.error('Authorization failed', e)
+          throw e
+        }
+      },
+      async checkBalanceTask(){ 
+        try {
+          const balance_stream = await checkBalance(api, process.env.E2E_NEW_OAUTH_APPID);
+          return balance_stream;
+        } catch (e) {
+          console.error('Operation failed', e)
+          throw e
+        }
+      },
+      async registerNewAppIDTask(){ 
+        try {
+          const newApplicationID = await registerNewApplicationId(api, process.env.E2E_APP_REGISTER, 
+            process.env.E2E_APP_REGISTER_HOMEPAGE, process.env.E2E_APP_REGISTER_REDIRECT_URI,
+             process.env.E2E_APP_REGISTER_VERIFICATION_URI
+        );
+        return newApplicationID;
+        } catch (e) {
+          console.error('Operation failed', e)
+          throw e
+        }
       }
       });
 
@@ -253,6 +286,13 @@ module.exports = defineConfig({
     citizenshipIDVROW: process.env.E2E_CITIZENSHIP_ROW_IDV,
     citizenshipMF: process.env.E2E_CITIZENSHIP_MF,
     dielCountry: "South Africa",
+    updatedAppId : process.env.E2E_UPDATED_APPID,
+    actualAmount : process.env.E2E_ACTUAL_AMOUNT,
+    newAppId: process.env.E2E_NEW_OAUTH_APPID,
+    appRegisterID: process.env.E2E_APP_REGISTER,
+    appRegisterHomePage: process.env.E2E_APP_REGISTER_HOMEPAGE,
+    appRegisterReDirectUri: process.env.E2E_APP_REGISTER_REDIRECT_URI,
+    appRegisterVerificationUri: process.env.E2E_APP_REGISTER_VERIFICATION_URI,
     countries: {
       ZA: "South Africa",
       CO: "Colombia",

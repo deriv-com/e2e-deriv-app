@@ -2,6 +2,7 @@ import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
 Cypress.prevUser = ''
+let newApplicationId
 
 const setLoginUser = (user = 'masterUser', options = {}) => {
   const { backEndProd = false } = options
@@ -142,6 +143,10 @@ Cypress.Commands.add('c_login', (options = {}) => {
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
         cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
+        const urlParams = new URLSearchParams(Cypress.env('oAuthUrl'))
+        const token = urlParams.get('token1')
+        Cypress.env('newAppId', token)
+        cy.log('getOAuthUrl : The Auth Token is :' + Cypress.env('newAppId'))
         cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
       },
       loginEmail,
@@ -474,6 +479,62 @@ Cypress.Commands.add(
 
 Cypress.Commands.add('c_loadingCheck', () => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
+})
+
+/**
+ * Method to perform Authorization Call
+ */
+Cypress.Commands.add('c_authorizeCall', () => {
+  try {
+    // cy.c_login()
+    cy.task('wsConnect')
+
+    const authAppId = Cypress.env('newAppId')
+    Cypress.env('newAppId', authAppId)
+
+    cy.task('authorizeCallTask', authAppId)
+  } catch (e) {
+    console.error('An error occurred during the account creation process:', e)
+  }
+})
+
+/**
+ * Method to perform Balance Call
+ */
+Cypress.Commands.add('c_getBalance', () => {
+  try {
+    cy.task('checkBalanceTask').then((response) => {
+      const balance = response
+      cy.log('Balance is -----> : ', balance)
+      Cypress.env('actualAmount', balance)
+    })
+  } catch (e) {
+    console.error('An error occurred during the account creation process:', e)
+  }
+})
+
+/**
+ * Method to Register a New Apllication ID
+ */
+Cypress.Commands.add('c_registerNewApplicationID', () => {
+  cy.task('registerNewAppIDTask').then((response) => {
+    const appId = response
+    cy.log('In c_registerNewApplicationID method and App Id is: ', appId)
+    Cypress.env('updatedAppId', appId)
+    Cypress.prevAppId = appId
+    newApplicationId = appId
+  })
+})
+
+/**
+ * Method to Logout from Application.
+ * This will click on account dropdown and click on logout link
+ */
+Cypress.Commands.add('c_logout', () => {
+  cy.get('div.acc-info__wrapper').click()
+  cy.wait(1000)
+  cy.get('div#dt_logout_button.acc-switcher__logout').click()
+  cy.wait(1000)
 })
 
 /*
