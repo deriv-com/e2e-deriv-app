@@ -19,9 +19,7 @@ describe('QATEST-4126: Log in Deriv Bot platform page from deriv.com', () => {
       cy.findByLabelText('Password').type(
         Cypress.env('credentials').production.dBot.PSWD
       )
-      cy.findByRole('button', { name: 'Log in' })
-        .invoke('attr', 'target', '_self')
-        .click()
+      cy.findByRole('button', { name: 'Log in' }).click()
       botDashboard.botBuilderDash.should('be.visible')
       cy.c_visitResponsive(`${Cypress.env('derivComProdURL')}/dbot`, 'desktop')
       cy.findAllByText('Go to live demo')
