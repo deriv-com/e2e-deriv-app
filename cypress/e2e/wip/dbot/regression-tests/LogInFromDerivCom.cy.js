@@ -4,8 +4,7 @@ import BotDashboard from '../pageobjects/bot_dashboard_page'
 describe('QATEST-4126: Log in Deriv Bot platform page from deriv.com', () => {
   const botDashboard = new BotDashboard()
   beforeEach(() => {
-    cy.c_visitResponsive(Cypress.env('derivComProdURL'), 'desktop')
-    cy.findByRole('link', { name: 'Learn more About Deriv Bot' }).click()
+    cy.c_visitResponsive(`${Cypress.env('derivComProdURL')}/dbot`, 'desktop')
     cy.findByText('Get into the Deriv Bot experience').should('exist')
   })
 
@@ -14,16 +13,16 @@ describe('QATEST-4126: Log in Deriv Bot platform page from deriv.com', () => {
       // added an if here so later can add on for staging check
       cy.findByRole('button', { name: 'whatsapp icon' }).should('be.visible')
       cy.findByRole('button', { name: 'Log in' }).click({ force: true })
-      cy.findByLabelText('Email')
-        .click()
-        .type(Cypress.env('credentials').production.dBot.ID)
-      cy.findByLabelText('Password')
-        .click()
-        .type(Cypress.env('credentials').production.dBot.PSWD)
+      cy.findByLabelText('Email').type(
+        Cypress.env('credentials').production.dBot.ID
+      )
+      cy.findByLabelText('Password').type(
+        Cypress.env('credentials').production.dBot.PSWD
+      )
       cy.findByRole('button', { name: 'Log in' })
         .invoke('attr', 'target', '_self')
         .click()
-      cy.c_skipTour()
+      botDashboard.botBuilderDash.should('be.visible')
       cy.c_visitResponsive(`${Cypress.env('derivComProdURL')}/dbot`, 'desktop')
       cy.findAllByText('Go to live demo')
         .invoke('attr', 'target', '_self')
