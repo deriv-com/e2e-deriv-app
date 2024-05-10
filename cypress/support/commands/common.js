@@ -370,10 +370,6 @@ Cypress.Commands.add(
             const verificationEmail = allRelatedEmails.pop()
             cy.wrap(verificationEmail).click()
             cy.contains('p', `${accountEmail}`).last().should('be.visible')
-            // .parent()
-            // .children()
-            // .contains('a', Cypress.config('baseUrl'))
-            // .invoke('attr', 'href')
             cy.contains('a', Cypress.config('baseUrl'))
               .invoke('attr', 'href')
               .then((href) => {
