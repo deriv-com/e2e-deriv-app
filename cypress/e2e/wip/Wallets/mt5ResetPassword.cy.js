@@ -1,15 +1,16 @@
 import '@testing-library/cypress/add-commands'
 
 function changeMT5Password() {
-  cy.findAllByText('Derived')
-    .parents('.wallets-available-mt5__details')
-    .next()
-    .invoke('text')
-    .then(($text) => {
-      cy.log($text)
-      const buttonText = $text.trim()
-      if (buttonText === 'Open') {
-        cy.findAllByRole('button', { name: 'Open' }).eq(0).click()
+  cy.findByText('This account offers CFDs on derived instruments.')
+    .should(() => {})
+    .then((el) => {
+      if (el.length) {
+        cy.log('no MT5 account exisy')
+      } else {
+        cy.log('changing MT5 password')
+        cy.findAllByText('Derived')
+          .parents('.wallets-added-mt5__details')
+          .click()
         cy.findByText('DerivSVG-Server').should('be.visible')
         cy.findByText('Password')
           .parent()
@@ -39,9 +40,9 @@ function changeMT5Password() {
         cy.then(() => {
           cy.c_visitResponsive(Cypress.env('verificationUrl'), 'large')
         })
-        cy.get('div')
-          .contains('Create a new Deriv MT5 Password')
-          .should('be.visible')
+        cy.findByText('Create a new Deriv MT5 password', {
+          timeout: 3000,
+        }).should('be.visible')
         cy.findByPlaceholderText('Deriv MT5 password')
           .click()
           .type(Cypress.env('mt5Password'))
@@ -49,15 +50,22 @@ function changeMT5Password() {
       }
     })
 }
-describe('WALL-3255 - Reset MT5 password', () => {
+describe('QATEST-99774 - MT5 reset password', () => {
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
-    cy.c_visitResponsive('/wallets', 'large')
   })
 
   it('should be able to change mt5 password', () => {
     cy.log('change mt5 password')
+    cy.c_visitResponsive('/wallets', 'large')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
+    changeMT5Password()
+  })
+  it.only('should be able to change mt5 password in responsive', () => {
+    cy.log('change mt5 password')
+    cy.c_visitResponsive('/wallets', 'small')
+    cy.findByText('CFDs', { exact: true }).should('be.visible')
+    cy.c_skipPasskeysV2()
     changeMT5Password()
   })
 })
