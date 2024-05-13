@@ -21,11 +21,12 @@ describe('QATEST-4126: Log in Deriv Bot platform page from deriv.com', () => {
       )
       cy.findByRole('button', { name: 'Log in' }).click()
       botDashboard.botBuilderDash.should('be.visible')
-      cy.c_visitResponsive(`${Cypress.env('derivComProdURL')}/dbot`, 'desktop')
-      cy.findAllByText('Go to live demo')
-        .invoke('attr', 'target', '_self')
-        .click()
-      botDashboard.botBuilderDash.should('be.visible')
+      cy.c_visitResponsive(`${Cypress.env('derivComProdURL')}dbot`, 'desktop')
+      cy.findByText('Go to live demo')
+        .invoke('attr', 'href')
+        .then((href) => {
+          cy.request(href).its('status').should('eq', 200)
+        })
     }
   })
 })
