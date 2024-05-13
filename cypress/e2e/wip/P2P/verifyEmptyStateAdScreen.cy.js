@@ -33,43 +33,7 @@ describe('QATEST-2538 Empty State/Buy Sell Page', () => {
           .should('be.visible')
           .click()
         cy.c_createNewAd('buy')
-        cy.findByText('Buy USD').click()
-        cy.findByText("You're creating an ad to buy...").should('be.visible')
-        cy.findByTestId('offer_amount')
-          .next('span.dc-text')
-          .invoke('text')
-          .then((fiatCurrency) => {
-            sessionStorage.setItem('c_fiatCurrency', fiatCurrency.trim())
-          })
-        cy.findByTestId('fixed_rate_type')
-          .next('span.dc-text')
-          .invoke('text')
-          .then((localCurrency) => {
-            sessionStorage.setItem('c_localCurrency', localCurrency.trim())
-          })
-        cy.then(() => {
-          cy.findByTestId('offer_amount').type('10').should('have.value', '10')
-          cy.findByTestId('fixed_rate_type')
-            .type(fixedRate)
-            .should('have.value', fixedRate)
-          cy.findByTestId('min_transaction')
-            .type(minOrder)
-            .should('have.value', minOrder)
-          cy.findByTestId('max_transaction')
-            .type(maxOrder)
-            .should('have.value', maxOrder)
-          cy.findByTestId('default_advert_description')
-            .type('Description Block')
-            .should('have.value', 'Description Block')
-          cy.findByTestId('dt_dropdown_display').click()
-          cy.get('#900').should('be.visible').click()
-          cy.c_PaymentMethod()
-          cy.c_verifyPostAd()
-          verifyAdOnMyAdsScreen(
-            sessionStorage.getItem('c_fiatCurrency'),
-            sessionStorage.getItem('c_localCurrency')
-          )
-        })
+        cy.c_inputAdDetails(fixedRate, minOrder, maxOrder, 'Buy', 'fixed')
       }
       cy.findByText('Buy / Sell').should('be.visible').click()
       cy.c_rateLimit({
@@ -77,16 +41,20 @@ describe('QATEST-2538 Empty State/Buy Sell Page', () => {
         isLanguageTest: true,
         maxRetries: 5,
       })
-      cy.c_checkForExistingAds().then((adExists) => {
-        if (adExists == true) {
-          cy.log('Value is: ' + adExists)
-          cy.findByText('My ads').should('be.visible').click()
-          cy.findByText('You have no ads 😞').should('not.be.visible')
-          cy.c_removeExistingAds()
-        } else if (adExists == false) {
-          throw new Error('Ad created is not listed')
-        }
+      cy.c_checkForNonEmptyStateAdScreen()
+      cy.findByText('My ads').should('be.visible').click()
+      cy.c_createNewAd('sell')
+      cy.c_inputAdDetails(fixedRate, minOrder, maxOrder, 'Sell', 'fixed')
+      cy.findByText('Buy / Sell').should('be.visible').click()
+      cy.c_rateLimit({
+        waitTimeAfterError: 15000,
+        isLanguageTest: true,
+        maxRetries: 5,
       })
+      cy.c_checkForNonEmptyStateAdScreen()
+      cy.findByText('My ads').should('be.visible').click()
+      cy.c_removeExistingAds('sell')
+      cy.findByText('Buy / Sell').should('be.visible').click()
       cy.c_checkForEmptyAdScreenMessage('Buy', 'Sell')
       cy.c_checkForEmptyAdScreenMessage('Sell', 'Buy')
     })

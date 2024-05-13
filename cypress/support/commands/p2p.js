@@ -871,3 +871,11 @@ Cypress.Commands.add('c_checkForNonEmptyAdScreen', (adType) => {
   cy.findByText('Buy / Sell').should('be.visible').click()
   cy.get('div[class="search-box"]').should('be.visible')
 })
+
+Cypress.Commands.add('c_checkForNonEmptyStateAdScreen', () => {
+  cy.findByText('No ads for this currency 😞').should('not.exist')
+  cy.findByText(
+    'Looking to buy or sell USD? You can post your own ad for others to respond.'
+  ).should('not.exist')
+  cy.findByRole('button', { name: 'Create ad' }).should('not.exist')
+})
