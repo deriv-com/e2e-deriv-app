@@ -153,10 +153,12 @@ export function getOAuthUrl(callback, loginEmail, loginPassword) {
             callback(oAuthUrl)
           })
         })
+      } else {
+        cy.log('Already Authorized')
+        const oAuthUrl = response.headers['location']
+        cy.log('oAuthUrl: ' + oAuthUrl)
+        callback(oAuthUrl)
       }
-      const oAuthUrl = response.headers['location']
-      cy.log('oAuthUrl: ' + oAuthUrl)
-      callback(oAuthUrl)
     })
   })
   // Note: Ensure that `extractCsrfToken` and `extractOauthToken` are defined and compatible with Cypress's execution.
