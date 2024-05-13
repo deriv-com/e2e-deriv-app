@@ -143,7 +143,11 @@ Cypress.Commands.add('c_login', (options = {}) => {
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
         cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
+        const urlParams = new URLSearchParams(Cypress.env('oAuthUrl'))
+        const token = urlParams.get('token1')
 
+        Cypress.env('oAuthToken', token)
+        cy.log('getOAuthUrl : The Auth Token is :' + Cypress.env('oAuthToken'))
         cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
       },
       loginEmail,
@@ -485,10 +489,10 @@ Cypress.Commands.add('c_authorizeCall', () => {
   try {
     cy.task('wsConnect')
 
-    const authAppId = Cypress.env('newAppId')
-    Cypress.env('newAppId', authAppId)
+    const oAuthNewToken = Cypress.env('oAuthToken')
+    Cypress.env('oAuthToken', oAuthNewToken)
 
-    cy.task('authorizeCallTask', authAppId)
+    cy.task('authorizeCallTask', oAuthNewToken)
   } catch (e) {
     console.error('An error occurred during the account creation process:', e)
   }

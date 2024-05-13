@@ -93,10 +93,10 @@ module.exports = defineConfig({
         process.env.E2E_EMAIL_VERIFICATION_CODE = verificationCode;
         return null;
       },
-      async authorizeCallTask(authId){
+      async authorizeCallTask(authToken){
         try {
-          const authCall = await authorizeCall(api, authId);
-          process.env.E2E_NEW_OAUTH_APPID = authId
+          const authCall = await authorizeCall(api, authToken);
+          process.env.E2E_OAUTH_TOKEN  = authToken
           return authCall;
         } catch (e) {
           console.error('Authorization failed', e)
@@ -105,7 +105,7 @@ module.exports = defineConfig({
       },
       async checkBalanceTask(){ 
         try {
-          const balance_stream = await checkBalance(api, process.env.E2E_NEW_OAUTH_APPID);
+          const balance_stream = await checkBalance(api, process.env.E2E_OAUTH_TOKEN);
           return balance_stream;
         } catch (e) {
           console.error('Operation failed', e)
@@ -289,7 +289,6 @@ module.exports = defineConfig({
     dielCountry: "South Africa",
     updatedAppId : process.env.E2E_UPDATED_APPID,
     actualAmount : process.env.E2E_ACTUAL_AMOUNT,
-    newAppId: process.env.E2E_NEW_OAUTH_APPID,
     appRegisterID: process.env.E2E_APP_REGISTER,
     appRegisterUrl: process.env.E2E_APP_REGISTER_URL,
     countries: {
