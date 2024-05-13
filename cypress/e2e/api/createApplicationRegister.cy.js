@@ -12,13 +12,13 @@ describe('QATEST - 148419 - Register a New Application / App ID', () => {
       cy.log('The New App Before ID is: ', updatedAppId)
 
       cy.c_logout()
-      // cy.wsDisconnect()
+      cy.c_wsDisconnect()
       Cypress.env('baseUrl', Cypress.env('appRegisterUrl'))
       Cypress.env('configAppId', updatedAppId)
       cy.c_wsConnect()
       cy.c_login()
     })
 
-    cy.wsDisconnect()
+    cy.c_wsDisconnect()
   })
 })

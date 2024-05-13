@@ -173,7 +173,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
     rateLimitCheck: rateLimitCheck,
   })
   //To let the dtrader page load completely
-  cy.get('.cq-symbol-select-btn', { timeout: 10000 }).should('exist')
+  cy.get('.cq-symbol-select-btn', { timeout: 15000 }).should('exist')
   cy.document().then((doc) => {
     const launchModal = doc.querySelector('[data-test-id="launch-modal"]')
     if (launchModal) {
@@ -595,6 +595,20 @@ Cypress.Commands.add(
     }
   }
 )
+
+/**
+ * Method to Connect to WebSocket
+ */
+Cypress.Commands.add('c_wsConnect', () => {
+  cy.task('wsConnect')
+})
+
+/**
+ * Method to Disconnect from WebSocket
+ */
+Cypress.Commands.add('c_wsDisconnect', () => {
+  cy.task('wsDisconnect')
+})
 
 Cypress.Commands.add('c_closeModal', () => {
   cy.log('Closing the modal')
