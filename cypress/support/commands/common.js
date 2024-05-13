@@ -490,9 +490,8 @@ Cypress.Commands.add('c_authorizeCall', () => {
     cy.task('wsConnect')
 
     const oAuthNewToken = Cypress.env('oAuthToken')
-    // Cypress.env('oAuthToken', oAuthNewToken)
-
     cy.task('authorizeCallTask', oAuthNewToken)
+    
   } catch (e) {
     console.error('An error occurred during the account creation process:', e)
   }
