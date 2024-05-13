@@ -4,9 +4,11 @@ let updatedAppId
 describe('QATEST - 148419 - Register a New Application / App ID', () => {
   it('Creation of New App ID should be successful. ', () => {
     cy.c_wsConnect()
-    cy.c_login() // Here Login is required as we need Auth ID for running RegisterApplication API. We are updating the 'configAppId' with 'newAuthToken'
+    // Login is required as we need Auth Token for running RegisterApplication API.
+    cy.c_login() 
     cy.c_authorizeCall()
 
+    // This method will create and return New App Id.
     cy.c_registerNewApplicationID().then(() => {
       updatedAppId = Cypress.env('updatedAppId')
       cy.log('The New App Before ID is: ', updatedAppId)

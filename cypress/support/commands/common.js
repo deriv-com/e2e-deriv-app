@@ -490,7 +490,7 @@ Cypress.Commands.add('c_authorizeCall', () => {
     cy.task('wsConnect')
 
     const oAuthNewToken = Cypress.env('oAuthToken')
-    Cypress.env('oAuthToken', oAuthNewToken)
+    // Cypress.env('oAuthToken', oAuthNewToken)
 
     cy.task('authorizeCallTask', oAuthNewToken)
   } catch (e) {
@@ -522,7 +522,6 @@ Cypress.Commands.add('c_registerNewApplicationID', () => {
     cy.log('In c_registerNewApplicationID method and App Id is: ', appId)
     Cypress.env('updatedAppId', appId)
     Cypress.prevAppId = appId
-    newApplicationId = appId
   })
 })
 

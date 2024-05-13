@@ -96,7 +96,6 @@ module.exports = defineConfig({
       async authorizeCallTask(authToken){
         try {
           const authCall = await authorizeCall(api, authToken);
-          process.env.E2E_OAUTH_TOKEN  = authToken
           return authCall;
         } catch (e) {
           console.error('Authorization failed', e)
