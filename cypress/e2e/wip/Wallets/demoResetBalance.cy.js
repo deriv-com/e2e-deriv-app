@@ -29,7 +29,7 @@ function reset_balance_demo(platform) {
 describe('QATEST-98815 - Demo reset balance', () => {
   //Prerequisites: Demo wallet account in any qa box with USD demo funds
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ app: 'wallets', user: 'wallets' })
   })
 
   it('should be able to reset balance for demo wallet', () => {
