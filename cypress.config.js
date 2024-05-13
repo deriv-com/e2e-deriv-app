@@ -291,7 +291,7 @@ module.exports = defineConfig({
     actualAmount : process.env.E2E_ACTUAL_AMOUNT,
     newAppId: process.env.E2E_NEW_OAUTH_APPID,
     appRegisterID: process.env.E2E_APP_REGISTER,
-    appRegisterHomePage: process.env.E2E_APP_REGISTER_URL,
+    appRegisterUrl: process.env.E2E_APP_REGISTER_URL,
     countries: {
       ZA: "South Africa",
       CO: "Colombia",

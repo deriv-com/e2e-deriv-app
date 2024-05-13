@@ -13,7 +13,7 @@ const scopeParams = [
  * Method to register a new application id / appid. This call requires authorize call to be called first
  * @param {Method } api
  * @param {*} appRegisterID
- * @param {*} appRegisterHomePage
+ * @param {*} appRegisterUrl
  * @param {*} appRegisterReDirectUri
  * @param {*} appRegisterVerificationUri
  * @returns appid
@@ -21,14 +21,14 @@ const scopeParams = [
 const registerNewApplicationId = async (
   api,
   appRegisterID,
-  appRegisterHomePage,
+  appRegisterUrl,
   appRegisterReDirectUri,
   appRegisterVerificationUri
 ) => {
   try {
     const registerAppResponse = await api.basic.appRegister({
       app_register: appRegisterID,
-      homepage: appRegisterHomePage,
+      homepage: appRegisterUrl,
       name: registerName(),
       redirect_uri: appRegisterReDirectUri,
       scopes: scopeParams,
