@@ -113,10 +113,11 @@ module.exports = defineConfig({
         }
       },
       async registerNewAppIDTask(){ 
+        let registerRedirectURI = process.env.E2E_APP_REGISTER_URL + '/redirect'
+        let registerVerificationURI = process.env.E2E_APP_REGISTER_URL + '/verify'
         try {
           const newApplicationID = await registerNewApplicationId(api, process.env.E2E_APP_REGISTER, 
-            process.env.E2E_APP_REGISTER_HOMEPAGE, process.env.E2E_APP_REGISTER_REDIRECT_URI,
-             process.env.E2E_APP_REGISTER_VERIFICATION_URI
+            process.env.E2E_APP_REGISTER_URL, registerRedirectURI, registerVerificationURI
         );
         return newApplicationID;
         } catch (e) {
@@ -290,9 +291,7 @@ module.exports = defineConfig({
     actualAmount : process.env.E2E_ACTUAL_AMOUNT,
     newAppId: process.env.E2E_NEW_OAUTH_APPID,
     appRegisterID: process.env.E2E_APP_REGISTER,
-    appRegisterHomePage: process.env.E2E_APP_REGISTER_HOMEPAGE,
-    appRegisterReDirectUri: process.env.E2E_APP_REGISTER_REDIRECT_URI,
-    appRegisterVerificationUri: process.env.E2E_APP_REGISTER_VERIFICATION_URI,
+    appRegisterHomePage: process.env.E2E_APP_REGISTER_URL,
     countries: {
       ZA: "South Africa",
       CO: "Colombia",

@@ -486,7 +486,6 @@ Cypress.Commands.add('c_loadingCheck', () => {
  */
 Cypress.Commands.add('c_authorizeCall', () => {
   try {
-    // cy.c_login()
     cy.task('wsConnect')
 
     const authAppId = Cypress.env('newAppId')
@@ -532,9 +531,7 @@ Cypress.Commands.add('c_registerNewApplicationID', () => {
  */
 Cypress.Commands.add('c_logout', () => {
   cy.get('div.acc-info__wrapper').click()
-  cy.wait(1000)
   cy.get('div#dt_logout_button.acc-switcher__logout').click()
-  cy.wait(1000)
 })
 
 /*

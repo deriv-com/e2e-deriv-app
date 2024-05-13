@@ -15,6 +15,6 @@ describe('QATEST - 145407 - Checking the Balance', () => {
       expect(actualAmountNum).to.be.at.most(expectedAmountNum)
     })
 
-    cy.c_wsDisconnect()
+    cy.wsDisconnect()
   })
 })
