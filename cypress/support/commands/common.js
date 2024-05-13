@@ -143,10 +143,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
         cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
-        const urlParams = new URLSearchParams(Cypress.env('oAuthUrl'))
-        const token = urlParams.get('token1')
-        Cypress.env('newAppId', token)
-        cy.log('getOAuthUrl : The Auth Token is :' + Cypress.env('newAppId'))
+
         cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
       },
       loginEmail,
