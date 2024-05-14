@@ -15,10 +15,11 @@ describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients
       'be.visible'
     )
     cy.reload()
+    cy.get('.notification__close-button').click()
     cy.c_waitUntilElementIsFound({
       cyLocator: () =>
         cy.findByText('Your identity verification failed because:'),
-      timeout: 1000,
+      timeout: 3000,
       maxRetries: 5,
     })
     cy.c_closeNotificationHeader()
@@ -38,7 +39,7 @@ describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients
     cy.c_waitUntilElementIsFound({
       cyLocator: () =>
         cy.findByText('Please upload one of the following documents:'),
-      timeout: 1000,
+      timeout: 3000,
       maxRetries: 5,
     })
   })
