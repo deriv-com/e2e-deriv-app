@@ -144,7 +144,7 @@ module.exports = defineConfig({
       },
       p2pVerifyEmptyStateAdScreen: {
         ID: process.env.E2E_LOGIN_ID_P2P_EMPTYSTATE,
-        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD1
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       allcrypto: {
         ID: process.env.E2E_CRYPTO,
