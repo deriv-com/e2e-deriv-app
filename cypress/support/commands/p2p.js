@@ -852,26 +852,6 @@ Cypress.Commands.add('c_checkForEmptyAdScreenMessage', (adType, adTypeOpp) => {
   cy.get('div[class="search-box"]').should('be.visible')
 })
 
-Cypress.Commands.add('c_checkForNonEmptyAdScreen', (adType) => {
-  cy.findByRole('button', { name: adType }).should('be.visible').click()
-  cy.findByText('No ads for this currency 😞').should('be.visible')
-  cy.findByText(
-    'Looking to buy or sell USD? You can post your own ad for others to respond.'
-  ).should('be.visible')
-  cy.findByRole('button', { name: 'Create ad' }).should('be.visible').click()
-  cy.findByText(
-    `You\'re creating an ad to ${adTypeOpp.toLowerCase()}...`
-  ).should('be.visible')
-  cy.get('.page-return__button').should('be.visible').click()
-  cy.findByText('You have no ads 😞').should('be.visible')
-  cy.findByText(
-    'Looking to buy or sell USD? You can post your own ad for others to respond.'
-  ).should('be.visible')
-  cy.findByRole('button', { name: 'Create new ad' }).should('be.visible')
-  cy.findByText('Buy / Sell').should('be.visible').click()
-  cy.get('div[class="search-box"]').should('be.visible')
-})
-
 Cypress.Commands.add('c_checkForNonEmptyStateAdScreen', () => {
   cy.findByText('No ads for this currency 😞').should('not.exist')
   cy.findByText(
