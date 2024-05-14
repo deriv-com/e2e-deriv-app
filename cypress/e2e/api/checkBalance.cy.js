@@ -5,7 +5,7 @@ let balanceAmount = 10000
 describe('QATEST - 145407 - Checking the Balance', () => {
   it('should show balance call', () => {
     cy.c_login()
-
+    cy.task('wsConnect')
     cy.c_authorizeCall()
 
     cy.c_getBalance().then(() => {
@@ -15,6 +15,6 @@ describe('QATEST - 145407 - Checking the Balance', () => {
       expect(actualAmountNum).to.be.at.most(expectedAmountNum)
     })
 
-    cy.c_wsDisconnect()
+    cy.task('wsDisconnect')
   })
 })

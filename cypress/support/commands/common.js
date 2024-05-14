@@ -76,6 +76,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
     app = '',
     backEndProd = false,
     rateLimitCheck = false,
+    testLink = false,
   } = options
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
@@ -95,6 +96,13 @@ Cypress.Commands.add('c_login', (options = {}) => {
   ) {
     Cypress.env('configServer', Cypress.env('prodServer'))
     Cypress.env('configAppId', Cypress.env('stgAppId'))
+  } else if (testLink == true ) {
+    Cypress.config().baseUrl = Cypress.env('appRegisterUrl')
+    Cypress.env('configServer', Cypress.env('configServer'))
+    Cypress.env('configAppId', Cypress.prevAppId)
+    
+    cy.log('The Current Base URL is: ', Cypress.config().baseUrl)
+
   } else {
     Cypress.env('configServer', Cypress.env('stdConfigServer'))
     Cypress.env('configAppId', Cypress.env('stdConfigAppId'))
@@ -170,6 +178,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
 
 Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
   const { rateLimitCheck = false } = options
+  cy.log('c_doOAuthLogin - value before: ' + Cypress.env('oAuthUrl'))
   cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large', {
     rateLimitCheck: rateLimitCheck,
   })
@@ -487,11 +496,9 @@ Cypress.Commands.add('c_loadingCheck', () => {
  */
 Cypress.Commands.add('c_authorizeCall', () => {
   try {
-    cy.task('wsConnect')
-
     const oAuthNewToken = Cypress.env('oAuthToken')
     cy.task('authorizeCallTask', oAuthNewToken)
-    
+
   } catch (e) {
     console.error('An error occurred during the account creation process:', e)
   }
@@ -529,8 +536,12 @@ Cypress.Commands.add('c_registerNewApplicationID', () => {
  * This will click on account dropdown and click on logout link
  */
 Cypress.Commands.add('c_logout', () => {
-  cy.get('div.acc-info__wrapper').click()
-  cy.get('div#dt_logout_button.acc-switcher__logout').click()
+
+  cy.get('#dt_core_header_acc-info-container').click();
+  cy.findByText("Log out").should('be.visible')
+  cy.get('[data-testid="acc-switcher"]').within(() => {
+    cy.contains('Log out').click()
+  })
 })
 
 /*
@@ -594,20 +605,6 @@ Cypress.Commands.add(
     }
   }
 )
-
-/**
- * Method to Connect to WebSocket
- */
-Cypress.Commands.add('c_wsConnect', () => {
-  cy.task('wsConnect')
-})
-
-/**
- * Method to Disconnect from WebSocket
- */
-Cypress.Commands.add('c_wsDisconnect', () => {
-  cy.task('wsDisconnect')
-})
 
 Cypress.Commands.add('c_closeModal', () => {
   cy.log('Closing the modal')
