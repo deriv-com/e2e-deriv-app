@@ -100,6 +100,7 @@ module.exports = defineConfig({
     stagingUrl: "https://staging-app.deriv.com/",
     prodURL: "https://app.deriv.com/",
     derivComProdURL: "https://deriv.com/",
+    derivComStagingURL: "https://staging.deriv.com/",
     smartTraderUrl: {
       staging: "https://staging-smarttrader.deriv.com/en/trading",
       prod: "https://smarttrader.deriv.com/en/trading",
