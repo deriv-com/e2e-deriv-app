@@ -11,6 +11,7 @@ describe('QATEST-5925: Verify Change currency functionality for the account whic
     it(`Should not be able to change currency on ${key}`, () => {
       const isMobile = key == 'mobile' ? true : false
       cy.c_visitResponsive('/appstore/traders-hub', `${size[key]}`)
+      if (isMobile) cy.c_skipPasskeysV2()
       cy.c_checkTradersHubHomePage(isMobile)
       cy.c_closeNotificationHeader()
       cy.findByTestId('dt_currency-switcher__arrow').click()

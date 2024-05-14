@@ -121,6 +121,15 @@ declare global {
         maxRetries?: number
         timeout?: number
       }): void
+
+      /**
+       * Create a demo account
+       * @param country_code Enter the country code (Default = 'id')
+       * @param currency Enter the currency (Default = 'USD')
+       * @example cy.c_createDemoAccount('co', 'EUR')
+       * @example cy.c_createDemoAccount()
+       */
+      c_createDemoAccount(country_code: string, currency: string): void
     }
   }
 }

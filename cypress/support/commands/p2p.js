@@ -587,6 +587,11 @@ Cypress.Commands.add('c_closeSafetyInstructions', () => {
         cy.get('.dc-checkbox__box').should('be.visible').click()
       }
     })
+  cy.c_rateLimit({
+    waitTimeAfterError: 15000,
+    isLanguageTest: true,
+    maxRetries: 5,
+  })
   cy.findByRole('button', { name: 'Confirm' }).should('be.visible').click()
   cy.c_skipPasskey()
 })
@@ -745,3 +750,84 @@ Cypress.Commands.add('c_adDetailsFieldText', (blockName) => {
     .should('have.value', textForField)
   cy.c_adDetailsFieldLength(blockName, textForField.length)
 })
+
+Cypress.Commands.add('c_giveRating', (advertiserType) => {
+  cy.get('.rating-modal__star')
+    .eq(1)
+    .within(() => {
+      cy.get('svg').eq(3).click({ force: true })
+    })
+  cy.findByText(`Would you recommend this ${advertiserType}?`)
+  cy.findByRole('button', { name: 'No' }).should('be.visible').click()
+  cy.findByRole('button', { name: 'Yes' }).should('be.visible').click()
+  cy.findByRole('button', { name: 'Done' }).should('be.visible').click()
+  cy.findByText('Your transaction experience').should('be.visible')
+  cy.get('span[title="4 out of 5"]').should('be.visible')
+  cy.findByText('Recommended').should('be.visible')
+})
+
+Cypress.Commands.add(
+  'c_verifyBuyOrderField',
+  (minOrder, maxOrder, fiatCurrency) => {
+    cy.get('input[name="amount"]').clear().type('abc').should('have.value', '')
+    cy.findByText('Enter a valid amount').should('be.visible')
+    cy.get('input[name="amount"]')
+      .clear()
+      .type('5abc')
+      .should('have.value', '5')
+    cy.get('input[name="amount"]').clear().type('!@#').should('have.value', '')
+    cy.findByText('Enter a valid amount').should('be.visible')
+    cy.get('input[name="amount"]')
+      .clear()
+      .type(maxOrder + 1)
+      .should('have.value', maxOrder + 1)
+    cy.findByText(`Maximum is ${maxOrder.toFixed(2)} ${fiatCurrency}`).should(
+      'be.visible'
+    )
+    cy.get('input[name="amount"]')
+      .clear()
+      .type(minOrder - 0.5)
+      .should('have.value', minOrder - 0.5)
+    cy.findByText(`Minimum is ${minOrder.toFixed(2)} ${fiatCurrency}`).should(
+      'be.visible'
+    )
+    cy.get('input[name="amount"]')
+      .clear()
+      .type(maxOrder)
+      .should('have.value', maxOrder)
+  }
+)
+
+Cypress.Commands.add(
+  'c_verifyPaymentConfirmationScreenContent',
+  (sendAmount, nickname) => {
+    cy.findByText('Payment confirmation').should('be.visible')
+    cy.findByText(
+      `Please make sure that you\'ve paid ${sendAmount} to ${nickname}, and upload the receipt as proof of your payment`
+    ).should('be.visible')
+    cy.findByText(
+      'Sending forged documents will result in an immediate and permanent ban.'
+    ).should('be.visible')
+    cy.findByText('We accept JPG, PDF, or PNG (up to 5MB).').should(
+      'be.visible'
+    )
+  }
+)
+
+Cypress.Commands.add(
+  'c_verifyOrderPlacementScreen',
+  (nickname, rateOfOneDollar, paymentMethods, instructions) => {
+    cy.findByText(nickname).should('be.visible')
+    cy.findByText(rateOfOneDollar).should('be.visible')
+    cy.findByText(paymentMethods).should('be.visible')
+    cy.findByText(instructions).should('be.visible')
+    cy.findByRole('button', { name: 'Expand all' }).should('be.visible').click()
+    cy.findByRole('button', { name: 'Collapse all' })
+      .should('be.visible')
+      .click()
+    cy.findByRole('button', { name: 'Cancel order' }).should('be.enabled')
+    cy.findByRole('button', { name: "I've paid" })
+      .should('not.be.disabled')
+      .click()
+  }
+)

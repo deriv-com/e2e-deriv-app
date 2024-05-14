@@ -13,6 +13,7 @@ describe('QATEST-5918: Verify Change currency functionality for the account whic
     it(`Should be able to change currency on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
       cy.c_visitResponsive('/appstore/traders-hub', size)
+      if (isMobile) cy.c_skipPasskeysV2()
       cy.c_checkTradersHubHomePage(isMobile)
       cy.findByTestId('dt_currency-switcher__arrow').click()
       cy.findByRole('button', { name: 'Add or manage account' }).click()

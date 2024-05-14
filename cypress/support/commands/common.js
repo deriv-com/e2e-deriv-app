@@ -369,12 +369,8 @@ Cypress.Commands.add(
           if (allRelatedEmails.length) {
             const verificationEmail = allRelatedEmails.pop()
             cy.wrap(verificationEmail).click()
-            cy.contains('p', `${accountEmail}`)
-              .last()
-              .should('be.visible')
-              .parent()
-              .children()
-              .contains('a', Cypress.config('baseUrl'))
+            cy.contains('p', `${accountEmail}`).last().should('be.visible')
+            cy.contains('a', Cypress.config('baseUrl'))
               .invoke('attr', 'href')
               .then((href) => {
                 if (href) {
@@ -513,6 +509,35 @@ Cypress.Commands.add(
   }
 )
 
+Cypress.Commands.add(
+  'c_createDemoAccount',
+  (country_code = 'id', currency = 'USD') => {
+    cy.c_visitResponsive('/')
+    // Call Verify Email and then set the Verification code in env
+    try {
+      cy.task('wsConnect')
+      cy.task('verifyEmailTask').then((accountEmail) => {
+        cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
+        cy.task('createVirtualAccountTask', {
+          country_code: country_code,
+          currency: currency,
+        }).then(() => {
+          // Updating Cypress environment variables with the new email
+          const currentCredentials = Cypress.env('credentials')
+          currentCredentials.test.masterUser.ID = accountEmail
+          Cypress.env('credentials', currentCredentials)
+          //Reset oAuthUrl otherwise it will use the previous URL
+          Cypress.env('oAuthUrl', '<empty>')
+        })
+      })
+    } catch (e) {
+      console.error('An error occurred during the account creation process:', e)
+    } finally {
+      cy.task('wsDisconnect')
+    }
+  }
+)
+
 Cypress.Commands.add('c_closeModal', () => {
   cy.log('Closing the modal')
   cy.get('.dc-modal').within(() => {
@@ -602,13 +627,23 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
   })
 })
 
-Cypress.Commands.add('c_skipPasskeysV2', () => {
-  cy.findByText('Effortless login with passkeys')
-    .should(() => {})
-    .then(($el) => {
-      if ($el.length) {
-        cy.findByText('Maybe later').click()
-        cy.log('Skipped Passkeys prompt !!!')
-      }
-    })
+Cypress.Commands.add('c_skipPasskeysV2', (options = {}) => {
+  const { language = 'english', retryCount = 0, maxRetries = 3 } = options
+  cy.fixture('common/common.json').then((langData) => {
+    const lang = langData[language]
+    cy.findByText(lang.passkeysModal.title)
+      .should(() => {})
+      .then(($el) => {
+        if ($el.length) {
+          cy.findByText(lang.passkeysModal.maybeLaterBtn).click()
+          cy.log('Skipped Passkeys prompt !!!')
+        } else if (retryCount < maxRetries) {
+          cy.wait(300)
+          cy.log(
+            `Passkeys prompt did not appear, Retrying... Attempt ${retryCount + 1}`
+          )
+          cy.c_skipPasskeysV2({ ...options, retryCount: retryCount + 1 })
+        }
+      })
+  })
 })

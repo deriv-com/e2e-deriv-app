@@ -134,6 +134,14 @@ module.exports = defineConfig({
         ID: process.env.E2E_P2P_FLOATING,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
+      p2pFloatingSellAd1: {
+        ID: process.env.E2E_LOGIN_ID_P2P_FLOATINGRATE_SELLAD_1,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      p2pFloatingSellAd2: {
+        ID: process.env.E2E_LOGIN_ID_P2P_FLOATINGRATE_SELLAD_2,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
       allcrypto: {
         ID: process.env.E2E_CRYPTO,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
@@ -229,6 +237,7 @@ module.exports = defineConfig({
     event_email_url: process.env.E2E_EVENTS_EMAIL,
     MAILISK_API_KEY: process.env.E2E_MAILISK_API_KEY, // the variable name should be like MAILISK_API_KEY as per mailisk documentation
     mailiskNamespace: process.env.E2E_MAILISK_NAMESPACE,
+    dbotStageAppId: process.env.E2E_DBOT_STG_APPID,
     diel_country_list: [
       "Ecuador",
       "South Africa",
