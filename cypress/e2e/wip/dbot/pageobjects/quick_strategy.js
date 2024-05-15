@@ -34,7 +34,7 @@ class QuickStrategy {
   }
 
   get quickStrategyTradeType() {
-    return cy.get('[data-testid="qs_autocomplete_tradetype"]')
+    return cy.findByTestId('qs_autocomplete_tradetype')
   }
 
   runBotQuickStrategy = () => {
@@ -56,10 +56,11 @@ class QuickStrategy {
 
   chooseTradeType = () => {
     this.quickStrategyTradeType.click()
-    cy.contains('Matches/Differs')
-      .scrollIntoView()
-      .then(($element) => {
-        cy.wrap($element).click()
+    cy.findAllByTestId('dt_themed_scrollbars')
+      .eq(3)
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Matches/Differs').click()
       })
   }
 
@@ -69,8 +70,8 @@ class QuickStrategy {
   }
 
   fillUpLossProfitTreshold = () => {
-    this.quickStrategyLoss.type('10')
-    this.quickStrategyProfit.type('15')
+    this.quickStrategyLoss.type('4')
+    this.quickStrategyProfit.type('5')
   }
 }
 
