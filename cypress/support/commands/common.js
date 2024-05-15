@@ -133,7 +133,6 @@ Cypress.Commands.add('c_login', (options = {}) => {
       }
     })
   }
-  cy.log('getOAuthUrl - value before: ' + Cypress.env('oAuthUrl'))
   if (
     Cypress.env('oAuthUrl') == '<empty>' &&
     app != 'wallets' &&
@@ -507,14 +506,13 @@ Cypress.Commands.add('c_getBalance', () => {
 })
 
 /**
- * Method to Register a New Apllication ID
+ * Method to Register a New Application ID
  */
 Cypress.Commands.add('c_registerNewApplicationID', () => {
   cy.task('registerNewAppIDTask').then((response) => {
     const appId = response
     cy.log('The Newly Generated App Id is: ', appId)
     Cypress.env('updatedAppId', appId)
-    // Cypress.prevAppId = appId
   })
 })
 
