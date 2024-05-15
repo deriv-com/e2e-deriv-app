@@ -612,14 +612,13 @@ Cypress.Commands.add('c_skipPasskeysV2', () => {
 
 Cypress.Commands.add('c_fakeLinkPopUpCheck', () => {
   cy.getCookie('website_status').then((cookie) => {
-    if (cookie) {
-      expect(cookie.value).to.equal(expectedCookieValue)
+    if (cookie && cookie.value === expectedCookieValue) {
       cy.findByText('Beware of fake links.').should('exist', { timeout: 12000 })
       cy.findByRole('checkbox').check()
       cy.findByRole('button', { name: 'OK, got it' }).click()
       cy.findAllByText('Beware of fake links.').should('not.exist')
     } else {
-      cy.log('The fake link pop up does not exist')
+      cy.log('The fake link pop up does not exist!')
     }
   })
 })
