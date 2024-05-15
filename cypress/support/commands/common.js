@@ -612,7 +612,8 @@ Cypress.Commands.add('c_skipPasskeysV2', () => {
 
 Cypress.Commands.add('c_fakeLinkPopUpCheck', () => {
   cy.getCookie('website_status').then((cookie) => {
-    if (cookie && cookie.value === expectedCookieValue) {
+    cy.log('The website_status cookie value :' + cookie.value)
+    if (cookie?.value === expectedCookieValue) {
       cy.findByText('Beware of fake links.').should('exist', { timeout: 12000 })
       cy.findByRole('checkbox').check()
       cy.findByRole('button', { name: 'OK, got it' }).click()
