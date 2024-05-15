@@ -858,4 +858,5 @@ Cypress.Commands.add('c_checkForNonEmptyStateAdScreen', () => {
     'Looking to buy or sell USD? You can post your own ad for others to respond.'
   ).should('not.exist')
   cy.findByRole('button', { name: 'Create ad' }).should('not.exist')
+  cy.get('.buy-sell-row').should('exist')
 })
