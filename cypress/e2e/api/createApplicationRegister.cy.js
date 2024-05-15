@@ -23,9 +23,6 @@ describe('QATEST - 148419 - Register a New Application / App ID', () => {
       const newAppId = parseInt(Cypress.env('configAppId'))
       expect(newAppId).not.equal(oldAppdId)
 
-      cy.visit(Cypress.env('appRegisterUrl') + '?qa_server=' + Cypress.env('configServer') + '&app_id=' + Cypress.env('configAppId'))
-      cy.c_login()
-
     })
 
   })
