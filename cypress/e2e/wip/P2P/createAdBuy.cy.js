@@ -13,6 +13,7 @@ describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
     cy.c_closeNotificationHeader()
     cy.c_clickMyAdTab()
     cy.c_createNewAd('buy')
+    cy.get('[type="radio"]').eq(1).click({ force: true })
     cy.c_verifyAmountFiled()
     cy.c_verifyRate()
     cy.c_verifyMaxMin('min_transaction', 5, 'Min')

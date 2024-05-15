@@ -162,6 +162,22 @@ module.exports = defineConfig({
         ID: process.env.E2E_EU_LOGIN,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
+      p2pFloatingSellOrderBuyer: {
+        ID: 'buyer1@deriv.com',
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      p2pFloatingSellOrderSeller: {
+        ID: 'seller1@deriv.com',
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      // p2pFloatingSellOrderBuyer: {
+      //   ID: process.env.E2E_LOGIN_ID_P2P_FLOATINGRATE_SELLORDER_BUYER,
+      //   PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      // },
+      // p2pFloatingSellOrderSeller: {
+      //   ID: process.env.E2E_LOGIN_ID_P2P_FLOATINGRATE_SELLORDER_SELLER,
+      //   PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      // },
     },
     production:{
       masterUser:{
@@ -179,7 +195,7 @@ module.exports = defineConfig({
       wallets: {
         ID: process.env.E2E_WALLETS_LOGIN_PROD,
         PSWD: process.env.E2E_WALLETS_PASSWORD_PROD
-      }
+      },
     }
   },
     RegionEU: "/?region=at",
