@@ -5,6 +5,7 @@ describe('QATEST - 148419 - Register a New Application / App ID', () => {
   it('Creation of New App ID should be successful. ', () => {
     // Login is required as we need Auth Token for running RegisterApplication API.
     cy.c_login() 
+    const oldAppdId = parseInt(Cypress.env('configAppId'))
     cy.task('wsConnect')
     cy.c_authorizeCall()
 
@@ -18,10 +19,13 @@ describe('QATEST - 148419 - Register a New Application / App ID', () => {
       Cypress.config('baseUrl', Cypress.env('appRegisterUrl'))
       Cypress.env('configAppId', updatedAppId)
       Cypress.env('oAuthUrl', '<empty>')
-      localStorage.setItem('config.server_url', Cypress.env('configServer'))
-      localStorage.setItem('config.app_id', Cypress.env('configAppId'))
-      cy.c_login({testLink: true})
-      // cy.c_login()
+
+      const newAppId = parseInt(Cypress.env('configAppId'))
+      expect(newAppId).not.equal(oldAppdId)
+
+      cy.visit(Cypress.env('appRegisterUrl') + '?qa_server=' + Cypress.env('configServer') + '&app_id=' + Cypress.env('configAppId'))
+      cy.c_login()
+
     })
 
   })

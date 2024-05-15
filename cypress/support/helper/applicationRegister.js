@@ -47,7 +47,7 @@ const registerNewApplicationId = async (
 
 /**
  * Method to generate 4-digit random number to be used for providing AppName to appid
- * @returns 4-digit random runber
+ * @returns 4-digit random number
  */
 const registerName = () => {
   const randomNumber = crypto.randomInt(0, 10000)

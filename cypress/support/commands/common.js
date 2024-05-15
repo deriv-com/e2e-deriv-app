@@ -76,7 +76,6 @@ Cypress.Commands.add('c_login', (options = {}) => {
     app = '',
     backEndProd = false,
     rateLimitCheck = false,
-    testLink = false,
   } = options
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
@@ -96,13 +95,6 @@ Cypress.Commands.add('c_login', (options = {}) => {
   ) {
     Cypress.env('configServer', Cypress.env('prodServer'))
     Cypress.env('configAppId', Cypress.env('stgAppId'))
-  } else if (testLink == true ) {
-    Cypress.config().baseUrl = Cypress.env('appRegisterUrl')
-    Cypress.env('configServer', Cypress.env('configServer'))
-    Cypress.env('configAppId', Cypress.prevAppId)
-    
-    cy.log('The Current Base URL is: ', Cypress.config().baseUrl)
-
   } else {
     Cypress.env('configServer', Cypress.env('stdConfigServer'))
     Cypress.env('configAppId', Cypress.env('stdConfigAppId'))
@@ -150,12 +142,10 @@ Cypress.Commands.add('c_login', (options = {}) => {
     getOAuthUrl(
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
-        cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
         const urlParams = new URLSearchParams(Cypress.env('oAuthUrl'))
         const token = urlParams.get('token1')
 
         Cypress.env('oAuthToken', token)
-        cy.log('getOAuthUrl : The Auth Token is :' + Cypress.env('oAuthToken'))
         cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
       },
       loginEmail,
@@ -168,7 +158,6 @@ Cypress.Commands.add('c_login', (options = {}) => {
     getWalletOAuthUrl((oAuthUrl) => {
       cy.log('came inside wallet getOauth')
       Cypress.env('oAuthUrl', oAuthUrl)
-      cy.log('getOAuthUrlWallet - value after: ' + Cypress.env('oAuthUrl'))
       cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
     })
   } else {
@@ -178,7 +167,6 @@ Cypress.Commands.add('c_login', (options = {}) => {
 
 Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
   const { rateLimitCheck = false } = options
-  cy.log('c_doOAuthLogin - value before: ' + Cypress.env('oAuthUrl'))
   cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large', {
     rateLimitCheck: rateLimitCheck,
   })
@@ -511,7 +499,6 @@ Cypress.Commands.add('c_getBalance', () => {
   try {
     cy.task('checkBalanceTask').then((response) => {
       const balance = response
-      cy.log('Balance is -----> : ', balance)
       Cypress.env('actualAmount', balance)
     })
   } catch (e) {
@@ -525,9 +512,9 @@ Cypress.Commands.add('c_getBalance', () => {
 Cypress.Commands.add('c_registerNewApplicationID', () => {
   cy.task('registerNewAppIDTask').then((response) => {
     const appId = response
-    cy.log('In c_registerNewApplicationID method and App Id is: ', appId)
+    cy.log('The Newly Generated App Id is: ', appId)
     Cypress.env('updatedAppId', appId)
-    Cypress.prevAppId = appId
+    // Cypress.prevAppId = appId
   })
 })
 

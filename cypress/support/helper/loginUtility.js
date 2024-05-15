@@ -140,7 +140,7 @@ export function getOAuthUrl(callback, loginEmail, loginPassword) {
           },
           body: {
             csrf_token: csrfToken2,
-            confirm_scopes: 'read,trade,payments,trading_information,admin',
+            confirm_scopes: 'read,trade,payments,admin',
           },
           followRedirect: true,
         }
