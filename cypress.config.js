@@ -14,7 +14,7 @@ let api;
 module.exports = defineConfig({
   e2e: {
     projectId: "rjvf4u",
-    baseUrl: "https://staging-app.deriv.com/",
+    baseUrl: "https://deriv-p2p-app.pages.dev/",
     defaultCommandTimeout: 15000,
     supportFile: "cypress/support/e2e.js",
     experimentalWebKitSupport: true,

@@ -27,7 +27,7 @@ Cypress.Commands.add('c_createNewAd', (adType) => {
 })
 
 Cypress.Commands.add('c_clickMyAdTab', () => {
-  cy.findByText('My ads').should('be.visible').click()
+  cy.findByText('My Ads').should('be.visible').click()
 })
 
 Cypress.Commands.add('c_postBuyAd', () => {

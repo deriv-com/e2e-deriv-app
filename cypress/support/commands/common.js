@@ -168,7 +168,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
     rateLimitCheck: rateLimitCheck,
   })
   //To let the dtrader page load completely
-  cy.get('.cq-symbol-select-btn', { timeout: 10000 }).should('exist')
+  //cy.get('.cq-symbol-select-btn', { timeout: 10000 }).should('exist')
   cy.document().then((doc) => {
     const launchModal = doc.querySelector('[data-test-id="launch-modal"]')
     if (launchModal) {
@@ -187,40 +187,40 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
         cy.log('Completed trading assessment!!!')
       }
     })
-  cy.get('#modal_root, .modal-root', { timeout: 10000 }).then(($element) => {
-    if ($element.children().length > 0) {
-      cy.contains('Continue').then(($element) => {
-        if ($element.length) {
-          cy.wrap($element).click()
-        }
-        //To redirect to wallet page
-        if (
-          app == 'wallets' ||
-          app == 'doughflow' ||
-          app == 'demoonlywallet' ||
-          app == 'onramp'
-        ) {
-          cy.findByRole('banner').should('be.visible')
-        } else {
-          //To redirect to trader's hub page
-          cy.findByText("Trader's Hub").should('be.visible')
-        }
-      })
-    } else {
-      //when deriv charts popup is not available and if we need to redirect to wallet page
-      if (
-        app == 'wallets' ||
-        app == 'doughflow' ||
-        app == 'demoonlywallet' ||
-        app == 'onramp'
-      ) {
-        cy.findByRole('banner').should('be.visible')
-      } else {
-        //when deriv charts popup is not available and if we need to redirect to trader's hub page
-        cy.findByText("Trader's Hub").should('be.visible')
-      }
-    }
-  })
+  // cy.get('#modal_root, .modal-root', { timeout: 10000 }).then(($element) => {
+  //   if ($element.children().length > 0) {
+  //     cy.contains('Continue').then(($element) => {
+  //       if ($element.length) {
+  //         cy.wrap($element).click()
+  //       }
+  //       //To redirect to wallet page
+  //       if (
+  //         app == 'wallets' ||
+  //         app == 'doughflow' ||
+  //         app == 'demoonlywallet' ||
+  //         app == 'onramp'
+  //       ) {
+  //         cy.findByRole('banner').should('be.visible')
+  //       } else {
+  //         //To redirect to trader's hub page
+  //         cy.findByText("Trader's Hub").should('be.visible')
+  //       }
+  //     })
+  //   } else {
+  //     //when deriv charts popup is not available and if we need to redirect to wallet page
+  //     if (
+  //       app == 'wallets' ||
+  //       app == 'doughflow' ||
+  //       app == 'demoonlywallet' ||
+  //       app == 'onramp'
+  //     ) {
+  //       cy.findByRole('banner').should('be.visible')
+  //     } else {
+  //       //when deriv charts popup is not available and if we need to redirect to trader's hub page
+  //       cy.findByText("Trader's Hub").should('be.visible')
+  //     }
+  //   }
+  // })
 })
 
 Cypress.Commands.add('c_mt5login', () => {
