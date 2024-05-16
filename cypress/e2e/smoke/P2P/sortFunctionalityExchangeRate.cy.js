@@ -3,7 +3,7 @@ import '@testing-library/cypress/add-commands'
 let ratesArray = []
 let ratesArrayAfterExchangeRateSort = []
 
-describe('QATEST-2718 Sort Functionality (by Exchange Rate)', () => {
+describe('QATEST-2718 - Sort Functionality (by Exchange Rate)', () => {
   beforeEach(() => {
     cy.c_login({ user: 'p2pSortFunctionality' })
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
