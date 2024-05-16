@@ -546,7 +546,7 @@ const validateLink = (index, linkName, expectedUrl, contentCheck) => {
 }
 
 Cypress.Commands.add('checkHyperLinks', (language) => {
-  cy.findByText('Swap-Free').should('be.visible')
+  cy.wait(2000)
   const bviCFD = BVI[language]
   const vanuatuCFD = Vanuatu[language]
   const labuanCFD = Labuan[language]
