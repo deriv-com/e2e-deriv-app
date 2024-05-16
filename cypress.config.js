@@ -226,8 +226,12 @@ module.exports = defineConfig({
     viewPortSize: "small",
     baseUrl: process.env.CYPRESS_BASE_URL,
     loginEmail: process.env.E2E_DERIV_LOGIN,
+<<<<<<< HEAD
     walletloginEmail: process.env.E2E_DERIV_LOGIN_WALLET,
     walletloginPassword:process.env.E2E_QA_ACCOUNT_PASSWORD,
+=======
+    walletEmail: process.env.E2E_WALLETS_LOGIN,
+>>>>>>> 872bf1fec697e6142f86ddd6a2cfcbaf041222ba
     loginPassword: process.env.E2E_DERIV_PASSWORD,
     p2pbuyloginEmail: process.env.E2E_P2P_BUY,
     p2psellloginEmail: process.env.E2E_P2P_SELL,
