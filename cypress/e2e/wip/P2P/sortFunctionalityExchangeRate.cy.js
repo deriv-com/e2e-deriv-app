@@ -9,7 +9,7 @@ describe('QATEST-2718 Sort Functionality (by Exchange Rate)', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
 
-  it('Should be able to sort ads by Exchange Rate.', () => {
+  it('Should be able to sort Buy and Sell ads by Exchange Rate.', () => {
     cy.c_navigateToDerivP2P()
     cy.c_closeSafetyInstructions()
     cy.findByText('Deriv P2P').should('exist')
