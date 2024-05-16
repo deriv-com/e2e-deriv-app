@@ -7,13 +7,14 @@ function crypto_transfer(to_account, transferAmount) {
     .eq(1)
     .click()
     .type('0.000003000')
-  if (to_account == 'USD') {
-    cy.contains(
-      'lifetime transfer limit from BTC Wallet to any fiat Wallets is'
-    )
-  } else {
-    cy.contains('lifetime transfer limit between cryptocurrency Wallets is')
-  }
+  // if (to_account == 'USD') {
+  //   cy.contains(
+  //     'lifetime transfer limit from BTC Wallet to any fiat Wallets is'
+  //   )
+  // } else {
+  //   cy.contains('lifetime transfer limit between cryptocurrency Wallets is')
+  // }
+  cy.contains('daily transfer limit between your Wallets').should('be.visible')
   cy.get('form')
     .findByRole('button', { name: 'Transfer', exact: true })
     .should('be.enabled')
@@ -53,7 +54,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
     cy.findByText('+5.00000000 BTC')
     cy.findByTestId('dt_wallets_textfield_box').click()
     cy.findByRole('option', { name: 'Withdrawal' }).click()
-    cy.findByText('No recent transactions')
+    cy.findByText('No transactions found')
     cy.findByTestId('dt_wallets_textfield_box').click()
     cy.findByRole('option', { name: 'Transfer' }).click()
     cy.findAllByText(/LTC Wallet/)
@@ -91,7 +92,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
     cy.findByText('+5.00000000 BTC')
     cy.findByTestId('dt_wallets_textfield_box').click()
     cy.findByRole('option', { name: 'Withdrawal' }).click()
-    cy.findByText('No recent transactions')
+    cy.findByText('No transactions found')
     cy.findByTestId('dt_wallets_textfield_box').click()
     cy.findByRole('option', { name: 'Transfer' }).click()
     cy.findAllByText(/LTC Wallet/)
