@@ -16,7 +16,7 @@ describe('QATEST-2718 Sort Functionality (by Exchange Rate)', () => {
     cy.c_closeNotificationHeader()
     cy.c_getExchngeRatesFromScreen('Buy').then((returnedRatesArray) => {
       ratesArray = returnedRatesArray
-      cy.c_sortOrdersBy('Exchange rate')
+      cy.c_sortAdBy('Exchange rate')
       cy.c_getExchngeRatesFromScreen('Buy').then((sortedReturnedRatesArray) => {
         ratesArrayAfterExchangeRateSort = sortedReturnedRatesArray
         cy.wrap(ratesArray).should(
@@ -27,7 +27,7 @@ describe('QATEST-2718 Sort Functionality (by Exchange Rate)', () => {
     })
     cy.c_getExchngeRatesFromScreen('Sell').then((returnedRatesArray) => {
       ratesArray = returnedRatesArray
-      cy.c_sortOrdersBy('Exchange rate')
+      cy.c_sortAdBy('Exchange rate')
       cy.c_getExchngeRatesFromScreen('Sell').then(
         (sortedReturnedRatesArray) => {
           ratesArrayAfterExchangeRateSort = sortedReturnedRatesArray
