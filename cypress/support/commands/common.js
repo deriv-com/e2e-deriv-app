@@ -488,7 +488,6 @@ Cypress.Commands.add('c_authorizeCall', () => {
   try {
     const oAuthNewToken = Cypress.env('oAuthToken')
     cy.task('authorizeCallTask', oAuthNewToken)
-
   } catch (e) {
     console.error('An error occurred during the account creation process:', e)
   }
@@ -524,9 +523,8 @@ Cypress.Commands.add('c_registerNewApplicationID', () => {
  * This will click on account dropdown and click on logout link
  */
 Cypress.Commands.add('c_logout', () => {
-
-  cy.get('#dt_core_header_acc-info-container').click();
-  cy.findByText("Log out").should('be.visible')
+  cy.get('#dt_core_header_acc-info-container').click()
+  cy.findByText('Log out').should('be.visible')
   cy.get('[data-testid="acc-switcher"]').within(() => {
     cy.contains('Log out').click()
   })
