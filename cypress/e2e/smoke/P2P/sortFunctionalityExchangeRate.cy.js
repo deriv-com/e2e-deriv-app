@@ -16,10 +16,10 @@ describe('QATEST-2718 - Sort Functionality (by Exchange Rate)', () => {
     cy.c_skipPasskey()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
-    cy.c_getExchangeRatesFromScreen('Buy').then((returnedRatesArray) => {
+    cy.c_getExchangeRatesFromScreen('Buy', true).then((returnedRatesArray) => {
       ratesArray = returnedRatesArray
       cy.c_sortAdBy('Exchange rate')
-      cy.c_getExchangeRatesFromScreen('Buy').then(
+      cy.c_getExchangeRatesFromScreen('Buy', false).then(
         (sortedReturnedRatesArray) => {
           ratesArrayAfterExchangeRateSort = sortedReturnedRatesArray
           cy.wrap(ratesArray).should(
@@ -29,10 +29,10 @@ describe('QATEST-2718 - Sort Functionality (by Exchange Rate)', () => {
         }
       )
     })
-    cy.c_getExchangeRatesFromScreen('Sell').then((returnedRatesArray) => {
+    cy.c_getExchangeRatesFromScreen('Sell', true).then((returnedRatesArray) => {
       ratesArray = returnedRatesArray
       cy.c_sortAdBy('Exchange rate')
-      cy.c_getExchangeRatesFromScreen('Sell').then(
+      cy.c_getExchangeRatesFromScreen('Sell', false).then(
         (sortedReturnedRatesArray) => {
           ratesArrayAfterExchangeRateSort = sortedReturnedRatesArray
           cy.wrap(ratesArray).should(

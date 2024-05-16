@@ -877,7 +877,7 @@ Cypress.Commands.add('c_sortAdBy', (sortBy) => {
     })
 })
 
-Cypress.Commands.add('c_getExchangeRatesFromScreen', (adType) => {
+Cypress.Commands.add('c_getExchangeRatesFromScreen', (adType, sortArray) => {
   let ratesArray = []
   cy.findByRole('button', { name: adType }).should('be.visible').click()
   cy.get('.buy-sell-row__rate')
@@ -896,6 +896,12 @@ Cypress.Commands.add('c_getExchangeRatesFromScreen', (adType) => {
         })
     })
     .then(() => {
+      if (sortArray) {
+        cy.log('Sorting rates array')
+        ratesArray.sort((a, b) => a - b)
+      } else {
+        cy.log('Not sorting rates array')
+      }
       return JSON.stringify(ratesArray)
     })
 })
