@@ -160,7 +160,7 @@ module.exports = defineConfig({
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       p2pSortFunctionality: {
-        ID: process.env.E2E_LOGIN_ID_P2P,
+        ID: process.env.E2E_LOGIN_ID_P2P_SORT,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       p2pFixedRate: {
