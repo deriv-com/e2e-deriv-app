@@ -3,6 +3,9 @@ import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
 Cypress.prevAppId = 0
 Cypress.prevUser = ''
 const expectedCookieValue = '{%22clients_country%22:%22br%22}'
+
+let newApplicationId
+
 const setLoginUser = (user = 'masterUser', options = {}) => {
   const { backEndProd = false } = options
   if (
@@ -119,7 +122,11 @@ Cypress.Commands.add('c_login', (options = {}) => {
     localStorage.setItem('config.server_url', Cypress.env('configServer'))
     localStorage.setItem('config.app_id', Cypress.env('configAppId'))
   }
-  if (app == 'wallets' || app == 'doughflow' || app == 'demoonlywallet') {
+  if (
+    (app || user) == 'wallets' ||
+    app == 'doughflow' ||
+    app == 'demoonlywallet'
+  ) {
     cy.contains('next_wallet').then(($element) => {
       //Check if the element exists
       if ($element.length) {
@@ -128,7 +135,6 @@ Cypress.Commands.add('c_login', (options = {}) => {
       }
     })
   }
-  cy.log('getOAuthUrl - value before: ' + Cypress.env('oAuthUrl'))
   if (
     Cypress.env('oAuthUrl') == '<empty>' &&
     app != 'wallets' &&
@@ -137,7 +143,10 @@ Cypress.Commands.add('c_login', (options = {}) => {
     getOAuthUrl(
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
-        cy.log('getOAuthUrl - value after: ' + Cypress.env('oAuthUrl'))
+        const urlParams = new URLSearchParams(Cypress.env('oAuthUrl'))
+        const token = urlParams.get('token1')
+
+        Cypress.env('oAuthToken', token)
         cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
       },
       loginEmail,
@@ -150,7 +159,6 @@ Cypress.Commands.add('c_login', (options = {}) => {
     getWalletOAuthUrl((oAuthUrl) => {
       cy.log('came inside wallet getOauth')
       Cypress.env('oAuthUrl', oAuthUrl)
-      cy.log('getOAuthUrlWallet - value after: ' + Cypress.env('oAuthUrl'))
       cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
     })
   } else {
@@ -165,7 +173,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
   })
   //To let the dtrader page load completely
   cy.c_fakeLinkPopUpCheck()
-  cy.get('.cq-symbol-select-btn', { timeout: 10000 }).should('exist')
+  cy.get('.cq-symbol-select-btn', { timeout: 15000 }).should('exist')
   cy.document().then((doc) => {
     const launchModal = doc.querySelector('[data-test-id="launch-modal"]')
     if (launchModal) {
@@ -366,12 +374,8 @@ Cypress.Commands.add(
           if (allRelatedEmails.length) {
             const verificationEmail = allRelatedEmails.pop()
             cy.wrap(verificationEmail).click()
-            cy.contains('p', `${accountEmail}`)
-              .last()
-              .should('be.visible')
-              .parent()
-              .children()
-              .contains('a', Cypress.config('baseUrl'))
+            cy.contains('p', `${accountEmail}`).last().should('be.visible')
+            cy.contains('a', Cypress.config('baseUrl'))
               .invoke('attr', 'href')
               .then((href) => {
                 if (href) {
@@ -477,6 +481,57 @@ Cypress.Commands.add('c_loadingCheck', () => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
 })
 
+/**
+ * Method to perform Authorization Call
+ */
+Cypress.Commands.add('c_authorizeCall', () => {
+  try {
+    const oAuthNewToken = Cypress.env('oAuthToken')
+    cy.task('authorizeCallTask', oAuthNewToken)
+
+  } catch (e) {
+    console.error('An error occurred during the account creation process:', e)
+  }
+})
+
+/**
+ * Method to perform Balance Call
+ */
+Cypress.Commands.add('c_getBalance', () => {
+  try {
+    cy.task('checkBalanceTask').then((response) => {
+      const balance = response
+      Cypress.env('actualAmount', balance)
+    })
+  } catch (e) {
+    console.error('An error occurred during the account creation process:', e)
+  }
+})
+
+/**
+ * Method to Register a New Application ID
+ */
+Cypress.Commands.add('c_registerNewApplicationID', () => {
+  cy.task('registerNewAppIDTask').then((response) => {
+    const appId = response
+    cy.log('The Newly Generated App Id is: ', appId)
+    Cypress.env('updatedAppId', appId)
+  })
+})
+
+/**
+ * Method to Logout from Application.
+ * This will click on account dropdown and click on logout link
+ */
+Cypress.Commands.add('c_logout', () => {
+
+  cy.get('#dt_core_header_acc-info-container').click();
+  cy.findByText("Log out").should('be.visible')
+  cy.get('[data-testid="acc-switcher"]').within(() => {
+    cy.contains('Log out').click()
+  })
+})
+
 /*
   Usage cy.c_createRealAccount('co', 'EUR') or you may not pass in anything to go with default.
   Currently works for CR countries as well as DIEL - non-EU account.
@@ -491,6 +546,35 @@ Cypress.Commands.add(
       cy.task('verifyEmailTask').then((accountEmail) => {
         cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
         cy.task('createRealAccountTask', {
+          country_code: country_code,
+          currency: currency,
+        }).then(() => {
+          // Updating Cypress environment variables with the new email
+          const currentCredentials = Cypress.env('credentials')
+          currentCredentials.test.masterUser.ID = accountEmail
+          Cypress.env('credentials', currentCredentials)
+          //Reset oAuthUrl otherwise it will use the previous URL
+          Cypress.env('oAuthUrl', '<empty>')
+        })
+      })
+    } catch (e) {
+      console.error('An error occurred during the account creation process:', e)
+    } finally {
+      cy.task('wsDisconnect')
+    }
+  }
+)
+
+Cypress.Commands.add(
+  'c_createDemoAccount',
+  (country_code = 'id', currency = 'USD') => {
+    cy.c_visitResponsive('/')
+    // Call Verify Email and then set the Verification code in env
+    try {
+      cy.task('wsConnect')
+      cy.task('verifyEmailTask').then((accountEmail) => {
+        cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
+        cy.task('createVirtualAccountTask', {
           country_code: country_code,
           currency: currency,
         }).then(() => {
@@ -599,15 +683,25 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
   })
 })
 
-Cypress.Commands.add('c_skipPasskeysV2', () => {
-  cy.findByText('Effortless login with passkeys')
-    .should(() => {})
-    .then(($el) => {
-      if ($el.length) {
-        cy.findByText('Maybe later').click()
-        cy.log('Skipped Passkeys prompt !!!')
-      }
-    })
+Cypress.Commands.add('c_skipPasskeysV2', (options = {}) => {
+  const { language = 'english', retryCount = 0, maxRetries = 3 } = options
+  cy.fixture('common/common.json').then((langData) => {
+    const lang = langData[language]
+    cy.findByText(lang.passkeysModal.title)
+      .should(() => {})
+      .then(($el) => {
+        if ($el.length) {
+          cy.findByText(lang.passkeysModal.maybeLaterBtn).click()
+          cy.log('Skipped Passkeys prompt !!!')
+        } else if (retryCount < maxRetries) {
+          cy.wait(300)
+          cy.log(
+            `Passkeys prompt did not appear, Retrying... Attempt ${retryCount + 1}`
+          )
+          cy.c_skipPasskeysV2({ ...options, retryCount: retryCount + 1 })
+        }
+      })
+  })
 })
 
 Cypress.Commands.add('c_fakeLinkPopUpCheck', () => {

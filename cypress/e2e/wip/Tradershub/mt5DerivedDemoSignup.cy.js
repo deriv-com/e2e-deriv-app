@@ -1,18 +1,25 @@
 import '@testing-library/cypress/add-commands'
-import { generateEpoch } from '../../../support/helper/utility'
 
 describe('QATEST-5695: Create a Derived Demo CFD account', () => {
-  let country = Cypress.env('countries').CO
-  let size = ['small', 'desktop']
+  const size = ['small', 'desktop']
+  let countryCode = 'co'
+
+  beforeEach(() => {
+    cy.c_createRealAccount(countryCode)
+    cy.c_login()
+  })
 
   size.forEach((size) => {
     it(`Verify I can signup for a demo derived CFD account on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
-      const signUpEmail = `sanity${generateEpoch()}mt5deriveddemo@deriv.com`
-      cy.c_setEndpoint(signUpEmail, size)
-      cy.c_demoAccountSignup(country, signUpEmail, size)
-      cy.c_checkTradersHubHomePage(size == 'small' ? true : false)
-      if (size == 'small') cy.findByRole('button', { name: 'CFDs' }).click()
-      cy.findAllByRole('button', { name: 'Get' }).first().click()
+      const isMobile = size == 'small' ? true : false
+      cy.c_visitResponsive('appstore/traders-hub', size)
+      if (isMobile) cy.c_skipPasskeysV2()
+      cy.c_checkTradersHubHomePage(isMobile)
+      cy.c_switchToDemo()
+      if (isMobile) cy.findByRole('button', { name: 'CFDs' }).click()
+      cy.findByTestId('dt_trading-app-card_demo_derived')
+        .findByRole('button', { name: 'Get' })
+        .click()
       cy.findByText('Create a Deriv MT5 password').should('be.visible')
       cy.findByText(
         'You can use this password for all your Deriv MT5 accounts.'
@@ -26,7 +33,7 @@ describe('QATEST-5695: Create a Derived Demo CFD account', () => {
       cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
       cy.get('.dc-modal-body').should(
         'contain.text',
-        'Success!Congratulations, you have successfully created your demo Deriv MT5 Derived account'
+        'Success!Your demo Derived account is ready'
       )
       cy.findByRole('button', { name: 'Continue' }).click()
       cy.findByText('10,000.00 USD').should('be.visible')

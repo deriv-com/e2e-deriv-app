@@ -135,7 +135,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
     }
     // Create Demo MT5 accounts
     cy.log('create demo mt5 svg account')
-    expandDemoWallet()
+    cy.c_switchWalletsAccount('USD Demo')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
     const demoSvgText = Cypress.$(
       ":contains('This account offers CFDs on derived instruments.')"
