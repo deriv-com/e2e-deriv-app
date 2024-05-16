@@ -858,3 +858,17 @@ Cypress.Commands.add('c_checkForNonEmptyStateAdScreen', () => {
   cy.findByRole('button', { name: 'Create ad' }).should('not.exist')
   cy.get('.buy-sell-row').should('exist')
 })
+
+Cypress.Commands.add('c_sortOrdersBy', (sortBy) => {
+  cy.findByTestId('sort-div').should('be.visible').click()
+  cy.findByText(sortBy).should('be.visible')
+  cy.contains('.dc-text', sortBy)
+    .parentsUntil('.dc-radio-group__item')
+    .parent() // Add .parent() to complete the selection up to '.dc-radio-group__item'
+    .find('input[type="radio"]') // Fix the selector: closing parenthesis should be square bracket
+    .then(($radio) => {
+      if (!$radio.is(':checked')) {
+        cy.wrap($radio).click({ force: true })
+      }
+    })
+})
