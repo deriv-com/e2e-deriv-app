@@ -21,9 +21,11 @@ describe('Verify deriv app login', () => {
     cy.get('.traders-hub-header__setting').click()
     cy.findByTestId('dt_logout_tab').click()
     //Verify new page has successfully loaded
-    cy.findByRole('button', { name: 'whatsapp icon' }).should('be.visible', {
-      timeout: 30000,
-    })
+    cy.findByRole(
+      'button',
+      { name: 'whatsapp icon' },
+      { timeout: 30000 }
+    ).should('be.visible')
     cy.url().should('eq', Cypress.env('derivComProdURL'))
   })
 })

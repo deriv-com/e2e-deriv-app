@@ -195,7 +195,11 @@ describe('QATEST-20010 Withdrawal Request: Fiat - Different language', () => {
     cy.clearAllCookies()
     cy.clearAllLocalStorage()
     cy.clearAllSessionStorage()
-    cy.c_login({ user: 'cashierWithdrawal', backEndProd: true })
+    cy.c_login({
+      user: 'cashierWithdrawal',
+      backEndProd: true,
+      rateLimitCheck: true,
+    })
     cy.fixture('cashierLegacy/withdrawalLanguageContent').as('languageDetails')
   })
   it(`should verify withdrawal request page with different languages for mobile screen size`, () => {

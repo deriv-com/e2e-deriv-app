@@ -1,6 +1,8 @@
 require("dotenv").config()
 const { defineConfig } = require("cypress")
 const {createAccountReal, createAccountVirtual, verifyEmail} = require('./cypress/support/helper/accountCreationUtility');
+const {authorizeCall, checkBalance } = require('./cypress/support/helper/balanceCall');
+const { registerNewApplicationId } = require('./cypress/support/helper/applicationRegister');
 
 const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI')
 const WebSocket = require('ws');
@@ -14,13 +16,21 @@ let api;
 module.exports = defineConfig({
   e2e: {
     projectId: "rjvf4u",
-    setupNodeEvents(on, config) {},
-    baseUrl: "https://staging-app.deriv.com",
+    baseUrl: "https://staging-app.deriv.com/",
     defaultCommandTimeout: 15000,
     supportFile: "cypress/support/e2e.js",
     experimentalWebKitSupport: true,
     chromeWebSecurity: false,
     setupNodeEvents(on, config) {
+      on('before:browser:launch', (browser = {}, launchOptions) => {
+        if (browser.family === 'chromium') {
+          launchOptions.args.push('--use-fake-ui-for-media-stream')
+          launchOptions.args.push('--use-fake-device-for-media-stream')
+          launchOptions.args.push('--use-file-for-fake-video-capture=cypress/fixtures/kyc/pass_1.y4m')
+        }
+        
+        return launchOptions
+      }),
       on('task', {
         wsConnect() {
           // Check if there is an existing connection and close it if open
@@ -52,18 +62,18 @@ module.exports = defineConfig({
         
           return null;
         },
-        async createRealAccountTask() {
+        async createRealAccountTask({country_code, currency}) {
           try {
-            const realAccountDetails = await createAccountReal(api);
+            const realAccountDetails = await createAccountReal(api, country_code, currency);
             return realAccountDetails;
           } catch (error) {
             console.error('Error creating account:', error);
             throw error;
           }
         },
-        async createVirtualAccountTask() {
+        async createVirtualAccountTask({country_code}) {
           try {
-              const virtualAccountDetails = await createAccountVirtual(api);
+              const virtualAccountDetails = await createAccountVirtual(api, country_code);
               return virtualAccountDetails;
           } catch (error) {
               console.error('Error creating virtual account:', error);
@@ -82,6 +92,37 @@ module.exports = defineConfig({
       setVerificationCode: (verificationCode) => {
         process.env.E2E_EMAIL_VERIFICATION_CODE = verificationCode;
         return null;
+      },
+      async authorizeCallTask(authToken){
+        try {
+          const authCall = await authorizeCall(api, authToken);
+          return authCall;
+        } catch (e) {
+          console.error('Authorization failed', e)
+          throw e
+        }
+      },
+      async checkBalanceTask(){ 
+        try {
+          const balance_stream = await checkBalance(api, process.env.E2E_OAUTH_TOKEN);
+          return balance_stream;
+        } catch (e) {
+          console.error('Operation failed', e)
+          throw e
+        }
+      },
+      async registerNewAppIDTask(){ 
+        let registerRedirectURI = process.env.E2E_APP_REGISTER_URL + '/redirect'
+        let registerVerificationURI = process.env.E2E_APP_REGISTER_URL + '/verify'
+        try {
+          const newApplicationID = await registerNewApplicationId(api, process.env.E2E_APP_REGISTER, 
+            process.env.E2E_APP_REGISTER_URL, registerRedirectURI, registerVerificationURI
+        );
+        return newApplicationID;
+        } catch (e) {
+          console.error('Operation failed', e)
+          throw e
+        }
       }
       });
 
@@ -126,17 +167,37 @@ module.exports = defineConfig({
         ID: process.env.E2E_P2P_FLOATING,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
+      p2pFloatingSellAd1: {
+        ID: process.env.E2E_LOGIN_ID_P2P_FLOATINGRATE_SELLAD_1,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      p2pFloatingSellAd2: {
+        ID: process.env.E2E_LOGIN_ID_P2P_FLOATINGRATE_SELLAD_2,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      p2pVerifyEmptyStateAdScreen: {
+        ID: process.env.E2E_LOGIN_ID_P2P_EMPTYSTATE,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      allcrypto: {
+        ID: process.env.E2E_CRYPTO,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
       cashierLegacy: {
         ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
+      cashierLegacyNonUSD: {
+        ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY_NON_USD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
       diel: {
         ID: process.env.E2E_DIEL_LOGIN,
-        PSWD: process.env.E2E_DIEL_PASSWORD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
       eu: {
         ID: process.env.E2E_EU_LOGIN,
-        PSWD: process.env.E2E_EU_PASSWORD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
     },
     production:{
@@ -213,6 +274,7 @@ module.exports = defineConfig({
     event_email_url: process.env.E2E_EVENTS_EMAIL,
     MAILISK_API_KEY: process.env.E2E_MAILISK_API_KEY, // the variable name should be like MAILISK_API_KEY as per mailisk documentation
     mailiskNamespace: process.env.E2E_MAILISK_NAMESPACE,
+    dbotStageAppId: process.env.E2E_DBOT_STG_APPID,
     diel_country_list: [
       "Ecuador",
       "South Africa",
@@ -229,6 +291,10 @@ module.exports = defineConfig({
     citizenshipIDVROW: process.env.E2E_CITIZENSHIP_ROW_IDV,
     citizenshipMF: process.env.E2E_CITIZENSHIP_MF,
     dielCountry: "South Africa",
+    updatedAppId : process.env.E2E_UPDATED_APPID,
+    actualAmount : process.env.E2E_ACTUAL_AMOUNT,
+    appRegisterID: process.env.E2E_APP_REGISTER,
+    appRegisterUrl: process.env.E2E_APP_REGISTER_URL,
     countries: {
       ZA: "South Africa",
       CO: "Colombia",

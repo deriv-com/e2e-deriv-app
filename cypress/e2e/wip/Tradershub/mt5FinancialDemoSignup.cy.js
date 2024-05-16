@@ -1,36 +1,48 @@
 import '@testing-library/cypress/add-commands'
-import { generateEpoch } from '../../../support/helper/utility'
 
 describe('QATEST-5699: Create a Financial Demo CFD account', () => {
-  const signUpEmail = `sanity${generateEpoch()}mt5financialdemo@deriv.com`
-  let country = Cypress.env('countries').CO
+  const size = ['small', 'desktop']
+  let countryCode = 'co'
 
   beforeEach(() => {
-    cy.c_setEndpoint(signUpEmail)
+    cy.c_createRealAccount(countryCode)
+    cy.c_login()
   })
-  it('Verify I can signup for a demo financial CFD account', () => {
-    cy.c_demoAccountSignup(country, signUpEmail)
-    cy.c_checkTradersHubHomePage()
-    cy.findAllByRole('button', { name: 'Get' }).eq(1).click()
-    cy.findByText('Create a Deriv MT5 password').should('be.visible')
-    cy.findByText(
-      'You can use this password for all your Deriv MT5 accounts.'
-    ).should('be.visible')
-    cy.findByRole('button', { name: 'Create Deriv MT5 password' }).should(
-      'be.disabled'
-    )
-    cy.findByTestId('dt_mt5_password').type(Cypress.env('mt5Password'), {
-      log: false,
+  size.forEach((size) => {
+    it(`Verify I can signup for a demo financial CFD account on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
+      const isMobile = size == 'small' ? true : false
+      cy.c_visitResponsive('appstore/traders-hub', size)
+      if (isMobile) cy.c_skipPasskeysV2()
+      cy.c_checkTradersHubHomePage(isMobile)
+      cy.c_switchToDemo()
+      if (isMobile) cy.findByRole('button', { name: 'CFDs' }).click()
+      cy.findByTestId('dt_trading-app-card_demo_financial')
+        .findByRole('button', { name: 'Get' })
+        .click()
+      cy.findByText('Create a Deriv MT5 password').should('be.visible')
+      cy.findByText(
+        'You can use this password for all your Deriv MT5 accounts.'
+      ).should('be.visible')
+      cy.findByRole('button', { name: 'Create Deriv MT5 password' }).should(
+        'be.disabled'
+      )
+      cy.findByTestId('dt_mt5_password').type(Cypress.env('mt5Password'), {
+        log: false,
+      })
+      cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
+      cy.get('.dc-modal-body').should(
+        'contain.text',
+        'Success!Your demo Financial account is ready.'
+      )
+      cy.findByRole('button', { name: 'Continue' }).click()
+      cy.findByText('10,000.00 USD').should('be.visible')
+      cy.findByRole('button', { name: 'Top up' }).should('exist')
+      cy.findByTestId('dt_trading-app-card_demo_financial_svg')
+        .findByRole('button', { name: 'Open' })
+        .click({ force: true })
+      cy.get('div.cfd-trade-modal-container')
+        .findByText('Financial Demo')
+        .should('be.visible')
     })
-    cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
-    cy.get('.dc-modal-body').should(
-      'contain.text',
-      'Success!Congratulations, you have successfully created your demo Deriv MT5 Financial account.'
-    )
-    cy.findByRole('button', { name: 'Continue' }).click()
-    cy.findByText('10,000.00 USD').should('be.visible')
-    cy.findByRole('button', { name: 'Top up' }).should('exist')
-    cy.get('button:nth-child(2)').click()
-    cy.get('#modal_root').findByText('Financial Demo').should('be.visible')
   })
 })
