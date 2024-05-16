@@ -864,11 +864,38 @@ Cypress.Commands.add('c_sortOrdersBy', (sortBy) => {
   cy.findByText(sortBy).should('be.visible')
   cy.contains('.dc-text', sortBy)
     .parentsUntil('.dc-radio-group__item')
-    .parent() // Add .parent() to complete the selection up to '.dc-radio-group__item'
-    .find('input[type="radio"]') // Fix the selector: closing parenthesis should be square bracket
+    .parent()
+    .find('input[type="radio"]')
     .then(($radio) => {
       if (!$radio.is(':checked')) {
-        cy.wrap($radio).click({ force: true })
+        cy.wrap($radio).click({ force: true }).and('be.checked')
+      } else {
+        cy.get('body').click({ x: 10, y: 10 })
+        cy.get('.dc-modal').should('not.exist')
+        cy.findByText('Buy / Sell').should('be.visible')
       }
+    })
+})
+
+Cypress.Commands.add('c_getExchngeRatesFromScreen', (adType) => {
+  let ratesArray = []
+  cy.findByRole('button', { name: adType }).should('be.visible').click()
+  cy.get('.buy-sell-row__rate')
+    .each(($parent) => {
+      cy.wrap($parent)
+        .children()
+        .eq(1)
+        .then(($child) => {
+          let text = $child.text().trim()
+          text = text.replace('IDR', '').trim()
+          text = text.replace(/,/g, '')
+          let rate = parseFloat(text)
+          rate = parseFloat(rate.toFixed(2))
+          ratesArray.push(rate)
+          cy.log('Updated Rates Array: ' + JSON.stringify(ratesArray))
+        })
+    })
+    .then(() => {
+      return JSON.stringify(ratesArray)
     })
 })
