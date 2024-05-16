@@ -71,7 +71,7 @@ export const Vanuatu = {
   RU: 'Вануату',
   FR: 'Vanuatu',
   IT: 'Vanuatu',
-  TH: 'Vanuatu',
+  TH: 'วานูอาตู',
   TR: 'Vanuatu',
   VI: 'Vanuatu',
   ZHCN: '瓦努阿图',
@@ -89,7 +89,7 @@ export const Labuan = {
   RU: 'Лабуан',
   FR: 'Labuan',
   IT: 'Labuan',
-  TH: 'Labuan',
+  TH: 'ลาบวน',
   TR: 'Labuan',
   VI: 'Labuan',
   ZHCN: '纳闽',
@@ -111,36 +111,36 @@ export const linkValidations = {
   ],
   ES: [
     {
-      linkName: 'Saber más',
+      linkName: 'Más información',
       expectedUrl: '/es/trade-types/options/digital-options/up-and-down/',
       contentCheck: '¿Qué son las opciones digitales?',
     },
     {
-      linkName: 'Saber más',
+      linkName: 'Más información',
       expectedUrl: '/es/trade-types/cfds/',
       contentCheck: 'rica en funciones',
     },
   ],
   BN: [
     {
-      linkName: 'করুন',
+      linkName: 'আরও জানুন',
       expectedUrl: '/bn/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'ডিজিটাল বিকল্প কি?',
     },
     {
-      linkName: 'করুন',
+      linkName: 'আরও জানুন',
       expectedUrl: '/bn/trade-types/cfds/',
       contentCheck: 'CFD ট্রেডিং',
     },
   ],
   DE: [
     {
-      linkName: 'Erfahren Sie mehr',
+      linkName: 'Weitere Informationen',
       expectedUrl: '/de/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'Was sind digitale Options?',
     },
     {
-      linkName: 'Erfahren Sie mehr',
+      linkName: 'Weitere Informationen',
       expectedUrl: '/de/trade-types/cfds/',
       contentCheck: 'CFD-Handel',
     },
@@ -171,12 +171,12 @@ export const linkValidations = {
   ],
   PL: [
     {
-      linkName: 'uzyskać lepszy zwrot z udanych transakcji',
+      linkName: 'Dowiedz się więcej',
       expectedUrl: '/pl/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'Czym są opcje cyfrowe?',
     },
     {
-      linkName: 'uzyskać lepszy zwrot z udanych transakcji',
+      linkName: 'Dowiedz się więcej',
       expectedUrl: '/pl/trade-types/cfds/',
       contentCheck: 'Handlowanie kontraktami na różnice kursowe',
     },
@@ -207,12 +207,12 @@ export const linkValidations = {
   ],
   IT: [
     {
-      linkName: 'Scopri di più',
+      linkName: 'Ulteriori informazioni',
       expectedUrl: '/it/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'Cosa sono le opzioni digitali?',
     },
     {
-      linkName: 'Scopri di più',
+      linkName: 'Ulteriori informazioni',
       expectedUrl: '/it/trade-types/cfds/',
       contentCheck: 'Trading su CFD',
     },
@@ -231,12 +231,12 @@ export const linkValidations = {
   ],
   TR: [
     {
-      linkName: 'Daha fazla bilgi edin',
+      linkName: 'Daha fazla bilgi edinin',
       expectedUrl: '/tr/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'Dijital opsiyonlar nelerdir?',
     },
     {
-      linkName: 'Daha fazla bilgi edin',
+      linkName: 'Daha fazla bilgi edinin',
       expectedUrl: '/tr/trade-types/cfds/',
       contentCheck: 'CFD ticareti',
     },
@@ -267,12 +267,12 @@ export const linkValidations = {
   ],
   ZHTW: [
     {
-      linkName: '了解更多',
+      linkName: '了解更多資訊',
       expectedUrl: '/zh-tw/trade-types/options/digital-options/up-and-down/',
       contentCheck: '甚麼是 digital 期權?',
     },
     {
-      linkName: '了解更多',
+      linkName: '了解更多資訊',
       expectedUrl: '/zh-tw/trade-types/cfds/',
       contentCheck: '差價合約交易',
     },
