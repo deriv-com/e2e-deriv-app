@@ -859,7 +859,7 @@ Cypress.Commands.add('c_checkForNonEmptyStateAdScreen', () => {
   cy.get('.buy-sell-row').should('exist')
 })
 
-Cypress.Commands.add('c_sortOrdersBy', (sortBy) => {
+Cypress.Commands.add('c_sortAdBy', (sortBy) => {
   cy.findByTestId('sort-div').should('be.visible').click()
   cy.findByText(sortBy).should('be.visible')
   cy.contains('.dc-text', sortBy)
