@@ -99,14 +99,9 @@ export const Labuan = {
 export const linkValidations = {
   EN: [
     {
-      linkName: 'options',
+      linkName: 'Learn more',
       expectedUrl: '/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'Digital options available on Deriv',
-    },
-    {
-      linkName: 'multipliers',
-      expectedUrl: '/trade-types/multiplier/',
-      contentCheck: 'Multipliers',
     },
     {
       linkName: 'Learn more',
@@ -116,14 +111,9 @@ export const linkValidations = {
   ],
   ES: [
     {
-      linkName: 'options',
+      linkName: 'Saber más',
       expectedUrl: '/es/trade-types/options/digital-options/up-and-down/',
       contentCheck: '¿Qué son las opciones digitales?',
-    },
-    {
-      linkName: 'multipliers',
-      expectedUrl: '/es/trade-types/multiplier/',
-      contentCheck: 'Multipliers',
     },
     {
       linkName: 'Saber más',
@@ -133,14 +123,9 @@ export const linkValidations = {
   ],
   BN: [
     {
-      linkName: 'options',
+      linkName: 'করুন',
       expectedUrl: '/bn/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'ডিজিটাল বিকল্প কি?',
-    },
-    {
-      linkName: 'multipliers',
-      expectedUrl: '/bn/trade-types/multiplier/',
-      contentCheck: 'Multipliers',
     },
     {
       linkName: 'করুন',
@@ -150,14 +135,9 @@ export const linkValidations = {
   ],
   DE: [
     {
-      linkName: 'options',
+      linkName: 'Erfahren Sie mehr',
       expectedUrl: '/de/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'Was sind digitale Options?',
-    },
-    {
-      linkName: 'multipliers',
-      expectedUrl: '/de/trade-types/multiplier/',
-      contentCheck: 'Multipliers',
     },
     {
       linkName: 'Erfahren Sie mehr',
@@ -167,14 +147,9 @@ export const linkValidations = {
   ],
   KO: [
     {
-      linkName: 'options',
+      linkName: '자세히 알아보기',
       expectedUrl: '/ko/trade-types/options/digital-options/up-and-down/',
       contentCheck: '디지털 옵션이란 무엇인가요?',
-    },
-    {
-      linkName: 'multipliers',
-      expectedUrl: '/ko/trade-types/multiplier/',
-      contentCheck: 'Multipliers',
     },
     {
       linkName: '자세히 알아보기',
@@ -184,14 +159,9 @@ export const linkValidations = {
   ],
   PT: [
     {
-      linkName: 'options',
+      linkName: 'Saiba mais',
       expectedUrl: '/pt/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'O que são Opções Digital?',
-    },
-    {
-      linkName: 'multipliers',
-      expectedUrl: '/pt/trade-types/multiplier/',
-      contentCheck: 'Multipliers',
     },
     {
       linkName: 'Saiba mais',
@@ -201,14 +171,9 @@ export const linkValidations = {
   ],
   PL: [
     {
-      linkName: 'options',
+      linkName: 'uzyskać lepszy zwrot z udanych transakcji',
       expectedUrl: '/pl/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'Czym są opcje cyfrowe?',
-    },
-    {
-      linkName: 'multipliers',
-      expectedUrl: '/pl/trade-types/multiplier/',
-      contentCheck: 'Multipliers',
     },
     {
       linkName: 'uzyskać lepszy zwrot z udanych transakcji',
@@ -218,14 +183,9 @@ export const linkValidations = {
   ],
   RU: [
     {
-      linkName: 'options',
+      linkName: 'Подробнее',
       expectedUrl: '/ru/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'Что такое цифровые опционы?',
-    },
-    {
-      linkName: 'multipliers',
-      expectedUrl: '/ru/trade-types/multiplier/',
-      contentCheck: 'Multipliers',
     },
     {
       linkName: 'Подробнее',
@@ -235,14 +195,9 @@ export const linkValidations = {
   ],
   FR: [
     {
-      linkName: 'options',
+      linkName: 'En savoir plus',
       expectedUrl: '/fr/trade-types/options/digital-options/up-and-down/',
       contentCheck: "Qu'est-ce que les options numériques ?",
-    },
-    {
-      linkName: 'multipliers',
-      expectedUrl: '/fr/trade-types/multiplier/',
-      contentCheck: 'Multipliers',
     },
     {
       linkName: 'En savoir plus',
@@ -252,14 +207,9 @@ export const linkValidations = {
   ],
   IT: [
     {
-      linkName: 'options',
+      linkName: 'Scopri di più',
       expectedUrl: '/it/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'Cosa sono le opzioni digitali?',
-    },
-    {
-      linkName: 'multipliers',
-      expectedUrl: '/it/trade-types/multiplier/',
-      contentCheck: 'Multipliers',
     },
     {
       linkName: 'Scopri di più',
@@ -269,14 +219,9 @@ export const linkValidations = {
   ],
   TH: [
     {
-      linkName: 'options',
+      linkName: 'เรียนรู้เพิ่มเติม',
       expectedUrl: '/th/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'ตราสารสิทธิดิจิทัลคืออะไร?',
-    },
-    {
-      linkName: 'multipliers',
-      expectedUrl: '/th/trade-types/multiplier/',
-      contentCheck: 'Multipliers',
     },
     {
       linkName: 'เรียนรู้เพิ่มเติม',
@@ -286,14 +231,9 @@ export const linkValidations = {
   ],
   TR: [
     {
-      linkName: 'options',
+      linkName: 'Daha fazla bilgi edin',
       expectedUrl: '/tr/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'Dijital opsiyonlar nelerdir?',
-    },
-    {
-      linkName: 'multipliers',
-      expectedUrl: '/tr/trade-types/multiplier/',
-      contentCheck: 'Multipliers',
     },
     {
       linkName: 'Daha fazla bilgi edin',
@@ -303,14 +243,9 @@ export const linkValidations = {
   ],
   VI: [
     {
-      linkName: 'options',
+      linkName: 'Tìm hiểu thêm',
       expectedUrl: '/tr/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'Quyền chọn Digital là gì?',
-    },
-    {
-      linkName: 'multipliers',
-      expectedUrl: '/tr/trade-types/multiplier/',
-      contentCheck: 'Multipliers',
     },
     {
       linkName: 'Tìm hiểu thêm',
@@ -320,14 +255,9 @@ export const linkValidations = {
   ],
   ZHCN: [
     {
-      linkName: 'options',
+      linkName: '了解更多',
       expectedUrl: '/zh-cn/trade-types/options/digital-options/up-and-down/',
       contentCheck: '什么是 digital 期权?',
-    },
-    {
-      linkName: 'multipliers',
-      expectedUrl: '/zh-cn/trade-types/multiplier/',
-      contentCheck: 'Multipliers',
     },
     {
       linkName: '了解更多',
@@ -337,14 +267,9 @@ export const linkValidations = {
   ],
   ZHTW: [
     {
-      linkName: 'options',
+      linkName: '了解更多',
       expectedUrl: '/zh-tw/trade-types/options/digital-options/up-and-down/',
       contentCheck: '甚麼是 digital 期權?',
-    },
-    {
-      linkName: 'multipliers',
-      expectedUrl: '/zh-tw/trade-types/multiplier/',
-      contentCheck: 'Multipliers',
     },
     {
       linkName: '了解更多',

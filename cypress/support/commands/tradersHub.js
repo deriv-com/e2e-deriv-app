@@ -513,7 +513,7 @@ Cypress.Commands.add('checkLanguage', (language) => {
   cy.checkHyperLinks(language)
 })
 
-const validateLink = (linkName, expectedUrl, contentCheck) => {
+/*const validateLink = (linkName, expectedUrl, contentCheck) => {
   cy.findByRole('link', { name: linkName }).then(($link) => {
     const url = $link.prop('href')
     cy.visit(url, {
@@ -525,20 +525,46 @@ const validateLink = (linkName, expectedUrl, contentCheck) => {
     cy.findByRole('heading', { name: `${contentCheck}` })
   })
   cy.go('back')
+}*/
+
+const validateLink = (index, linkName, expectedUrl, contentCheck) => {
+  //cy.findByRole('link', { name: linkName }).eq(index).click()
+  cy.log(index)
+  cy.findAllByRole('link', { name: linkName })
+    .eq(index)
+    .then(($link) => {
+      const url = $link.prop('href')
+      cy.visit(url, {
+        onBeforeLoad: (win) => {
+          cy.stub(win, 'open').as('windowOpen')
+        },
+      })
+      cy.url().should('contain', expectedUrl)
+      cy.findByRole('heading', { name: `${contentCheck}` })
+    })
+  cy.go('back')
 }
 
 Cypress.Commands.add('checkHyperLinks', (language) => {
+  cy.findByText('Swap-Free').should('be.visible')
   const bviCFD = BVI[language]
   const vanuatuCFD = Vanuatu[language]
   const labuanCFD = Labuan[language]
 
-  const validations = linkValidations[language]
+  /*const validations = linkValidations[language]
 
   validations.forEach(({ linkName, expectedUrl, contentCheck }) => {
     cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
     validateLink(linkName, expectedUrl, contentCheck)
+  })*/
+  //cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
+
+  const validations = linkValidations[language]
+  validations.forEach(({ linkName, expectedUrl, contentCheck }, index) => {
+    cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
+    validateLink(index, linkName, expectedUrl, contentCheck)
   })
-  cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
+
   clickCompareAccounts(language)
   cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
   clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD)
