@@ -9,7 +9,7 @@ describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
 
   it('should be able to create buy type advert and verify all fields and messages', () => {
     cy.c_navigateToDerivP2P()
-    cy.c_closeSafetyInstructions()
+    cy.c_skipPasskey()
     cy.c_closeNotificationHeader()
     cy.c_clickMyAdTab()
     cy.c_createNewAd('buy')
