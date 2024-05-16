@@ -41,6 +41,8 @@ export const termsAndConditions = {
   'Лабуан': 'https://deriv.com/tnc/deriv-(fx)-ltd.pdf',
   '纳闽': 'https://deriv.com/tnc/deriv-(fx)-ltd.pdf',
   '納閩': 'https://deriv.com/tnc/deriv-(fx)-ltd.pdf',
+  'วานูอาตู': 'https://deriv.com/tnc/general-terms.pdf',
+  'ลาบวน': 'https://deriv.com/tnc/deriv-(fx)-ltd.pdf',
 }
 
 export const BVI = {
@@ -244,7 +246,7 @@ export const linkValidations = {
   VI: [
     {
       linkName: 'Tìm hiểu thêm',
-      expectedUrl: '/tr/trade-types/options/digital-options/up-and-down/',
+      expectedUrl: '/vi/trade-types/options/digital-options/up-and-down/',
       contentCheck: 'Quyền chọn Digital là gì?',
     },
     {
