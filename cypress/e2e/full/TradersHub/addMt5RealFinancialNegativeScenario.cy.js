@@ -1,5 +1,4 @@
 import '@testing-library/cypress/add-commands'
-import { generateRandomPassword } from '../../../support/helper/utility'
 
 describe('QATEST-6032: Create MT5 account without using the existing MT5 password for the user(negative scenario)', () => {
   const size = ['small', 'desktop']
@@ -51,7 +50,7 @@ describe('QATEST-6032: Create MT5 account without using the existing MT5 passwor
       ).should('be.visible')
       cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
       cy.findByRole('button', { name: 'Forgot password?' }).should('be.visible')
-      cy.findByTestId('dt_mt5_password').type(randomPassword)
+      cy.findByTestId('dt_mt5_password').type('gfdGHFD@123')
       cy.findByRole('button', { name: 'Add account' }).click()
       cy.findByText('That password is incorrect. Please try again.').should(
         'be.visible'

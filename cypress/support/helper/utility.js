@@ -28,22 +28,3 @@ export const calculateTransferFee = (amountTransferred) => {
   const calculatedFee = amountTransferred * percentFeeRate
   return Math.max(calculatedFee, minimumFee)
 }
-
-export function generateRandomPassword(length) {
-  const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz'
-  const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  const numberChars = '0123456789'
-  const allChars = lowercaseChars + uppercaseChars + numberChars
-
-  let password = ''
-
-  password += lowercaseChars[Math.floor(Math.random() * lowercaseChars.length)]
-  password += uppercaseChars[Math.floor(Math.random() * uppercaseChars.length)]
-  password += numberChars[Math.floor(Math.random() * numberChars.length)]
-
-  while (password.length < length) {
-    password += allChars[Math.floor(Math.random() * allChars.length)]
-  }
-
-  return password
-}
