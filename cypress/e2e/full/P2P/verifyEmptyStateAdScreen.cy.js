@@ -13,7 +13,7 @@ describe('QATEST-2538 Empty State/Buy Sell Page', () => {
 
   it('Should be able to see an empty state of ads and verify message is displayed.', () => {
     cy.c_navigateToDerivP2P()
-    cy.c_closeSafetyInstructions()
+    cy.c_skipPasskey()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
     cy.c_checkForEmptyAdScreenMessage('Buy', 'Sell')
