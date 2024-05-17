@@ -374,8 +374,13 @@ Cypress.Commands.add(
           if (allRelatedEmails.length) {
             const verificationEmail = allRelatedEmails.pop()
             cy.wrap(verificationEmail).click()
-            cy.contains('p', `${accountEmail}`).last().should('be.visible')
-            cy.contains('a', Cypress.config('baseUrl'))
+            cy.get('p')
+              .filter(`:contains('${accountEmail}')`)
+              .last()
+              .should('be.visible')
+              .parent()
+              .children()
+              .contains('a', Cypress.config('baseUrl'))
               .invoke('attr', 'href')
               .then((href) => {
                 if (href) {
@@ -435,7 +440,8 @@ Cypress.Commands.add(
       if (allRelatedEmails.length) {
         const verificationEmail = allRelatedEmails.pop()
         cy.wrap(verificationEmail).click()
-        cy.contains('p', `${accountEmail}`)
+        cy.get('p')
+          .filter(`:contains('${accountEmail}')`)
           .last()
           .should('be.visible')
           .parent()
