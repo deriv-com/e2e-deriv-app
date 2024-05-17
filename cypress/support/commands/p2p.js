@@ -877,31 +877,33 @@ Cypress.Commands.add('c_sortAdBy', (sortBy) => {
     })
 })
 
-Cypress.Commands.add('c_getExchangeRatesFromScreen', (adType, sortArray) => {
+Cypress.Commands.add('c_getExchangeRatesFromScreen', (adType, options = {}) => {
+  const { sortArray = false } = options
   let ratesArray = []
   cy.findByRole('button', { name: adType }).should('be.visible').click()
-  cy.get('.buy-sell-row__rate')
-    .each(($parent) => {
-      cy.wrap($parent)
-        .children()
-        .eq(1)
-        .then(($child) => {
-          let text = $child.text().trim()
-          text = text.replace('IDR', '').trim()
-          text = text.replace(/,/g, '')
-          let rate = parseFloat(text)
-          rate = parseFloat(rate.toFixed(2))
-          ratesArray.push(rate)
-          cy.log('Updated Rates Array: ' + JSON.stringify(ratesArray))
-        })
-    })
-    .then(() => {
-      if (sortArray) {
-        cy.log('Sorting rates array')
+  cy.get('.buy-sell-row__rate').each(($parent) => {
+    cy.wrap($parent)
+      .children()
+      .eq(1)
+      .then(($child) => {
+        let text = $child.text().trim()
+        text = text.replace('IDR', '').trim()
+        text = text.replace(/,/g, '')
+        let rate = parseFloat(text)
+        rate = parseFloat(rate.toFixed(2))
+        ratesArray.push(rate)
+      })
+  })
+  cy.then(() => {
+    if (sortArray == true) {
+      if (adType == 'Buy') {
         ratesArray.sort((a, b) => a - b)
-      } else {
-        cy.log('Not sorting rates array')
+      } else if (adType == 'Buy') {
+        ratesArray.sort((a, b) => b - a)
       }
-      return JSON.stringify(ratesArray)
-    })
+    } else {
+      cy.log('Not sorting rates array')
+    }
+    return cy.wrap(JSON.stringify(ratesArray))
+  })
 })

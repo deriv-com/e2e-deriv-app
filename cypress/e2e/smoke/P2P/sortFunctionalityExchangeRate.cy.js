@@ -16,31 +16,40 @@ describe('QATEST-2718 - Sort Functionality (by Exchange Rate)', () => {
     cy.c_skipPasskey()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
-    cy.c_getExchangeRatesFromScreen('Buy', true).then((returnedRatesArray) => {
-      ratesArray = returnedRatesArray
-      cy.c_sortAdBy('Exchange rate')
-      cy.c_getExchangeRatesFromScreen('Buy', false).then(
-        (sortedReturnedRatesArray) => {
-          ratesArrayAfterExchangeRateSort = sortedReturnedRatesArray
-          cy.wrap(ratesArray).should(
-            'deep.equal',
-            ratesArrayAfterExchangeRateSort
-          )
-        }
-      )
+    cy.c_rateLimit({
+      waitTimeAfterError: 15000,
+      isLanguageTest: true,
+      maxRetries: 5,
     })
-    cy.c_getExchangeRatesFromScreen('Sell', true).then((returnedRatesArray) => {
-      ratesArray = returnedRatesArray
-      cy.c_sortAdBy('Exchange rate')
-      cy.c_getExchangeRatesFromScreen('Sell', false).then(
-        (sortedReturnedRatesArray) => {
-          ratesArrayAfterExchangeRateSort = sortedReturnedRatesArray
-          cy.wrap(ratesArray).should(
-            'deep.equal',
-            ratesArrayAfterExchangeRateSort
-          )
-        }
-      )
-    })
+    cy.c_getExchangeRatesFromScreen('Buy', { sortArray: true }).then(
+      (returnedRatesArray) => {
+        ratesArray = returnedRatesArray
+        cy.c_sortAdBy('Exchange rate')
+        cy.c_getExchangeRatesFromScreen('Buy', { sortArray: false }).then(
+          (sortedReturnedRatesArray) => {
+            ratesArrayAfterExchangeRateSort = sortedReturnedRatesArray
+            cy.wrap(ratesArray).should(
+              'deep.equal',
+              ratesArrayAfterExchangeRateSort
+            )
+          }
+        )
+      }
+    )
+    cy.c_getExchangeRatesFromScreen('Sell', { sortArray: true }).then(
+      (returnedRatesArray) => {
+        ratesArray = returnedRatesArray
+        cy.c_sortAdBy('Exchange rate')
+        cy.c_getExchangeRatesFromScreen('Sell', { sortArray: false }).then(
+          (sortedReturnedRatesArray) => {
+            ratesArrayAfterExchangeRateSort = sortedReturnedRatesArray
+            cy.wrap(ratesArray).should(
+              'deep.equal',
+              ratesArrayAfterExchangeRateSort
+            )
+          }
+        )
+      }
+    )
   })
 })
