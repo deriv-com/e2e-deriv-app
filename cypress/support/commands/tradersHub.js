@@ -895,16 +895,13 @@ Cypress.Commands.add('checkHyperLinks', (language) => {
   const bviCFD = BVI[language]
   const vanuatuCFD = Vanuatu[language]
   const labuanCFD = Labuan[language]
-  //cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
 
   const validations = linkValidations[language]
   validations.forEach(({ linkName, expectedUrl, contentCheck }, index) => {
-    //cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
     validateLink(index, linkName, expectedUrl, contentCheck)
   })
 
   clickCompareAccounts(language)
-  //cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
   clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD)
 })
 
