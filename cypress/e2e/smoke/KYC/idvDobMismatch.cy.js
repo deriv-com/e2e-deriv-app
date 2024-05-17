@@ -26,7 +26,7 @@ describe('QATEST-23042 IDV DOB Mismatch by Smile Identity provider', () => {
     )
     cy.c_closeNotificationHeader()
     cy.reload()
-    cy.findByText('Your date of birth does not match your profile').should(
+    cy.findByText('Your identity verification failed because:').should(
       'be.visible'
     )
   })
