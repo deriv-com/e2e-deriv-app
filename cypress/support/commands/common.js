@@ -374,7 +374,8 @@ Cypress.Commands.add(
           if (allRelatedEmails.length) {
             const verificationEmail = allRelatedEmails.pop()
             cy.wrap(verificationEmail).click()
-            cy.contains('p', `${accountEmail}`)
+            cy.get('p')
+              .filter(`:contains('${accountEmail}')`)
               .last()
               .should('be.visible')
               .parent()
@@ -439,7 +440,8 @@ Cypress.Commands.add(
       if (allRelatedEmails.length) {
         const verificationEmail = allRelatedEmails.pop()
         cy.wrap(verificationEmail).click()
-        cy.contains('p', `${accountEmail}`)
+        cy.get('p')
+          .filter(`:contains('${accountEmail}')`)
           .last()
           .should('be.visible')
           .parent()
@@ -705,6 +707,29 @@ Cypress.Commands.add('c_skipPasskeysV2', (options = {}) => {
       })
   })
 })
+
+Cypress.Commands.add(
+  'c_clickToOpenInSamePage',
+  { prevSubject: true },
+  (locator) => {
+    cy.wrap(locator).invoke('attr', 'target', '_self').click()
+  }
+)
+
+Cypress.Commands.add(
+  'c_uiLogin',
+  (
+    size = 'large',
+    username = Cypress.env('loginEmailProd'),
+    password = Cypress.env('loginPasswordProd')
+  ) => {
+    cy.c_visitResponsive('/', size)
+    cy.findByRole('button', { name: 'Log in' }).click()
+    cy.findByLabelText('Email').type(username)
+    cy.findByLabelText('Password').type(password, { log: false })
+    cy.findByRole('button', { name: 'Log in' }).click()
+  }
+)
 
 Cypress.Commands.add('c_fakeLinkPopUpCheck', () => {
   cy.getCookie('website_status').then((cookie) => {

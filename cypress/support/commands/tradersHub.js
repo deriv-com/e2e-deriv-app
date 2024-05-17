@@ -39,6 +39,8 @@ Cypress.Commands.add('c_switchToReal', () => {
 Cypress.Commands.add('c_switchToDemo', () => {
   cy.findByTestId('dt_dropdown_display').click()
   cy.get('#demo').click()
+  //Wait for page to completely load
+  cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
 })
 
 Cypress.Commands.add('c_completeTradersHubTour', (options = {}) => {
@@ -344,7 +346,8 @@ Cypress.Commands.add('c_manageAccountsetting', (CoR, options = {}) => {
     if (isMobile) cy.get(`select[name='country_input']`).select(CoR)
     else {
       cy.findByLabelText('Country').type(CoR)
-      cy.findByText(CoR).click()
+      cy.findByText(CoR).as('COR')
+      cy.get('@COR').click()
     }
     cy.findByRole('button', { name: lang.realAccountFormUtils.nextBtn }).should(
       'not.be.disabled'

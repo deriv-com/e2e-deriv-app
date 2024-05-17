@@ -24,7 +24,7 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
   })
   it('Should be able to create sell type advert and verify all fields and messages for fixed rate.', () => {
     cy.c_navigateToDerivP2P()
-    cy.c_closeSafetyInstructions()
+    cy.c_skipPasskey()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
     cy.c_clickMyAdTab()
