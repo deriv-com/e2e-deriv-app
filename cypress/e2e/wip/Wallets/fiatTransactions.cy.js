@@ -19,16 +19,16 @@ function fiat_transfer(to_account) {
     .eq(1)
     .click()
     .type('1.000')
-  //Check the transfer limit message   ---> this part is commmented till transfer limit message is finalized
-  // if (`${to_account}` == 'Options') {
-  //   cy.contains(
-  //     'transfer limit between your USD Wallet and Options is '
-  //   ).should('exist')
-  // } else {
-  //   cy.contains(
-  //     'lifetime transfer limit from USD Wallet to any cryptocurrency Wallets is'
-  //   ).should('exist')
-  // }
+  //Check the transfer limit message
+  if (`${to_account}` == 'Options') {
+    cy.contains(
+      'transfer limit between your USD Wallet and Options is '
+    ).should('exist')
+  } else {
+    cy.contains(
+      'lifetime transfer limit from USD Wallet to any cryptocurrency Wallets is'
+    ).should('exist')
+  }
   cy.get('form')
     .findByRole('button', { name: 'Transfer', exact: true })
     .should('be.enabled')
