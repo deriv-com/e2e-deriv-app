@@ -863,8 +863,7 @@ Cypress.Commands.add('c_sortAdBy', (sortBy) => {
   cy.findByTestId('sort-div').should('be.visible').click()
   cy.findByText(sortBy).should('be.visible')
   cy.contains('.dc-text', sortBy)
-    .parentsUntil('.dc-radio-group__item')
-    .parent()
+    .closest('.dc-radio-group__item')
     .find('input[type="radio"]')
     .then(($radio) => {
       if (!$radio.is(':checked')) {
@@ -885,22 +884,16 @@ Cypress.Commands.add('c_getExchangeRatesFromScreen', (adType, options = {}) => {
     cy.wrap($parent)
       .children()
       .eq(1)
-      .then(($child) => {
-        let text = $child.text().trim()
-        text = text.replace('IDR', '').trim()
-        text = text.replace(/,/g, '')
-        let rate = parseFloat(text)
-        rate = parseFloat(rate.toFixed(2))
-        ratesArray.push(rate)
+      .invoke('text')
+      .then((text) => {
+        let cleanedText = text.replace('IDR', '').replace(/,/g, '').trim()
+        let rate = parseFloat(cleanedText).toFixed(2)
+        ratesArray.push(parseFloat(rate))
       })
   })
   cy.then(() => {
-    if (sortArray == true) {
-      if (adType == 'Buy') {
-        ratesArray.sort((a, b) => a - b)
-      } else if (adType == 'Sell') {
-        ratesArray.sort((a, b) => b - a)
-      }
+    if (sortArray) {
+      ratesArray.sort((a, b) => (adType === 'Buy' ? a - b : b - a))
     } else {
       cy.log('Not sorting rates array')
     }
