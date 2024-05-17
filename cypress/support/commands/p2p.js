@@ -898,7 +898,7 @@ Cypress.Commands.add('c_getExchangeRatesFromScreen', (adType, options = {}) => {
     if (sortArray == true) {
       if (adType == 'Buy') {
         ratesArray.sort((a, b) => a - b)
-      } else if (adType == 'Buy') {
+      } else if (adType == 'Sell') {
         ratesArray.sort((a, b) => b - a)
       }
     } else {
