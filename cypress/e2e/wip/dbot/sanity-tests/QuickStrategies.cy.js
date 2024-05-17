@@ -28,10 +28,13 @@ describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
     quickStrategy.fillUpContractSize()
     quickStrategy.fillUpLossProfitTreshold()
     quickStrategy.runBotQuickStrategy()
+    //waiting for the bot to stop
+    cy.findByRole('button', { name: 'Run' }, { timeout: 120000 }).should(
+      'be.visible'
+    )
     runPanel.transactionsTab.click()
-
     //Verify Stake doubles after a loss
     runPanel.runPanelScrollbar.scrollTo('bottom', { ensureScrollable: false })
-    runPanel.transactionAfterFirstLoss.should('have.text', '2.00 USD')
+    runPanel.transactionAfterFirstLoss()
   })
 })

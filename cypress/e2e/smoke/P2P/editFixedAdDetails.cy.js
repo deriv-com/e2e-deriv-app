@@ -23,7 +23,7 @@ describe('QATEST-2469 - Edit Advert Details - Fixed Rate', () => {
 
   it('Should be able to edit buy type advert and verify all fields and messages for fixed rate.', () => {
     cy.c_navigateToDerivP2P()
-    cy.c_closeSafetyInstructions()
+    cy.c_skipPasskey()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
     cy.c_clickMyAdTab()

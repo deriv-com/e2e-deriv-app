@@ -19,7 +19,7 @@ describe('QATEST-145618 - Copy Ad - Fixed Rate - Buy Ad', () => {
       isLanguageTest: true,
       maxRetries: 5,
     })
-    cy.c_closeSafetyInstructions()
+    cy.c_skipPasskey()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
     cy.c_clickMyAdTab()

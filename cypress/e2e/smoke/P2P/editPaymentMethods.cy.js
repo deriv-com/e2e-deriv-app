@@ -43,7 +43,7 @@ describe('QATEST-2831 - My Profile page - Edit Payment Method', () => {
 
   it('Should be able to edit the existing payment method in responsive mode.', () => {
     cy.c_navigateToDerivP2P()
-    cy.c_closeSafetyInstructions()
+    cy.c_skipPasskey()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
     cy.findByText('My profile').click()
