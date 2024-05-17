@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-import { generateEpoch } from '../../../support/helper/utility'
+
 describe('QATEST-5918: Verify Change currency functionality for the account which has no balance', () => {
   const size = ['small', 'desktop']
   let newCurrency = Cypress.env('accountCurrency').EUR

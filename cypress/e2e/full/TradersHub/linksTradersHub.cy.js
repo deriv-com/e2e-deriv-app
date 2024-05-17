@@ -52,7 +52,7 @@ function checkHyperLinks(deviceType) {
   cy.go('back')
 }
 
-describe("QATEST 5930 - Validate the hyperlinks on Trader's hub", () => {
+describe("QATEST-5930 - Validate the hyperlinks on Trader's hub", () => {
   beforeEach(() => {
     cy.c_createRealAccount()
     cy.c_login()

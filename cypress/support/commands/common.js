@@ -2,6 +2,8 @@ import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
 Cypress.prevUser = ''
+const expectedCookieValue = '{%22clients_country%22:%22br%22}'
+
 let newApplicationId
 
 const setLoginUser = (user = 'masterUser', options = {}) => {
@@ -170,6 +172,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
     rateLimitCheck: rateLimitCheck,
   })
   //To let the dtrader page load completely
+  cy.c_fakeLinkPopUpCheck()
   cy.get('.cq-symbol-select-btn', { timeout: 15000 }).should('exist')
   cy.document().then((doc) => {
     const launchModal = doc.querySelector('[data-test-id="launch-modal"]')
@@ -371,8 +374,13 @@ Cypress.Commands.add(
           if (allRelatedEmails.length) {
             const verificationEmail = allRelatedEmails.pop()
             cy.wrap(verificationEmail).click()
-            cy.contains('p', `${accountEmail}`).last().should('be.visible')
-            cy.contains('a', Cypress.config('baseUrl'))
+            cy.get('p')
+              .filter(`:contains('${accountEmail}')`)
+              .last()
+              .should('be.visible')
+              .parent()
+              .children()
+              .contains('a', Cypress.config('baseUrl'))
               .invoke('attr', 'href')
               .then((href) => {
                 if (href) {
@@ -432,7 +440,8 @@ Cypress.Commands.add(
       if (allRelatedEmails.length) {
         const verificationEmail = allRelatedEmails.pop()
         cy.wrap(verificationEmail).click()
-        cy.contains('p', `${accountEmail}`)
+        cy.get('p')
+          .filter(`:contains('${accountEmail}')`)
           .last()
           .should('be.visible')
           .parent()
@@ -485,7 +494,6 @@ Cypress.Commands.add('c_authorizeCall', () => {
   try {
     const oAuthNewToken = Cypress.env('oAuthToken')
     cy.task('authorizeCallTask', oAuthNewToken)
-
   } catch (e) {
     console.error('An error occurred during the account creation process:', e)
   }
@@ -521,9 +529,8 @@ Cypress.Commands.add('c_registerNewApplicationID', () => {
  * This will click on account dropdown and click on logout link
  */
 Cypress.Commands.add('c_logout', () => {
-
-  cy.get('#dt_core_header_acc-info-container').click();
-  cy.findByText("Log out").should('be.visible')
+  cy.get('#dt_core_header_acc-info-container').click()
+  cy.findByText('Log out').should('be.visible')
   cy.get('[data-testid="acc-switcher"]').within(() => {
     cy.contains('Log out').click()
   })
@@ -700,3 +707,42 @@ Cypress.Commands.add('c_skipPasskeysV2', (options = {}) => {
       })
   })
 })
+
+Cypress.Commands.add(
+  'c_clickToOpenInSamePage',
+  { prevSubject: true },
+  (locator) => {
+    cy.wrap(locator).invoke('attr', 'target', '_self').click()
+  }
+)
+
+Cypress.Commands.add(
+  'c_uiLogin',
+  (
+    size = 'large',
+    username = Cypress.env('loginEmailProd'),
+    password = Cypress.env('loginPasswordProd')
+  ) => {
+    cy.c_visitResponsive('/', size)
+    cy.findByRole('button', { name: 'Log in' }).click()
+    cy.findByLabelText('Email').type(username)
+    cy.findByLabelText('Password').type(password, { log: false })
+    cy.findByRole('button', { name: 'Log in' }).click()
+  }
+)
+
+Cypress.Commands.add('c_fakeLinkPopUpCheck', () => {
+  cy.getCookie('website_status').then((cookie) => {
+    if (cookie) cy.log('The website_status cookie value :' + cookie.value)
+    else cy.log(`website_status cookie not found`)
+    if (cookie?.value === expectedCookieValue) {
+      cy.findByText('Beware of fake links.').should('exist', { timeout: 12000 })
+      cy.findByRole('checkbox').check()
+      cy.findByRole('button', { name: 'OK, got it' }).click()
+      cy.findAllByText('Beware of fake links.').should('not.exist')
+    } else {
+      cy.log('The fake link pop up does not exist!')
+    }
+  })
+})
+

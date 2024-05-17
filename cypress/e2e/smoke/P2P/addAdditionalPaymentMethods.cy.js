@@ -15,7 +15,7 @@ describe('QATEST-2811 - My profile page - User with existing payment method add 
 
   it('Should be able to add additional payment method in responsive mode.', () => {
     cy.c_navigateToDerivP2P()
-    cy.c_closeSafetyInstructions()
+    cy.c_skipPasskey()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
     cy.findByText('My profile').click()

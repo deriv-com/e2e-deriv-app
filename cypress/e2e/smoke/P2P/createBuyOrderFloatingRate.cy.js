@@ -52,7 +52,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
   })
   it('Should be able to create sell type advert and verify all fields and messages for floating rate.', () => {
     cy.c_navigateToDerivP2P()
-    cy.c_closeSafetyInstructions()
+    cy.c_skipPasskey()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
     cy.findByText('My profile').should('be.visible').click()
@@ -133,7 +133,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
   })
   it('Should be able to place an order for advert and verify all fields and messages for floating rate.', () => {
     cy.c_navigateToDerivP2P()
-    cy.c_closeSafetyInstructions()
+    cy.c_skipPasskey()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
     cy.findByText('My profile').should('be.visible').click()
@@ -264,7 +264,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       isLanguageTest: true,
       maxRetries: 5,
     })
-    cy.c_closeSafetyInstructions()
+    cy.c_skipPasskey()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
     cy.findByText('Orders').should('be.visible').click()
@@ -342,7 +342,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       isLanguageTest: true,
       maxRetries: 5,
     })
-    cy.c_closeSafetyInstructions()
+    cy.c_skipPasskey()
     cy.findByText('Deriv P2P').should('exist')
     cy.c_closeNotificationHeader()
     cy.findByText('My profile').should('be.visible').click()
