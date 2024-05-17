@@ -27,6 +27,11 @@ describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients
     cy.contains('button', 'Next').click()
 
     cy.c_submitIdv() // second IDV attempt
+    cy.c_waitUntilElementIsFound({
+      cyLocator: () => cy.findByText('ID verification failed'),
+      timeout: 3000,
+      maxRetries: 5,
+    })
 
     // Onfido flow
     cy.findByRole('button', { name: 'Upload identity document' }).click()
@@ -39,7 +44,7 @@ describe('QATEST-123731 - IDV (2 attempts) and Onfido (1 attempt) failed clients
     cy.c_waitUntilElementIsFound({
       cyLocator: () =>
         cy.findByText('Please upload one of the following documents:'),
-      timeout: 3000,
+      timeout: 5000,
       maxRetries: 5,
     })
   })
