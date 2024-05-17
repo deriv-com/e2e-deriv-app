@@ -4,14 +4,18 @@ describe('QATEST-24444 - Verify the user is able to close the personal details p
   const size = ['small', 'desktop']
   let countryCode = 'co'
 
-  beforeEach(() => {
+  before(() => {
     cy.c_createDemoAccount(countryCode)
+  })
+  beforeEach(() => {
     cy.c_login()
   })
   size.forEach((size) => {
     it(`Should validate the pop up functionality when user closes the personal details section  on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
       cy.c_visitResponsive('appstore/traders-hub', size)
+      //Wait for page to completely load
+      cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
       if (isMobile) cy.c_skipPasskeysV2()
       cy.c_switchToReal()
 

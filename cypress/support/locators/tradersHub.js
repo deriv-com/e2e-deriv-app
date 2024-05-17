@@ -8,7 +8,6 @@ export const tradersHubPageLocators = {
     //commonDesktopLocator2 : () => cy.findByTestId('xyz')
   },
   sharedLocators: {
-    //commonLocator1 : () => cy.findByTestId('abc')
-    //commonLocator2 : () => cy.findByTestId('xyz')
+    legacyAccountInfo: () => cy.get('.header__acc-info'),
   },
 }

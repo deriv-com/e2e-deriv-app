@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
 
-describe('QATEST 54262 - Verify deposit functionality from account switcher', () => {
+describe('QATEST-54262 - Verify deposit functionality from account switcher', () => {
   const size = ['small', 'desktop']
 
   beforeEach(() => {
