@@ -553,7 +553,7 @@ Cypress.Commands.add(
           country_code: country_code,
           currency: currency,
         }).then(() => {
-          // Updating Cypress environment variables with the new email
+          // Updating Cypress environment variables with the new emai
           const currentCredentials = Cypress.env('credentials')
           currentCredentials.test.masterUser.ID = accountEmail
           Cypress.env('credentials', currentCredentials)
