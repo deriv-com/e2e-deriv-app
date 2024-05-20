@@ -553,9 +553,11 @@ Cypress.Commands.add(
           country_code: country_code,
           currency: currency,
         }).then(() => {
+          // Updating Cypress environment variables with the new email
           const currentCredentials = Cypress.env('credentials')
           currentCredentials.test.masterUser.ID = accountEmail
           Cypress.env('credentials', currentCredentials)
+          //Reset oAuthUrl otherwise it will use the previous URL
           Cypress.env('oAuthUrl', '<empty>')
         })
       })
