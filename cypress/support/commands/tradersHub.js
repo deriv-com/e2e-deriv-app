@@ -17,7 +17,7 @@ Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
     cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'Options & Multipliers' }).click()
   } else {
-    cy.findByText('Options & Multipliers').should('be.visible')
+    cy.findByText('Options').should('be.visible')
     cy.findByText('CFDs').should('be.visible')
     cy.findAllByText('Deriv cTrader')
       .first()
@@ -26,7 +26,7 @@ Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
     cy.findByText('Other CFD Platforms').scrollIntoView({
       position: 'bottom',
     })
-    cy.findByText('Options & Multipliers').click()
+    cy.findByText('Options').click()
   }
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
 })
