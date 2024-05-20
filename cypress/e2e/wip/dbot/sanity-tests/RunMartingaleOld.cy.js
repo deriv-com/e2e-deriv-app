@@ -1,12 +1,10 @@
 import '@testing-library/cypress/add-commands'
 import TradersHub from '../pageobjects/traders_hub'
-import Common from '../pageobjects/common'
 import BotDashboard from '../pageobjects/bot_dashboard_page'
 import RunPanel from '../pageobjects/run_panel'
 
 describe('QATEST-99420: Import and run custom strategy', () => {
   const tradersHub = new TradersHub()
-  const common = new Common()
   const botDashboard = new BotDashboard()
   const runPanel = new RunPanel()
   let totalPL
@@ -16,14 +14,13 @@ describe('QATEST-99420: Import and run custom strategy', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     tradersHub.openBotButton.click()
     cy.c_loadingCheck()
-    common.skipTour()
-    common.switchToDemo()
+    cy.c_skipTour()
+    cy.c_switchToDemoBot()
   })
 
   it('Run Martingale Old Strategy', () => {
     botDashboard.importStrategy('MartingaleOld')
-    common.blockDashboardLoad()
-    common.skipTour()
+    cy.c_skipTour()
 
     //Enter Expected profit, expected Loss, and Trade Amount
     cy.window().then((win) => {
@@ -32,20 +29,19 @@ describe('QATEST-99420: Import and run custom strategy', () => {
       cy.stub(win, 'prompt').callsFake(() => {
         return martingaleValues[call++]
       })
-      common.runBot()
+      cy.c_runBot()
     })
 
     //Wait for bot to complete
-    common
-      .getElementWithTimeout(common.botRunButtonEl, 120000)
-      .should('be.visible')
-
+    cy.findByRole('button', { name: 'Run' }, { timeout: 120000 }).should(
+      'be.visible'
+    )
     runPanel.profitLossValue.then(($value) => {
       totalPL = $value.text()
     })
 
-    common
-      .getElementWithTimeout(runPanel.totalProfitLossEl, 120000)
+    cy.findAllByTestId('dt_themed_scrollbars')
+      .last({ timeout: 120000 })
       .then(($amt) => {
         if ($amt.hasClass('run-panel__stat-amount--positive')) {
           cy.on('window:alert', (str) => {
@@ -66,7 +62,7 @@ describe('QATEST-99420: Import and run custom strategy', () => {
 
     //Verify Stake doubles after a loss
     runPanel.runPanelScrollbar.scrollTo('bottom', { ensureScrollable: false })
-    runPanel.transactionAfterFirstLoss.should('have.text', '2.00 USD')
+    runPanel.transactionAfterFirstLoss()
   })
 
   after(() => {

@@ -19,6 +19,8 @@ function crypto_transfer(to_account, transferAmount) {
     .should('be.enabled')
     .click()
   cy.c_transferLimit(transferAmount)
+  cy.contains('Transfer fees:')
+  cy.findByRole('button', { name: 'Make a new transfer' }).click()
 }
 
 describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypto transactions and QATEST-99429 Transfer conversion rate and QATEST-99714 Life time transfer limit message', () => {
@@ -26,11 +28,11 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
   let transferAmount = '0.00003000 BTC'
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
-    cy.c_visitResponsive('/wallets', 'large')
   })
 
   it('should be able to perform transfer from crypto account', () => {
     cy.log('Transfer from Crypto account')
+    cy.c_visitResponsive('/wallets', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccount('BTC')
     cy.contains('Transfer').click()
@@ -41,9 +43,48 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
 
   it('should be able to view transactions of crypto account', () => {
     cy.log('View Transactions of Crypto account')
+    cy.c_visitResponsive('/wallets', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccount('BTC')
     cy.contains('Transfer').click()
+    cy.findByText('Transactions').first().click()
+    cy.findByTestId('dt_wallets_textfield_box').click()
+    cy.findByRole('option', { name: 'Deposit' }).click()
+    cy.findByText('+5.00000000 BTC')
+    cy.findByTestId('dt_wallets_textfield_box').click()
+    cy.findByRole('option', { name: 'Withdrawal' }).click()
+    cy.findByText('No recent transactions')
+    cy.findByTestId('dt_wallets_textfield_box').click()
+    cy.findByRole('option', { name: 'Transfer' }).click()
+    cy.findAllByText(/LTC Wallet/)
+      .first()
+      .should('be.visible')
+    cy.findAllByText(/ETH Wallet/)
+      .first()
+      .should('be.visible')
+    cy.findAllByText(/USD Wallet/)
+      .first()
+      .should('be.visible')
+    cy.findAllByText(`-${transferAmount}`).first().should('be.visible')
+  })
+
+  it('should be able to perform transfer from crypto account in responsive', () => {
+    cy.log('Transfer from Crypto account')
+    cy.c_visitResponsive('/wallets', 'small')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.c_switchWalletsAccountResponsive('BTC')
+    cy.contains('Transfer').parent().click()
+    crypto_transfer('USD', transferAmount)
+    crypto_transfer('ETH', transferAmount)
+    crypto_transfer('LTC', transferAmount)
+  })
+
+  it('should be able to view transactions of crypto account in responsive', () => {
+    cy.log('View Transactions of Crypto account')
+    cy.c_visitResponsive('/wallets', 'small')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.c_switchWalletsAccountResponsive('BTC')
+    cy.contains('Transfer').parent().click()
     cy.findByText('Transactions').first().click()
     cy.findByTestId('dt_wallets_textfield_box').click()
     cy.findByRole('option', { name: 'Deposit' }).click()

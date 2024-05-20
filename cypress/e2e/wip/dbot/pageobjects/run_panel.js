@@ -16,13 +16,6 @@ class RunPanel {
   get runPanelScrollbar() {
     return cy.get("div[data-testid='dt_themed_scrollbars']").last()
   }
-
-  get transactionAfterFirstLoss() {
-    return cy.xpath(
-      "(//div[@class='transactions__profit--loss'])[last()]//ancestor::div[@role='gridcell']/preceding-sibling::div[1]//div[@class='transactions__cell transactions__stake']/span"
-    )
-  }
-
   get journalTab() {
     return cy.get("li[id='db-run-panel-tab__journal']")
   }
@@ -37,6 +30,21 @@ class RunPanel {
 
   get secondBeforePurchaseText() {
     return cy.get('div.journal__text.journal__text--info').eq(-2)
+  }
+
+  transactionAfterFirstLoss = () => {
+    cy.findAllByTestId('dt_transactions_item')
+      .get('.transactions__profit--loss')
+      .last()
+      .parents('.data-list__row--wrapper')
+      .parent()
+      .prev()
+      .within(($el) => {
+        cy.findByTestId('dt_transactions_item').should(
+          'contain.text',
+          '2.00 USD'
+        )
+      })
   }
 }
 
