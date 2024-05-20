@@ -29,6 +29,20 @@ function verifyTwoPaymentMethod(orderTab, PM1, PM2) {
     .contains(PM2)
 }
 
+function addBuyOrderWithPM(PM) {
+  cy.c_navigateToDerivP2P()
+  cy.c_skipPasskey()
+  cy.c_closeNotificationHeader()
+  cy.c_clickMyAdTab()
+  cy.c_createNewAd('buy')
+  cy.findByTestId('offer_amount').click().type('10')
+  cy.findByTestId('fixed_rate_type').type('1')
+  cy.findByTestId('min_transaction').click().type(0.01)
+  cy.findByTestId('max_transaction').click().type(1)
+  cy.findByPlaceholderText('Add').click()
+  cy.findByText(PM).click()
+}
+
 describe('QATEST-2853 - Ad details', () => {
   beforeEach(() => {
     cy.clearAllLocalStorage()
@@ -36,10 +50,11 @@ describe('QATEST-2853 - Ad details', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
   it('Filter for Payment Methods - Buy/Sell Ad', () => {
-    cy.c_navigateToDerivP2P()
-    cy.c_skipPasskey()
-    cy.findByText('Deriv P2P').should('exist')
-    cy.c_closeNotificationHeader()
+    // cy.c_navigateToDerivP2P()
+    // cy.c_skipPasskey()
+    // cy.findByText('Deriv P2P').should('exist')
+    // cy.c_closeNotificationHeader()
+    addBuyOrderWithPM('Bank Transfer')
     resetFilter()
     filterByPaymentMethod('Bank Transfer')
     verifyNoPaymentMethod('Buy')
