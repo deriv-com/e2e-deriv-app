@@ -38,17 +38,17 @@ describe('QATEST-5159 MF financial assessment (Appropriateness Test) - Pass scen
         name: 'How much knowledge and experience do you have in relation to online trading?',
       }).should('be.visible')
       cy.findByText(
-        'I have an academic degree, professional certification, and/or work experience related to financial services.'
+        'I am interested in trading but have very little experience.'
       ).click()
       cy.findByRole('button', { name: 'Next' }).click()
       //3rd question
-      cy.get(`select[name='cfd_experience']`).select('1 - 2 years')
-      cy.get(`select[name='cfd_frequency']`).select('1 - 5')
+      cy.get(`select[name='cfd_experience']`).select('No experience')
+      cy.get(`select[name='cfd_frequency']`).select('None')
       cy.get(`select[name='trading_experience_financial_instruments']`).select(
-        '1 - 2 years'
+        'No experience'
       )
       cy.get(`select[name='trading_frequency_financial_instruments']`).select(
-        '1 - 5'
+        'None'
       )
       cy.findByRole('button', { name: 'Next' }).click()
       //4th question
@@ -56,7 +56,7 @@ describe('QATEST-5159 MF financial assessment (Appropriateness Test) - Pass scen
         name: 'In your understanding, CFD trading allows you to',
       }).should('be.visible')
       cy.findByText(
-        'Speculate on the price movement of an asset without actually owning it.'
+        'Make a long-term investment for a guaranteed profit.'
       ).click()
       cy.findByRole('button', { name: 'Next' }).click()
       //5th question
@@ -64,7 +64,7 @@ describe('QATEST-5159 MF financial assessment (Appropriateness Test) - Pass scen
         name: 'How does leverage affect CFD trading?',
       }).should('be.visible')
       cy.findByText(
-        'Leverage lets you open large positions for a fraction of trade value, which may result in increased profit or loss.'
+        'Leverage prevents you from opening large positions.'
       ).click()
       cy.findByRole('button', { name: 'Next' }).click()
       //6th question
@@ -72,14 +72,14 @@ describe('QATEST-5159 MF financial assessment (Appropriateness Test) - Pass scen
         name: "Leverage trading is high-risk, so it's a good idea to use risk management features such as stop loss. Stop loss allows you to",
       }).should('be.visible')
       cy.findByText(
-        'Close your trade automatically when the loss is equal to or more than a specified amount, as long as there is adequate market liquidity.'
+        'Cancel your trade at any time within a specified timeframe.'
       ).click()
       cy.findByRole('button', { name: 'Next' }).click()
       //7th question
       cy.findByRole('heading', {
         name: 'When are you required to pay an initial margin?',
       }).should('be.visible')
-      cy.findByText('When opening a leveraged CFD trade.').click()
+      cy.findByText('When trading multipliers.').click()
       cy.findByRole('button', { name: 'Next' }).click()
 
       cy.c_completeFinancialAssessment({ isMobile: true })
@@ -90,6 +90,9 @@ describe('QATEST-5159 MF financial assessment (Appropriateness Test) - Pass scen
       cy.get('.dc-checkbox__box').eq(1).click()
       cy.get('.dc-checkbox__box').eq(2).click()
       cy.findByRole('button', { name: 'Add account' }).click()
+
+      cy.findByText('Appropriateness Test Warning').should('be.visible')
+      cy.findByRole('button', { name: 'Accept' }).click()
 
       cy.get('#traders-hub').scrollIntoView({ position: 'top' })
       cy.findByText('Total assets').should('be.visible')
