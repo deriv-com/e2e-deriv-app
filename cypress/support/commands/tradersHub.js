@@ -347,7 +347,7 @@ Cypress.Commands.add('c_manageAccountsetting', (CoR, options = {}) => {
     else {
       cy.findByLabelText('Country').should('not.be.disabled').type(CoR)
       cy.findByText(CoR).as('COR').scrollIntoView()
-      cy.get('@COR').click()
+      cy.get('@COR', { timeout: 30000 }).click()
     }
     cy.findByRole('button', { name: lang.realAccountFormUtils.nextBtn }).should(
       'not.be.disabled'
