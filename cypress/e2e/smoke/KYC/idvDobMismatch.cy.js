@@ -27,12 +27,9 @@ describe('QATEST-23042 IDV DOB Mismatch by Smile Identity provider', () => {
       'be.visible'
     )
     cy.c_closeNotificationHeader()
-
-    cy.c_waitUntilElementIsFound({
-      cyLocator: () =>
-        cy.findByText('Your identity verification failed because:'),
-      timeout: 4000,
-      maxRetries: 5,
-    })
+    cy.reload()
+    cy.findByText('Your identity verification failed because:').should(
+      'be.visible'
+    )
   })
 })
