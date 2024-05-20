@@ -3,8 +3,7 @@ import { generateEpoch } from '../../../support/helper/utility'
 import { derivApp } from '../../../support/locators'
 
 describe('QATEST-5569: Verify MF Signup flow', () => {
-  // let size = ['small', 'desktop']
-  let size = ['desktop']
+  let size = ['small', 'desktop']
   let country = Cypress.env('countries').ES
   let nationalIDNum = Cypress.env('nationalIDNum').ES
   let taxIDNum = Cypress.env('taxIDNum').ES
@@ -44,9 +43,10 @@ describe('QATEST-5569: Verify MF Signup flow', () => {
         'have.text',
         '0.00EUR'
       )
-      cy.c_manageAccountsetting(country, {
-        isMobile: isMobile,
-      })
+      if (isMobile)
+        cy.c_manageAccountsetting(country, {
+          isMobile: isMobile,
+        })
     })
   })
 })
