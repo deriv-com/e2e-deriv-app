@@ -8,8 +8,6 @@ Cypress.Commands.add('c_navigateToPoi', (country) => {
 })
 
 Cypress.Commands.add('c_navigateToPoiResponsive', (country) => {
-  cy.c_visitResponsive('/appstore/traders-hub', 'small')
-  cy.c_skipPasskeysV2()
   cy.c_visitResponsive('/account/proof-of-identity', 'small')
   cy.c_closeNotificationHeader()
   cy.get('select[name="country_input"]').select(country)
