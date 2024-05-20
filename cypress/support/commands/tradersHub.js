@@ -345,6 +345,7 @@ Cypress.Commands.add('c_manageAccountsetting', (CoR, options = {}) => {
     )
     if (isMobile) cy.get(`select[name='country_input']`).select(CoR)
     else {
+      cy.findByRole('link', { name: 'WhatsApp' }).should('be.visible')
       cy.findByLabelText('Country').type(CoR)
       cy.findByText(CoR).scrollIntoView()
       cy.findByText(CoR).click()
