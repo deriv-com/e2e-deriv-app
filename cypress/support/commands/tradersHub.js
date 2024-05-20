@@ -345,16 +345,9 @@ Cypress.Commands.add('c_manageAccountsetting', (CoR, options = {}) => {
     )
     if (isMobile) cy.get(`select[name='country_input']`).select(CoR)
     else {
-      // cy.findByRole('link', { name: 'WhatsApp', timeout: 30000 }).should(
-      //   'be.visible'
-      // )
       cy.findByLabelText('Country').type(CoR)
       cy.findByText(CoR).as('COR').scrollIntoView()
       cy.get('@COR').click()
-      // cy.findByLabelText('Country')
-      //   .invoke('attr', 'value', `${CoR}`)
-      //   .trigger('change')
-      //   .should('have.attr', 'value', `${CoR}`)
     }
     cy.findByRole('button', { name: lang.realAccountFormUtils.nextBtn }).should(
       'not.be.disabled'
