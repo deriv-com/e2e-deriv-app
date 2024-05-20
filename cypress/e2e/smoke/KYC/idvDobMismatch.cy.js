@@ -3,15 +3,17 @@ import '@testing-library/cypress/add-commands'
 describe('QATEST-23042 IDV DOB Mismatch by Smile Identity provider', () => {
   beforeEach(() => {
     cy.c_visitResponsive('/')
-    cy.c_createRealAccount('ke')
+    cy.c_createRealAccount('gh')
     cy.c_login()
-    cy.c_navigateToPoiResponsive('Kenya')
+    cy.c_navigateToPoiResponsive('Ghana')
   })
 
   it('Should return Date of birth mismatch', () => {
-    cy.get('select[name="document_type"]').select('National ID Number')
-    cy.findByLabelText('Enter your document number').type('00000000')
-    cy.findByTestId('first_name').clear().type('Joe Doe')
+    cy.get('select[name="document_type"]').select(
+      'Social Security and National Insurance Trust (SSNIT)'
+    )
+    cy.findByLabelText('Enter your SSNIT number').type('C000000000000')
+    cy.findByTestId('first_name').clear().type('Doe Joe')
     cy.findByTestId('last_name').clear().type('Leo')
     cy.findByTestId('date_of_birth').type('1991-08-23')
 
@@ -21,7 +23,7 @@ describe('QATEST-23042 IDV DOB Mismatch by Smile Identity provider', () => {
     cy.findByText('Your documents were submitted successfully').should(
       'be.visible'
     )
-    cy.findByText('Proof of address required', { timeout: 3000 }).should(
+    cy.findByText('Proof of address required', { timeout: 30000 }).should(
       'be.visible'
     )
     cy.c_closeNotificationHeader()

@@ -745,4 +745,3 @@ Cypress.Commands.add('c_fakeLinkPopUpCheck', () => {
     }
   })
 })
-
