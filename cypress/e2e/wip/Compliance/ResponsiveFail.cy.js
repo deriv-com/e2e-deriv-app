@@ -1,7 +1,7 @@
 import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/helper/utility'
 
-describe('QATEST-5159 MF financial assessment (Appropriateness Test) - Pass scenario and successful account creation', () => {
+describe('QATEST-5168 MF financial assessment (Appropriateness Test) - Fail scenario but successful account creation', () => {
   const size = ['small']
   const signUpEmail = `sanity${generateEpoch()}mf@deriv.com`
   let country = Cypress.env('countries').ES
