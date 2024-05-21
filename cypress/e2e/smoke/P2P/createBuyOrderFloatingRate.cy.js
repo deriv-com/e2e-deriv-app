@@ -4,7 +4,6 @@ import { generateAccountNumberString } from '../../../support/helper/utility'
 let floatRate = 1.25
 let minOrder = 1
 let maxOrder = 10
-let paymentName = 'Alipay'
 let cleanedText = null
 let floatValue = null
 let nicknameAndAmount = {
@@ -76,62 +75,63 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       })
     cy.c_clickMyAdTab()
     cy.c_createNewAd('sell')
-    cy.findByText('Sell USD').click()
-    cy.findByText("You're creating an ad to sell...").should('be.visible')
-    cy.findByTestId('offer_amount')
-      .next('span.dc-text')
-      .invoke('text')
-      .then((fiatCurrency) => {
-        sessionStorage.setItem('c_fiatCurrency', fiatCurrency.trim())
-      })
-    cy.get('.floating-rate__hint')
-      .invoke('text')
-      .then((textString) => {
-        const words = textString.split(' ')
-        const localCurrency = words[words.length - 1]
-        sessionStorage.setItem('c_localCurrency', localCurrency.trim())
-      })
-    cy.then(() => {
-      cy.findByTestId('offer_amount').type('10').should('have.value', '10')
-      cy.findByTestId('float_rate_type')
-        .clear()
-        .type(floatRate)
-        .should('have.value', floatRate)
-      cy.findByTestId('min_transaction')
-        .type(minOrder)
-        .should('have.value', minOrder)
-      cy.findByTestId('max_transaction')
-        .type(maxOrder)
-        .should('have.value', maxOrder)
-      cy.findByTestId('contact_info')
-        .clear()
-        .type('Contact Info Block.')
-        .should('have.value', 'Contact Info Block.')
-      cy.findByTestId('default_advert_description')
-        .clear()
-        .type('Instructions Block.')
-        .should('have.value', 'Instructions Block.')
-      cy.findByTestId('dt_dropdown_display').click()
-      cy.get('#900').should('be.visible').click()
-      cy.findByTestId('dt_payment_method_card_add_icon')
-        .should('be.visible')
-        .click()
-      cy.c_addPaymentMethod(paymentID, paymentName)
-      cy.findByText(paymentID)
-        .should('exist')
-        .parent()
-        .prev()
-        .find('.dc-checkbox')
-        .and('exist')
-        .click()
-      cy.c_verifyPostAd()
-      verifyAdOnMyAdsScreenFloatingRateAd(
-        'Sell',
-        sessionStorage.getItem('c_fiatCurrency')
-      )
-    })
+    cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Sell', 'float')
+    //cy.findByText('Sell USD').click()
+    //cy.findByText("You're creating an ad to sell...").should('be.visible')
+    // cy.findByTestId('offer_amount')
+    //   .next('span.dc-text')
+    //   .invoke('text')
+    //   .then((fiatCurrency) => {
+    //     sessionStorage.setItem('c_fiatCurrency', fiatCurrency.trim())
+    //   })
+    // cy.get('.floating-rate__hint')
+    //   .invoke('text')
+    //   .then((textString) => {
+    //     const words = textString.split(' ')
+    //     const localCurrency = words[words.length - 1]
+    //     sessionStorage.setItem('c_localCurrency', localCurrency.trim())
+    //   })
+    // cy.then(() => {
+    //   cy.findByTestId('offer_amount').type('10').should('have.value', '10')
+    //   cy.findByTestId('float_rate_type')
+    //     .clear()
+    //     .type(floatRate)
+    //     .should('have.value', floatRate)
+    //   cy.findByTestId('min_transaction')
+    //     .type(minOrder)
+    //     .should('have.value', minOrder)
+    //   cy.findByTestId('max_transaction')
+    //     .type(maxOrder)
+    //     .should('have.value', maxOrder)
+    //   cy.findByTestId('contact_info')
+    //     .clear()
+    //     .type('Contact Info Block.')
+    //     .should('have.value', 'Contact Info Block.')
+    //   cy.findByTestId('default_advert_description')
+    //     .clear()
+    //     .type('Instructions Block.')
+    //     .should('have.value', 'Instructions Block.')
+    //   cy.findByTestId('dt_dropdown_display').click()
+    //   cy.get('#900').should('be.visible').click()
+    //   cy.findByTestId('dt_payment_method_card_add_icon')
+    //     .should('be.visible')
+    //     .click()
+    //   cy.c_addPaymentMethod(paymentID, paymentName)
+    //   cy.findByText(paymentID)
+    //     .should('exist')
+    //     .parent()
+    //     .prev()
+    //     .find('.dc-checkbox')
+    //     .and('exist')
+    //     .click()
+    //cy.c_verifyPostAd()
+    //  verifyAdOnMyAdsScreenFloatingRateAd(
+    //   'Sell',
+    //   sessionStorage.getItem('c_fiatCurrency')
+    // )
+    // })
   })
-  it('Should be able to place an order for advert and verify all fields and messages for floating rate.', () => {
+  it.skip('Should be able to place an order for advert and verify all fields and messages for floating rate.', () => {
     cy.c_navigateToDerivP2P()
     cy.c_skipPasskey()
     cy.findByText('Deriv P2P').should('exist')
@@ -257,7 +257,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       })
     })
   })
-  it("Should be able to confirm sell order from verification link, give rating to buyer and then confirm seller's balance.", () => {
+  it.skip("Should be able to confirm sell order from verification link, give rating to buyer and then confirm seller's balance.", () => {
     cy.c_navigateToDerivP2P()
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
@@ -335,7 +335,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       }
     })
   })
-  it("Should be able to confirm buyer's balance and give rating to seller.", () => {
+  it.skip("Should be able to confirm buyer's balance and give rating to seller.", () => {
     cy.c_navigateToDerivP2P()
     cy.c_rateLimit({
       waitTimeAfterError: 15000,

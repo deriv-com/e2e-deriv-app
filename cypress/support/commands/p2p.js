@@ -169,10 +169,11 @@ Cypress.Commands.add(
           sessionStorage.setItem('c_localCurrency', localCurrency.trim())
         })
     } else if (rateType == 'float') {
-      cy.findByTestId('float_rate_type')
-        .next('span.dc-text')
+      cy.get('.floating-rate__hint')
         .invoke('text')
-        .then((localCurrency) => {
+        .then((textString) => {
+          const words = textString.split(' ')
+          const localCurrency = words[words.length - 1]
           sessionStorage.setItem('c_localCurrency', localCurrency.trim())
         })
     }
@@ -184,6 +185,7 @@ Cypress.Commands.add(
           .should('have.value', rateValue)
       } else if (rateType == 'float') {
         cy.findByTestId('float_rate_type')
+          .clear()
           .type(rateValue)
           .should('have.value', rateValue)
       }
@@ -195,10 +197,12 @@ Cypress.Commands.add(
         .should('have.value', maxOrder)
       if (adType == 'Sell') {
         cy.findByTestId('contact_info')
+          .clear()
           .type('Contact Info Block')
           .should('have.value', 'Contact Info Block')
       }
       cy.findByTestId('default_advert_description')
+        .clear()
         .type('Description Block')
         .should('have.value', 'Description Block')
       cy.findByTestId('dt_dropdown_display').click()
@@ -223,6 +227,7 @@ Cypress.Commands.add(
         adType,
         sessionStorage.getItem('c_fiatCurrency'),
         sessionStorage.getItem('c_localCurrency'),
+        rateType,
         rateValue,
         minOrder,
         maxOrder
@@ -233,13 +238,25 @@ Cypress.Commands.add(
 
 Cypress.Commands.add(
   'c_verifyAdOnMyAdsScreen',
-  (adType, fiatCurrency, localCurrency, rateValue, minOrder, maxOrder) => {
+  (
+    adType,
+    fiatCurrency,
+    localCurrency,
+    rateType,
+    rateValue,
+    minOrder,
+    maxOrder
+  ) => {
     cy.findByText('Active').should('be.visible')
     cy.findByText(`${adType} ${fiatCurrency}`).should('be.visible')
-    cy.findByText(`${rateValue} ${localCurrency}`)
+    if (rateType === 'float') {
+      cy.findByText(`+${rateValue}%`).should('be.visible')
+    } else if (rateType === 'fixed') {
+      cy.findByText(`${rateValue} ${localCurrency}`).should('be.visible')
+    }
     cy.findByText(
       `${minOrder.toFixed(2)} - ${maxOrder.toFixed(2)} ${fiatCurrency}`
-    )
+    ).should('be.visible')
   }
 )
 
