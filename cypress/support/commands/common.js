@@ -4,7 +4,7 @@ Cypress.prevAppId = 0
 Cypress.prevUser = ''
 const expectedCookieValue = '{%22clients_country%22:%22br%22}'
 
-let newApplicationId
+let updatedAppId
 
 const setLoginUser = (user = 'masterUser', options = {}) => {
   const { backEndProd = false } = options
@@ -100,6 +100,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
   } else {
     Cypress.env('configServer', Cypress.env('stdConfigServer'))
     Cypress.env('configAppId', Cypress.env('stdConfigAppId'))
+    cy.log("Inside Else and Value of stdConfigAppId is : ", Cypress.env('stdConfigAppId'))
   }
 
   //If we're switching between apps or users, we'll need to re-authenticate
@@ -744,4 +745,38 @@ Cypress.Commands.add('c_fakeLinkPopUpCheck', () => {
       cy.log('The fake link pop up does not exist!')
     }
   })
+})
+
+/**
+ * Method to perform Authorization and Create Application ID 
+ * by calling ApplicationRegister API call
+ */
+Cypress.Commands.add('c_createApplicationId', () => {
+  try {
+     // Login is required as we need Auth Token for running RegisterApplication API.
+     cy.c_login() 
+     const oldAppdId = parseInt(Cypress.env('configAppId'))
+     cy.task('wsConnect')
+     cy.c_authorizeCall()
+ 
+     // This method will create and return New App Id.
+     cy.c_registerNewApplicationID().then(() => {
+       updatedAppId = Cypress.env('updatedAppId')
+       cy.log('The New App Before ID is: ', updatedAppId)
+       cy.task('wsDisconnect')
+       cy.c_logout()
+ 
+       Cypress.config('baseUrl', Cypress.env('appRegisterUrl'))
+       Cypress.env('configAppId', updatedAppId)
+       Cypress.env('oAuthUrl', '<empty>')
+       Cypress.env('stdConfigAppId', updatedAppId)
+ 
+       const newAppId = parseInt(Cypress.env('configAppId'))
+       expect(newAppId).not.equal(oldAppdId)
+
+       cy.visit(Cypress.env('appRegisterUrl') + '?qa_server=' + Cypress.env('configServer') + '&app_id=' + Cypress.env('stdConfigAppId'))
+     })
+  } catch (e) {
+    console.error('An error occurred during the account creation process:', e)
+  }
 })

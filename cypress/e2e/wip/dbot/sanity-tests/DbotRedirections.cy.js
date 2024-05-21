@@ -4,6 +4,7 @@ import TradersHub from '../pageobjects/traders_hub'
 describe('QATEST-136582: Redirection to other pages from dbot', () => {
   const tradersHub = new TradersHub()
   beforeEach(() => {
+    cy.c_createApplicationId()
     cy.c_login({ user: 'dBot', rateLimitCheck: true })
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     tradersHub.openBotButton.click()
