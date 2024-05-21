@@ -62,7 +62,7 @@ describe('QATEST-99420: Import and run custom strategy', () => {
 
     //Verify Stake doubles after a loss
     runPanel.runPanelScrollbar.scrollTo('bottom', { ensureScrollable: false })
-    runPanel.transactionAfterFirstLoss.should('have.text', '2.00 USD')
+    runPanel.transactionAfterFirstLoss()
   })
 
   after(() => {

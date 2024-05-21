@@ -579,18 +579,6 @@ Cypress.Commands.add('c_deleteAllPM', () => {
   })
 })
 
-Cypress.Commands.add('c_closeSafetyInstructions', () => {
-  cy.findByRole('heading', { name: 'For your safety:' })
-    .should('be.visible')
-    .then(($title) => {
-      if ($title.is(':visible')) {
-        cy.get('.dc-checkbox__box').should('be.visible').click()
-      }
-    })
-  cy.findByRole('button', { name: 'Confirm' }).should('be.visible').click()
-  cy.c_skipPasskey()
-})
-
 Cypress.Commands.add('c_addPaymentMethod', (paymentID, paymentMethod) => {
   if (paymentMethod == 'Bank Transfer') {
     cy.findByRole('textbox', { name: 'Payment method' })
@@ -744,4 +732,112 @@ Cypress.Commands.add('c_adDetailsFieldText', (blockName) => {
     .type(textForField)
     .should('have.value', textForField)
   cy.c_adDetailsFieldLength(blockName, textForField.length)
+})
+
+Cypress.Commands.add('c_giveRating', (advertiserType) => {
+  cy.get('.rating-modal__star')
+    .eq(1)
+    .within(() => {
+      cy.get('svg').eq(3).click({ force: true })
+    })
+  cy.findByText(`Would you recommend this ${advertiserType}?`)
+  cy.findByRole('button', { name: 'No' }).should('be.visible').click()
+  cy.findByRole('button', { name: 'Yes' }).should('be.visible').click()
+  cy.findByRole('button', { name: 'Done' }).should('be.visible').click()
+  cy.findByText('Your transaction experience').should('be.visible')
+  cy.get('span[title="4 out of 5"]').should('be.visible')
+  cy.findByText('Recommended').should('be.visible')
+})
+
+Cypress.Commands.add(
+  'c_verifyBuyOrderField',
+  (minOrder, maxOrder, fiatCurrency) => {
+    cy.get('input[name="amount"]').clear().type('abc').should('have.value', '')
+    cy.findByText('Enter a valid amount').should('be.visible')
+    cy.get('input[name="amount"]')
+      .clear()
+      .type('5abc')
+      .should('have.value', '5')
+    cy.get('input[name="amount"]').clear().type('!@#').should('have.value', '')
+    cy.findByText('Enter a valid amount').should('be.visible')
+    cy.get('input[name="amount"]')
+      .clear()
+      .type(maxOrder + 1)
+      .should('have.value', maxOrder + 1)
+    cy.findByText(`Maximum is ${maxOrder.toFixed(2)} ${fiatCurrency}`).should(
+      'be.visible'
+    )
+    cy.get('input[name="amount"]')
+      .clear()
+      .type(minOrder - 0.5)
+      .should('have.value', minOrder - 0.5)
+    cy.findByText(`Minimum is ${minOrder.toFixed(2)} ${fiatCurrency}`).should(
+      'be.visible'
+    )
+    cy.get('input[name="amount"]')
+      .clear()
+      .type(maxOrder)
+      .should('have.value', maxOrder)
+  }
+)
+
+Cypress.Commands.add(
+  'c_verifyPaymentConfirmationScreenContent',
+  (sendAmount, nickname) => {
+    cy.findByText('Payment confirmation').should('be.visible')
+    cy.findByText(
+      `Please make sure that you\'ve paid ${sendAmount} to ${nickname}, and upload the receipt as proof of your payment`
+    ).should('be.visible')
+    cy.findByText(
+      'Sending forged documents will result in an immediate and permanent ban.'
+    ).should('be.visible')
+    cy.findByText('We accept JPG, PDF, or PNG (up to 5MB).').should(
+      'be.visible'
+    )
+  }
+)
+
+Cypress.Commands.add(
+  'c_verifyOrderPlacementScreen',
+  (nickname, rateOfOneDollar, paymentMethods, instructions) => {
+    cy.findByText(nickname).should('be.visible')
+    cy.findByText(rateOfOneDollar).should('be.visible')
+    cy.findByText(paymentMethods).should('be.visible')
+    cy.findByText(instructions).should('be.visible')
+    cy.findByRole('button', { name: 'Expand all' }).should('be.visible').click()
+    cy.findByRole('button', { name: 'Collapse all' }).should('be.visible')
+    cy.findByRole('button', { name: 'Cancel order' }).should('be.enabled')
+    cy.findByRole('button', { name: "I've paid" })
+      .should('not.be.disabled')
+      .click()
+  }
+)
+
+Cypress.Commands.add('c_checkForEmptyAdScreenMessage', (adType, adTypeOpp) => {
+  cy.findByRole('button', { name: adType }).should('be.visible').click()
+  cy.findByText('No ads for this currency 😞').should('be.visible')
+  cy.findByText(
+    'Looking to buy or sell USD? You can post your own ad for others to respond.'
+  ).should('be.visible')
+  cy.findByRole('button', { name: 'Create ad' }).should('be.visible').click()
+  cy.findByText(
+    `You\'re creating an ad to ${adTypeOpp.toLowerCase()}...`
+  ).should('be.visible')
+  cy.get('.page-return__button').should('be.visible').click()
+  cy.findByText('You have no ads 😞').should('be.visible')
+  cy.findByText(
+    'Looking to buy or sell USD? You can post your own ad for others to respond.'
+  ).should('be.visible')
+  cy.findByRole('button', { name: 'Create new ad' }).should('be.visible')
+  cy.findByText('Buy / Sell').should('be.visible').click()
+  cy.get('div[class="search-box"]').should('be.visible')
+})
+
+Cypress.Commands.add('c_checkForNonEmptyStateAdScreen', () => {
+  cy.findByText('No ads for this currency 😞').should('not.exist')
+  cy.findByText(
+    'Looking to buy or sell USD? You can post your own ad for others to respond.'
+  ).should('not.exist')
+  cy.findByRole('button', { name: 'Create ad' }).should('not.exist')
+  cy.get('.buy-sell-row').should('exist')
 })

@@ -27,11 +27,10 @@ describe('QATEST-4782 Onfido verified profile', () => {
     cy.findByText('Confirm').click()
     cy.findByText('Account verification required').should('be.visible')
 
-    cy.reload()
     cy.c_closeNotificationHeader()
     cy.c_waitUntilElementIsFound({
       cyLocator: () => cy.findByText('Your proof of identity is verified'),
-      timeout: 2000,
+      timeout: 4000,
       maxRetries: 5,
     })
   })

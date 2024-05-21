@@ -21,8 +21,8 @@ Cypress.Commands.add('c_submitIdv', () => {
   cy.findByRole('button', { name: 'Verify' }).click()
 })
 
-Cypress.Commands.add('c_onfidoSecondRun', () => {
-  cy.get('select[name="country_input"]').select('Colombia')
+Cypress.Commands.add('c_onfidoSecondRun', (country) => {
+  cy.get('select[name="country_input"]').select(country)
   cy.findByRole('button', { name: 'Next' }).click()
   cy.get('.dc-checkbox__box').click()
   cy.findByText('Passport').click()
