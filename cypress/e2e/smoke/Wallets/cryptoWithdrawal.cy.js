@@ -107,4 +107,10 @@ describe('QATEST-98698 - Crypto withdrawal content access from email', () => {
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     verifyEmailandPerformWithdraw('desktop')
   })
+  it.only('should be able to access crypto withdrawal content and perform withdrawal in responsibe', () => {
+    cy.log('Access Crypto Withdrawal Content Through Email Link')
+    cy.c_visitResponsive('/wallets', 'small')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    verifyEmailandPerformWithdraw('mobile')
+  })
 })
