@@ -67,6 +67,7 @@ describe('QATEST-121523 - Forget DerivX password', () => {
       .then(($el) => {
         if ($el.length) {
           cy.log(`Derivx account doesn't exist`)
+          cy.c_switchWalletsAccountDemo()
         } else {
           changeDerivxPassword()
         }
