@@ -100,7 +100,6 @@ Cypress.Commands.add('c_login', (options = {}) => {
   } else {
     Cypress.env('configServer', Cypress.env('stdConfigServer'))
     Cypress.env('configAppId', Cypress.env('stdConfigAppId'))
-    cy.log("Inside Else and Value of stdConfigAppId is : ", Cypress.env('stdConfigAppId'))
   }
 
   //If we're switching between apps or users, we'll need to re-authenticate
@@ -767,10 +766,17 @@ Cypress.Commands.add('c_createApplicationId', () => {
        cy.c_logout()
  
        Cypress.config('baseUrl', Cypress.env('appRegisterUrl'))
+
+       Cypress.config('stdConfigServer', Cypress.env('appRegisterUrl'))
+
        Cypress.env('configAppId', updatedAppId)
+       
+       Cypress.env('stdConfigAppId', updatedAppId)
        Cypress.env('oAuthUrl', '<empty>')
        Cypress.env('stdConfigAppId', updatedAppId)
- 
+
+      //  cy.task('wsConnect')
+
        const newAppId = parseInt(Cypress.env('configAppId'))
        expect(newAppId).not.equal(oldAppdId)
 

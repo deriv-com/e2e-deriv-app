@@ -5,7 +5,6 @@ const scopeParams = [
   'read',
   'trade',
   'payments',
-  'trading_information',
   'admin',
 ]
 
