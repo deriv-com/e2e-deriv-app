@@ -19,7 +19,9 @@ describe("QATEST-5930 - Validate the hyperlinks on Trader's hub", () => {
       cy.findAllByRole('link', { name: 'Learn more' })
         .first()
         .c_clickToOpenInSamePage()
-      cy.findByRole('heading', { name: 'Digital options available on Deriv' })
+      cy.findByRole('heading', {
+        name: 'Digital options available on Deriv',
+      }).should('be.visible')
       cy.url().should(
         'contain',
         '/trade-types/options/digital-options/up-and-down/'
@@ -31,15 +33,15 @@ describe("QATEST-5930 - Validate the hyperlinks on Trader's hub", () => {
       cy.findAllByRole('link', { name: 'Learn more' })
         .last()
         .c_clickToOpenInSamePage()
-      cy.findByRole('heading', { name: 'CFD trading' })
+      cy.findByRole('heading', { name: 'CFD trading' }).should('be.visible')
       cy.url().should('contain', '/trade-types/cfds/')
       cy.go('back')
       if (isMobile) {
         cy.findByRole('button', { name: 'CFDs' }).click()
       }
       cy.findByText('Compare accounts').click()
-      cy.url().should('contain', 'appstore/cfd-compare-acccounts')
       cy.findByText('Compare CFDs accounts').should('be.visible')
+      cy.url().should('contain', 'appstore/cfd-compare-acccounts')
     })
   })
 })
