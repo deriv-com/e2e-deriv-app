@@ -841,12 +841,3 @@ Cypress.Commands.add('c_checkForNonEmptyStateAdScreen', () => {
   cy.findByRole('button', { name: 'Create ad' }).should('not.exist')
   cy.get('.buy-sell-row').should('exist')
 })
-
-Cypress.Commands.add('c_navigateToPOI', (country) => {
-  cy.c_visitResponsive('/appstore/traders-hub', 'small')
-  cy.c_skipPasskeysV2()
-  cy.c_visitResponsive('/account/proof-of-identity', 'small')
-  cy.c_closeNotificationHeader()
-  cy.get('select[name="country_input"]').select(country)
-  cy.contains('button', 'Next').click()
-})

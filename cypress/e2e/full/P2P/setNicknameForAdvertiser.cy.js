@@ -1,4 +1,5 @@
 import '@testing-library/cypress/add-commands'
+import { generateCPFNumber } from '../../../support/helper/utility'
 
 let longNickname = 'thisnicknamewillnotfitatall'
 let shortNickname = 'a'
@@ -15,16 +16,11 @@ function checkNickname(nickname, message, buttonState) {
   cy.contains('.dc-field--error', message).should('be.visible')
 }
 
-const generateCPFNumber = () => {
-  const getRandomDigit = () => Math.floor(Math.random() * 10)
-  return `0${getRandomDigit()}${getRandomDigit()}.${getRandomDigit()}${getRandomDigit()}${getRandomDigit()}.${getRandomDigit()}${getRandomDigit()}${getRandomDigit()}-${getRandomDigit()}${getRandomDigit()}`
-}
-
 describe.skip('QATEST-2292 - Register a new client as an Advertiser in Deriv P2P - Nickname checks', () => {
   beforeEach(() => {
     cy.c_createRealAccount('br')
     cy.c_login()
-    cy.c_navigateToPOI('Brazil')
+    cy.c_navigateToPoiResponsive('Brazil', { runFor: 'p2p' })
   })
 
   it('Should be able to set a nickname for P2P in responsive mode.', () => {
