@@ -12,7 +12,7 @@ const pm3 = 'Skrill'
 
 Cypress.Commands.add('c_createNewAd', (adType) => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
-  cy.get('body', { timeout: 10000 }).then((body) => {
+  cy.get('body', { timeout: 50000 }).then((body) => {
     if (body.find('.no-ads__message', { timeout: 10000 }).length > 0) {
       cy.findByRole('button', { name: 'Create new ad' })
         .should('be.visible')

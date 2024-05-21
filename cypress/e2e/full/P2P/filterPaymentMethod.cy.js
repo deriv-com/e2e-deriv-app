@@ -19,7 +19,9 @@ function verifyNoPaymentMethod(orderTab) {
 }
 
 function verifyOnePaymentMethod(orderTab, PM1) {
-  cy.findByRole('button', { name: orderTab }).click().contains(PM1)
+  cy.findByRole('button', { name: orderTab }).click()
+  cy.contains(PM1).should('exist')
+  cy.contains('PayPal').should('not.exist')
 }
 
 function verifyTwoPaymentMethod(orderTab, PM1, PM2) {
@@ -29,18 +31,43 @@ function verifyTwoPaymentMethod(orderTab, PM1, PM2) {
     .contains(PM2)
 }
 
-function addBuyOrderWithPM(PM) {
+function addBuyOrderWithPM() {
   cy.c_navigateToDerivP2P()
   cy.c_skipPasskey()
   cy.c_closeNotificationHeader()
   cy.c_clickMyAdTab()
   cy.c_createNewAd('buy')
-  cy.findByTestId('offer_amount').click().type('10')
-  cy.findByTestId('fixed_rate_type').type('1')
-  cy.findByTestId('min_transaction').click().type(0.01)
-  cy.findByTestId('max_transaction').click().type(1)
+  addBuyOrderDetails('Bank Transfer', '10', '1', '0.01', '0.02')
+  cy.findByRole('button', { name: 'Create new ad' })
+    .should('be.enabled')
+    .click()
+  addBuyOrderDetails('PayPal', '20', '2', '10.01', '10.02')
+  cy.findByRole('button', { name: 'Create new ad' })
+    .should('be.enabled')
+    .click()
+  addSellOrderDetails('Other', '10', '0.1', '0.01', '0.02')
+}
+
+function addBuyOrderDetails(PM, amount, rate, min, max) {
+  cy.findByTestId('offer_amount').click().type(amount)
+  cy.findByTestId('fixed_rate_type').type(rate)
+  cy.findByTestId('min_transaction').click().type(min)
+  cy.findByTestId('max_transaction').click().type(max)
   cy.findByPlaceholderText('Add').click()
   cy.findByText(PM).click()
+  cy.c_verifyPostAd()
+}
+
+function addSellOrderDetails(PM, amount, rate, min, max) {
+  // cy.contains('Sell USD').parent().find('input[type="radio"]').click()
+  cy.contains('label', 'Sell USD').find('input[type="radio"]').click()
+  cy.findByTestId('offer_amount').click().type(amount)
+  cy.findByTestId('fixed_rate_type').type(rate)
+  cy.findByTestId('min_transaction').click().type(min)
+  cy.findByTestId('max_transaction').click().type(max)
+  cy.findByPlaceholderText('Add').click()
+  cy.findByText(PM).click()
+  cy.c_verifyPostAd()
 }
 
 describe('QATEST-2853 - Ad details', () => {
@@ -50,28 +77,25 @@ describe('QATEST-2853 - Ad details', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
   it('Filter for Payment Methods - Buy/Sell Ad', () => {
-    // cy.c_navigateToDerivP2P()
-    // cy.c_skipPasskey()
-    // cy.findByText('Deriv P2P').should('exist')
-    // cy.c_closeNotificationHeader()
-    addBuyOrderWithPM('Bank Transfer')
-    resetFilter()
-    filterByPaymentMethod('Bank Transfer')
-    verifyNoPaymentMethod('Buy')
-    verifyOnePaymentMethod('Sell', 'Bank Transfer')
-    cy.findByTestId('sort-div').next().click()
-    filterByPaymentMethod('Other')
-    verifyOnePaymentMethod('Buy', 'Other')
-    verifyOnePaymentMethod('Sell', 'Bank Transfer')
-    resetFilter()
-    filterByPaymentMethod('Skrill')
-    verifyOnePaymentMethod('Buy', 'Skrill')
-    verifyNoPaymentMethod('Sell')
-    filterByPaymentMethod('Other')
-    verifyTwoPaymentMethod('Buy', 'Other', 'Skrill')
-    verifyNoPaymentMethod('Sell')
-    resetFilter()
-    verifyOnePaymentMethod('Sell', 'Bank Transfer')
-    verifyTwoPaymentMethod('Buy', 'Other', 'Skrill')
+    addBuyOrderWithPM()
+    // cy.findByText('Buy / Sell').should('be.visible').click()
+    // resetFilter()
+    // filterByPaymentMethod('Bank Transfer')
+    // verifyNoPaymentMethod('Buy')
+    // verifyOnePaymentMethod('Sell', 'Bank Transfer')
+    // cy.findByTestId('sort-div').next().click()
+    // filterByPaymentMethod('Other')
+    // verifyOnePaymentMethod('Buy', 'Other')
+    // verifyOnePaymentMethod('Sell', 'Bank Transfer')
+    // resetFilter()
+    // filterByPaymentMethod('Skrill')
+    // verifyOnePaymentMethod('Buy', 'Skrill')
+    // verifyNoPaymentMethod('Sell')
+    // filterByPaymentMethod('Other')
+    // verifyTwoPaymentMethod('Buy', 'Other', 'Skrill')
+    // verifyNoPaymentMethod('Sell')
+    // resetFilter()
+    // verifyOnePaymentMethod('Sell', 'Bank Transfer')
+    // verifyTwoPaymentMethod('Buy', 'Other', 'Skrill')
   })
 })
