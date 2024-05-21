@@ -1,5 +1,4 @@
 import '@testing-library/cypress/add-commands'
-import { generateEpoch } from '../../../support/helper/utility'
 
 function createSiblingAcct(acctCount) {
   cy.findByTestId('dt_currency-switcher__arrow').click()
@@ -19,42 +18,53 @@ function getCurrencyList() {
       return labelCount
     })
 }
-describe('QATEST-5797, QATEST-5820 - Add siblings accounts', () => {
-  const signUpEmail = `sanity${generateEpoch()}sibacct@deriv.com`
+describe('QATEST-5797, QATEST-5820: Add siblings accounts', () => {
+  const size = ['small', 'desktop']
   let country = Cypress.env('countries').CO
+  let countryCode = 'co'
+  let currencyCode = 'USD'
+  let currency = Cypress.env('accountCurrency').USD
   let nationalIDNum = Cypress.env('nationalIDNum').CO
   let taxIDNum = Cypress.env('taxIDNum').CO
-  let currency = Cypress.env('accountCurrency').USD
   beforeEach(() => {
-    cy.c_setEndpoint(signUpEmail)
+    cy.c_createDemoAccount(countryCode, currencyCode)
+    cy.c_login()
   })
-
-  it('Create siblings accounts from USD account ', () => {
-    cy.c_demoAccountSignup(country, signUpEmail)
-    cy.c_switchToReal()
-    cy.findByRole('button', { name: 'Get a Deriv account' }).click()
-    cy.c_generateRandomName().then((firstName) => {
-      cy.c_personalDetails(
-        firstName,
-        'Onfido',
-        country,
-        nationalIDNum,
-        taxIDNum,
-        currency
-      )
-    })
-    cy.c_addressDetails()
-    cy.c_completeFatcaDeclarationAgreement()
-    cy.c_addAccount()
-    cy.c_checkTradersHubHomePage()
-    cy.c_closeNotificationHeader()
-    cy.findByTestId('dt_currency-switcher__arrow').click()
-    cy.findByRole('button', { name: 'Add or manage account' }).click()
-    getCurrencyList().then((labelCount) => {
-      cy.findByTestId('dt_modal_close_icon').click()
-      for (let acctCount = 0; acctCount < labelCount; acctCount++) {
-        createSiblingAcct(acctCount)
-      }
+  size.forEach((size) => {
+    it(`Should Create siblings accounts from USD account on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
+      const isMobile = size == 'small' ? true : false
+      cy.c_visitResponsive('/appstore/traders-hub', size)
+      //Wait for page to completely load
+      cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
+      cy.c_switchToReal()
+      cy.findByTestId('dt_trading-app-card_real_deriv-account')
+        .findByRole('button', { name: 'Get' })
+        .click()
+      cy.c_generateRandomName().then((firstName) => {
+        cy.c_personalDetails(
+          firstName,
+          'Onfido',
+          country,
+          nationalIDNum,
+          taxIDNum,
+          currency,
+          { isMobile: isMobile }
+        )
+      })
+      cy.c_addressDetails()
+      cy.c_completeFatcaDeclarationAgreement()
+      cy.c_addAccount()
+      cy.c_checkTradersHubHomePage(isMobile)
+      cy.c_closeNotificationHeader()
+      cy.findByTestId('dt_currency-switcher__arrow').click()
+      cy.findByRole('button', { name: 'Add or manage account' }).click()
+      getCurrencyList().then((labelCount) => {
+        if (isMobile) cy.findByTestId('dt_dc_mobile_dialog_close_btn').click()
+        else cy.findByTestId('dt_modal_close_icon').click()
+        for (let acctCount = 0; acctCount < labelCount; acctCount++) {
+          createSiblingAcct(acctCount)
+        }
+      })
     })
   })
 })
