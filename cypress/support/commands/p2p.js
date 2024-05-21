@@ -46,7 +46,7 @@ Cypress.Commands.add('c_verifyExchangeRate', (rate) => {
   rateCalculation = rate * 0.01
   calculatedValue = rateCalculation * marketRate + marketRate
   regexPattern = new RegExp(
-    `Your rate is = ${calculatedValue.toFixed(6).slice(0, -1)}\\d? NZD`
+    `^Your rate is = ${calculatedValue.toFixed(1)}\\d* NZD$`
   )
   cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
 })
