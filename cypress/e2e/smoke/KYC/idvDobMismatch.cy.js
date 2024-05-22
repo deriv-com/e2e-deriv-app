@@ -1,11 +1,14 @@
 import '@testing-library/cypress/add-commands'
-
 describe('QATEST-23042 IDV DOB Mismatch by Smile Identity provider', () => {
   beforeEach(() => {
     cy.c_visitResponsive('/')
     cy.c_createRealAccount('gh')
     cy.c_login()
     cy.c_navigateToPoiResponsive('Ghana')
+  })
+
+  afterEach(() => {
+    cy.c_resetData()
   })
 
   it('Should return Date of birth mismatch', () => {
