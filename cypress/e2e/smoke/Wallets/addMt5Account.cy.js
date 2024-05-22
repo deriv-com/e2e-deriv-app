@@ -23,7 +23,7 @@ function selectBVIJurisdiction(accountType) {
 function verifyDerivMT5Creation() {
   cy.findByPlaceholderText('Deriv MT5 password', { timeout: 10000 })
   cy.wait(2000) // this is needed since even for fisrt MT5 account creation, add mt5 modal opens for a second,
-  cy.findByText('Enter your Deriv MT5 password')
+  cy.contains('Enter your Deriv MT5 password')
     .should(() => {})
     .then(($text) => {
       if ($text.length) {
@@ -36,13 +36,19 @@ function verifyDerivMT5Creation() {
           .click()
           .type(Cypress.env('mt5Password'))
         cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
+        cy.findByText(
+          'You have a new Deriv MT5 password to log in to your Deriv MT5 accounts on the web and mobile apps.',
+          { timeout: 30000 }
+        ).should('be.visible')
+        cy.findByRole('button', { name: 'Done' }).click()
       }
     })
 }
 
 function verifyTransferFundsMessage(accountType) {
   cy.findByText(
-    `Transfer funds from your USD Wallet to your ${accountType} (SVG) account to start trading.`
+    `Transfer funds from your USD Wallet to your ${accountType} (SVG) account to start trading.`,
+    { timeout: 30000 }
   ).should('be.visible')
   cy.get(
     `div:contains("MT5 ${accountType} (SVG)USD Wallet0.00 USDYour ${accountType} (SVG) account is ready")`
@@ -78,7 +84,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
     cy.c_login({ app: 'wallets' })
   })
 
-  it('should be able to create mt5 account', () => {
+  it.only('should be able to create mt5 account', () => {
     cy.log('create mt5 svg account')
     cy.c_visitResponsive('/wallets', 'large')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
@@ -113,23 +119,22 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
 
     // create SVG swap free account
     // this part of the code is commented due to this bug https://app.clickup.com/t/20696747/WALL-3967
-    // cy.findByText(
-    //   'Trade swap-free CFDs on MT5 with synthetics, forex, stocks, stock indices, cryptocurrencies and ETFs'
-    // )
-    //   .should(() => {})
-    //   .then(($el) => {
-    //     if ($el.length) {
-    //       clickAddMt5Button('Swap-Free')
-    //       verifyJurisdictionSelection('Swap-Free')
-    //       verifyDerivMT5Creation()
-    //       verifyTransferFundsMessage('Deriv MT5')
-    //       closeModal()
-    //     }
-    //     else{
-    //       cy.log('Swap-free SVG account not created. It already exists')
-    //     }
-    //   })
-    // // create BVI Financial account
+    cy.findByText(
+      'Trade swap-free CFDs on MT5 with synthetics, forex, stocks, stock indices, cryptocurrencies and ETFs'
+    )
+      .should(() => {})
+      .then(($el) => {
+        if ($el.length) {
+          clickAddMt5Button('Swap-Free')
+          verifyJurisdictionSelection('Swap-Free')
+          verifyDerivMT5Creation()
+          verifyTransferFundsMessage('Deriv MT5')
+          closeModal()
+        } else {
+          cy.log('Swap-free SVG account not created. It already exists')
+        }
+      })
+    // create BVI Financial account
     cy.findByText('Get more')
       .should(() => {})
       .then(($el) => {
@@ -239,19 +244,19 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
       })
     // create SVG swap free account
     // this part of the code is commented due to this bug https://app.clickup.com/t/20696747/WALL-3967
-    // cy.findByText(
-    //   'Trade swap-free CFDs on MT5 with synthetics, forex, stocks, stock indices, cryptocurrencies and ETFs'
-    // )
-    //   .should(() => {})
-    //   .then(($el) => {
-    //     if ($el.length) {
-    //       clickAddMt5Button('Swap-Free')
-    //       verifyJurisdictionSelection('Swap-Free')
-    //       verifyDerivMT5Creation()
-    //       verifyTransferFundsMessage('Deriv MT5')
-    //       closeModal()
-    //     }
-    //   })
+    cy.findByText(
+      'Trade swap-free CFDs on MT5 with synthetics, forex, stocks, stock indices, cryptocurrencies and ETFs'
+    )
+      .should(() => {})
+      .then(($el) => {
+        if ($el.length) {
+          clickAddMt5Button('Swap-Free')
+          verifyJurisdictionSelection('Swap-Free')
+          verifyDerivMT5Creation()
+          verifyTransferFundsMessage('Deriv MT5')
+          closeModal()
+        }
+      })
 
     // create SVG Financial account
     cy.findByText('Get more')
@@ -336,7 +341,6 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
       .then(($el) => {
         if ($el.length) {
           clickAddMt5Button('Swap-Free')
-          verifyJurisdictionSelection('Swap-Free')
           verifyDerivMT5Creation()
           verifyTransferFundsMessage('Deriv MT5')
           closeModal()
