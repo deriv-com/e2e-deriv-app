@@ -6,8 +6,8 @@ function checkWalletBanner(deviceType) {
   cy.findByText('Better funds segregation')
   if (deviceType == 'mobile') {
     cy.get('.mobile-real-wallets-upgrade')
-      .trigger('touchstart', { force: true, position: 'center' })
-      .trigger('touchmove', { force: true, position: 'left' }) // Adjust position based on swipe direction
+      .trigger('touchstart', { force: true, position: 'right' })
+      .trigger('touchmove', { force: true, position: 'left' })
       .trigger('touchend', { force: true })
   } else {
     cy.findByRole('button', { name: 'Next' }).click()
@@ -17,8 +17,8 @@ function checkWalletBanner(deviceType) {
   cy.contains('Wallets will become your')
   if (deviceType == 'mobile') {
     cy.get('.mobile-real-wallets-upgrade')
-      .trigger('touchstart', { force: true, position: 'center' })
-      .trigger('touchmove', { force: true, position: 'right' }) // Adjust position based on swipe direction
+      .trigger('touchstart', { force: true, position: 'left' })
+      .trigger('touchmove', { force: true, position: 'right' })
       .trigger('touchend', { force: true })
   } else {
     cy.findByRole('button', { name: 'Back' })
@@ -30,7 +30,7 @@ function checkWalletBanner(deviceType) {
   cy.findByText('Better funds segregation')
   if (deviceType == 'mobile') {
     cy.get('.mobile-real-wallets-upgrade')
-      .trigger('touchstart', { force: true, position: 'center' })
+      .trigger('touchstart', { force: true, position: 'right' })
       .trigger('touchmove', { force: true, position: 'left' })
       .trigger('touchend', { force: true })
   } else {
