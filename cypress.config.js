@@ -130,6 +130,8 @@ module.exports = defineConfig({
     },
   },
   env: {
+    setupComplete: false,
+    runFromPR: false,
     stagingUrl: "https://staging-app.deriv.com/",
     prodURL: "https://app.deriv.com/",
     derivComProdURL: "https://deriv.com/",

@@ -4,8 +4,6 @@ Cypress.prevAppId = 0
 Cypress.prevUser = ''
 const expectedCookieValue = '{%22clients_country%22:%22br%22}'
 
-let updatedAppId
-
 const setLoginUser = (user = 'masterUser', options = {}) => {
   const { backEndProd = false } = options
   if (
@@ -747,42 +745,53 @@ Cypress.Commands.add('c_fakeLinkPopUpCheck', () => {
 })
 
 /**
- * Method to perform Authorization and Create Application ID 
+ * Method to perform Authorization and Create Application ID
  * by calling ApplicationRegister API call
  */
 Cypress.Commands.add('c_createApplicationId', () => {
   try {
-     // Login is required as we need Auth Token for running RegisterApplication API.
-     cy.c_login() 
-     const oldAppdId = parseInt(Cypress.env('configAppId'))
-     cy.task('wsConnect')
-     cy.c_authorizeCall()
- 
-     // This method will create and return New App Id.
-     cy.c_registerNewApplicationID().then(() => {
-       updatedAppId = Cypress.env('updatedAppId')
-       cy.log('The New App Before ID is: ', updatedAppId)
-       cy.task('wsDisconnect')
-       cy.c_logout()
- 
-       Cypress.config('baseUrl', Cypress.env('appRegisterUrl'))
+    cy.log('Registering Url...')
 
-       Cypress.config('stdConfigServer', Cypress.env('appRegisterUrl'))
+    cy.c_login_setToken() // We need Auth Token for running WS API calls.
+    const oldAppdId = parseInt(Cypress.env('configAppId'))
+    cy.task('wsConnect')
+    cy.c_authorizeCall()
 
-       Cypress.env('configAppId', updatedAppId)
-       
-       Cypress.env('stdConfigAppId', updatedAppId)
-       Cypress.env('oAuthUrl', '<empty>')
-       Cypress.env('stdConfigAppId', updatedAppId)
+    cy.task('registerNewAppIDTask').then((response) => {
+      const appId = response
+      cy.log('The Newly Generated App Id is: ', appId)
+      Cypress.env('updatedAppId', appId)
 
-      //  cy.task('wsConnect')
+      cy.task('wsDisconnect')
 
-       const newAppId = parseInt(Cypress.env('configAppId'))
-       expect(newAppId).not.equal(oldAppdId)
+      Cypress.config('baseUrl', Cypress.env('appRegisterUrl'))
 
-       cy.visit(Cypress.env('appRegisterUrl') + '?qa_server=' + Cypress.env('configServer') + '&app_id=' + Cypress.env('stdConfigAppId'))
-     })
+      Cypress.env('configAppId', appId)
+      Cypress.env('stdConfigAppId', appId)
+      Cypress.prevAppId = appId
+      Cypress.env('oAuthUrl', '<empty>') //This needs to be empty as we need to auto-auth the app after first login.
+
+      cy.log(
+        '...Url registered and baseUrl switched. AppId = ' +
+          Cypress.env('updatedAppId')
+      )
+    })
   } catch (e) {
-    console.error('An error occurred during the account creation process:', e)
+    console.error('An error occurred during the app registration process:', e)
   }
+})
+
+Cypress.Commands.add('c_login_setToken', () => {
+  getOAuthUrl(
+    (oAuthUrl) => {
+      Cypress.env('oAuthUrl', oAuthUrl)
+
+      const urlParams = new URLSearchParams(Cypress.env('oAuthUrl'))
+      const token = urlParams.get('token1')
+
+      Cypress.env('oAuthToken', token) //Set token here
+    },
+    Cypress.env('loginEmail'),
+    Cypress.env('loginPassword')
+  )
 })
