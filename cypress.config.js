@@ -204,6 +204,19 @@ module.exports = defineConfig({
         ID: process.env.E2E_EU_LOGIN,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
+      recentUSDClientIneligible: {
+        ID: process.env.E2E_RECENTUSDCLIENTINELIGIBLE,
+        PSWD: process.env.E2E_DERIV_PASSWORD,
+      },
+      clientWithoutVRTC: {
+        ID: process.env.E2E_CLIENTWITHOUTVRTC,
+        PSWD: process.env.E2E_DERIV_PASSWORD,
+      },
+      VRTConlyClient: {
+        ID: process.env.E2E_VRTCONLYCLIENT,
+        PSWD: process.env.E2E_DERIV_PASSWORD,
+      }
+
     },
     production:{
       masterUser:{
@@ -232,7 +245,7 @@ module.exports = defineConfig({
     baseUrl: process.env.CYPRESS_BASE_URL,
     loginEmail: process.env.E2E_DERIV_LOGIN,
     walletloginEmail: process.env.E2E_DERIV_LOGIN_WALLET,
-    walletloginPassword:process.env.E2E_QA_ACCOUNT_PASSWORD,
+    walletloginPassword:process.env.E2E_DERIV_PASSWORD,
     loginPassword: process.env.E2E_DERIV_PASSWORD,
     p2pbuyloginEmail: process.env.E2E_P2P_BUY,
     p2psellloginEmail: process.env.E2E_P2P_SELL,
@@ -325,6 +338,9 @@ module.exports = defineConfig({
       AUD: "Australian Dollar",
       BTC: "Bitcoin",
     },
+    walltermigrationineligible:{
+
+    }
   },
   retries: {
     runMode: 2,
