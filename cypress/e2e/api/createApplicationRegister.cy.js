@@ -4,7 +4,8 @@ describe('QATEST - 148419 - Register a New Application / App ID', () => {
   beforeEach(() => {
     cy.log('<prevAppId - beforeEach> ' + Cypress.env('setupComplete'))
     if (!Cypress.env('setupComplete')) {
-      if (Cypress.env('runFromPR')) {
+      cy.log('runFromPR = ' + Cypress.env('runFromPR'))
+      if (Cypress.env('runFromPR') == 'true') {
         cy.c_createApplicationId()
       }
 

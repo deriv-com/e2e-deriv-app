@@ -9,7 +9,8 @@ Cypress.jsQR = jsQR
 before(() => {
   // Code to run once before all tests
   if (!Cypress.env('setupComplete')) {
-    if (Cypress.env('runFromPR')) {
+    cy.log('runFromPR = ' + Cypress.env('runFromPR'))
+    if (Cypress.env('runFromPR') == 'true') {
       cy.c_createApplicationId()
     }
 
