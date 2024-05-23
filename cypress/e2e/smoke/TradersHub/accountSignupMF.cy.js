@@ -1,6 +1,5 @@
 import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/helper/utility'
-import { derivApp } from '../../../support/locators'
 
 describe('QATEST-5569: Verify MF Signup flow', () => {
   let size = ['small', 'desktop']
@@ -43,6 +42,7 @@ describe('QATEST-5569: Verify MF Signup flow', () => {
         'have.text',
         '0.00EUR'
       )
+      //TODO: Temp disable. Re-enable after debugging.
       if (isMobile)
         cy.c_manageAccountsetting(country, {
           isMobile: isMobile,
