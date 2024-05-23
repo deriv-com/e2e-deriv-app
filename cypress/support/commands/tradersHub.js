@@ -346,7 +346,7 @@ Cypress.Commands.add('c_manageAccountsetting', (CoR, options = {}) => {
     if (isMobile) cy.get(`select[name='country_input']`).select(CoR)
     else {
       cy.findByLabelText('Country').type(CoR)
-      cy.findByText(CoR).as('COR')
+      cy.findByText(CoR).as('COR').scrollIntoView().should('be.visible')
       cy.get('@COR').click()
     }
     cy.findByRole('button', { name: lang.realAccountFormUtils.nextBtn }).should(
