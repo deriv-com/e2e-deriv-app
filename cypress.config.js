@@ -205,24 +205,24 @@ module.exports = defineConfig({
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
       eligibleMigration1: {
-        ID: process.env.E2E_WALLETS_LOGIN_PROD,
-        PSWD: process.env.E2E_WALLETS_PASSWORD_PROD
+        ID: process.env.E2E_WALLETS_MIGARTION_MAIN,
+        PSWD: process.env.E2E_DERIV_PASSWOR
       },
       eligibleMigration2: {
-        ID: process.env.E2E_WALLETS_LOGIN_PROD,
-        PSWD: process.env.E2E_WALLETS_PASSWORD_PROD
+        ID: process.env.E2E_WALLETS_MIGARTION_BACKUP1,
+        PSWD: process.env.E2E_DERIV_PASSWOR
       },
       eligibleMigration3: {
-        ID: process.env.E2E_WALLETS_LOGIN_PROD,
-        PSWD: process.env.E2E_WALLETS_PASSWORD_PROD
+        ID: process.env.E2E_WALLETS_MIGARTION_BACKUP2,
+        PSWD: process.env.E2E_DERIV_PASSWOR
       },
       eligibleMigration4: {
-        ID: process.env.E2E_WALLETS_LOGIN_PROD,
-        PSWD: process.env.E2E_WALLETS_PASSWORD_PROD
+        ID: process.env.E2E_WALLETS_MIGARTION_BACKUP3,
+        PSWD: process.env.E2E_DERIV_PASSWOR
       },
       eligibleMigration5: {
-        ID: process.env.E2E_WALLETS_LOGIN_PROD,
-        PSWD: process.env.E2E_WALLETS_PASSWORD_PROD
+        ID: process.env.E2E_WALLETS_MIGARTION_BACKUP4,
+        PSWD: process.env.E2E_DERIV_PASSWOR
       }
     }
     },
