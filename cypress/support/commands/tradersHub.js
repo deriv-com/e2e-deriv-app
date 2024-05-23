@@ -17,7 +17,7 @@ Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
     cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'Options & Multipliers' }).click()
   } else {
-    cy.findByText('Options & Multipliers').should('be.visible')
+    cy.findByText('Options').should('be.visible')
     cy.findByText('CFDs').should('be.visible')
     cy.findAllByText('Deriv cTrader')
       .first()
@@ -26,7 +26,7 @@ Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
     cy.findByText('Other CFD Platforms').scrollIntoView({
       position: 'bottom',
     })
-    cy.findByText('Options & Multipliers').click()
+    cy.findByText('Options').click()
   }
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
 })
@@ -39,13 +39,15 @@ Cypress.Commands.add('c_switchToReal', () => {
 Cypress.Commands.add('c_switchToDemo', () => {
   cy.findByTestId('dt_dropdown_display').click()
   cy.get('#demo').click()
+  //Wait for page to completely load
+  cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
 })
 
 Cypress.Commands.add('c_completeTradersHubTour', (options = {}) => {
   const { language = 'english' } = options
   cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
     const lang = langData[language]
-    cy.c_skipPasskeysV2()
+    cy.c_skipPasskeysV2({ language: language })
     cy.findByRole('button', { name: lang.realAccountFormUtils.nextBtn }).click()
     if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
       cy.contains('Choice of regulation').should('be.visible')
@@ -60,7 +62,7 @@ Cypress.Commands.add('c_enterValidEmail', (signUpMail, options = {}) => {
   {
     cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
       const lang = langData[language]
-      cy.visit(`https://deriv.com/${lang.urlCode}/`, {
+      cy.visit(`${Cypress.env('derivComProdURL')}${lang.urlCode}/`, {
         onBeforeLoad(win) {
           win.localStorage.setItem(
             'config.server_url',
@@ -69,7 +71,7 @@ Cypress.Commands.add('c_enterValidEmail', (signUpMail, options = {}) => {
           win.localStorage.setItem('config.app_id', Cypress.env('configAppId'))
         },
       })
-      cy.visit(`https://deriv.com/${lang.urlCode}/signup/`, {
+      cy.visit(`${Cypress.env('derivComProdURL')}${lang.urlCode}/signup/`, {
         onBeforeLoad(win) {
           win.localStorage.setItem(
             'config.server_url',
@@ -138,7 +140,8 @@ Cypress.Commands.add('c_enterPassword', (options = {}) => {
   })
 })
 
-Cypress.Commands.add('c_completeOnboarding', () => {
+Cypress.Commands.add('c_completeOnboarding', (options = {}) => {
+  const { language = 'english' } = options
   cy.contains('Switch accounts').should('be.visible')
   cy.contains('button', 'Next').click()
   if (Cypress.env('diel_country_list').includes(Cypress.env('citizenship'))) {
@@ -147,7 +150,7 @@ Cypress.Commands.add('c_completeOnboarding', () => {
   }
   cy.contains("Trader's Hub tour").should('be.visible')
   cy.contains('button', 'OK').click()
-  cy.c_skipPasskeysV2()
+  cy.c_skipPasskeysV2({ language: language })
 })
 
 // TODO move to Utility finction
@@ -342,8 +345,9 @@ Cypress.Commands.add('c_manageAccountsetting', (CoR, options = {}) => {
     )
     if (isMobile) cy.get(`select[name='country_input']`).select(CoR)
     else {
-      cy.findByLabelText('Country').type(CoR)
-      cy.findByText(CoR).click()
+      cy.findByLabelText('Country').should('not.be.disabled').type(CoR)
+      cy.findByText(CoR).as('COR').scrollIntoView().should('be.visible')
+      cy.get('@COR', { timeout: 15000 }).click()
     }
     cy.findByRole('button', { name: lang.realAccountFormUtils.nextBtn }).should(
       'not.be.disabled'

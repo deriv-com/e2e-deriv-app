@@ -26,18 +26,19 @@ describe('QATEST-127508 - Onfido (2 attempts) failed clients are redirected to m
     cy.findByText('Confirm').click()
     cy.findByText('Account verification required').should('be.visible')
     cy.reload()
-    cy.c_closeNotificationHeader()
+    cy.get('.notification__close-button').click()
     cy.c_waitUntilElementIsFound({
       cyLocator: () =>
         cy.findByText('Your proof of identity submission failed because:'),
-      timeout: 1000,
+      timeout: 3000,
       maxRetries: 5,
     })
+    cy.c_closeNotificationHeader()
     cy.findByText('Your proof of identity submission failed because:')
-    cy.get('.dc-btn').click()
+    cy.get('.dc-btn--primary').click()
 
     // Second onfido attempt
-    cy.c_onfidoSecondRun()
+    cy.c_onfidoSecondRun('Colombia')
     cy.findByText('Your documents were submitted successfully').should(
       'be.visible'
     )
@@ -45,8 +46,8 @@ describe('QATEST-127508 - Onfido (2 attempts) failed clients are redirected to m
     cy.c_waitUntilElementIsFound({
       cyLocator: () =>
         cy.findByText('Please upload one of the following documents:'),
-      timeout: 1000,
-      maxRetries: 2,
+      timeout: 3000,
+      maxRetries: 5,
     })
     cy.reload()
     cy.findByText('Please upload one of the following documents:').should(
