@@ -43,17 +43,17 @@ function checkWalletBanner(deviceType) {
   }
 }
 function checkAccountNotMigrated() {
-  for (let i = 0; i < 3; i++) {
+  for (let i = 1; i < 4; i++) {
     cy.contains('USD Wallet')
       .should(() => {})
       .then(($text) => {
         if ($text.length) {
-          cy.log('Account is migrated')
+          cy.log('Account is migrated!')
           cy.c_logout()
-          cy.c_login({ app: 'wallets' })
+          cy.c_login({ app: 'wallets', user: `eligibleMigration${i}` })
         } else {
-          cy.log('USD Wallet does not exist')
-          return // Exit from the function
+          cy.log('account is not migrated!')
+          return
         }
       })
   }
