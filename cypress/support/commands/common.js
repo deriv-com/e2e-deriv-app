@@ -753,7 +753,6 @@ Cypress.Commands.add('c_createApplicationId', () => {
     cy.log('Registering Url...')
 
     cy.c_login_setToken() // We need Auth Token for running WS API calls.
-    const oldAppdId = parseInt(Cypress.env('configAppId'))
     cy.task('wsConnect')
     cy.c_authorizeCall()
 
