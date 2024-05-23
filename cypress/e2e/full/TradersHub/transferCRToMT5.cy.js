@@ -77,8 +77,11 @@ describe('QATEST-6064 Validate the transfer from CR to MT5 when CR account is ha
 
   it('Should validate the transfer functionality from CR to MT5 account when CR account is having balance in mobile ', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
+    //Wait for page to load
+    cy.findByTestId('dt_trading-app-card_real_deriv-trader')
+      .findByText('Deriv Trader')
+      .should('be.visible')
     cy.c_skipPasskeysV2()
-    cy.findByRole('link', { name: 'options' }).should('be.visible')
     cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'CFDs' }).click()
     validateTransferwithBalance()
@@ -98,8 +101,11 @@ describe('QATEST-6060 Validate the transfer from CR to MT5 when CR account is no
 
   it('Should validate the transfer functionality from CR to MT5 account when CR account is not having balance in mobile ', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
+    //Wait for page to load
+    cy.findByTestId('dt_trading-app-card_real_deriv-trader')
+      .findByText('Deriv Trader')
+      .should('be.visible')
     cy.c_skipPasskeysV2()
-    cy.findByRole('link', { name: 'options' }).should('be.visible')
     cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'CFDs' }).click()
     createMT5Account()
