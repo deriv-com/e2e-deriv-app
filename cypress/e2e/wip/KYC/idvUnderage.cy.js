@@ -25,6 +25,6 @@ describe('QATEST-23076 IDV Underage', () => {
     )
     cy.c_closeNotificationHeader()
     cy.reload()
-    cy.contains('Your identity document has expired').should('be.visible')
+    cy.contains('We were unable to verify the identity document with the details provided.').should('be.visible')
   })
 })
