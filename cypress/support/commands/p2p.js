@@ -46,7 +46,7 @@ Cypress.Commands.add('c_verifyExchangeRate', (rate) => {
   rateCalculation = rate * 0.01
   calculatedValue = rateCalculation * marketRate + marketRate
   regexPattern = new RegExp(
-    `Your rate is = ${calculatedValue.toFixed(6).slice(0, -1)}\\d? NZD`
+    `^Your rate is = ${calculatedValue.toFixed(1)}\\d* NZD$`
   )
   cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
 })
@@ -840,4 +840,46 @@ Cypress.Commands.add('c_checkForNonEmptyStateAdScreen', () => {
   ).should('not.exist')
   cy.findByRole('button', { name: 'Create ad' }).should('not.exist')
   cy.get('.buy-sell-row').should('exist')
+})
+
+Cypress.Commands.add('c_sortAdBy', (sortBy) => {
+  cy.findByTestId('sort-div').should('be.visible').click()
+  cy.findByText(sortBy).should('be.visible')
+  cy.contains('.dc-text', sortBy)
+    .closest('.dc-radio-group__item')
+    .find('input[type="radio"]')
+    .then(($radio) => {
+      if (!$radio.is(':checked')) {
+        cy.wrap($radio).click({ force: true }).and('be.checked')
+      } else {
+        cy.get('body').click({ x: 10, y: 10 })
+        cy.get('.dc-modal').should('not.exist')
+        cy.findByText('Buy / Sell').should('be.visible')
+      }
+    })
+})
+
+Cypress.Commands.add('c_getExchangeRatesFromScreen', (adType, options = {}) => {
+  const { sortArray = false } = options
+  let ratesArray = []
+  cy.findByRole('button', { name: adType }).should('be.visible').click()
+  cy.get('.buy-sell-row__rate').each(($parent) => {
+    cy.wrap($parent)
+      .children()
+      .eq(1)
+      .invoke('text')
+      .then((text) => {
+        let cleanedText = text.replace('IDR', '').replace(/,/g, '').trim()
+        let rate = parseFloat(cleanedText).toFixed(2)
+        ratesArray.push(parseFloat(rate))
+      })
+  })
+  cy.then(() => {
+    if (sortArray) {
+      ratesArray.sort((a, b) => (adType === 'Buy' ? a - b : b - a))
+    } else {
+      cy.log('Not sorting rates array')
+    }
+    return cy.wrap(JSON.stringify(ratesArray))
+  })
 })

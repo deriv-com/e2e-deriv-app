@@ -25,9 +25,14 @@ describe('QATEST-22853 IDV Document Rejected by Smile Identity provider', () => 
       'be.visible'
     )
     cy.c_closeNotificationHeader()
-    cy.reload()
-    cy.findByText(
-      'We were unable to verify the identity document with the details provided.'
-    ).should('be.visible')
+
+    cy.c_waitUntilElementIsFound({
+      cyLocator: () =>
+        cy.findByText(
+          'We were unable to verify the identity document with the details provided.'
+        ),
+      timeout: 4000,
+      maxRetries: 5,
+    })
   })
 })

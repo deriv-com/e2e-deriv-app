@@ -75,6 +75,23 @@ function onboardingcfdtrading() {
   cy.contains('Click here to repeat this tour.')
   cy.findByRole('button', { name: 'Done' }).click()
 }
+function onboardingWalletSwitcher() {
+  cy.get('.wallets-tour-guide__content').should('be.visible')
+  cy.contains('This is your Wallet').should('be.visible')
+  cy.contains('Manage your funds with Wallets.').should('be.visible')
+  cy.findByRole('button', { name: 'Next' }).click()
+  // demo/real account switcher o
+  cy.contains('Select Demo or Real', { timeout: 10000 }).should('be.visible')
+  cy.contains('Press the tab to switch between Demo or Real Wallets.', {
+    timeout: 10000,
+  }).should('be.visible')
+  cy.findByRole('button', { name: 'Next' }).click()
+  cy.contains('Change your Wallet.', { timeout: 10000 }).should('be.visible')
+  cy.contains('Switch to a Wallet from the drop-down menu.', {
+    timeout: 10000,
+  }).should('be.visible')
+  cy.findByRole('button', { name: 'Next' }).click()
+}
 
 function onboardingfiatwallet() {
   cy.contains('Wallet', { timeout: 10000 }).should('exist')
@@ -83,6 +100,7 @@ function onboardingfiatwallet() {
   cy.contains('Swap-Free').should('be.visible')
   cy.findByTestId('dt_traders_hub_onboarding_icon').click()
   cy.get('[data-test-id="spotlight"]').should('be.visible')
+  onboardingWalletSwitcher()
   onboardingcfdtrading()
 }
 
