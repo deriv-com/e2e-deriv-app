@@ -204,6 +204,11 @@ module.exports = defineConfig({
         ID: process.env.E2E_EU_LOGIN,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
+      eligibleMigration: {
+        ID: process.env.E2E_WALLETS_LOGIN_PROD,
+        PSWD: process.env.E2E_WALLETS_PASSWORD_PROD
+      }
+    }
     },
     production:{
       masterUser:{
@@ -222,7 +227,6 @@ module.exports = defineConfig({
         ID: process.env.E2E_WALLETS_LOGIN_PROD,
         PSWD: process.env.E2E_WALLETS_PASSWORD_PROD
       }
-    }
   },
     RegionEU: "/?region=at",
     RegionROW: "/?region=za",
