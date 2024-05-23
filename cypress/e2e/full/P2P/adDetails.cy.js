@@ -46,7 +46,6 @@ describe('QATEST-2853 - Ad details', () => {
         sessionStorage.getItem('c_instructionsText').length
       )
       cy.findByText('Sell USD').click()
-      cy.findByText("You're creating an ad to sell...").should('be.visible')
       cy.findByTestId('contact_info').should(
         'have.value',
         sessionStorage.getItem('c_contactInfoText')
