@@ -86,8 +86,9 @@ const checkStep = (
   cy.findByRole('button', { name: 'Back' }).should(
     backButtonShouldExist ? 'exist' : 'not.exist'
   )
-  cy.findByRole('button', { name: nextButtonName }).should('exist').click()
-  cy.wait(800)
+  cy.findByRole('button', { name: nextButtonName, timeout: 3000 })
+    .should('exist')
+    .click()
 }
 
 const allWalletAdded = () => {
