@@ -35,7 +35,7 @@ function changeMT5Password() {
         cy.findByRole('button', { name: 'Investor Password' }).should('exist')
         cy.c_emailVerification(
           'New%20DMT5%20password%20request.html',
-          'Need a new DMT5 password?',
+          'QA script',
           { baseUrl: Cypress.env('configServer') + '/emails' }
         )
         cy.then(() => {
