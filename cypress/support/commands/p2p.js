@@ -12,13 +12,15 @@ const pm3 = 'Skrill'
 
 Cypress.Commands.add('c_createNewAd', (adType) => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
+  cy.contains('loading').should('not.exist')
   cy.get('body', { timeout: 50000 }).then((body) => {
     if (body.find('.no-ads__message', { timeout: 10000 }).length > 0) {
+      // cy.c_removeAllExistingAds(adType)
       cy.findByRole('button', { name: 'Create new ad' })
         .should('be.visible')
         .click()
     } else if (body.find('#toggle-my-ads', { timeout: 10000 }).length > 0) {
-      cy.c_removeExistingAds(adType)
+      // cy.c_removeExistingAds(adType)
       cy.findByRole('button', { name: 'Create new ad' })
         .should('be.visible')
         .click()
@@ -513,6 +515,7 @@ Cypress.Commands.add('c_postAd', () => {
 
 Cypress.Commands.add('c_removeExistingAds', (adType) => {
   cy.get('.my-ads-table__row .dc-dropdown-container')
+    .first()
     .should('be.visible')
     .click()
   cy.findByText('Delete').parent().click()
