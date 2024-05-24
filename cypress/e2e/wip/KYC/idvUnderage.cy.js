@@ -23,8 +23,11 @@ describe('QATEST-23076 IDV Underage', () => {
     cy.findByText('Proof of address required', { timeout: 30000 }).should(
       'exist'
     )
+
     cy.c_closeNotificationHeader()
     cy.reload()
-    cy.contains('We were unable to verify the identity document with the details provided.').should('be.visible')
+    cy.contains(
+      'We were unable to verify the identity document with the details provided.'
+    ).should('be.visible')
   })
 })
