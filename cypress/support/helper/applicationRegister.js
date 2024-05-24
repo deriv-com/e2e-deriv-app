@@ -1,12 +1,7 @@
 require('dotenv').config()
 const crypto = require('crypto')
 
-const scopeParams = [
-  'read',
-  'trade',
-  'payments',
-  'admin',
-]
+const scopeParams = ['read', 'trade', 'payments', 'admin']
 
 /**
  * Method to register a new application id / appid. This call requires authorize call to be called first
