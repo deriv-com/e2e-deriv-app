@@ -40,7 +40,7 @@ module.exports = defineConfig({
           newAppId = id;
           return null;
         }
-      });
+      }),
       on('task', {
         wsConnect() {
           // Check if there is an existing connection and close it if open
