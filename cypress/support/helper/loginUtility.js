@@ -172,18 +172,19 @@ export function getOAuthUrl(callback, loginEmail, loginPassword) {
  * ...something here
  * })
  */
-export function getWalletOAuthUrl(callback) {
-  let loginEmail
-  let loginPassword
+export function getWalletOAuthUrl(callback, loginEmail, loginPassword) {
   /* User production credentials if base url is production
   Else use test credentials */
   if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
+    let loginEmail
+    let loginPassword
     loginEmail = Cypress.env('loginEmailProd')
     loginPassword = Cypress.env('loginPasswordProd')
-  } else {
-    loginEmail = Cypress.env('walletloginEmail')
-    loginPassword = Cypress.env('walletloginPassword')
-  }
+  } //else {
+    //cy.log('it came to this wallet flow')
+    //loginEmail = Cypress.env('walletloginEmail')
+    //loginPassword = Cypress.env('walletloginPassword')
+ // }
 
   // Step 1: Perform a GET on the OAuth Url in order to generate a CSRF token.
   cy.request({

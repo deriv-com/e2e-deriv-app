@@ -160,7 +160,9 @@ Cypress.Commands.add('c_login', (options = {}) => {
       cy.log('came inside wallet getOauth')
       Cypress.env('oAuthUrl', oAuthUrl)
       cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
-    })
+    },
+    loginEmail,
+    loginPassword)
   } else {
     cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
   }
