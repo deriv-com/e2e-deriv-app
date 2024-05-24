@@ -130,7 +130,7 @@ module.exports = defineConfig({
     },
   },
   env: {
-    setupComplete: false,
+    setupComplete: process.env.E2E_SETUP_COMPLETE,
     runFromPR: process.env.E2E_RUN_FROM_PR,
     stagingUrl: "https://staging-app.deriv.com/",
     prodURL: "https://app.deriv.com/",
