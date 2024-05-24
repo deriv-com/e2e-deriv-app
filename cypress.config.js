@@ -34,10 +34,12 @@ module.exports = defineConfig({
       }),
       on('task', {
         getPRAppId() {
+          console.log('Current PR appId = ' + newAppId);
           return newAppId;
         },
         setAppId(id) {
           newAppId = id;
+          console.log('Current PR appId = ' + newAppId);
           return null;
         }
       }),
@@ -140,7 +142,6 @@ module.exports = defineConfig({
     },
   },
   env: {
-    setupComplete: process.env.E2E_SETUP_COMPLETE,
     runFromPR: process.env.E2E_RUN_FROM_PR,
     stagingUrl: "https://staging-app.deriv.com/",
     prodURL: "https://app.deriv.com/",
