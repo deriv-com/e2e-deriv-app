@@ -15,17 +15,7 @@ let nicknameAndAmount = {
   seller: '',
   amount: '',
 }
-let paymentID = generateAccountNumberString(12)
 let fiatCurrency = 'USD'
-
-function verifyAdOnMyAdsScreenFloatingRateAd(adType, fiatCurrency) {
-  cy.findByText('Active').should('be.visible')
-  cy.findByText(`${adType} ${fiatCurrency}`).should('be.visible')
-  cy.findByText(`+${floatRate}%`)
-  cy.findByText(
-    `${minOrder.toFixed(2)} - ${maxOrder.toFixed(2)} ${fiatCurrency}`
-  )
-}
 
 let isSellAdUser = true
 const loginWithNewUser = (userAccount, isSellAdUserAccount) => {
@@ -56,80 +46,17 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
     cy.c_closeNotificationHeader()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
-    cy.get('.my-profile-name__column')
-      .children('.dc-text')
-      .invoke('text')
-      .then((sellerName) => {
-        nicknameAndAmount.seller = sellerName
-      })
-    cy.get('.my-profile-balance__amount')
-      .children('span')
-      .invoke('text')
-      .then((sellerBalanceText) => {
-        cleanedText = sellerBalanceText
-          .replace(',', '')
-          .replace('USD', '')
-          .trim()
-        floatValue = parseFloat(cleanedText).toFixed(2)
-        nicknameAndAmount.sellerBalanceBeforeSelling = floatValue
-      })
+    cy.getProfileName('seller').then((name) => {
+      nicknameAndAmount.seller = name
+    })
+    cy.getProfileBalance('seller', 'sellerBalanceBeforeSelling').then(
+      (balance) => {
+        nicknameAndAmount.sellerBalanceBeforeSelling = balance
+      }
+    )
     cy.c_clickMyAdTab()
     cy.c_createNewAd('sell')
     cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Sell', 'float')
-    //cy.findByText('Sell USD').click()
-    //cy.findByText("You're creating an ad to sell...").should('be.visible')
-    // cy.findByTestId('offer_amount')
-    //   .next('span.dc-text')
-    //   .invoke('text')
-    //   .then((fiatCurrency) => {
-    //     sessionStorage.setItem('c_fiatCurrency', fiatCurrency.trim())
-    //   })
-    // cy.get('.floating-rate__hint')
-    //   .invoke('text')
-    //   .then((textString) => {
-    //     const words = textString.split(' ')
-    //     const localCurrency = words[words.length - 1]
-    //     sessionStorage.setItem('c_localCurrency', localCurrency.trim())
-    //   })
-    // cy.then(() => {
-    //   cy.findByTestId('offer_amount').type('10').should('have.value', '10')
-    //   cy.findByTestId('float_rate_type')
-    //     .clear()
-    //     .type(floatRate)
-    //     .should('have.value', floatRate)
-    //   cy.findByTestId('min_transaction')
-    //     .type(minOrder)
-    //     .should('have.value', minOrder)
-    //   cy.findByTestId('max_transaction')
-    //     .type(maxOrder)
-    //     .should('have.value', maxOrder)
-    //   cy.findByTestId('contact_info')
-    //     .clear()
-    //     .type('Contact Info Block.')
-    //     .should('have.value', 'Contact Info Block.')
-    //   cy.findByTestId('default_advert_description')
-    //     .clear()
-    //     .type('Instructions Block.')
-    //     .should('have.value', 'Instructions Block.')
-    //   cy.findByTestId('dt_dropdown_display').click()
-    //   cy.get('#900').should('be.visible').click()
-    //   cy.findByTestId('dt_payment_method_card_add_icon')
-    //     .should('be.visible')
-    //     .click()
-    //   cy.c_addPaymentMethod(paymentID, paymentName)
-    //   cy.findByText(paymentID)
-    //     .should('exist')
-    //     .parent()
-    //     .prev()
-    //     .find('.dc-checkbox')
-    //     .and('exist')
-    //     .click()
-    //cy.c_verifyPostAd()
-    //  verifyAdOnMyAdsScreenFloatingRateAd(
-    //   'Sell',
-    //   sessionStorage.getItem('c_fiatCurrency')
-    // )
-    // })
   })
   it.skip('Should be able to place an order for advert and verify all fields and messages for floating rate.', () => {
     cy.c_navigateToDerivP2P()

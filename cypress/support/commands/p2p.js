@@ -155,9 +155,7 @@ Cypress.Commands.add(
     } else if (rateType == 'float') {
       cy.get('.floating-rate__hint')
         .invoke('text')
-        .then((textString) => {
-          const words = textString.split(' ')
-          const localCurrency = words[words.length - 1]
+        .then((localCurrency) => {
           sessionStorage.setItem('c_localCurrency', localCurrency.trim())
         })
     }
@@ -181,12 +179,10 @@ Cypress.Commands.add(
         .should('have.value', maxOrder)
       if (adType == 'Sell') {
         cy.findByTestId('contact_info')
-          .clear()
           .type('Contact Info Block')
           .should('have.value', 'Contact Info Block')
       }
       cy.findByTestId('default_advert_description')
-        .clear()
         .type('Description Block')
         .should('have.value', 'Description Block')
       cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
@@ -205,20 +201,20 @@ Cypress.Commands.add(
           .find('.dc-checkbox')
           .and('exist')
           .click()
+        cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+        cy.findByText('Set ad conditions').should('be.visible')
       } else if (adType == 'Buy') {
         cy.c_PaymentMethod()
       }
-      cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
-      cy.findByText('Set ad conditions').should('be.visible')
       cy.c_verifyPostAd()
       cy.c_verifyAdOnMyAdsScreen(
         adType,
         sessionStorage.getItem('c_fiatCurrency'),
         sessionStorage.getItem('c_localCurrency'),
-        rateType,
         rateValue,
         minOrder,
-        maxOrder
+        maxOrder,
+        rateType
       )
     })
   }
@@ -230,10 +226,10 @@ Cypress.Commands.add(
     adType,
     fiatCurrency,
     localCurrency,
-    rateType,
     rateValue,
     minOrder,
-    maxOrder
+    maxOrder,
+    rateType
   ) => {
     cy.findByText('Active').should('be.visible')
     cy.findByText(`${adType} ${fiatCurrency}`).should('be.visible')
@@ -907,3 +903,27 @@ Cypress.Commands.add(
       })
   }
 )
+
+Cypress.Commands.add('getProfileName', (profileType) => {
+  return cy
+    .get('.my-profile-name__column')
+    .children('.dc-text')
+    .invoke('text')
+    .then((name) => {
+      // nicknameAndAmount[profileType] = name
+      return name
+    })
+})
+
+Cypress.Commands.add('getProfileBalance', (profileType, balanceKey) => {
+  return cy
+    .get('.my-profile-balance__amount')
+    .children('span')
+    .invoke('text')
+    .then((balanceText) => {
+      const cleanedText = balanceText.replace(',', '').replace('USD', '').trim()
+      const floatValue = parseFloat(cleanedText).toFixed(2)
+      // nicknameAndAmount[balanceKey] = floatValue
+      return floatValue
+    })
+})
