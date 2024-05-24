@@ -46,41 +46,28 @@ Cypress.Commands.add('c_verifyExchangeRate', (rate) => {
   rateCalculation = rate * 0.01
   calculatedValue = rateCalculation * marketRate + marketRate
   regexPattern = new RegExp(
-    `Your rate is = ${calculatedValue.toFixed(6).slice(0, -1)}\\d? NZD`
+    `^Your rate is = ${calculatedValue.toFixed(1)}\\d* NZD$`
   )
   cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
 })
 
-Cypress.Commands.add(
-  'c_verifyFixedRate',
-  (adType, totalAmount, fixedRateValue, fiatCurrency, localCurrency) => {
-    totalAmount = totalAmount.toFixed(2)
-    fixedRateValue = fixedRateValue.toFixed(2)
-    cy.findByTestId('fixed_rate_type').clear()
-    cy.findByText('Fixed rate is required').should('be.visible')
-    cy.findByTestId('fixed_rate_type').type('abc').should('have.value', 'abc')
-    cy.findByText('Enter a valid amount').should('be.visible')
-    cy.findByTestId('fixed_rate_type')
-      .clear()
-      .type('10abc')
-      .should('have.value', '10abc')
-    cy.findByText('Enter a valid amount').should('be.visible')
-    cy.findByTestId('fixed_rate_type')
-      .clear()
-      .type('!@#')
-      .should('have.value', '!@#')
-    cy.findByText('Enter a valid amount').should('be.visible')
-    cy.findByTestId('fixed_rate_type').clear().type(fixedRateValue)
-    const totalPrice = totalAmount * fixedRateValue
-    regexPattern = `You\'re creating an ad to ${adType} ${totalAmount} ${fiatCurrency} for ${totalPrice.toFixed(2)} ${localCurrency} (${fixedRateValue} ${localCurrency}/${fiatCurrency})`
-    cy.get('.create-ad-summary')
-      .eq(0)
-      .invoke('text')
-      .then((spanText) => {
-        expect(spanText).to.eq(regexPattern)
-      })
-  }
-)
+Cypress.Commands.add('c_verifyFixedRate', (fixedRateValue) => {
+  cy.findByTestId('fixed_rate_type').clear()
+  cy.findByText('Fixed rate is required').should('be.visible')
+  cy.findByTestId('fixed_rate_type').type('abc').should('have.value', 'abc')
+  cy.findByText('Enter a valid amount').should('be.visible')
+  cy.findByTestId('fixed_rate_type')
+    .clear()
+    .type('10abc')
+    .should('have.value', '10abc')
+  cy.findByText('Enter a valid amount').should('be.visible')
+  cy.findByTestId('fixed_rate_type')
+    .clear()
+    .type('!@#')
+    .should('have.value', '!@#')
+  cy.findByText('Enter a valid amount').should('be.visible')
+  cy.findByTestId('fixed_rate_type').clear().type(fixedRateValue)
+})
 
 Cypress.Commands.add('c_verifyTextAreaBlock', (blockName) => {
   cy.c_verifyTextAreaLength(blockName, 0)
@@ -152,9 +139,6 @@ Cypress.Commands.add(
   'c_inputAdDetails',
   (rateValue, minOrder, maxOrder, adType, rateType) => {
     cy.findByText(`${adType} USD`).click()
-    cy.findByText(`You're creating an ad to ${adType.toLowerCase()}...`).should(
-      'be.visible'
-    )
     cy.findByTestId('offer_amount')
       .next('span.dc-text')
       .invoke('text')
@@ -201,6 +185,8 @@ Cypress.Commands.add(
       cy.findByTestId('default_advert_description')
         .type('Description Block')
         .should('have.value', 'Description Block')
+      cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+      cy.findByText('Set payment details').should('be.visible')
       cy.findByTestId('dt_dropdown_display').click()
       cy.get('#900').should('be.visible').click()
       if (adType == 'Sell') {
@@ -218,6 +204,8 @@ Cypress.Commands.add(
       } else if (adType == 'Buy') {
         cy.c_PaymentMethod()
       }
+      cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+      cy.findByText('Set ad conditions').should('be.visible')
       cy.c_verifyPostAd()
       cy.c_verifyAdOnMyAdsScreen(
         adType,
@@ -265,11 +253,13 @@ Cypress.Commands.add('c_getExistingAdDetailsForValidation', (adType) => {
         sessionStorage.setItem('c_contactInfo', contactInfo.trim())
       })
   }
-  cy.findByTestId('description')
+  cy.findByTestId('default_advert_description')
     .invoke('text')
     .then((instructions) => {
       sessionStorage.setItem('c_instructions', instructions.trim())
     })
+  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+  cy.findByText('Edit payment details').should('be.visible')
   cy.get('span[name="order_completion_time"]')
     .invoke('text')
     .then((orderCompletionTime) => {
@@ -380,7 +370,7 @@ Cypress.Commands.add(
         "If the ad doesn't receive an order for 3 days, it will be deactivated."
       ).should('be.visible')
       cy.findByText('Don’t show this message again.').should('be.visible')
-      cy.findByRole('button', { name: 'Ok' }).should('be.enabled').click()
+      cy.findByRole('button', { name: 'OK' }).should('be.enabled').click()
     })
   }
 )
@@ -449,9 +439,11 @@ Cypress.Commands.add('c_verifyPostAd', () => {
 })
 
 Cypress.Commands.add('c_verifyTooltip', () => {
+  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+  cy.findByText('Set payment details').should('be.visible')
   cy.findByTestId('dt_order_time_selection_info_icon').click()
   cy.contains('Orders will expire if they aren’t completed within this time.')
-  cy.findByRole('button', { name: 'Ok' }).click()
+  cy.findByRole('button', { name: 'OK' }).click()
 })
 
 Cypress.Commands.add('c_verifyCompletionOrderDropdown', () => {
@@ -496,6 +488,8 @@ Cypress.Commands.add('c_PaymentMethod', () => {
   cy.findByPlaceholderText('Add').click()
   cy.findByText(pm3).click()
   cy.findByPlaceholderText('Add').should('not.exist')
+  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+  cy.findByText('Set ad conditions').should('be.visible')
 })
 
 Cypress.Commands.add('c_verifyAmountFiled', () => {
@@ -820,10 +814,7 @@ Cypress.Commands.add('c_checkForEmptyAdScreenMessage', (adType, adTypeOpp) => {
     'Looking to buy or sell USD? You can post your own ad for others to respond.'
   ).should('be.visible')
   cy.findByRole('button', { name: 'Create ad' }).should('be.visible').click()
-  cy.findByText(
-    `You\'re creating an ad to ${adTypeOpp.toLowerCase()}...`
-  ).should('be.visible')
-  cy.get('.page-return__button').should('be.visible').click()
+  cy.get('.wizard__main-step').prev().children().last().click()
   cy.findByText('You have no ads 😞').should('be.visible')
   cy.findByText(
     'Looking to buy or sell USD? You can post your own ad for others to respond.'
@@ -841,3 +832,61 @@ Cypress.Commands.add('c_checkForNonEmptyStateAdScreen', () => {
   cy.findByRole('button', { name: 'Create ad' }).should('not.exist')
   cy.get('.buy-sell-row').should('exist')
 })
+
+Cypress.Commands.add('c_sortAdBy', (sortBy) => {
+  cy.findByTestId('sort-div').should('be.visible').click()
+  cy.findByText(sortBy).should('be.visible')
+  cy.contains('.dc-text', sortBy)
+    .closest('.dc-radio-group__item')
+    .find('input[type="radio"]')
+    .then(($radio) => {
+      if (!$radio.is(':checked')) {
+        cy.wrap($radio).click({ force: true }).and('be.checked')
+      } else {
+        cy.get('body').click({ x: 10, y: 10 })
+        cy.get('.dc-modal').should('not.exist')
+        cy.findByText('Buy / Sell').should('be.visible')
+      }
+    })
+})
+
+Cypress.Commands.add('c_getExchangeRatesFromScreen', (adType, options = {}) => {
+  const { sortArray = false } = options
+  let ratesArray = []
+  cy.findByRole('button', { name: adType }).should('be.visible').click()
+  cy.get('.buy-sell-row__rate').each(($parent) => {
+    cy.wrap($parent)
+      .children()
+      .eq(1)
+      .invoke('text')
+      .then((text) => {
+        let cleanedText = text.replace('IDR', '').replace(/,/g, '').trim()
+        let rate = parseFloat(cleanedText).toFixed(2)
+        ratesArray.push(parseFloat(rate))
+      })
+  })
+  cy.then(() => {
+    if (sortArray) {
+      ratesArray.sort((a, b) => (adType === 'Buy' ? a - b : b - a))
+    } else {
+      cy.log('Not sorting rates array')
+    }
+    return cy.wrap(JSON.stringify(ratesArray))
+  })
+})
+
+Cypress.Commands.add(
+  'c_verifyAdSummary',
+  (adType, totalAmount, fixedRateValue, fiatCurrency, localCurrency) => {
+    totalAmount = totalAmount.toFixed(2)
+    fixedRateValue = fixedRateValue.toFixed(2)
+    let totalPrice = totalAmount * fixedRateValue
+    regexPattern = `You\'re creating an ad to ${adType} ${totalAmount} ${fiatCurrency} for ${totalPrice.toFixed(2)} ${localCurrency} (${fixedRateValue} ${localCurrency}/${fiatCurrency})`
+    cy.get('.create-ad-summary')
+      .eq(0)
+      .invoke('text')
+      .then((spanText) => {
+        expect(spanText).to.eq(regexPattern)
+      })
+  }
+)

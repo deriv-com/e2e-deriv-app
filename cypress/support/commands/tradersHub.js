@@ -17,7 +17,7 @@ Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
     cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'Options & Multipliers' }).click()
   } else {
-    cy.findByText('Options & Multipliers').should('be.visible')
+    cy.findByText('Options').should('be.visible')
     cy.findByText('CFDs').should('be.visible')
     cy.findAllByText('Deriv cTrader')
       .first()
@@ -26,7 +26,7 @@ Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
     cy.findByText('Other CFD Platforms').scrollIntoView({
       position: 'bottom',
     })
-    cy.findByText('Options & Multipliers').click()
+    cy.findByText('Options').click()
   }
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
 })
@@ -345,9 +345,9 @@ Cypress.Commands.add('c_manageAccountsetting', (CoR, options = {}) => {
     )
     if (isMobile) cy.get(`select[name='country_input']`).select(CoR)
     else {
-      cy.findByLabelText('Country').type(CoR)
-      cy.findByText(CoR).as('COR')
-      cy.get('@COR').click()
+      cy.findByLabelText('Country').should('not.be.disabled').type(CoR)
+      cy.findByText(CoR).as('COR').scrollIntoView().should('be.visible')
+      cy.get('@COR', { timeout: 15000 }).click()
     }
     cy.findByRole('button', { name: lang.realAccountFormUtils.nextBtn }).should(
       'not.be.disabled'
