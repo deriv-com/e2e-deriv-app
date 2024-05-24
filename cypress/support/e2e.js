@@ -24,5 +24,7 @@ before(() => {
 
     Cypress.config('baseUrl', Cypress.env('appRegisterUrl'))
     Cypress.env('oAuthUrl', '<empty>')
+
+    cy.log('AppId value before tests = ' + Cypress.env('configAppId'))
   })
 })
