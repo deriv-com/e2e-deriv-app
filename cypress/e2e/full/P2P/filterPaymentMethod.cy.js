@@ -53,8 +53,10 @@ function addBuyOrderDetails(PM, amount, rate, min, max) {
   cy.findByTestId('fixed_rate_type').type(rate)
   cy.findByTestId('min_transaction').click().type(min)
   cy.findByTestId('max_transaction').click().type(max)
-  cy.findByPlaceholderText('Add').click()
+  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+  cy.findByPlaceholderText('Add').should('be.visible').click()
   cy.findByText(PM).click()
+  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
   cy.c_verifyPostAd()
 }
 
@@ -65,8 +67,10 @@ function addSellOrderDetails(PM, amount, rate, min, max) {
   cy.findByTestId('fixed_rate_type').type(rate)
   cy.findByTestId('min_transaction').click().type(min)
   cy.findByTestId('max_transaction').click().type(max)
-  cy.findByPlaceholderText('Add').click()
+  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+  cy.findByPlaceholderText('Add').should('be.visible').click()
   cy.findByText(PM).click()
+  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
   cy.c_verifyPostAd()
 }
 

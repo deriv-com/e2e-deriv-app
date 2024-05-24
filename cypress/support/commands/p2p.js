@@ -445,7 +445,7 @@ Cypress.Commands.add('c_verifyPostAd', () => {
     "If the ad doesn't receive an order for 3 days, it will be deactivated."
   ).should('be.visible')
   cy.findByText('Don’t show this message again.').should('be.visible')
-  cy.findByRole('button', { name: 'Ok' }).should('be.enabled').click()
+  cy.findByRole('button', { name: 'OK' }).should('be.enabled').click()
 })
 
 Cypress.Commands.add('c_verifyTooltip', () => {
