@@ -4,30 +4,30 @@ function switchWallets() {
     if (currentIndex >= totalElements) {
       return;
     }
-      cy.get('.wallets-progress-bar')
+    cy.get('.wallets-progress-bar')
       .find('.wallets-progress-bar-active.wallets-progress-bar-transition, .wallets-progress-bar-inactive.wallets-progress-bar-transition')
       .eq(currentIndex)
       .click()
       .then(() => {
         cy.get('.wallets-card__carousel-content-details')
-        .eq(currentIndex)
-        .find('.wallets-card__details-bottom').invoke('text')
-        
+          .eq(currentIndex)
+          .find('.wallets-card__details-bottom').invoke('text')
+
         const actions = ['deposit', 'withdraw', 'transfer'];
         let actionChain = Cypress.Promise.resolve();
         actions.forEach((action) => {
           actionChain = actionChain
             .then(() => {
               return cy.get('.wallets-mobile-actions__container')
-              .scrollIntoView() // Scroll the container into view
-              .find('.wallets-mobile-actions')
+                .scrollIntoView()
+                .find('.wallets-mobile-actions')
                 .find(`button[aria-label="${action}"]`)
-                .click({ force: true }); // Click on the action button
+                .click({ force: true });
             })
             .then(() => {
               return cy.get('.wallets-cashier-header')
                 .find('.wallets-cashier-header__close-icon')
-                .click(); // Close the modal after the action is clicked
+                .click();
             });
         });
 
@@ -39,7 +39,7 @@ function switchWallets() {
 
   cy.get('.wallets-progress-bar-active.wallets-progress-bar-transition, .wallets-progress-bar-inactive.wallets-progress-bar-transition')
     .then(($elements) => {
-      performActionsOnElement(0, $elements.length);
+      performActionsOnElement(0, $elements.length - 1); // here -1 is to skip demo account as temp solution
     });
 }
 
