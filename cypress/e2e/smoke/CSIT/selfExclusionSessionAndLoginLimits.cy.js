@@ -1,16 +1,19 @@
 import '@testing-library/cypress/add-commands'
+const addDays = (n) => {
+  let myDate = new Date()
+  myDate.setDate(myDate.getDate() + n)
+  return myDate.toISOString().slice(0, 10)
+}
 
 function createClientAndLogin() {
-  cy.log('<E2EOAuthUrl - beforeEach>' + Cypress.env('oAuthUrl'))
-  cy.c_visitResponsive('/')
   cy.c_createRealAccount()
   cy.c_login()
 }
 
 function setSessionAndLoginLimitExclusion() {
   cy.c_visitResponsive('/account/self-exclusion', 'large')
-  cy.get('input[name="timeout_until"]').click()
-  cy.get('[data-duration="13 Days"]').click() // selects 13 day from the current day
+  cy.findAllByLabelText('Date').first().click()
+  cy.get(`[data-date='${addDays(40)}']`).click()
   cy.findByRole('button', { name: 'Next' }).click()
   cy.findByRole('button', { name: 'Accept' }).click()
   cy.findByRole('button', { name: 'Yes, log me out immediately' }).click()
@@ -19,11 +22,13 @@ function setSessionAndLoginLimitExclusion() {
 function checkSelfExclusionIsSet() {
   cy.c_login()
   cy.c_visitResponsive('/appstore/traders-hub', 'large')
-  cy.wait(2000) // waits until page is loaded
+  cy.findByTestId('dt_dropdown_display', { timeout: 10000 }).should('exist')
   cy.findByTestId('dt_dropdown_display').click()
-  cy.wait(1000) // waits until dropdown values are displayed
+  cy.get('#real', { timeout: 10000 }).should('exist')
   cy.get('#real').click()
-  cy.wait(2000) // waits until demo is switced to real and page is loaded
+  cy.get('[class="dc-text balance-text__text--real"]', {
+    timeout: 30000,
+  }).should('exist') // waits until Real account is loaded
   cy.c_visitResponsive('/account/self-exclusion', 'large')
   cy.get('input[name="timeout_until"]').should('not.be.empty')
 }
@@ -33,38 +38,33 @@ function checkDeposit() {
   cy.get('.empty-state').should('be.visible') // checks Deposit is locked
 }
 
-function checkWithdrawal() {
-  cy.c_visitResponsive('/cashier/deposit', 'large')
-  cy.findByTestId('dt_empty_state_action').should('be.visible') // checks Send withdrawal email button is visible - withdrawal not locked
-}
-
 function checkTrade() {
   cy.c_visitResponsive(
     '/?chart_type=area&interval=1t&symbol=1HZ100V&trade_type=multiplier',
     'large'
   )
+  cy.findByRole('button', { name: 'Up 10.00 USD' }, { timeout: 30000 }).should(
+    'exist'
+  )
   cy.findByRole('button', { name: 'Up 10.00 USD' }).click()
-  cy.findByText('You have chosen to exclude').should('be.visible') // checks Trade is unavailable
+  cy.get('[class="dc-modal-body"]').should('be.visible') // checks Trade is unavailable
 }
 
 function checkNewAccountCreation() {
   cy.c_visitResponsive('/appstore/traders-hub', 'large')
-  cy.findByTestId('dt_currency-switcher__arrow').click()
-  cy.findByRole('button', { name: 'Add or manage account' }).click()
-  cy.get('label').filter({ hasText: 'Bitcoin(BTC)' }).click()
-  cy.findByRole('button', { name: 'Add account' }).click()
-  cy.findByText('You have chosen to exclude').should('be.visible') // checks New account creation is unavailable
-}
-
-function addRecordToTradeTable() {
-  cy.c_visitResponsive(
-    '/?chart_type=area&interval=1t&symbol=1HZ100V&trade_type=multiplier',
-    'large'
+  cy.get('[class="dc-text balance-text__text--real"]', {
+    timeout: 30000,
+  }).should('exist') // waits until Real account is loaded
+  cy.findByTestId('dt_trading-app-card_real_derived').click()
+  cy.findByText(
+    'St. Vincent & GrenadinesAssets40+Synthetic indices, basket indices, and derived'
+  ).click()
+  cy.findByRole('button', { name: 'Next' }).click()
+  cy.findByTestId('dt_mt5_password').type('Abcd1234!')
+  cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
+  cy.findByText('Something’s not rightYou have', { timeout: 30000 }).should(
+    'exist'
   )
-  cy.wait(2000) // waits until page is loaded
-  cy.findByRole('button', { name: 'Up 10.00 USD' }).click()
-  cy.wait(2000) // waits for trade to work
-  cy.findByRole('button', { name: 'Close' }).click()
 }
 
 function checkHistory() {
@@ -75,10 +75,17 @@ function checkHistory() {
 }
 
 describe('QATEST-116798 Self Exclusion Session and login limits on desktop', () => {
+  beforeEach(() => {
+    cy.c_createRealAccount()
+    cy.c_login()
+  })
+
   it('should login, set self exclusion and verify it applied', () => {
-    createClientAndLogin()
     setSessionAndLoginLimitExclusion()
     checkSelfExclusionIsSet()
+    checkNewAccountCreation()
+    checkHistory()
     checkDeposit()
+    checkTrade()
   })
 })
