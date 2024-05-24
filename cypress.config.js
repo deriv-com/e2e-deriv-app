@@ -11,6 +11,7 @@ const appId = process.env.E2E_STD_CONFIG_APPID
 const websocketURL = `wss://${process.env.E2E_STD_CONFIG_SERVER}/websockets/v3`
 let connection;
 let api;
+let newAppId = null;
 //const gViewPortSize = {small: 'phone-xr', large: 'macbook-16'} //TODO Use enum
  
 module.exports = defineConfig({
@@ -31,6 +32,15 @@ module.exports = defineConfig({
         
         return launchOptions
       }),
+      on('task', {
+        getPRAppId() {
+          return newAppId;
+        },
+        setAppId(id) {
+          newAppId = id;
+          return null;
+        }
+      });
       on('task', {
         wsConnect() {
           // Check if there is an existing connection and close it if open

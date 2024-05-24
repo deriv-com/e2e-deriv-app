@@ -7,14 +7,22 @@ import jsQR from 'jsqr'
 Cypress.jsQR = jsQR
 
 before(() => {
-  // Code to run once before all tests
-  cy.log('setupComplete = ' + Cypress.env('setupComplete'))
-  if (Cypress.env('setupComplete') == 'false') {
-    cy.log('runFromPR = ' + Cypress.env('runFromPR'))
-    if (Cypress.env('runFromPR') == 'true') {
-      cy.c_createApplicationId()
+  if (Cypress.env('runFromPR') != 'true') return
+
+  cy.task('getPRAppId').then((id) => {
+    if (!id) {
+      cy.c_createApplicationId().then(() => {
+        cy.task('setAppId', Cypress.env('configAppId'))
+      })
+    } else {
+      Cypress.env('configAppId', id)
     }
 
-    Cypress.env('setupComplete', true) // Flag to indicate setup is done
-  }
+    Cypress.env('updatedAppId', Cypress.env('configAppId'))
+    Cypress.env('stdConfigAppId', Cypress.env('configAppId'))
+    Cypress.prevAppId = Cypress.env('configAppId')
+
+    Cypress.config('baseUrl', Cypress.env('appRegisterUrl'))
+    Cypress.env('oAuthUrl', '<empty>')
+  })
 })
