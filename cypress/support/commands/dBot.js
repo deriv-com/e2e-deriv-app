@@ -36,6 +36,13 @@ Cypress.Commands.add('c_checkRunPanel', () => {
       // Check while bot is running
       cy.findByTestId('dt_mock_summary_card').should('be.visible')
       cy.findByRole('button', { name: 'Stop' }).should('be.visible')
+      cy.findByText('Total profit/loss')
+        .parent()
+        .find('[data-testid="dt_span"]')
+        .invoke('text')
+        .then((text) => {
+          cy.log('The total profit/loss is ' + text)
+        })
     } else if ($clearButton.is(':visible')) {
       // Check while bot is not running
       cy.findByText('Bot is not running').should('be.visible')
