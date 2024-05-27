@@ -736,12 +736,21 @@ Cypress.Commands.add('c_createNewMt5Account', (Account, options = {}) => {
       `Add your Deriv MT5 ${Account.subType} account under Deriv (SVG) LLC (company no. 273 LLC 2020).`
     )
   cy.findByRole('button', { name: 'Next' }).click()
-  const isNewPassword = Cypress.$(':contains("Create a Deriv MT5 password")')
-  const isAlreadyCreatedPassword = Cypress.$(
-    ':contains("Enter your Deriv MT5 password")'
-  )
+  cy.findByTestId('dt_mt5_password').should('be.visible')
+  cy.get('.dc-modal').then((modal) => {
+    if (modal.find('span:contains(Create a Deriv MT5 password)').length > 0) {
+      sessionStorage.setItem('c_mt5Password', 'new')
+    }
+    else if (modal.find('span:contains(Enter your Deriv MT5 password)')) {
+      sessionStorage.setItem('c_mt5Password', 'exists')
+    }
+  })
   cy.get('.dc-modal').within(() => {
+    cy.then(() => {
+      let isNewPassword =
+        sessionStorage.getItem('c_mt5Password') == 'new' ? true : false
     if (isNewPassword) {
+      sessionStorage.removeItem('c_mt5Password')
       cy.findByText('Create a Deriv MT5 password').should('be.visible')
       cy.findByText(
         'You can use this password for all your Deriv MT5 accounts.'
@@ -756,7 +765,8 @@ Cypress.Commands.add('c_createNewMt5Account', (Account, options = {}) => {
         .should('be.visible')
         .and('be.enabled')
         .click()
-    } else if (isAlreadyCreatedPassword) {
+    } else if (isNewPassword == false) {
+      sessionStorage.removeItem('c_mt5Password')
       cy.findByText('Enter your Deriv MT5 password').should('be.visible')
       cy.findByText(
         `Enter your Deriv MT5 password to add a MT5 ${Account.type} ${Account.jurisdiction} account`
@@ -776,9 +786,10 @@ Cypress.Commands.add('c_createNewMt5Account', (Account, options = {}) => {
         .click()
     }
   })
+  })
   cy.findByRole('heading', { name: 'Success!' }).should('be.visible')
   cy.findByText(
-    `Congratulations, you have successfully created your real ${Account.type} ${Account.subType} ${Account.jurisdiction} account. To start trading, transfer funds from your Deriv account into this account.`
+    `Your ${Account.type} ${Account.subType} account is ready. Enable trading with your first transfer.`
   )
   cy.findByRole('button', { name: 'Transfer now' })
     .should('be.visible')

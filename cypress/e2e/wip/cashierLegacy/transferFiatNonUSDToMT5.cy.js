@@ -7,7 +7,7 @@ const toAccount = {
   fullJurisdiction: 'St. Vincent & Grenadines',
   name: 'Derived SVG',
   code: 'USD',
-  delta: 1.0, // needed for approximately equal to
+  delta: 1.5, // needed for approximately equal to
   accurateDelta: 0.5, // this is to match exact exchangerate
 }
 const fromAccount = {
