@@ -223,7 +223,7 @@ module.exports = defineConfig({
       eligibleMigration5: {
         ID: process.env.E2E_WALLETS_MIGARTION_BACKUP4,
         PSWD: process.env.E2E_DERIV_PASSWORD
-      }
+      },
       walletMigrationnewClient: {
         ID: process.env.E2E_WALET_MIGRATION_NEWCLIENT,
         PSWD: process.env.E2E_DERIV_PASSWORD,
