@@ -256,7 +256,6 @@ module.exports = defineConfig({
         ID: process.env.E2E_WALLET_MIGRATION_PA_CLIENT,
         PSWD: process.env.E2E_DERIV_PASSWORD,
       }
-
     },
     production:{
       masterUser:{
@@ -377,7 +376,7 @@ module.exports = defineConfig({
       GBP: "Pound Sterling",
       AUD: "Australian Dollar",
       BTC: "Bitcoin",
-    }
+    },
   },
   retries: {
     runMode: 2,
