@@ -170,60 +170,8 @@ module.exports = defineConfig({
       },
       p2pFloating: {
         ID: process.env.E2E_P2P_FLOATING,
-        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
-      },
-      p2pFloatingSellAd1: {
-        ID: process.env.E2E_LOGIN_ID_P2P_FLOATINGRATE_SELLAD_1,
-        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
-      },
-      p2pFloatingSellAd2: {
-        ID: process.env.E2E_LOGIN_ID_P2P_FLOATINGRATE_SELLAD_2,
-        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
-      },
-      p2pVerifyEmptyStateAdScreen: {
-        ID: process.env.E2E_LOGIN_ID_P2P_EMPTYSTATE,
-        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
-      },
-      allcrypto: {
-        ID: process.env.E2E_CRYPTO,
-        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
-      },
-      cashierLegacy: {
-        ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY,
-        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
-      },
-      cashierLegacyNonUSD: {
-        ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY_NON_USD,
-        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
-      },
-      diel: {
-        ID: process.env.E2E_DIEL_LOGIN,
-        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
-      },
-      eu: {
-        ID: process.env.E2E_EU_LOGIN,
-        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
-      },
-      eligibleMigration1: {
-        ID: process.env.E2E_WALLETS_MIGARTION_MAIN,
-        PSWD: process.env.E2E_DERIV_PASSWORD
-      },
-      eligibleMigration2: {
-        ID: process.env.E2E_WALLETS_MIGARTION_BACKUP1,
-        PSWD: process.env.E2E_DERIV_PASSWORD
-      },
-      eligibleMigration3: {
-        ID: process.env.E2E_WALLETS_MIGARTION_BACKUP2,
-        PSWD: process.env.E2E_DERIV_PASSWORD
-      },
-      eligibleMigration4: {
-        ID: process.env.E2E_WALLETS_MIGARTION_BACKUP3,
-        PSWD: process.env.E2E_DERIV_PASSWORD
-      },
-      eligibleMigration5: {
-        ID: process.env.E2E_WALLETS_MIGARTION_BACKUP4,
-        PSWD: process.env.E2E_DERIV_PASSWORD
-      }
+        PSWD: process.env.E2E_PSWD_P2P
+      } 
     },
     production:{
       masterUser:{
