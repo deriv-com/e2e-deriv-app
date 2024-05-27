@@ -224,11 +224,11 @@ module.exports = defineConfig({
         ID: process.env.E2E_WALLETS_MIGARTION_BACKUP4,
         PSWD: process.env.E2E_DERIV_PASSWORD
       },
-      walletMigrationnewClient: {
+      walletMigrationNewClient: {
         ID: process.env.E2E_WALET_MIGRATION_NEWCLIENT,
         PSWD: process.env.E2E_DERIV_PASSWORD,
       },
-      walletMigrationwithoutVRTC: {
+      walletMigrationWithoutVRTC: {
         ID: process.env.E2E_WALLET_MIGRATION_WITHOUTVRTC,
         PSWD: process.env.E2E_DERIV_PASSWORD,
       },
@@ -236,11 +236,11 @@ module.exports = defineConfig({
         ID: process.env.E2E_WALLET_MIGRATION_VRTCONLY,
         PSWD: process.env.E2E_DERIV_PASSWORD,
       },
-      walletMigrationnoCurrency: {
+      walletMigrationNoCurrency: {
         ID: process.env.E2E_WALLET_MIGRATION_NO_CURRENCY,
         PSWD: process.env.E2E_DERIV_PASSWORD,
       },
-      walletMigrationonUSD: {
+      walletMigratioNonUSD: {
         ID: process.env.E2E_WALLET_MIGRATION_NON_USD,
         PSWD: process.env.E2E_DERIV_PASSWORD,
       },

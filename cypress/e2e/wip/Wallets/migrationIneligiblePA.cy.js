@@ -1,9 +1,9 @@
 import '@testing-library/cypress/add-commands'
-describe('QATEST-154043 - Client with USD more than 3 months but is a payment agent', () => {
-  it('Client with USD more than 3 months & Payment agent', () => {
+describe('QATEST-154043 - Client with USD more than 3 months & Payment agent', () => {
+  it('Client with USD more than 3 months & PA should not see  Wallets - Enable now banner', () => {
     cy.c_login({ app: 'wallets', user: 'walletMigrationPA' })
     cy.log('Logged into walletMigrationPA')
-    cy.c_checkForbanner()
+    cy.c_checkForBanner()
     cy.findByText('US Dollar').should('be.visible')
     cy.get('#dt_cashier_tab > .dc-text').should('be.visible').click()
     cy.findByRole('link', { name: 'Transfer to client' })
@@ -19,9 +19,9 @@ describe('QATEST-154043 - Client with USD more than 3 months but is a payment ag
   })
 })
 describe('QATEST-154263 - Client with USD more than 3 months & used PA in recently', () => {
-  it('Client used PA service in recent 3 months, joined more than 3 months', () => {
+  it('Should not see  Wallets - Enable now banner', () => {
     cy.c_login({ app: 'wallets', user: 'walletMigrationPAclient' })
     cy.log('Logged into walletMigrationPAclient')
-    cy.c_checkForbanner()
+    cy.c_checkForBanner()
   })
 })
