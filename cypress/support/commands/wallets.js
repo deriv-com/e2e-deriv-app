@@ -83,8 +83,8 @@ Cypress.Commands.add('c_switchWalletsAccountDemo', () => {
 
 Cypress.Commands.add('c_checkForBanner', () =>{
   cy.c_visitResponsive('/appstore/traders-hub' , 'large')
-  cy.findByText('Enjoy seamless transactions').should('not.exist')
   cy.findByTestId('dt_div_100_vh').findByText('Trader\'s Hub').should('be.visible')
   cy.findByText('Options').should('be.visible')
   cy.findByText('CFDs').should('be.visible')
+  cy.findByText('Enjoy seamless transactions').should('not.exist')
 })
