@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-import {generateAccountNumberString} from '../../../support/helper/utility'
+import { generateAccountNumberString } from '../../../support/helper/utility'
 
 let longNickname = 'thisnicknamewillnotfitatall'
 let shortNickname = 'a'
@@ -16,7 +16,7 @@ function checkNickname(nickname, message, buttonState) {
   cy.contains('.dc-field--error', message).should('be.visible')
 }
 
-describe.skip('QATEST-2292, QATEST-2316, QATEST-2324, QATEST-2300, QATEST-2308, QATEST-2334 - Verify nickname validation checks during advertiser registration, including duplicates, special characters, length, repetition, and for correct nickname.', () => {
+describe.skip('QATEST-2292, QATEST-2316, QATEST-2324, QATEST-2300, QATEST-2308, QATEST-2334 - Verify nickname validation checks during advertiser registration, including duplicates, special characters, length, repetition, and for correct nickname', () => {
   beforeEach(() => {
     cy.c_createRealAccount('br')
     cy.c_login()
@@ -54,7 +54,9 @@ describe.skip('QATEST-2292, QATEST-2316, QATEST-2324, QATEST-2300, QATEST-2308, 
       'be.enabled'
     )
     const advertiserNickname = generateAccountNumberString(10)
-    cy.findByRole('textbox', { name: 'Your nickname' }).clear().type(advertiserNickname)
+    cy.findByRole('textbox', { name: 'Your nickname' })
+      .clear()
+      .type(advertiserNickname)
     cy.findByRole('button', { name: 'Confirm' }).should('be.enabled').click()
     cy.findByText('Nickname added successfully!').should('be.visible')
     cy.c_closeNotificationHeader()
