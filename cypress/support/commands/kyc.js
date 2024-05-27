@@ -44,7 +44,7 @@ Cypress.Commands.add('c_onfidoSecondRun', (country) => {
   cy.findByText('Confirm').click()
 })
 
-Cypress.Commands.add('c_VerifyAccount', () => {
+Cypress.Commands.add('c_verifyAccount', () => {
   const CPFDocumentNumber = generateCPFNumber()
   cy.get('select[name="document_type"]').select('CPF')
   cy.findByLabelText('Enter your document number')

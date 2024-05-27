@@ -21,7 +21,7 @@ describe.skip('QATEST-2292, QATEST-2316, QATEST-2324, QATEST-2300, QATEST-2308, 
     cy.c_createRealAccount('br')
     cy.c_login()
     cy.c_navigateToPoiResponsive('Brazil', { runFor: 'p2p' })
-    cy.c_VerifyAccount()
+    cy.c_verifyAccount()
   })
 
   it('Should be able to set a nickname for P2P in responsive mode.', () => {
