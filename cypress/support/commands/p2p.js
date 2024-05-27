@@ -515,8 +515,10 @@ Cypress.Commands.add('c_removeExistingAds', (adType) => {
   cy.get('.my-ads-table__row .dc-dropdown-container')
     .its('length')
     .then((numberOfAds) => {
+      cy.log('Number of Ads:', numberOfAds)
       cy.get('.my-ads-table__row .dc-dropdown-container').each(
         ($el, index, $list) => {
+          cy.log('The index is:', index)
           cy.wrap($el).click()
           cy.findByText('Delete').parent().click()
           cy.findByText('Do you want to delete this ad?').should('be.visible')
