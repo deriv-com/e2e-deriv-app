@@ -511,32 +511,7 @@ Cypress.Commands.add('c_postAd', () => {
   cy.findByRole('button', { name: 'Ok' }).should('be.enabled').click()
 })
 
-// Cypress.Commands.add('c_removeExistingAds', (adType) => {
-//   cy.get('.my-ads-table__row .dc-dropdown-container')
-//     .should('be.visible')
-//     .click()
-//   cy.findByText('Delete').parent().click()
-//   cy.findByText('Do you want to delete this ad?').should('be.visible')
-//   cy.findByText('You will NOT be able to restore it.').should('be.visible')
-//   cy.findByRole('button', { name: 'Delete' })
-//     .should('be.enabled')
-//     .click()
-//     .should('not.exist', {
-//       timeout: 10000,
-//     })
-//   if (adType == 'sell') {
-//     cy.findByText('My profile').click()
-//     cy.findByText('Available Deriv P2P balance').should('be.visible')
-//     cy.findByText('Payment methods').should('be.visible').click()
-//     cy.findByText('Payment methods').should('be.visible')
-//     cy.c_deleteAllPM()
-//     cy.findByRole('button', { name: /Add/ }).should('be.visible')
-//     cy.c_visitResponsive('/cashier/p2p', 'small')
-//     cy.c_clickMyAdTab()
-//   }
-// })
-
-Cypress.Commands.add('c_removeExistingAds', () => {
+Cypress.Commands.add('c_removeExistingAds', (adType) => {
   cy.get('.my-ads-table__row .dc-dropdown-container')
     .its('length')
     .then((numberOfAds) => {
