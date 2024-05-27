@@ -28,3 +28,8 @@ export const calculateTransferFee = (amountTransferred) => {
   const calculatedFee = amountTransferred * percentFeeRate
   return Math.max(calculatedFee, minimumFee)
 }
+
+export const generateCPFNumber = () => {
+  const getRandomDigit = () => Math.floor(Math.random() * 10)
+  return `0${getRandomDigit()}${getRandomDigit()}.${getRandomDigit()}${getRandomDigit()}${getRandomDigit()}.${getRandomDigit()}${getRandomDigit()}${getRandomDigit()}-${getRandomDigit()}${getRandomDigit()}`
+}
