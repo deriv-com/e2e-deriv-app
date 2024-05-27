@@ -8,7 +8,7 @@ let repetitiveCharactersNickname = 'haaaaaaaaaary'
 let duplicateNickname = 'DuplicateNickChecker'
 
 function checkNickname(nickname, message, buttonState) {
-  cy.findByRole('textbox', { name: 'Your naickname' }).clear().type(nickname)
+  cy.findByRole('textbox', { name: 'Your nickname' }).clear().type(nickname)
   cy.findByRole('button', { name: 'Confirm' }).should(buttonState)
   if (buttonState == 'be.enabled') {
     cy.findByRole('button', { name: 'Confirm' }).click()
