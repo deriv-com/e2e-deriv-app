@@ -1,116 +1,142 @@
 import '@testing-library/cypress/add-commands'
 
-function onboardingcfdtrading() {
-  //Wallet Onboarding -  tour around CFD section
-  cy.get('.wallets-cfd-list-accounts__content')
-    .should('exist')
-    .then(($mt5list) => {
-      const derivedDesc = $mt5list.children().first().text()
-      const expectedDesc = 'This account offers CFDs on derived instruments.'
-      if (derivedDesc.includes(expectedDesc)) {
-        //MT5 Account doesnot exist
-        cy.contains('CFDs')
-        cy.contains(
-          'This is your CFDs trading account. Click Get to create the trading account you desire for trading.'
-        )
-        cy.findByRole('button', { name: 'Next' }).click()
-      } else {
-        //MT5 Account exist
-        cy.contains('CFDs')
-        cy.contains(
-          'This is your CFDs trading account. Click Transfer to move funds between your Wallet and trading account.'
-        )
-        cy.findByRole('button', { name: 'Next' }).click()
-      }
-    })
+const desktopSteps = [
+  {
+    backButtonExists: false,
+    nextButtonName: 'Next',
+    title: 'This is your Wallet',
+    description: 'Manage your funds with Wallets.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Next',
+    title: 'Select Demo or Real',
+    description: 'Press the tab to switch between Demo or Real Wallets.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Next',
+    title: 'Change your Wallet',
+    description: 'Switch to a Wallet from the drop-down menu.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Next',
+    title: 'Add more currencies',
+    description: 'Want Wallets in other currencies too? Press Add.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Done',
+    title: "Trader's Hub tour",
+    description: 'Press here to repeat this tour.',
+  },
+]
 
-  //Wallet Onboarding -  tour around Options and Multiplier section
-  cy.get('.wallets-options-and-multipliers-listing__header')
-    .should('exist')
-    .then(($list) => {
-      const derivAppDesc = $list.children().eq(1).text()
-      const expderivAppDesc =
-        'Get an Options trading account to trade options and multipliers on these apps.'
-      if (derivAppDesc.includes(expderivAppDesc)) {
-        //Deriv App Trading Account is not created
-        cy.contains('Options trading account')
-        cy.contains(
-          'This is your Options trading account. Click Get to create the Options trading account for trading.'
-        )
-        cy.findByRole('button', { name: 'Next' }).click()
-        cy.contains(
-          'Once you have get an Options trading account, choose a Deriv app to trade options or multipliers.'
-        )
-        cy.findByRole('button', { name: 'Next' }).click()
-      } else {
-        //Deriv App Trading Account exist
-        cy.contains('Options trading account')
-        cy.contains(
-          'This is your Options trading account balance. Click Transfer to move funds between your Wallet and Options trading account.'
-        )
-        cy.findByRole('button', { name: 'Next' }).click()
-        cy.contains('Choose a Deriv app to trade options or multipliers.')
-        cy.findByRole('button', { name: 'Next' }).click()
-      }
-    })
-  // "Add More Wallet section - tour"
-  cy.get('.wallets-add-more__carousel')
-    .should('exist')
-    .then(($list) => {
-      const buttontext = $list
-        .children()
-        .first()
-        .find('.wallets-button')
-        .first()
-        .text()
-      const expButtontext = 'Added'
-      if (buttontext.includes(expButtontext)) {
-        cy.log(`No wallets to add`)
-      } else {
-        cy.log(`Add more wallets`)
-        cy.contains('Click Add on each card for more Wallets.')
-        cy.findByRole('button', { name: 'Next' }).click()
-      }
-    })
-  cy.contains('Click here to repeat this tour.')
-  cy.findByRole('button', { name: 'Done' }).click()
-}
-function onboardingWalletSwitcher() {
-  cy.get('.wallets-tour-guide__content').should('be.visible')
-  cy.contains('This is your Wallet').should('be.visible')
-  cy.contains('Manage your funds with Wallets.').should('be.visible')
-  cy.findByRole('button', { name: 'Next' }).click()
-  // demo/real account switcher o
-  cy.contains('Select Demo or Real', { timeout: 10000 }).should('be.visible')
-  cy.contains('Press the tab to switch between Demo or Real Wallets.', {
-    timeout: 10000,
-  }).should('be.visible')
-  cy.findByRole('button', { name: 'Next' }).click()
-  cy.contains('Change your Wallet.', { timeout: 10000 }).should('be.visible')
-  cy.contains('Switch to a Wallet from the drop-down menu.', {
-    timeout: 10000,
-  }).should('be.visible')
-  cy.findByRole('button', { name: 'Next' }).click()
-}
+const mobileSteps = [
+  {
+    backButtonExists: false,
+    nextButtonName: 'Next',
+    title: 'This is your Wallet',
+    description: 'Manage your funds with Wallets.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Next',
+    title: 'Switch between Wallets',
+    description: 'Swipe left or right to switch between Wallets.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Next',
+    title: 'Select your account type',
+    description: 'Press the tab to switch between CFDs and Options accounts.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Next',
+    title: 'Add more currencies',
+    description: 'Want Wallets in other currencies too? Press Add.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Done',
+    title: "Trader's Hub tour",
+    description: 'Press here to repeat this tour.',
+  },
+]
 
-function onboardingfiatwallet() {
+const setupTest = () => {
   cy.contains('Wallet', { timeout: 10000 }).should('exist')
-  cy.findByText('CFDs', { exact: true }).should('be.visible')
-  // Onboarding - Account having Fiat wallets (without CFD and Trading account).
-  cy.contains('Swap-Free').should('be.visible')
   cy.findByTestId('dt_traders_hub_onboarding_icon').click()
-  cy.get('[data-test-id="spotlight"]').should('be.visible')
-  onboardingWalletSwitcher()
-  onboardingcfdtrading()
+  cy.contains('USD Wallet', { timeout: 10000 }).should('exist')
+  cy.get('#react-joyride-portal').should('exist')
+  cy.get('[data-test-id="spotlight"]').should('exist')
+}
+
+const checkStep = (
+  backButtonShouldExist,
+  nextButtonName,
+  title,
+  description
+) => {
+  cy.findByRole('alertdialog').should('exist')
+  cy.findByText(title).should('exist')
+  cy.findByText(description).should('exist')
+  cy.findByRole('button', { name: 'Back' }).should(
+    backButtonShouldExist ? 'exist' : 'not.exist'
+  )
+  cy.findByRole('button', { name: nextButtonName, timeout: 3000 })
+    .should('exist')
+    .click()
+}
+
+const allWalletAdded = () => {
+  return cy
+    .get('.wallets-add-more__carousel-wrapper')
+    .find('button')
+    .then((buttons) => {
+      const buttonCount = buttons.filter(
+        (index, button) => Cypress.$(button).text().trim() === 'Add'
+      ).length
+      return buttonCount === 0
+    })
 }
 
 describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets', () => {
   beforeEach(() => {
     cy.c_login({ app: 'wallets' })
-    cy.c_visitResponsive('/wallets', 'large')
   })
 
-  it('should be able to see the tour for Fiat Wallets', () => {
-    onboardingfiatwallet()
+  it('User onboarding for desktop', () => {
+    cy.c_visitResponsive('/wallets', 'large')
+    const walletAdded = allWalletAdded()
+    setupTest('large')
+    desktopSteps.forEach((step, index) => {
+      if (index === 3 && walletAdded) return
+      checkStep(
+        step.backButtonExists,
+        step.nextButtonName,
+        step.title,
+        step.description
+      )
+    })
+    cy.get('[data-test-id="spotlight"]').should('not.exist')
+  })
+
+  it('User onboarding for mobile', () => {
+    cy.c_visitResponsive('/wallets', 'small')
+    const walletAdded = allWalletAdded()
+    setupTest()
+    mobileSteps.forEach((step, index) => {
+      if (index === 3 && walletAdded) return
+      checkStep(
+        step.backButtonExists,
+        step.nextButtonName,
+        step.title,
+        step.description
+      )
+    })
+    cy.get('[data-test-id="spotlight"]').should('not.exist')
   })
 })

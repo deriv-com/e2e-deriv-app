@@ -30,7 +30,7 @@ describe('QATEST-145618 - Copy Ad - Fixed Rate - Buy Ad', () => {
       }
       cy.c_getExistingAdDetailsForValidation('Buy')
       cy.then(() => {
-        cy.findByTestId('dt_page_return_icon').click()
+        cy.get('.wizard__main-step').prev().children().last().click()
         cy.contains('span[class="dc-text"]', 'Buy USD')
           .siblings('.dc-dropdown-container')
           .should('be.visible')
