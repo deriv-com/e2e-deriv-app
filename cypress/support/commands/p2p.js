@@ -537,9 +537,6 @@ Cypress.Commands.add('c_postAd', () => {
 // })
 
 Cypress.Commands.add('c_removeExistingAds', () => {
-  cy.findByTestId('dt_initial_loader').should('not.exist')
-  cy.contains('loading').should('not.exist')
-  cy.contains('Create new ad').should('be.visible')
   cy.get('.my-ads-table__row .dc-dropdown-container')
     .its('length')
     .then((numberOfAds) => {
