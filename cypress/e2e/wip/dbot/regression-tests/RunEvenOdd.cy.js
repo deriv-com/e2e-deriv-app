@@ -20,6 +20,7 @@ describe('QATEST-109419: Run custom strategy Even Odd', () => {
     cy.c_skipTour()
     cy.c_runBot()
     cy.c_stopBot(10000)
+    cy.c_checkRunPanel()
     runPanel.transactionsTab.click() //Switch to transactions tab
 
     //getting the positions of even and odd purchase conditions
