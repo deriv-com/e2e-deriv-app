@@ -29,7 +29,7 @@ Cypress.Commands.add('c_skipTour', () => {
   cy.findByText('Skip').should('be.visible').click({ force: true })
 })
 
-Cypress.Commands.add('c_checkRunPanel', () => {
+Cypress.Commands.add('c_checkRunPanel', (clearPanel = false) => {
   cy.findByText('Summary').click()
   cy.get('#db-run-panel__clear-button').then(($clearButton) => {
     if ($clearButton.is(':disabled')) {
@@ -38,7 +38,7 @@ Cypress.Commands.add('c_checkRunPanel', () => {
       cy.findByRole('button', { name: 'Stop' }).should('be.visible')
       cy.findByText('Total profit/loss')
         .parent()
-        .find('[data-testid="dt_span"]')
+        .findByTestId('dt_span')
         .invoke('text')
         .then((text) => {
           cy.log('The total profit/loss is ' + text)
@@ -48,7 +48,8 @@ Cypress.Commands.add('c_checkRunPanel', () => {
       cy.findByText('Bot is not running').should('be.visible')
       cy.findByRole('button', { name: 'Run' }).should('be.visible')
       cy.get('#db-run-panel__clear-button').click()
-      cy.findByText('Ok').should('be.visible').click({ force: true })
+      if (clearPanel)
+        cy.findByText('Ok').should('be.visible').click({ force: true })
     }
   })
 })
