@@ -171,7 +171,6 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
   cy.c_visitResponsive(Cypress.env('oAuthUrl'), 'large', {
     rateLimitCheck: rateLimitCheck,
   })
-  //To let the dtrader page load completely
   cy.c_fakeLinkPopUpCheck()
   cy.document().then((doc) => {
     const launchModal = doc.querySelector('[data-test-id="launch-modal"]')
