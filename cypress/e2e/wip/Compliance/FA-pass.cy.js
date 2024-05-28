@@ -9,7 +9,7 @@ describe('QATEST-5159 MF financial assessment (Appropriateness Test) - Pass scen
   let currency = Cypress.env('accountCurrency').USD
 
   size.forEach((size) => {
-    it(`Check FA on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
+    it(`should check FA on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
       const signUpEmail = `sanity${generateEpoch()}mf@deriv.com`
       cy.c_setEndpoint(signUpEmail, size)
@@ -93,7 +93,7 @@ describe('QATEST-5159 MF financial assessment (Appropriateness Test) - Pass scen
       if (isMobile) {
         cy.c_completeFinancialAssessment({ isMobile: true })
       } else {
-        cy.c_completeFinancialAssessment({})
+        cy.c_completeFinancialAssessment()
       }
       cy.c_completeFatcaDeclarationAgreement()
       cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
