@@ -173,7 +173,6 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
   })
   //To let the dtrader page load completely
   cy.c_fakeLinkPopUpCheck()
-  // cy.get('.cq-symbol-select-btn', { timeout: 15000 }).should('exist')
   cy.document().then((doc) => {
     const launchModal = doc.querySelector('[data-test-id="launch-modal"]')
     if (launchModal) {
@@ -208,7 +207,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
           cy.findByRole('banner').should('be.visible')
         } else {
           //To redirect to trader's hub page
-          cy.findAllByText("Trader's Hub").eq(1).should('be.visible')
+          cy.findAllByText("Trader's Hub").last().should('be.visible')
         }
       })
     } else {
@@ -222,7 +221,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
         cy.findByRole('banner').should('be.visible')
       } else {
         //when deriv charts popup is not available and if we need to redirect to trader's hub page
-        cy.findAllByText("Trader's Hub").eq(1).should('be.visible')
+        cy.findAllByText("Trader's Hub").last().should('be.visible')
       }
     }
   })
