@@ -77,33 +77,27 @@ function closeModal() {
 }
 describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG MT5 account and QATEST-115487 Add real BVI MT5 account', () => {
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
-    cy.c_visitResponsive('/wallets', 'large')
+     cy.c_login({ user: 'walletloginEmail' })
+    cy.c_visitResponsive('/', 'large')
   })
 
   it('should be able to create mt5 svg account', () => {
     cy.log('create mt5 svg account')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
-    const svgText = Cypress.$(
-      ":contains('This account offers CFDs on derived instruments.')"
-    )
-    if (svgText.length > 0) {
-      clickAddMt5Button()
-      verifyJurisdictionSelection('Derived')
-      verifyDerivMT5Creation('Derived')
-      verifyTransferFundsMessage('Derived')
-      closeModal()
-    }
-    const financialText = Cypress.$(
-      ":contains('This account offers CFDs on financial instruments.')"
-    )
-    if (financialText.length > 0) {
+    cy.findByText('CFDs on derived instruments.').should('exist').then(() => {
+    clickAddMt5Button()
+    verifyJurisdictionSelection('Derived')
+    verifyDerivMT5Creation('Derived')
+    verifyTransferFundsMessage('Derived')
+    closeModal()
+    })
+    cy.findByText('CFDs on financial instruments.').should('exist').then(() => {
       clickAddMt5Button()
       verifyJurisdictionSelection('Financial')
       verifyDerivMT5Creation('Financial')
       verifyTransferFundsMessage('Financial')
       closeModal()
-    }
+    })
     // this part is commented due to this bug [https://app.clickup.com/t/20696747/WALL-3302]
     // cy,findByText('Trade swap-free CFDs on MT5 with synthetics, forex, stocks, stock indices, cryptocurrencies and ETFs').then(()=>{
     // clickAddMt5Button()
