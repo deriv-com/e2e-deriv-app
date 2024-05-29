@@ -6,6 +6,7 @@ const addDays = (n) => {
 }
 
 function createClientAndLogin() {
+  cy.c_visitResponsive('/')
   cy.c_createRealAccount()
   cy.c_login()
 }
