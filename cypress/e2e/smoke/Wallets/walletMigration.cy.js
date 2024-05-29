@@ -62,7 +62,7 @@ function checkAccountNotMigrated() {
 }
 describe('QATEST-154253 - Migration country eligibility', () => {
   beforeEach(() => {
-    cy.c_login({ user: 'walletloginEmail' })
+    cy.c_login({ user: 'eligibleMigration1' })
   })
 
   it('should be able to see the tour for Fiat Wallets', () => {
