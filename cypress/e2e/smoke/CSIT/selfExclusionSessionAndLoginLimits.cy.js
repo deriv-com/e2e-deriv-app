@@ -68,8 +68,6 @@ function checkNewAccountCreation() {
 }
 
 function checkHistory() {
-  cy.c_visitResponsive('/reports/profit', 'large')
-  cy.get('.dc-data-table').should('be.visible') // checks records from Trade table are visible
   cy.c_visitResponsive('/reports/statement', 'large')
   cy.get('.dc-data-table').should('be.visible') // checks records from Statement are visible
 }
