@@ -11,6 +11,7 @@ const appId = process.env.E2E_STD_CONFIG_APPID
 const websocketURL = `wss://${process.env.E2E_STD_CONFIG_SERVER}/websockets/v3`
 let connection;
 let api;
+let newAppId = null;
 //const gViewPortSize = {small: 'phone-xr', large: 'macbook-16'} //TODO Use enum
  
 module.exports = defineConfig({
@@ -30,6 +31,17 @@ module.exports = defineConfig({
         }
         
         return launchOptions
+      }),
+      on('task', {
+        getPRAppId() {
+          console.log('Current PR appId = ' + newAppId);
+          return newAppId;
+        },
+        setAppId(id) {
+          newAppId = id;
+          console.log('Current PR appId = ' + newAppId);
+          return null;
+        }
       }),
       on('task', {
         wsConnect() {
@@ -130,6 +142,7 @@ module.exports = defineConfig({
     },
   },
   env: {
+    runFromPR: process.env.E2E_RUN_FROM_PR,
     stagingUrl: "https://staging-app.deriv.com/",
     prodURL: "https://app.deriv.com/",
     derivComProdURL: "https://deriv.com/",
