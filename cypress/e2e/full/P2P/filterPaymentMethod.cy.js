@@ -20,17 +20,16 @@ function verifyOnePaymentMethod(orderTab, PM1, NonSelectedPM) {
 function verifyTwoPaymentMethod(orderTab, PM1, PM2, NonSelectedPM) {
   cy.findByRole('button', { name: orderTab }).click()
   const buttonText = orderTab === 'Sell' ? 'Sell USD' : 'Buy USD'
-  cy.contains('button', buttonText)
-    .its('length')
-    .then((length) => {
-      if (length === 0) {
-        cy.findByText('No ads for this currency 😞')
-      } else {
-        cy.contains(PM1)
-        cy.contains(PM2)
-        cy.contains(NonSelectedPM).should('not.exist')
-      }
-    })
+  cy.findByTestId('dt_initial_loader').should('not.exist')
+  cy.get('body', { timeout: 10000 }).then((body) => {
+    if (body.find('.no-ads__message', { timeout: 10000 }).length > 0) {
+      cy.findByText('No ads for this currency 😞')
+    } else {
+      cy.contains(PM1).should('exist')
+      cy.contains(PM2).should('exist')
+      cy.contains(NonSelectedPM).should('not.exist')
+    }
+  })
 }
 
 function verifyAllPaymentMethod(orderTab, PM1, PM2) {
