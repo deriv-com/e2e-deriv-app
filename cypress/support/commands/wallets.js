@@ -80,3 +80,32 @@ Cypress.Commands.add('c_switchWalletsAccountDemo', () => {
     .last()
     .click()
 })
+
+Cypress.Commands.add('addDerivxAccount', (accountType) => {
+  cy.get('.wallets-available-dxtrade__icon')
+    .parent('.wallets-trading-account-card')
+    .click()
+
+  let expectedText
+  if (accountType === 'Real') {
+    expectedText = 'Create a Deriv X password'
+    cy.get('div').contains(expectedText).should('be.visible')
+    cy.findByPlaceholderText('Deriv X password')
+      .click()
+      .type(Cypress.env('mt5Password'))
+    cy.findByRole('button', { name: 'Create Deriv X password' }).click()
+    cy.findByText('Your Deriv X account is ready').should('be.visible')
+    cy.findByRole('button', { name: 'Maybe later' }).should('exist')
+    cy.findByRole('button', { name: 'Transfer funds' }).should('exist')
+    cy.findByRole('button', { name: 'Maybe later' }).click()
+  } else {
+    expectedText = 'Enter your Deriv X password' // Adjust this text based on your actual requirement
+    cy.get('div').contains(expectedText).should('be.visible')
+    cy.findByPlaceholderText('Deriv X password')
+      .click()
+      .type(Cypress.env('mt5Password'))
+    cy.findByRole('button', { name: 'Add account' }).click()
+    cy.findByText('Your Deriv X demo account is ready').should('be.visible')
+    cy.findByRole('button', { name: 'OK' }).click()
+  }
+})
