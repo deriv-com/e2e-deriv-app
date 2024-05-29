@@ -206,23 +206,23 @@ module.exports = defineConfig({
       },
       eligibleMigration1: {
         ID: process.env.E2E_WALLETS_MIGARTION_MAIN,
-        PSWD: process.env.E2E_DERIV_PASSWORD
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       eligibleMigration2: {
         ID: process.env.E2E_WALLETS_MIGARTION_BACKUP1,
-        PSWD: process.env.E2E_DERIV_PASSWORD
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       eligibleMigration3: {
         ID: process.env.E2E_WALLETS_MIGARTION_BACKUP2,
-        PSWD: process.env.E2E_DERIV_PASSWORD
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       eligibleMigration4: {
         ID: process.env.E2E_WALLETS_MIGARTION_BACKUP3,
-        PSWD: process.env.E2E_DERIV_PASSWORD
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       eligibleMigration5: {
         ID: process.env.E2E_WALLETS_MIGARTION_BACKUP4,
-        PSWD: process.env.E2E_DERIV_PASSWORD
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       walletloginEmail: {
         ID: process.env.E2E_DERIV_LOGIN_WALLET,
