@@ -45,11 +45,11 @@ describe('QATEST-98773 - Add crypto wallet account', () => {
   })
 
   it('should be able to add more wallets', () => {
-    cy.c_visitResponsive('/wallets', 'large')
+    cy.c_visitResponsive('/', 'large')
     addcryptowallet()
   })
   it('should be able to add more wallets in Responsive', () => {
-    cy.c_visitResponsive('/wallets', 'small')
+    cy.c_visitResponsive('/', 'small')
     addcryptowallet()
   })
 })

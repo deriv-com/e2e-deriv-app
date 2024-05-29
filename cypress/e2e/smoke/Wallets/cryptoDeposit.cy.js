@@ -48,21 +48,21 @@ describe('QATEST-98781 - Crypto deposit and fiat onramp', () => {
   })
 
   it('should be able to view crypto deposit details', () => {
-    cy.c_visitResponsive('/wallets', 'large')
+    cy.c_visitResponsive('/', 'large')
     performCryptoDeposit('desktop')
   })
 
   it('should be able to deposit into crypto account through fiat onramp', () => {
-    cy.c_visitResponsive('/wallets', 'large')
+    cy.c_visitResponsive('/', 'large')
     performCryptoDepositFiatonRamp('desktop')
   })
   it('should be able to view crypto deposit details in responsive', () => {
-    cy.c_visitResponsive('/wallets', 'small')
+    cy.c_visitResponsive('/', 'small')
     performCryptoDeposit('mobile')
   })
 
   it('should be able to deposit into crypto account through fiat onramp in responsive', () => {
-    cy.c_visitResponsive('/wallets', 'small')
+    cy.c_visitResponsive('/', 'small')
     performCryptoDepositFiatonRamp('mobile')
   })
 })
