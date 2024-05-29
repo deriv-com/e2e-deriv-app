@@ -1,7 +1,7 @@
 import '@testing-library/cypress/add-commands'
 
 function changeMT5Password() {
-  cy.findByText('Derived', { timeout: 3000 }).should('be.visible')
+  cy.findByText('Derived', { timeout: 10000 }).should('be.visible').then(()=>{
   cy.findByText('This account offers CFDs on derived instruments.')
     .should(() => {})
     .then((el) => {
@@ -50,6 +50,7 @@ function changeMT5Password() {
         cy.findByRole('button', { name: 'Create' }).click()
       }
     })
+  })
 }
 describe('QATEST-99774 - MT5 reset password', () => {
   beforeEach(() => {

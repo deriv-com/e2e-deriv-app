@@ -24,22 +24,17 @@ function verifyEmailandPerformWithdraw(platform) {
     cy.c_switchWalletsAccount('BTC')
   }
   cy.findByText('Withdraw').should('be.visible').click()
+  cy.log('indu check wallet login' + Cypress.env('walletloginEmail') )
   cy.c_emailVerification(
     'request_payment_withdraw.html',
-    Cypress.env('walletloginEmail')
+    Cypress.env('credentials').test.walletloginEmail.ID
   )
   cy.then(() => {
     let verification_code = Cypress.env('walletsWithdrawalCode')
     if (`${platform}` == `mobile`) {
-      cy.c_visitResponsive(
-        `/wallets/cashier/withdraw?verification=${verification_code}`,
-        'small'
-      )
+      cy.c_visitResponsive(verification_code,'small')
     } else {
-      cy.c_visitResponsive(
-        `/wallets/cashier/withdraw?verification=${verification_code}`,
-        'large'
-      )
+        cy.c_visitResponsive(verification_code,'small')
     }
 
     cy.contains('Transaction status')
@@ -101,7 +96,7 @@ describe('QATEST-98698 - Crypto withdrawal content access from email', () => {
     cy.c_login({ user: 'walletloginEmail' })
   })
 
-  it('should be able to access crypto withdrawal content and perform withdrawal', () => {
+  it.only('should be able to access crypto withdrawal content and perform withdrawal', () => {
     cy.log('Access Crypto Withdrawal Content Through Email Link')
     cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')

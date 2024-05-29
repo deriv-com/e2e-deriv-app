@@ -123,7 +123,8 @@ Cypress.Commands.add('c_login', (options = {}) => {
     localStorage.setItem('config.app_id', Cypress.env('configAppId'))
   }
   if (
-    Cypress.env('oAuthUrl') == '<empty>') {
+    Cypress.env('oAuthUrl') == '<empty>'
+  ) {
     getOAuthUrl(
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
@@ -136,17 +137,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
       loginEmail,
       loginPassword
     )
-  // } else if (
-  //   (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') ||
-  //   app == 'doughflow'
-  // ) {
-  //   getWalletOAuthUrl((oAuthUrl) => {
-  //     cy.log('came inside wallet getOauth')
-  //     Cypress.env('oAuthUrl', oAuthUrl)
-  //     cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
-  //   })
-  // } 
-  }else {
+  } else {
     cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
   }
 })

@@ -1,10 +1,13 @@
 import '@testing-library/cypress/add-commands'
 
-function clickAddMt5Button() {
-  cy.get('.wallets-available-mt5__details')
-    .next('.wallets-trading-account-card__content > .wallets-button')
-    .first()
-    .click()
+function clickAddMt5Button(mt5AccountType) {
+  // cy.get('.wallets-available-mt5__details')
+  //   .next('.wallets-trading-account-card__content > .wallets-button')
+  //   .first()
+  //   .click()
+  cy.get('span.wallets-text')
+  .contains(mt5AccountType)
+  .click()
 }
 
 function verifyJurisdictionSelection(accountType) {
@@ -82,17 +85,19 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
   })
 
   it('should be able to create mt5 svg account', () => {
+    const mt5SVG = 'CFDs on derived instruments.'
     cy.log('create mt5 svg account')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
     cy.findByText('CFDs on derived instruments.').should('exist').then(() => {
-    clickAddMt5Button()
+    clickAddMt5Button(mt5SVG)
     verifyJurisdictionSelection('Derived')
     verifyDerivMT5Creation('Derived')
     verifyTransferFundsMessage('Derived')
     closeModal()
     })
     cy.findByText('CFDs on financial instruments.').should('exist').then(() => {
-      clickAddMt5Button()
+      const mt5FIN = 'CFDs on financial instruments.'
+      clickAddMt5Button(mt5FIN)
       verifyJurisdictionSelection('Financial')
       verifyDerivMT5Creation('Financial')
       verifyTransferFundsMessage('Financial')
@@ -107,49 +112,48 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
     // closeModal()
     // })
 
+    //Below flow is also different with current MT5 flow. need to check and confirm on latest behavior.As per new flow cannot add more than 1 MT5 svg account
     // create SVG Financial account
-    const getMoreText = Cypress.$(":contains('Get more')")
-    if (getMoreText.length > 0) {
-      cy.findByText('Get more', { exact: true }).click()
-      cy.findByText('Select Deriv MT5’s account type').should('be.visible')
-      cy.get('.wallets-mt5-account-type-card-list-content').first().click()
-      cy.findByRole('button', { name: 'Next' }).click()
-      selectBVIJurisdiction('Derived')
-      cy.findByRole('heading', {
-        name: 'Complete your personal details',
-      }).should('exist')
-      cy.findByPlaceholderText('Tax residence*').click()
-      cy.findByPlaceholderText('Tax residence*').type('Indonesi')
-      cy.findByRole('option', { name: 'Indonesia' }).click()
-      cy.findByLabelText('Tax identification number*').click()
-      cy.findByLabelText('Tax identification number*').type('001234212343232')
-      cy.findByRole('button', { name: 'Next' }).click()
-      verifyDerivMT5Creation('BVI')
-      closeModal()
-    }
+    // const getMoreText = Cypress.$(":contains('Get more')")
+    // if (getMoreText.length > 0) {
+    //   cy.findByText('Get more', { exact: true }).click()
+    //   cy.findByText('Select Deriv MT5’s account type').should('be.visible')
+    //   cy.get('.wallets-mt5-account-type-card-list-content').first().click()
+    //   cy.findByRole('button', { name: 'Next' }).click()
+    //   selectBVIJurisdiction('Derived')
+    //   cy.findByRole('heading', {
+    //     name: 'Complete your personal details',
+    //   }).should('exist')
+    //   cy.findByPlaceholderText('Tax residence*').click()
+    //   cy.findByPlaceholderText('Tax residence*').type('Indonesi')
+    //   cy.findByRole('option', { name: 'Indonesia' }).click()
+    //   cy.findByLabelText('Tax identification number*').click()
+    //   cy.findByLabelText('Tax identification number*').type('001234212343232')
+    //   cy.findByRole('button', { name: 'Next' }).click()
+    //   verifyDerivMT5Creation('BVI')
+    //   closeModal()
+    // }
     // Create Demo MT5 accounts
     cy.log('create demo mt5 svg account')
     cy.c_switchWalletsAccount('USD Demo')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
-    const demoSvgText = Cypress.$(
-      ":contains('This account offers CFDs on derived instruments.')"
-    )
-    if (demoSvgText.length > 0) {
-      clickAddMt5Button()
+    cy.findByText('CFDs on derived instruments.').should('exist').then(() => {
+      clickAddMt5Button(mt5SVG)
       verifyDerivMT5Creation('Demo')
       verifyDemoCreationsMessage('Derived')
-    }
+    })
 
-    cy.log('create demo mt5 svg financial account')
-    cy.findByText('CFDs', { exact: true }).should('be.visible')
-    const demoFinancialText = Cypress.$(
-      ":contains('This account offers CFDs on derived instruments.')"
-    )
-    if (demoFinancialText.length > 0) {
-      clickAddMt5Button()
-      verifyDerivMT5Creation('Demo')
-      verifyDemoCreationsMessage('Financial')
-    }
+    //As per new flow cannot add more than 1 MT5 svg account
+    // cy.log('create demo mt5 svg financial account')
+    // cy.findByText('CFDs', { exact: true }).should('be.visible')
+    // const demoFinancialText = Cypress.$(
+    //   ":contains('This account offers CFDs on derived instruments.')"
+    // )
+    // if (demoFinancialText.length > 0) {
+    //   clickAddMt5Button()
+    //   verifyDerivMT5Creation('Demo')
+    //   verifyDemoCreationsMessage('Financial')
+    // }
     // this part is commented due to this bug [https://app.clickup.com/t/20696747/WALL-3302]
     // cy.log("create demo mt5 svg swap free account")
     // cy.findByText("CFDs", { exact: true }).should("be.visible")
