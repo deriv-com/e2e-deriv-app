@@ -61,7 +61,7 @@ describe('QATEST-98821 - Add demo derivx account and QATEST-98824 add real deriv
         verifyTransferFundsMessage('Demo')
       })
   })
-  it.only('should be able to add DerivX USD account in responsive', () => {
+  it('should be able to add DerivX USD account in responsive', () => {
     cy.log('add derivx account')
     cy.c_login({ user: 'walletloginEmailMobile' })
     cy.c_visitResponsive('/', 'small')
