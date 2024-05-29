@@ -3,39 +3,18 @@ import { generateAccountNumberString } from '../../../support/helper/utility'
 
 let paymentID = generateAccountNumberString(12)
 
-function filterByPaymentMethod(PM) {
-  cy.findByText('Payment methods').should('be.visible').click()
-  cy.findByText(PM).should('be.visible').click()
-  cy.findByRole('button', { name: 'Confirm' }).should('be.enabled').click()
-  cy.findByRole('button', { name: 'Apply' }).should('be.enabled').click()
-}
-
-function resetFilter() {
-  cy.findByTestId('sort-div').next().click()
-  cy.findByRole('button', { name: 'Reset' }).should('be.enabled').click()
-}
-
-function verifyNoPaymentMethod(orderTab) {
-  cy.findByRole('button', { name: orderTab }).click()
-  cy.findByText('No ads for this currency 😞')
-}
-
 function verifyOnePaymentMethod(orderTab, PM1, NonSelectedPM) {
   cy.findByRole('button', { name: orderTab }).click()
-
   const buttonText = orderTab === 'Sell' ? 'Sell USD' : 'Buy USD'
-
-  cy.contains('button', buttonText)
-    .its('length')
-    .then((length) => {
-      if (length === 0) {
-        // No 'Buy USD' or 'Sell USD' button found
-        cy.findByText('No ads for this currency 😞')
-      } else {
-        cy.contains(PM1).should('exist')
-        cy.contains(NonSelectedPM).should('not.exist')
-      }
-    })
+  cy.findByTestId('dt_initial_loader').should('not.exist')
+  cy.get('body', { timeout: 10000 }).then((body) => {
+    if (body.find('.no-ads__message', { timeout: 10000 }).length > 0) {
+      cy.findByText('No ads for this currency 😞')
+    } else {
+      cy.contains(PM1).should('exist')
+      cy.contains(NonSelectedPM).should('not.exist')
+    }
+  })
 }
 
 function verifyTwoPaymentMethod(orderTab, PM1, PM2, NonSelectedPM) {
@@ -45,7 +24,6 @@ function verifyTwoPaymentMethod(orderTab, PM1, PM2, NonSelectedPM) {
     .its('length')
     .then((length) => {
       if (length === 0) {
-        // No 'Buy USD' or 'Sell USD' button found
         cy.findByText('No ads for this currency 😞')
       } else {
         cy.contains(PM1)
@@ -56,20 +34,28 @@ function verifyTwoPaymentMethod(orderTab, PM1, PM2, NonSelectedPM) {
 }
 
 function verifyAllPaymentMethod(orderTab, PM1, PM2) {
-  cy.findByRole('button', { name: orderTab })
-    .click()
-    .contains(PM1)
-    .contains(PM2)
+  cy.findByRole('button', { name: orderTab }).click()
+  cy.contains(PM1)
+  cy.contains(PM2)
 }
 
-function addOrderWithPM() {
+function redirectToP2PMyAdTab(email) {
+  cy.c_login({ user: email })
+  cy.c_visitResponsive('/appstore/traders-hub', 'small')
   cy.c_navigateToDerivP2P()
   cy.c_skipPasskey()
   cy.c_closeNotificationHeader()
   cy.c_clickMyAdTab()
-  cy.c_removeExistingAds('sell')
+}
+
+function addOrderWithPM() {
+  addSellOrderDetails('Other', '10', '0.1', '1', '2')
   cy.findByRole('button', { name: 'Create new ad' })
-    .should('be.visible')
+    .should('be.enabled')
+    .click()
+  addSellOrderDetails('Skrill', '20', '0.2', '10.1', '10.2')
+  cy.findByRole('button', { name: 'Create new ad' })
+    .should('be.enabled')
     .click()
   addBuyOrderDetails('Bank Transfer', '10', '1', '0.01', '0.02')
   cy.findByRole('button', { name: 'Create new ad' })
@@ -79,21 +65,16 @@ function addOrderWithPM() {
   cy.findByRole('button', { name: 'Create new ad' })
     .should('be.visible')
     .click()
-  addSellOrderDetails('Other', '10', '0.1', '1', '2')
-  cy.findByRole('button', { name: 'Create new ad' })
-    .should('be.enabled')
-    .click()
-  addSellOrderDetails('Skrill', '20', '0.2', '10.1', '10.2')
 }
 
-function addBuyOrderDetails(PM, amount, rate, min, max) {
+function addBuyOrderDetails(paymentMethod, amount, rate, min, max) {
   cy.findByTestId('offer_amount').click().type(amount)
   cy.findByTestId('fixed_rate_type').type(rate)
   cy.findByTestId('min_transaction').click().type(min)
   cy.findByTestId('max_transaction').click().type(max)
   cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
   cy.findByPlaceholderText('Add').should('be.visible').click()
-  cy.findByText(PM).click()
+  cy.findByText(paymentMethod).click()
   cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
   cy.c_verifyPostAd()
 }
@@ -125,34 +106,30 @@ function addSellOrderDetails(paymentMethod, amount, rate, min, max) {
 describe('QATEST-2853 - Ad details', () => {
   beforeEach(() => {
     cy.clearAllLocalStorage()
-    cy.c_login({ user: 'p2pFloating' })
-    cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
   it('Filter for Payment Methods - Buy/Sell Ad', () => {
+    redirectToP2PMyAdTab('p2pFloating')
+    cy.c_createNewAd('sell')
     addOrderWithPM()
-    cy.c_login({ user: 'p2pSortFunctionality' })
-    cy.c_visitResponsive('/appstore/traders-hub', 'small')
-    cy.c_navigateToDerivP2P()
-    cy.c_skipPasskey()
-    cy.c_closeNotificationHeader()
-    cy.c_clickMyAdTab()
+    redirectToP2PMyAdTab('p2pSortFunctionality')
     cy.findByText('Buy / Sell').should('be.visible').click()
-    resetFilter()
-    filterByPaymentMethod('Bank Transfer')
+    cy.findByTestId('sort-div').next().click()
+    cy.c_filterByPaymentMethod('Bank Transfer')
     verifyOnePaymentMethod('Buy', 'Bank Transfer', 'Other')
     verifyOnePaymentMethod('Sell', 'Bank Transfer', 'Other')
     cy.findByTestId('sort-div').next().click()
-    filterByPaymentMethod('Other')
-    verifyOnePaymentMethod('Buy', 'Other')
-    verifyOnePaymentMethod('Sell', 'Bank Transfer')
-    resetFilter()
-    filterByPaymentMethod('Skrill')
+    cy.c_filterByPaymentMethod('Other')
+    verifyOnePaymentMethod('Buy', 'Other', 'AliPay')
+    verifyOnePaymentMethod('Sell', 'Bank Transfer', 'AliPay')
+    cy.c_resetFilter()
+    cy.c_filterByPaymentMethod('Skrill')
     verifyOnePaymentMethod('Buy', 'Skrill', 'Bank Transfer')
     verifyOnePaymentMethod('Sell', 'Skrill', 'Bank Transfer')
     cy.findByTestId('sort-div').next().click()
-    filterByPaymentMethod('Other')
+    cy.c_filterByPaymentMethod('Other')
     verifyTwoPaymentMethod('Buy', 'Other', 'Skrill', 'Bank Transfer')
-    resetFilter()
+    cy.c_resetFilter()
+    cy.findByRole('button', { name: 'Apply' }).should('be.enabled').click()
     verifyAllPaymentMethod('Buy', 'Other', 'Skrill')
     verifyAllPaymentMethod('Sell', 'PayPal', 'Bank Transfer')
   })

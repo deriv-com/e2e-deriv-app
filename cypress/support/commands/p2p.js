@@ -13,6 +13,7 @@ const pm3 = 'Skrill'
 Cypress.Commands.add('c_createNewAd', (adType) => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
   cy.contains('loading').should('not.exist')
+  cy.wait(2000)
   cy.get('body', { timeout: 10000 }).then((body) => {
     if (body.find('.no-ads__message', { timeout: 10000 }).length > 0) {
       cy.findByRole('button', { name: 'Create new ad' })
@@ -930,3 +931,16 @@ Cypress.Commands.add(
       })
   }
 )
+Cypress.Commands.add('c_filterByPaymentMethod', (PM) => {
+  cy.findByText('Payment methods').should('be.visible').click()
+  cy.findByText(PM).should('be.visible').click()
+  cy.findByRole('button', { name: 'Confirm' }).should('be.enabled').click()
+  cy.findByRole('button', { name: 'Apply' }).should('be.enabled').click()
+})
+
+Cypress.Commands.add('c_resetFilter', () => {
+  cy.findByTestId('sort-div').next().click()
+  cy.findByText('Deriv P2P', { timeout: 10000 }).should('not.be.visible')
+  cy.findByText('Filter', { timeout: 10000 }).should('be.visible')
+  cy.findByRole('button', { name: 'Reset' }).should('be.enabled').click()
+})
