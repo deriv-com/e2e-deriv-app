@@ -43,14 +43,16 @@ function checkWalletBanner(deviceType) {
   }
 }
 function checkAccountNotMigrated() {
+  cy.findByText('Derived', { timeout: 30000 }).should('be.visible')
   for (let i = 1; i < 4; i++) {
-    cy.contains('USD Wallet')
+    cy.get('input[value="USD Wallet"]')
       .should(() => {})
       .then(($text) => {
         if ($text.length) {
           cy.log('Account is migrated!')
-          cy.c_logout()
-          cy.c_login({ app: 'wallets', user: `eligibleMigration${i}` })
+          cy.c_walletLogout()
+          cy.c_visitResponsive('/', 'large')
+          cy.c_login({ user: `eligibleMigration${i}` })
         } else {
           cy.log('account is not migrated!')
           return
@@ -60,11 +62,11 @@ function checkAccountNotMigrated() {
 }
 describe('QATEST-154253 - Migration country eligibility', () => {
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ user: 'walletloginEmail' })
   })
 
   it('should be able to see the tour for Fiat Wallets', () => {
-    cy.c_visitResponsive('/appstore/traders-hub', 'large')
+    cy.c_visitResponsive('/', 'large')
     checkAccountNotMigrated()
     cy.contains('Enjoy seamless transactions').should('be.visible')
     cy.get('#modal_root').findByRole('button', { name: 'Enable now' }).click()
@@ -75,7 +77,7 @@ describe('QATEST-154253 - Migration country eligibility', () => {
   })
 
   it('should be able to see the tour for Fiat Wallets in responsive', () => {
-    cy.c_visitResponsive('/appstore/traders-hub', 'small')
+    cy.c_visitResponsive('/', 'small')
     checkAccountNotMigrated()
     cy.contains('Enjoy seamless transactions').should('be.visible')
     cy.get('#modal_root').findByRole('button', { name: 'Enable now' }).click()
