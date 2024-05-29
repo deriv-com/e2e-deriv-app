@@ -122,9 +122,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
     localStorage.setItem('config.server_url', Cypress.env('configServer'))
     localStorage.setItem('config.app_id', Cypress.env('configAppId'))
   }
-  if (
-    Cypress.env('oAuthUrl') == '<empty>'
-  ) {
+  if (Cypress.env('oAuthUrl') == '<empty>') {
     getOAuthUrl(
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
