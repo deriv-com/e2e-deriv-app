@@ -18,8 +18,8 @@ function resetBalanceDemo(platform) {
   cy.findByText('Success').should('exist')
   cy.findByRole('button', { name: 'Transfer funds' }).click()
   //To check if Transfer tab is active on clicking Transfer funds
-  cy.findByRole('button', { name: 'Transfer' })
-    .parent()
+  cy.findByRole('main')
+    .findByRole('button', { name: 'Transfer' })
     .should('be.visible')
     .invoke('attr', 'class') //would return the string of that class
     .should('include', 'wallets-cashier-header__tab--active') //find if the class has "active" string
