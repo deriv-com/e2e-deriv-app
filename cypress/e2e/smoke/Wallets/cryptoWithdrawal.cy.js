@@ -26,7 +26,7 @@ function verifyEmailandPerformWithdraw(platform) {
   cy.findByText('Withdraw').should('be.visible').click()
   cy.c_emailVerification(
     'request_payment_withdraw.html',
-    Cypress.env('walletloginEmail')
+    Cypress.env('walletEmail')
   )
   cy.then(() => {
     let verification_code = Cypress.env('walletsWithdrawalCode')

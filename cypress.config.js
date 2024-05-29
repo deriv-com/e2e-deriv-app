@@ -256,6 +256,7 @@ module.exports = defineConfig({
     baseUrl: process.env.CYPRESS_BASE_URL,
     loginEmail: process.env.E2E_DERIV_LOGIN,
     loginPassword: process.env.E2E_DERIV_PASSWORD,
+    walletEmail: process.env.E2E_DERIV_LOGIN_WALLET,
     p2pbuyloginEmail: process.env.E2E_P2P_BUY,
     p2psellloginEmail: process.env.E2E_P2P_SELL,
     loginEmailProd: process.env.E2E_DERIV_LOGIN_PROD,
