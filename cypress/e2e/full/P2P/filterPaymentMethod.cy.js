@@ -1,7 +1,4 @@
 import '@testing-library/cypress/add-commands'
-import { generateAccountNumberString } from '../../../support/helper/utility'
-
-let paymentID = generateAccountNumberString(12)
 
 function verifyOnePaymentMethod(orderTab, PM1, NonSelectedPM) {
   cy.findByRole('button', { name: orderTab }).click()
@@ -92,6 +89,7 @@ describe('QATEST-2853 - Ad details', () => {
     cy.c_filterByPaymentMethod('Other')
     verifyTwoPaymentMethod('Buy', 'Other', 'Skrill', 'Bank Transfer')
     cy.c_resetFilter()
+    cy.get('.dc-toggle-switch__label').click()
     cy.findByRole('button', { name: 'Apply' }).should('be.enabled').click()
     verifyAllPaymentMethod('Buy', 'Other', 'Skrill')
     verifyAllPaymentMethod('Sell', 'PayPal', 'Bank Transfer')
