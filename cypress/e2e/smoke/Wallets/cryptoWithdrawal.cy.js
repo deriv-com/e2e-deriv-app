@@ -33,12 +33,12 @@ function verifyEmailandPerformWithdraw(platform) {
     let verification_code = Cypress.env('walletsWithdrawalCode')
     if (`${platform}` == `mobile`) {
       cy.c_visitResponsive(
-        `/wallet/withdrawl?verification=${verification_code}`,
+        `/wallet/withdrawal?verification=${verification_code}`,
         'small'
       )
     } else {
       cy.c_visitResponsive(
-        `/wallet/withdrawl?verification=${verification_code}`,
+        `/wallet/withdrawal?verification=${verification_code}`,
         'large'
       )
     }
