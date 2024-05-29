@@ -48,58 +48,22 @@ function redirectToP2PMyAdTab(email) {
 }
 
 function addOrderWithPM() {
-  addSellOrderDetails('Other', '10', '0.1', '1', '2')
+  cy.c_addSellOrderDetails('Other', '10', '0.1', '1', '2')
   cy.findByRole('button', { name: 'Create new ad' })
     .should('be.enabled')
     .click()
-  addSellOrderDetails('Skrill', '20', '0.2', '10.1', '10.2')
+  cy.c_addSellOrderDetails('Skrill', '20', '0.2', '10.1', '10.2')
   cy.findByRole('button', { name: 'Create new ad' })
     .should('be.enabled')
     .click()
-  addBuyOrderDetails('Bank Transfer', '10', '1', '0.01', '0.02')
+  cy.c_addBuyOrderDetails('Bank Transfer', '10', '1', '0.01', '0.02')
   cy.findByRole('button', { name: 'Create new ad' })
     .should('be.enabled')
     .click()
-  addBuyOrderDetails('PayPal', '20', '2', '10.01', '10.02')
+  cy.c_addBuyOrderDetails('PayPal', '20', '2', '10.01', '10.02')
   cy.findByRole('button', { name: 'Create new ad' })
     .should('be.visible')
     .click()
-}
-
-function addBuyOrderDetails(paymentMethod, amount, rate, min, max) {
-  cy.findByTestId('offer_amount').click().type(amount)
-  cy.findByTestId('fixed_rate_type').type(rate)
-  cy.findByTestId('min_transaction').click().type(min)
-  cy.findByTestId('max_transaction').click().type(max)
-  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
-  cy.findByPlaceholderText('Add').should('be.visible').click()
-  cy.findByText(paymentMethod).click()
-  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
-  cy.c_verifyPostAd()
-}
-
-function addSellOrderDetails(paymentMethod, amount, rate, min, max) {
-  cy.get(':nth-child(2) > .dc-radio-group__circle').click()
-  cy.findByTestId('offer_amount').click().type(amount)
-  cy.findByTestId('fixed_rate_type').type(rate)
-  cy.findByTestId('min_transaction').click().type(min)
-  cy.findByTestId('max_transaction').click().type(max)
-  cy.findByTestId('contact_info').click().type('Test')
-  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
-  cy.get('body', { timeout: 10000 }).then((body) => {
-    if (body.find(paymentMethod, { timeout: 10000 }).length > 0) {
-      cy.contains(paymentMethod).click()
-    } else {
-      cy.findByTestId('dt_payment_method_card_add_icon')
-        .should('be.visible')
-        .click()
-      cy.get('input[name="payment_method"]').click()
-      cy.c_addPaymentMethod(paymentID, paymentMethod)
-      cy.contains(paymentMethod).click()
-    }
-  })
-  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
-  cy.c_verifyPostAd()
 }
 
 describe('QATEST-2853 - Ad details', () => {
@@ -107,10 +71,10 @@ describe('QATEST-2853 - Ad details', () => {
     cy.clearAllLocalStorage()
   })
   it('Filter for Payment Methods - Buy/Sell Ad', () => {
-    redirectToP2PMyAdTab('p2pFloating')
+    redirectToP2PMyAdTab('p2pFilterPaymentMethodBase')
     cy.c_createNewAd('sell')
     addOrderWithPM()
-    redirectToP2PMyAdTab('p2pSortFunctionality')
+    redirectToP2PMyAdTab('p2pFilterPaymentMethodSelector')
     cy.findByText('Buy / Sell').should('be.visible').click()
     cy.findByTestId('sort-div').next().click()
     cy.c_filterByPaymentMethod('Bank Transfer')
