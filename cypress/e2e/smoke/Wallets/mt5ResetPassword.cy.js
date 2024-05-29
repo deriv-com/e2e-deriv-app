@@ -2,7 +2,7 @@ import '@testing-library/cypress/add-commands'
 
 function changeMT5Password() {
   cy.findByText('Derived', { timeout: 3000 }).should('be.visible')
-  cy.findByText('This account offers CFDs on derived instruments.')
+  cy.findByText('CFDs on derived instruments.')
     .should(() => {})
     .then((el) => {
       if (el.length) {

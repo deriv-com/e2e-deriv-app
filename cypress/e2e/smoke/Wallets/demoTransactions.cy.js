@@ -18,8 +18,7 @@ function resetBalanceDemo(platform) {
   cy.findByText('Success').should('exist')
   cy.findByRole('button', { name: 'Transfer funds' }).click()
   //To check if Transfer tab is active on clicking Transfer funds
-  cy.get('[class*="wallets-cashier-header__tab"].wallets-cashier-header__tab')
-    .findByText('Transfer')
+  cy.findByRole('button', { name: 'Transfer' })
     .parent()
     .should('be.visible')
     .invoke('attr', 'class') //would return the string of that class
