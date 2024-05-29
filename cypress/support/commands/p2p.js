@@ -545,6 +545,7 @@ Cypress.Commands.add('c_removeExistingAds', (adType) => {
               timeout: 10000,
             })
           if (index < numberOfAds - 1) {
+            // this wait needed to provide a buffer after deleting each row, which helps avoid flaky failures.
             cy.wait(1000)
           }
         }
