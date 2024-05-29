@@ -526,16 +526,30 @@ Cypress.Commands.add('c_postAd', () => {
 
 Cypress.Commands.add('c_removeExistingAds', (adType) => {
   cy.get('.my-ads-table__row .dc-dropdown-container')
-    .should('be.visible')
-    .click()
-  cy.findByText('Delete').parent().click()
-  cy.findByText('Do you want to delete this ad?').should('be.visible')
-  cy.findByText('You will NOT be able to restore it.').should('be.visible')
-  cy.findByRole('button', { name: 'Delete' })
-    .should('be.enabled')
-    .click()
-    .should('not.exist', {
-      timeout: 10000,
+    .its('length')
+    .then((numberOfAds) => {
+      cy.log('Number of Ads:', numberOfAds)
+      cy.get('.my-ads-table__row .dc-dropdown-container').each(
+        ($el, index, $list) => {
+          cy.log('The index is:', index)
+          cy.wrap($el).click()
+          cy.findByText('Delete').parent().click()
+          cy.findByText('Do you want to delete this ad?').should('be.visible')
+          cy.findByText('You will NOT be able to restore it.').should(
+            'be.visible'
+          )
+          cy.findByRole('button', { name: 'Delete' })
+            .should('be.enabled')
+            .click()
+            .should('not.exist', {
+              timeout: 10000,
+            })
+          if (index < numberOfAds - 1) {
+            // this wait needed to provide a buffer after deleting each row, which helps avoid flaky failures.
+            cy.wait(1000)
+          }
+        }
+      )
     })
   if (adType == 'sell') {
     cy.findByText('My profile').click()
