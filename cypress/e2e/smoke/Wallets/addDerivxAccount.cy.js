@@ -38,24 +38,17 @@ function verifyTransferFundsMessage(accountType) {
 }
 
 function expandDemoWallet() {
-  cy.get('.wallets-dropdown__button').click()
-  cy.get('.wallets-list-card-dropdown__item-content')
-    .contains('USD Demo Wallet')
-    .click()
+  cy.get('label').find('span').click()
   cy.findByText('USD Demo Wallet').should('be.visible')
 }
 
 describe('QATEST-98821 - Add demo derivx account and QATEST-98824 add real derivx account', () => {
-  beforeEach(() => {
-    cy.c_login({ user: 'walletloginEmail' })
-  })
 
   it('should be able to add DerivX USD account', () => {
     cy.log('add derivx account')
+    cy.c_login({ user: 'walletloginEmail' })
     cy.c_visitResponsive('/', 'large')
-    const Text = Cypress.$(':contains("CFDs on financial and derived instruments via a customisable platform.")')
-    cy.log('Length of text is' + Text.length)
-   // if (Text.length > 0) {
+    cy.findByText('CFDs on financial and derived instruments via a customisable platform.').should('exist').then(() => {
       clickAddDerivxButton()
       verifyDerivxCreation('Real')
       verifyTransferFundsMessage('Real')
@@ -63,31 +56,20 @@ describe('QATEST-98821 - Add demo derivx account and QATEST-98824 add real deriv
       clickAddDerivxButton()
       verifyDerivxCreation('Demo')
       verifyTransferFundsMessage('Demo')
-  //  }
+    })
   })
-  it('should be able to add DerivX USD account in responsive', () => {
+  it.only('should be able to add DerivX USD account in responsive', () => {
     cy.log('add derivx account')
-    cy.c_visitResponsive('/wallets', 'small')
-    const Text = Cypress.$(
-      ":contains('This account offers CFDs on a highly customisable CFD trading platform.')"
-    )
-    if (Text.length > 0) {
+    cy.c_login({ user: 'walletloginEmailMobile' })
+    cy.c_visitResponsive('/', 'small')
+    cy.findByText('CFDs on financial and derived instruments via a customisable platform.').should('exist').then(() => {
       clickAddDerivxButton()
       verifyDerivxCreation('Real')
       verifyTransferFundsMessage('Real')
-    }
-  })
-  it('should be able to add Demo DerivX USD account in responsive', () => {
-    cy.log('add derivx account')
-    cy.c_visitResponsive('/wallets', 'small')
-    cy.c_switchWalletsAccountDemo()
-    const Text = Cypress.$(
-      ":contains('This account offers CFDs on a highly customisable CFD trading platform.')"
-    )
-    if (Text.length > 0) {
+      cy.c_switchWalletsAccountDemo()
       clickAddDerivxButton()
-      verifyDerivxCreation('Real')
-      verifyTransferFundsMessage('Real')
-    }
+      verifyDerivxCreation('Demo')
+      verifyTransferFundsMessage('Demo')
+    })
   })
 })

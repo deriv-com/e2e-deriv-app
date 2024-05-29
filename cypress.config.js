@@ -227,6 +227,10 @@ module.exports = defineConfig({
       walletloginEmail: {
         ID: process.env.E2E_DERIV_LOGIN_WALLET,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      walletloginEmailMobile: {
+        ID: process.env.E2E_DERIV_LOGIN_WALLET_MOBILE,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       }
     },
     production:{
