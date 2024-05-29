@@ -41,7 +41,7 @@ function addcryptowallet() {
 
 describe('QATEST-98773 - Add crypto wallet account', () => {
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ user: 'walletloginEmail' })
   })
 
   it('should be able to add more wallets', () => {

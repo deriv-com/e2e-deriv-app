@@ -47,7 +47,7 @@ function expandDemoWallet() {
 
 describe('QATEST-98821 - Add demo derivx account and QATEST-98824 add real derivx account', () => {
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ user: 'walletloginEmail' })
   })
 
   it('should be able to add DerivX USD account', () => {

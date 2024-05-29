@@ -27,7 +27,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
   //Prerequisites: Crypto wallet account in any qa box with 1.00000000 BTC balance and USD, ETH and LTC wallets
   let transferAmount = '0.00003000 BTC'
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ user: 'walletloginEmail' })
   })
 
   it('should be able to perform transfer from crypto account', () => {

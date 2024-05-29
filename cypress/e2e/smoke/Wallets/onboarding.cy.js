@@ -105,7 +105,7 @@ const allWalletAdded = () => {
 
 describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets', () => {
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ user: 'walletloginEmail' })
   })
 
   it('User onboarding for desktop', () => {
