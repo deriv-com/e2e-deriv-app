@@ -43,33 +43,40 @@ function expandDemoWallet() {
 }
 
 describe('QATEST-98821 - Add demo derivx account and QATEST-98824 add real derivx account', () => {
-
   it('should be able to add DerivX USD account', () => {
     cy.log('add derivx account')
     cy.c_login({ user: 'walletloginEmail' })
     cy.c_visitResponsive('/', 'large')
-    cy.findByText('CFDs on financial and derived instruments via a customisable platform.').should('exist').then(() => {
-      clickAddDerivxButton()
-      verifyDerivxCreation('Real')
-      verifyTransferFundsMessage('Real')
-      expandDemoWallet()
-      clickAddDerivxButton()
-      verifyDerivxCreation('Demo')
-      verifyTransferFundsMessage('Demo')
-    })
+    cy.findByText(
+      'CFDs on financial and derived instruments via a customisable platform.'
+    )
+      .should('exist')
+      .then(() => {
+        clickAddDerivxButton()
+        verifyDerivxCreation('Real')
+        verifyTransferFundsMessage('Real')
+        expandDemoWallet()
+        clickAddDerivxButton()
+        verifyDerivxCreation('Demo')
+        verifyTransferFundsMessage('Demo')
+      })
   })
   it.only('should be able to add DerivX USD account in responsive', () => {
     cy.log('add derivx account')
     cy.c_login({ user: 'walletloginEmailMobile' })
     cy.c_visitResponsive('/', 'small')
-    cy.findByText('CFDs on financial and derived instruments via a customisable platform.').should('exist').then(() => {
-      clickAddDerivxButton()
-      verifyDerivxCreation('Real')
-      verifyTransferFundsMessage('Real')
-      cy.c_switchWalletsAccountDemo()
-      clickAddDerivxButton()
-      verifyDerivxCreation('Demo')
-      verifyTransferFundsMessage('Demo')
-    })
+    cy.findByText(
+      'CFDs on financial and derived instruments via a customisable platform.'
+    )
+      .should('exist')
+      .then(() => {
+        clickAddDerivxButton()
+        verifyDerivxCreation('Real')
+        verifyTransferFundsMessage('Real')
+        cy.c_switchWalletsAccountDemo()
+        clickAddDerivxButton()
+        verifyDerivxCreation('Demo')
+        verifyTransferFundsMessage('Demo')
+      })
   })
 })

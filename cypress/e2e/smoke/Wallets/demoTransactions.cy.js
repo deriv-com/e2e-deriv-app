@@ -18,8 +18,10 @@ function resetBalanceDemo(platform) {
   cy.findByText('Success').should('exist')
   cy.findByRole('button', { name: 'Transfer funds' }).click()
   //To check if Transfer tab is active on clicking Transfer funds
-   cy.get('.wallets-cashier-header__tab--active')
-   .should('contain.text', 'Transfer')
+  cy.get('.wallets-cashier-header__tab--active').should(
+    'contain.text',
+    'Transfer'
+  )
 }
 
 function demoTransfer(transferToAccount) {

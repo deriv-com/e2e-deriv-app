@@ -5,9 +5,7 @@ function clickAddMt5Button(mt5AccountType) {
   //   .next('.wallets-trading-account-card__content > .wallets-button')
   //   .first()
   //   .click()
-  cy.get('span.wallets-text')
-  .contains(mt5AccountType)
-  .click()
+  cy.get('span.wallets-text').contains(mt5AccountType).click()
 }
 
 function verifyJurisdictionSelection(accountType) {
@@ -80,7 +78,7 @@ function closeModal() {
 }
 describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG MT5 account and QATEST-115487 Add real BVI MT5 account', () => {
   beforeEach(() => {
-     cy.c_login({ user: 'walletloginEmail' })
+    cy.c_login({ user: 'walletloginEmail' })
     cy.c_visitResponsive('/', 'large')
   })
 
@@ -88,21 +86,25 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
     const mt5SVG = 'CFDs on derived instruments.'
     cy.log('create mt5 svg account')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
-    cy.findByText('CFDs on derived instruments.').should('exist').then(() => {
-    clickAddMt5Button(mt5SVG)
-    verifyJurisdictionSelection('Derived')
-    verifyDerivMT5Creation('Derived')
-    verifyTransferFundsMessage('Derived')
-    closeModal()
-    })
-    cy.findByText('CFDs on financial instruments.').should('exist').then(() => {
-      const mt5FIN = 'CFDs on financial instruments.'
-      clickAddMt5Button(mt5FIN)
-      verifyJurisdictionSelection('Financial')
-      verifyDerivMT5Creation('Financial')
-      verifyTransferFundsMessage('Financial')
-      closeModal()
-    })
+    cy.findByText('CFDs on derived instruments.')
+      .should('exist')
+      .then(() => {
+        clickAddMt5Button(mt5SVG)
+        verifyJurisdictionSelection('Derived')
+        verifyDerivMT5Creation('Derived')
+        verifyTransferFundsMessage('Derived')
+        closeModal()
+      })
+    cy.findByText('CFDs on financial instruments.')
+      .should('exist')
+      .then(() => {
+        const mt5FIN = 'CFDs on financial instruments.'
+        clickAddMt5Button(mt5FIN)
+        verifyJurisdictionSelection('Financial')
+        verifyDerivMT5Creation('Financial')
+        verifyTransferFundsMessage('Financial')
+        closeModal()
+      })
     // this part is commented due to this bug [https://app.clickup.com/t/20696747/WALL-3302]
     // cy,findByText('Trade swap-free CFDs on MT5 with synthetics, forex, stocks, stock indices, cryptocurrencies and ETFs').then(()=>{
     // clickAddMt5Button()
@@ -137,11 +139,13 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
     cy.log('create demo mt5 svg account')
     cy.c_switchWalletsAccount('USD Demo')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
-    cy.findByText('CFDs on derived instruments.').should('exist').then(() => {
-      clickAddMt5Button(mt5SVG)
-      verifyDerivMT5Creation('Demo')
-      verifyDemoCreationsMessage('Derived')
-    })
+    cy.findByText('CFDs on derived instruments.')
+      .should('exist')
+      .then(() => {
+        clickAddMt5Button(mt5SVG)
+        verifyDerivMT5Creation('Demo')
+        verifyDemoCreationsMessage('Derived')
+      })
 
     //As per new flow cannot add more than 1 MT5 svg account
     // cy.log('create demo mt5 svg financial account')
