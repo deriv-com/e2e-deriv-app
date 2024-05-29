@@ -21,6 +21,16 @@ Cypress.Commands.add('c_navigateToPoiResponsive', (country, options = {}) => {
   cy.contains('button', 'Next').click()
 })
 
+Cypress.Commands.add('c_navigateToPoaResponsive', (country, options = {}) => {
+  const { runFor = '' } = options
+  if (runFor == 'p2p') {
+    cy.c_visitResponsive('/appstore/traders-hub', 'small')
+    cy.c_skipPasskeysV2()
+  }
+  cy.c_visitResponsive('/account/proof-of-address', 'small')
+  cy.c_closeNotificationHeader()
+})
+
 Cypress.Commands.add('c_submitIdv', () => {
   cy.get('select[name="document_type"]').select('Passport')
   cy.findByLabelText('Enter your document number').type('G0000001')

@@ -134,6 +134,7 @@ module.exports = defineConfig({
     prodURL: "https://app.deriv.com/",
     derivComProdURL: "https://deriv.com/",
     derivComStagingURL: "https://staging.deriv.com/",
+    boStagingUrl:"https://qaxx.deriv.dev/d/backoffice/login.cgi",
     smartTraderUrl: {
       staging: "https://staging-smarttrader.deriv.com/en/trading",
       prod: "https://smarttrader.deriv.com/en/trading",
@@ -151,6 +152,9 @@ module.exports = defineConfig({
       dBot: {
         ID: process.env.E2E_LOGIN_ID_DBOT,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      bo:{
+        ID: process.env.E2E_BO_URL
       },
       p2pStandardAccountWithAds: {
         ID: process.env.E2E_LOGIN_ID_P2P_STANDARDACCOUNTWITHADS,

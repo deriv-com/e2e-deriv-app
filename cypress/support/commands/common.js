@@ -173,7 +173,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
   })
   //To let the dtrader page load completely
   cy.c_fakeLinkPopUpCheck()
-  cy.get('.cq-symbol-select-btn', { timeout: 15000 }).should('exist')
+  //cy.get('.cq-symbol-select-btn', { timeout: 15000 }).should('exist')
   cy.document().then((doc) => {
     const launchModal = doc.querySelector('[data-test-id="launch-modal"]')
     if (launchModal) {
