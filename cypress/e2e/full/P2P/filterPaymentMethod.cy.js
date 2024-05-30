@@ -35,15 +35,6 @@ function verifyAllPaymentMethod(orderTab, PM1, PM2) {
   cy.contains(PM2)
 }
 
-function redirectToP2PMyAdTab(email) {
-  cy.c_login({ user: email })
-  cy.c_visitResponsive('/appstore/traders-hub', 'small')
-  cy.c_navigateToDerivP2P()
-  cy.c_skipPasskey()
-  cy.c_closeNotificationHeader()
-  cy.c_clickMyAdTab()
-}
-
 function addOrderWithPM() {
   cy.c_addSellOrderDetails('Other', '10', '0.1', '1', '2')
   cy.findByRole('button', { name: 'Create new ad' })
@@ -66,12 +57,22 @@ function addOrderWithPM() {
 describe('QATEST-2853 - Ad details', () => {
   beforeEach(() => {
     cy.clearAllLocalStorage()
+    cy.c_login({ user: 'p2pFilterPaymentMethodBase' })
+    cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
   it('Filter for Payment Methods - Buy/Sell Ad', () => {
-    redirectToP2PMyAdTab('p2pFilterPaymentMethodBase')
+    cy.c_navigateToDerivP2P()
+    cy.c_skipPasskey()
+    cy.c_closeNotificationHeader()
+    cy.c_clickMyAdTab()
     cy.c_createNewAd('sell')
     addOrderWithPM()
-    redirectToP2PMyAdTab('p2pFilterPaymentMethodSelector')
+    cy.c_login({ user: 'p2pFilterPaymentMethodSelector' })
+    cy.c_visitResponsive('/appstore/traders-hub', 'small')
+    cy.c_navigateToDerivP2P()
+    cy.c_skipPasskey()
+    cy.c_closeNotificationHeader()
+    cy.c_clickMyAdTab()
     cy.findByText('Buy / Sell').should('be.visible').click()
     cy.findByTestId('sort-div').next().click()
     cy.c_filterByPaymentMethod('Bank Transfer')
