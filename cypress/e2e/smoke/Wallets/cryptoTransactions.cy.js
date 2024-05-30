@@ -38,7 +38,12 @@ function setupTradeAccount(wallet) {
     .then((button) => {
       if (button.length) {
         cy.wrap(button).click()
-        cy.findByRole('button', { name: 'Maybe later', timeout: 3000 }).click()
+        cy.wait(1000)
+        cy.findByRole('button', { name: 'Transfer funds' }).should('be.visible')
+        cy.findByRole('button', { name: 'Maybe later', timeout: 3000 })
+          .should('be.visible')
+          .and('be.enabled')
+          .click()
       }
     })
 }

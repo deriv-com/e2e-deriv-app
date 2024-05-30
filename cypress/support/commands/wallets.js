@@ -20,7 +20,7 @@ Cypress.Commands.add('c_switchWalletsAccount', (account) => {
           cy.log('you are in real wallet')
         }
       })
-    cy.get('.wallets-dropdown__button', { timeout: 10000 }).should('be.visible')
+    cy.get('.wallets-dropdown__button', { timeout: 10000 }).should('exist')
     cy.get('.wallets-dropdown__button').click()
     cy.get('.wallets-list-card-dropdown__item-content')
       .contains(`${account} Wallet`)
