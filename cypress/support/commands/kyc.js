@@ -14,6 +14,11 @@ Cypress.Commands.add('c_navigateToPoiResponsive', (country) => {
   cy.contains('button', 'Next').click()
 })
 
+Cypress.Commands.add('c_navigateToPoaResponsive', () => {
+  cy.c_visitResponsive('/account/proof-of-address', 'small')
+  cy.c_closeNotificationHeader()
+})
+
 Cypress.Commands.add('c_submitIdv', () => {
   cy.get('select[name="document_type"]').select('Passport')
   cy.findByLabelText('Enter your document number').type('G0000001')
