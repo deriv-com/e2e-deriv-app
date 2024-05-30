@@ -11,6 +11,7 @@ const appId = process.env.E2E_STD_CONFIG_APPID
 const websocketURL = `wss://${process.env.E2E_STD_CONFIG_SERVER}/websockets/v3`
 let connection;
 let api;
+let newAppId = null;
 //const gViewPortSize = {small: 'phone-xr', large: 'macbook-16'} //TODO Use enum
  
 module.exports = defineConfig({
@@ -30,6 +31,17 @@ module.exports = defineConfig({
         }
         
         return launchOptions
+      }),
+      on('task', {
+        getPRAppId() {
+          console.log('Current PR appId = ' + newAppId);
+          return newAppId;
+        },
+        setAppId(id) {
+          newAppId = id;
+          console.log('Current PR appId = ' + newAppId);
+          return null;
+        }
       }),
       on('task', {
         wsConnect() {
@@ -130,6 +142,7 @@ module.exports = defineConfig({
     },
   },
   env: {
+    runFromPR: process.env.E2E_RUN_FROM_PR,
     stagingUrl: "https://staging-app.deriv.com/",
     prodURL: "https://app.deriv.com/",
     derivComProdURL: "https://deriv.com/",
@@ -206,23 +219,23 @@ module.exports = defineConfig({
       },
       eligibleMigration1: {
         ID: process.env.E2E_WALLETS_MIGARTION_MAIN,
-        PSWD: process.env.E2E_DERIV_PASSWORD
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       eligibleMigration2: {
         ID: process.env.E2E_WALLETS_MIGARTION_BACKUP1,
-        PSWD: process.env.E2E_DERIV_PASSWORD
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       eligibleMigration3: {
         ID: process.env.E2E_WALLETS_MIGARTION_BACKUP2,
-        PSWD: process.env.E2E_DERIV_PASSWORD
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       eligibleMigration4: {
         ID: process.env.E2E_WALLETS_MIGARTION_BACKUP3,
-        PSWD: process.env.E2E_DERIV_PASSWORD
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       eligibleMigration5: {
         ID: process.env.E2E_WALLETS_MIGARTION_BACKUP4,
-        PSWD: process.env.E2E_DERIV_PASSWORD
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       walletloginEmail: {
         ID: process.env.E2E_DERIV_LOGIN_WALLET,
@@ -260,6 +273,7 @@ module.exports = defineConfig({
     baseUrl: process.env.CYPRESS_BASE_URL,
     loginEmail: process.env.E2E_DERIV_LOGIN,
     loginPassword: process.env.E2E_DERIV_PASSWORD,
+    walletEmail: process.env.E2E_DERIV_LOGIN_WALLET,
     p2pbuyloginEmail: process.env.E2E_P2P_BUY,
     p2psellloginEmail: process.env.E2E_P2P_SELL,
     loginEmailProd: process.env.E2E_DERIV_LOGIN_PROD,

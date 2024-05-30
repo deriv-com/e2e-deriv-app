@@ -4,8 +4,6 @@ Cypress.prevAppId = 0
 Cypress.prevUser = ''
 const expectedCookieValue = '{%22clients_country%22:%22br%22}'
 
-let newApplicationId
-
 const setLoginUser = (user = 'masterUser', options = {}) => {
   const { backEndProd = false } = options
   if (
@@ -507,6 +505,11 @@ Cypress.Commands.add('c_logout', () => {
     cy.contains('Log out').click()
   })
 })
+Cypress.Commands.add('c_walletLogout', () => {
+  cy.visit('/account/personal-details')
+  cy.findByText('Log out').should('exist')
+  cy.findByText('Log out').click()
+})
 
 /*
   Usage cy.c_createRealAccount('co', 'EUR') or you may not pass in anything to go with default.
@@ -716,4 +719,55 @@ Cypress.Commands.add('c_fakeLinkPopUpCheck', () => {
       cy.log('The fake link pop up does not exist!')
     }
   })
+})
+
+/**
+ * Method to perform Authorization and Create Application ID
+ * by calling ApplicationRegister API call
+ */
+Cypress.Commands.add('c_createApplicationId', () => {
+  try {
+    cy.log('Registering Url...')
+
+    cy.c_login_setToken() // We need Auth Token for running WS API calls.
+    cy.task('wsConnect')
+    cy.c_authorizeCall()
+
+    cy.task('registerNewAppIDTask').then((response) => {
+      const appId = response
+      cy.log('The Newly Generated App Id is: ', appId)
+      Cypress.env('updatedAppId', appId)
+
+      cy.task('wsDisconnect')
+
+      Cypress.config('baseUrl', Cypress.env('appRegisterUrl'))
+
+      Cypress.env('configAppId', appId)
+      Cypress.env('stdConfigAppId', appId)
+      Cypress.prevAppId = appId
+      Cypress.env('oAuthUrl', '<empty>') //This needs to be empty as we need to auto-auth the app after first login.
+
+      cy.log(
+        '...Url registered and baseUrl switched. AppId = ' +
+          Cypress.env('updatedAppId')
+      )
+    })
+  } catch (e) {
+    console.error('An error occurred during the app registration process:', e)
+  }
+})
+
+Cypress.Commands.add('c_login_setToken', () => {
+  getOAuthUrl(
+    (oAuthUrl) => {
+      Cypress.env('oAuthUrl', oAuthUrl)
+
+      const urlParams = new URLSearchParams(Cypress.env('oAuthUrl'))
+      const token = urlParams.get('token1')
+
+      Cypress.env('oAuthToken', token) //Set token here
+    },
+    Cypress.env('loginEmail'),
+    Cypress.env('loginPassword')
+  )
 })
