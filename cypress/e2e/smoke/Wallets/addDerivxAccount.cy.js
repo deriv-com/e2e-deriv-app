@@ -41,42 +41,62 @@ function expandDemoWallet() {
   cy.get('label').find('span').click()
   cy.findByText('USD Demo Wallet').should('be.visible')
 }
+function existingAccountCheck(type) {
+  cy.get(type).contains('.wallets-text', ' USD').should('be.visible')
+  cy.findByText('CFDs', { exact: true }).should('be.visible').click()
+  return cy
+    .get('.wallets-added-dxtrade__details, .wallets-available-dxtrade__details')
+    .then(($details) => {
+      if ($details.hasClass('wallets-added-dxtrade__details')) {
+        return 'added'
+      } else if ($details.hasClass('wallets-available-dxtrade__details')) {
+        return 'available'
+      } else {
+        return 'none'
+      }
+    })
+}
+function addDerivXaccount(status, accountType) {
+  if (status === 'available') {
+    cy.log(accountType + ' DerivX account ready to add')
+    clickAddDerivxButton()
+    verifyDerivxCreation(accountType)
+    verifyTransferFundsMessage(accountType)
+  } else if (status === 'added') {
+    cy.log(accountType + ' DerivX account added already')
+    cy.get('.wallets-added-dxtrade__details')
+      .should('exist')
+      .within(() => {
+        cy.contains('.wallets-text', 'Deriv X').should('exist')
+      })
+  } else {
+    cy.log('Neither found')
+  }
+}
 
 describe('QATEST-98821 - Add demo derivx account and QATEST-98824 add real derivx account', () => {
   it('should be able to add DerivX USD account', () => {
-    cy.log('add derivx account')
     cy.c_login({ user: 'walletloginEmail' })
     cy.c_visitResponsive('/', 'large')
-    cy.findByText(
-      'CFDs on financial and derived instruments via a customisable platform.'
-    )
-      .should('exist')
-      .then(() => {
-        clickAddDerivxButton()
-        verifyDerivxCreation('Real')
-        verifyTransferFundsMessage('Real')
-        expandDemoWallet()
-        clickAddDerivxButton()
-        verifyDerivxCreation('Demo')
-        verifyTransferFundsMessage('Demo')
-      })
+    existingAccountCheck('.wallets-balance__container').then((status) => {
+      addDerivXaccount(status, 'Real')
+    })
+    expandDemoWallet()
+    existingAccountCheck('.wallets-balance__container').then((status) => {
+      addDerivXaccount(status, 'Demo')
+    })
   })
   it('should be able to add DerivX USD account in responsive', () => {
     cy.log('add derivx account')
     cy.c_login({ user: 'walletloginEmailMobile' })
     cy.c_visitResponsive('/', 'small')
-    cy.findByText(
-      'CFDs on financial and derived instruments via a customisable platform.'
-    )
-      .should('exist')
-      .then(() => {
-        clickAddDerivxButton()
-        verifyDerivxCreation('Real')
-        verifyTransferFundsMessage('Real')
-        cy.c_switchWalletsAccountDemo()
-        clickAddDerivxButton()
-        verifyDerivxCreation('Demo')
-        verifyTransferFundsMessage('Demo')
-      })
+    existingAccountCheck('.wallets-card__details-bottom').then((status) => {
+      addDerivXaccount(status, 'Real')
+    })
+    cy.get('.wallets-carousel-content__title').scrollIntoView()
+    cy.c_switchWalletsAccountDemo()
+    existingAccountCheck('.wallets-card__details-bottom').then((status) => {
+      addDerivXaccount(status, 'Demo')
+    })
   })
 })

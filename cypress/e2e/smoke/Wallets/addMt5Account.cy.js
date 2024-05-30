@@ -72,6 +72,22 @@ function closeModal() {
   cy.findByRole('button', { name: 'Transfer funds' }).should('exist')
   cy.findByRole('button', { name: 'Maybe later' }).click()
 }
+function existingAccountCheck(type, CFDtype) {
+  return cy
+    .get(type)
+    .contains('.wallets-text', CFDtype)
+    .parent()
+    .closest('.wallets-added-mt5__details, .wallets-available-mt5__details')
+    .then(($details) => {
+      if ($details.hasClass('wallets-added-mt5__details')) {
+        return 'added'
+      } else if ($details.hasClass('wallets-available-mt5__details')) {
+        return 'available'
+      } else {
+        return null
+      }
+    })
+}
 describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG MT5 account and QATEST-115487 Add real BVI MT5 account', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })
@@ -79,28 +95,51 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
   })
 
   it('should be able to create mt5 svg account', () => {
-    const mt5SVG = 'CFDs on derived instruments.'
     cy.log('create mt5 svg account')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
-    cy.findByText('CFDs on derived instruments.')
-      .should('exist')
-      .then(() => {
-        clickAddMt5Button(mt5SVG)
+    cy.get('.wallets-balance__container')
+      .contains('.wallets-text', ' USD')
+      .should('be.visible') //To check page load
+    existingAccountCheck(
+      '.wallets-trading-account-card__content',
+      'Derived'
+    ).then((status) => {
+      if (status === 'available') {
+        cy.log('Derived MT5 account ready to add')
+        clickAddMt5Button('Derived')
         verifyJurisdictionSelection('Derived')
         verifyDerivMT5Creation('Derived')
         verifyTransferFundsMessage('Derived')
         closeModal()
-      })
-    cy.findByText('CFDs on financial instruments.')
-      .should('exist')
-      .then(() => {
-        const mt5FIN = 'CFDs on financial instruments.'
-        clickAddMt5Button(mt5FIN)
+      } else if (status === 'added') {
+        cy.log('Derived MT5 account added already')
+        cy.get('.wallets-added-mt5__details:contains("Derived")').should(
+          'exist'
+        )
+      } else {
+        cy.log('Neither found')
+      }
+    })
+    existingAccountCheck(
+      '.wallets-trading-account-card__content',
+      'Financial'
+    ).then((status) => {
+      if (status === 'available') {
+        cy.log('Financial MT5 account ready to add')
+        clickAddMt5Button('Financial')
         verifyJurisdictionSelection('Financial')
         verifyDerivMT5Creation('Financial')
         verifyTransferFundsMessage('Financial')
         closeModal()
-      })
+      } else if (status === 'added') {
+        cy.log('Fianancial MT5 account added already')
+        cy.get('.wallets-added-mt5__details:contains("Financial")').should(
+          'exist'
+        )
+      } else {
+        cy.log('Neither found')
+      }
+    })
     // this part is commented due to this bug [https://app.clickup.com/t/20696747/WALL-3302]
     // cy,findByText('Trade swap-free CFDs on MT5 with synthetics, forex, stocks, stock indices, cryptocurrencies and ETFs').then(()=>{
     // clickAddMt5Button()
@@ -133,26 +172,47 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
     // Create Demo MT5 accounts
     cy.log('create demo mt5 svg account')
     cy.c_switchWalletsAccount('USD Demo')
-    cy.findByText('CFDs', { exact: true }).should('be.visible')
-    cy.findByText('CFDs on derived instruments.')
-      .should('exist')
-      .then(() => {
-        clickAddMt5Button(mt5SVG)
+    cy.findByText('CFDs', { exact: true }).should('be.visible').click()
+    cy.get('.wallets-balance__container')
+      .contains('.wallets-text', ' USD')
+      .should('be.visible') //To check page load
+    existingAccountCheck(
+      '.wallets-trading-account-card__content',
+      'Derived'
+    ).then((status) => {
+      if (status === 'available') {
+        cy.log('Derived  MT5 demo account ready to add')
+        clickAddMt5Button('Derived')
         verifyDerivMT5Creation('Demo')
         verifyDemoCreationsMessage('Derived')
-      })
-
-    //As per new flow cannot add more than 1 MT5 svg account
+      } else if (status === 'added') {
+        cy.log('Derived MT5 demo account added already')
+        cy.get('.wallets-added-mt5__details:contains("Derived")').should(
+          'exist'
+        )
+      } else {
+        cy.log('Neither found')
+      }
+    })
     cy.log('create demo mt5 svg financial account')
-    cy.findByText('CFDs', { exact: true }).should('be.visible')
-    const demoFinancialText = Cypress.$(
-      ":contains('This account offers CFDs on derived instruments.')"
-    )
-    if (demoFinancialText.length > 0) {
-      clickAddMt5Button()
-      verifyDerivMT5Creation('Demo')
-      verifyDemoCreationsMessage('Financial')
-    }
+    existingAccountCheck(
+      '.wallets-trading-account-card__content',
+      'Financial'
+    ).then((status) => {
+      if (status === 'available') {
+        cy.log('Financial  MT5 demo account ready to add')
+        clickAddMt5Button('Financial')
+        verifyDerivMT5Creation('Demo')
+        verifyDemoCreationsMessage('Financial')
+      } else if (status === 'added') {
+        cy.log('Financial MT5 demo account added already')
+        cy.get('.wallets-added-mt5__details:contains("Financial")').should(
+          'exist'
+        )
+      } else {
+        cy.log('Neither found')
+      }
+    })
     // this part is commented due to this bug [https://app.clickup.com/t/20696747/WALL-3302]
     // cy.log("create demo mt5 svg swap free account")
     // cy.findByText("CFDs", { exact: true }).should("be.visible")

@@ -78,5 +78,5 @@ Cypress.Commands.add('c_switchWalletsAccountDemo', () => {
   cy.get('div.wallets-progress-bar')
     .find('div.wallets-progress-bar-inactive')
     .last()
-    .click()
+    .click({ force: true })
 })

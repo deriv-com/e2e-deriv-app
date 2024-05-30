@@ -24,7 +24,6 @@ function verifyEmailandPerformWithdraw(platform) {
     cy.c_switchWalletsAccount('BTC')
   }
   cy.findByText('Withdraw').should('be.visible').click()
-  cy.log('indu check wallet login' + Cypress.env('walletloginEmail'))
   cy.c_emailVerification(
     'request_payment_withdraw.html',
     Cypress.env('credentials').test.walletloginEmail.ID
