@@ -52,7 +52,6 @@ describe('QATEST-98798 - Transfer and QATEST-98801 View demo transaction', () =>
   //Prerequisites: Demo wallet account in any qa box with USD demo funds
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })
-    cy.c_login({ user: 'walletloginEmail' })
   })
 
   let firstAccount = /MT5 Derived/
@@ -60,7 +59,6 @@ describe('QATEST-98798 - Transfer and QATEST-98801 View demo transaction', () =>
 
   it('should be able to transfer demo funds', () => {
     cy.log('Transfer Demo Funds for Demo Account')
-    cy.c_visitResponsive('/', 'large')
     cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     resetBalanceDemo('desktop')
@@ -78,7 +76,6 @@ describe('QATEST-98798 - Transfer and QATEST-98801 View demo transaction', () =>
 
   it('should be able to view demo transactions', () => {
     cy.log('View Transactions for Demo Account')
-    cy.c_visitResponsive('/', 'large')
     cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     resetBalanceDemo('desktop')
@@ -111,7 +108,6 @@ describe('QATEST-98798 - Transfer and QATEST-98801 View demo transaction', () =>
   it('should be able to transfer demo funds in responsive', () => {
     cy.log('Transfer Demo Funds for Demo Account in responsive')
     cy.c_visitResponsive('/', 'small')
-    cy.c_visitResponsive('/', 'small')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     resetBalanceDemo('mobile')
     cy.findByText(/Transfer from/).click()
@@ -128,7 +124,6 @@ describe('QATEST-98798 - Transfer and QATEST-98801 View demo transaction', () =>
 
   it('should be able to view demo transactions in responsive', () => {
     cy.log('View Transactions for Demo Account in responsive')
-    cy.c_visitResponsive('/', 'small')
     cy.c_visitResponsive('/', 'small')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     resetBalanceDemo('mobile')
