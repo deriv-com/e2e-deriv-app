@@ -72,9 +72,9 @@ function closeModal() {
   cy.findByRole('button', { name: 'Transfer funds' }).should('exist')
   cy.findByRole('button', { name: 'Maybe later' }).click()
 }
-function existingAccountCheck(type, CFDtype) {
+function existingAccountCheck(CFDtype) {
   return cy
-    .get(type)
+    .get('.wallets-trading-account-card__content')
     .contains('.wallets-text', CFDtype)
     .parent()
     .closest('.wallets-added-mt5__details, .wallets-available-mt5__details')
@@ -100,10 +100,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
     cy.get('.wallets-balance__container')
       .contains('.wallets-text', ' USD')
       .should('be.visible') //To check page load
-    existingAccountCheck(
-      '.wallets-trading-account-card__content',
-      'Derived'
-    ).then((status) => {
+    existingAccountCheck('Derived').then((status) => {
       if (status === 'available') {
         cy.log('Derived MT5 account ready to add')
         clickAddMt5Button('Derived')
@@ -120,10 +117,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
         cy.log('Neither found')
       }
     })
-    existingAccountCheck(
-      '.wallets-trading-account-card__content',
-      'Financial'
-    ).then((status) => {
+    existingAccountCheck('Financial').then((status) => {
       if (status === 'available') {
         cy.log('Financial MT5 account ready to add')
         clickAddMt5Button('Financial')
@@ -176,10 +170,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
     cy.get('.wallets-balance__container')
       .contains('.wallets-text', ' USD')
       .should('be.visible') //To check page load
-    existingAccountCheck(
-      '.wallets-trading-account-card__content',
-      'Derived'
-    ).then((status) => {
+    existingAccountCheck('Derived').then((status) => {
       if (status === 'available') {
         cy.log('Derived  MT5 demo account ready to add')
         clickAddMt5Button('Derived')
@@ -195,10 +186,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
       }
     })
     cy.log('create demo mt5 svg financial account')
-    existingAccountCheck(
-      '.wallets-trading-account-card__content',
-      'Financial'
-    ).then((status) => {
+    existingAccountCheck('Financial').then((status) => {
       if (status === 'available') {
         cy.log('Financial  MT5 demo account ready to add')
         clickAddMt5Button('Financial')

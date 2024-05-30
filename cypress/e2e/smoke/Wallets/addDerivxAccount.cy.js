@@ -41,8 +41,8 @@ function expandDemoWallet() {
   cy.get('label').find('span').click()
   cy.findByText('USD Demo Wallet').should('be.visible')
 }
-function existingAccountCheck(type) {
-  cy.get(type).contains('.wallets-text', ' USD').should('be.visible')
+function existingAccountCheck(walletBanner) {
+  cy.get(walletBanner).contains('.wallets-text', ' USD').should('be.visible') //To check page load
   cy.findByText('CFDs', { exact: true }).should('be.visible').click()
   return cy
     .get('.wallets-added-dxtrade__details, .wallets-available-dxtrade__details')
