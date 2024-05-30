@@ -12,8 +12,7 @@ const pm3 = 'Skrill'
 let paymentID = generateAccountNumberString(12)
 
 Cypress.Commands.add('c_createNewAd', (adType) => {
-  cy.findByTestId('dt_initial_loader').should('not.exist')
-  cy.contains('loading').should('not.exist')
+  cy.c_loadingCheck()
   cy.get('body', { timeout: 30000 }).then((body) => {
     if (body.find('.no-ads__message', { timeout: 10000 }).length > 0) {
       cy.findByRole('button', { name: 'Create new ad' })
