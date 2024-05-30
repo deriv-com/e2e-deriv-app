@@ -120,24 +120,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
     localStorage.setItem('config.server_url', Cypress.env('configServer'))
     localStorage.setItem('config.app_id', Cypress.env('configAppId'))
   }
-  if (
-    (app || user) == 'wallets' ||
-    app == 'doughflow' ||
-    app == 'demoonlywallet'
-  ) {
-    cy.contains('next_wallet').then(($element) => {
-      //Check if the element exists
-      if ($element.length) {
-        // If the element exists, click on it
-        cy.wrap($element).click()
-      }
-    })
-  }
-  if (
-    Cypress.env('oAuthUrl') == '<empty>' &&
-    app != 'wallets' &&
-    app != 'doughflow'
-  ) {
+  if (Cypress.env('oAuthUrl') == '<empty>') {
     getOAuthUrl(
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
@@ -150,15 +133,6 @@ Cypress.Commands.add('c_login', (options = {}) => {
       loginEmail,
       loginPassword
     )
-  } else if (
-    (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') ||
-    app == 'doughflow'
-  ) {
-    getWalletOAuthUrl((oAuthUrl) => {
-      cy.log('came inside wallet getOauth')
-      Cypress.env('oAuthUrl', oAuthUrl)
-      cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
-    })
   } else {
     cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
   }
@@ -530,6 +504,11 @@ Cypress.Commands.add('c_logout', () => {
   cy.get('[data-testid="acc-switcher"]').within(() => {
     cy.contains('Log out').click()
   })
+})
+Cypress.Commands.add('c_walletLogout', () => {
+  cy.visit('/account/personal-details')
+  cy.findByText('Log out').should('exist')
+  cy.findByText('Log out').click()
 })
 
 /*
