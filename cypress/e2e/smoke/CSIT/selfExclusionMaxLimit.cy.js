@@ -27,7 +27,6 @@ Cypress.Commands.add('c_clearTrades', () => {
 Cypress.Commands.add('c_openPositionsPanel', () => {
   cy.c_rateLimit({
     waitTimeAfterError: 15000,
-    isLanguageTest: false,
     maxRetries: 5,
   })
   cy.findAllByTestId('dt_positions_toggle').click()
