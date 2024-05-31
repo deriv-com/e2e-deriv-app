@@ -1,0 +1,142 @@
+import '@testing-library/cypress/add-commands'
+
+const desktopSteps = [
+  {
+    backButtonExists: false,
+    nextButtonName: 'Next',
+    title: 'This is your Wallet',
+    description: 'Manage your funds with Wallets.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Next',
+    title: 'Select Demo or Real',
+    description: 'Press the tab to switch between Demo or Real Wallets.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Next',
+    title: 'Change your Wallet',
+    description: 'Switch to a Wallet from the drop-down menu.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Next',
+    title: 'Add more currencies',
+    description: 'Want Wallets in other currencies too? Press Add.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Done',
+    title: "Trader's Hub tour",
+    description: 'Press here to repeat this tour.',
+  },
+]
+
+const mobileSteps = [
+  {
+    backButtonExists: false,
+    nextButtonName: 'Next',
+    title: 'This is your Wallet',
+    description: 'Manage your funds with Wallets.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Next',
+    title: 'Switch between Wallets',
+    description: 'Swipe left or right to switch between Wallets.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Next',
+    title: 'Select your account type',
+    description: 'Press the tab to switch between CFDs and Options accounts.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Next',
+    title: 'Add more currencies',
+    description: 'Want Wallets in other currencies too? Press Add.',
+  },
+  {
+    backButtonExists: true,
+    nextButtonName: 'Done',
+    title: "Trader's Hub tour",
+    description: 'Press here to repeat this tour.',
+  },
+]
+
+const setupTest = () => {
+  cy.contains('Wallet', { timeout: 10000 }).should('exist')
+  cy.findByTestId('dt_traders_hub_onboarding_icon').click()
+  cy.contains('USD Wallet', { timeout: 10000 }).should('exist')
+  cy.get('#react-joyride-portal').should('exist')
+  cy.get('[data-test-id="spotlight"]').should('exist')
+}
+
+const checkStep = (
+  backButtonShouldExist,
+  nextButtonName,
+  title,
+  description
+) => {
+  cy.findByRole('alertdialog').should('exist')
+  cy.findByText(title).should('exist')
+  cy.findByText(description).should('exist')
+  cy.findByRole('button', { name: 'Back' }).should(
+    backButtonShouldExist ? 'exist' : 'not.exist'
+  )
+  cy.findByRole('button', { name: nextButtonName, timeout: 3000 })
+    .should('exist')
+    .click()
+}
+
+const allWalletAdded = () => {
+  return cy
+    .get('.wallets-add-more__carousel-wrapper')
+    .find('button')
+    .then((buttons) => {
+      const buttonCount = buttons.filter(
+        (index, button) => Cypress.$(button).text().trim() === 'Add'
+      ).length
+      return buttonCount === 0
+    })
+}
+
+describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets', () => {
+  beforeEach(() => {
+    cy.c_login({ user: 'walletloginEmail' })
+  })
+
+  it('User onboarding for desktop', () => {
+    cy.c_visitResponsive('/', 'large')
+    const walletAdded = allWalletAdded()
+    setupTest('large')
+    desktopSteps.forEach((step, index) => {
+      if (index === 3 && walletAdded) return
+      checkStep(
+        step.backButtonExists,
+        step.nextButtonName,
+        step.title,
+        step.description
+      )
+    })
+    cy.get('[data-test-id="spotlight"]').should('not.exist')
+  })
+
+  it('User onboarding for mobile', () => {
+    cy.c_visitResponsive('/', 'small')
+    const walletAdded = allWalletAdded()
+    setupTest()
+    mobileSteps.forEach((step, index) => {
+      if (index === 3 && walletAdded) return
+      checkStep(
+        step.backButtonExists,
+        step.nextButtonName,
+        step.title,
+        step.description
+      )
+    })
+    cy.get('[data-test-id="spotlight"]').should('not.exist')
+  })
+})

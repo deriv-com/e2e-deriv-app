@@ -33,6 +33,7 @@ describe('QATEST-99419: Import and run custom strategy', () => {
     })
 
     cy.c_runBot()
+    cy.c_checkRunPanel()
     cy.c_stopBot(7000)
     runPanel.journalTab.click()
     runPanel.runPanelScrollbar

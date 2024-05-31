@@ -77,7 +77,6 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
     cy.c_clickMyAdTab()
     cy.c_createNewAd('sell')
     cy.findByText('Sell USD').click()
-    cy.findByText("You're creating an ad to sell...").should('be.visible')
     cy.findByTestId('offer_amount')
       .next('span.dc-text')
       .invoke('text')
@@ -111,6 +110,8 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
         .clear()
         .type('Instructions Block.')
         .should('have.value', 'Instructions Block.')
+      cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+      cy.findByText('Set payment details').should('be.visible')
       cy.findByTestId('dt_dropdown_display').click()
       cy.get('#900').should('be.visible').click()
       cy.findByTestId('dt_payment_method_card_add_icon')
@@ -124,6 +125,8 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
         .find('.dc-checkbox')
         .and('exist')
         .click()
+      cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+      cy.findByText('Set ad conditions').should('be.visible')
       cy.c_verifyPostAd()
       verifyAdOnMyAdsScreenFloatingRateAd(
         'Sell',

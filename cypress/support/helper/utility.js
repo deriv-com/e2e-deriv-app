@@ -42,3 +42,8 @@ export function getCurrentDate() {
 
   return `${year}-${month}-${day}`
 }
+
+export const generateCPFNumber = () => {
+  const getRandomDigit = () => Math.floor(Math.random() * 10)
+  return `0${getRandomDigit()}${getRandomDigit()}.${getRandomDigit()}${getRandomDigit()}${getRandomDigit()}.${getRandomDigit()}${getRandomDigit()}${getRandomDigit()}-${getRandomDigit()}${getRandomDigit()}`
+}

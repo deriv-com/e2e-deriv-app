@@ -29,7 +29,6 @@ describe('QATEST-2403 - Create a Buy type Advert - Fixed Rate', () => {
     cy.c_clickMyAdTab()
     cy.c_createNewAd('buy')
     cy.findByText('Buy USD').click()
-    cy.findByText("You're creating an ad to buy...").should('be.visible')
     cy.findByTestId('offer_amount')
       .next('span.dc-text')
       .invoke('text')
@@ -44,18 +43,19 @@ describe('QATEST-2403 - Create a Buy type Advert - Fixed Rate', () => {
       })
     cy.then(() => {
       cy.c_verifyAmountFiled()
-      cy.c_verifyFixedRate(
+      cy.c_verifyFixedRate(fixedRate)
+      cy.c_verifyMaxMin('min_transaction', minOrder, 'Min')
+      cy.c_verifyMaxMin('max_transaction', maxOrder, 'Max')
+      cy.c_verifyTextAreaBlock('default_advert_description')
+      cy.c_verifyTooltip()
+      cy.c_verifyCompletionOrderDropdown()
+      cy.c_verifyAdSummary(
         'buy',
         10,
         fixedRate,
         sessionStorage.getItem('c_fiatCurrency'),
         sessionStorage.getItem('c_localCurrency')
       )
-      cy.c_verifyMaxMin('min_transaction', minOrder, 'Min')
-      cy.c_verifyMaxMin('max_transaction', maxOrder, 'Max')
-      cy.c_verifyTextAreaBlock('default_advert_description')
-      cy.c_verifyTooltip()
-      cy.c_verifyCompletionOrderDropdown()
       cy.c_PaymentMethod()
       cy.c_verifyPostAd()
       verifyAdOnMyAdsScreen(
