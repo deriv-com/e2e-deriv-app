@@ -4,7 +4,7 @@ import { getCurrentDate } from '../../../support/helper/utility'
 const BO_URL = `https://${Cypress.env('configServer')}/d/backoffice/login.cgi`
 const CURRENT_DATE = getCurrentDate()
 
-describe('QATEST-4835 POA Verify', () => {
+describe('QATEST-4835 POA Verified', () => {
   beforeEach(() => {
     cy.c_visitResponsive('/')
     cy.c_createRealAccount()
