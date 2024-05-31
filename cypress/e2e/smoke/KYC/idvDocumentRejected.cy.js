@@ -8,6 +8,10 @@ describe('QATEST-22853 IDV Document Rejected by Smile Identity provider', () => 
     cy.c_navigateToPoiResponsive('Ghana')
   })
 
+  afterEach(() => {
+    cy.c_resetData()
+  })
+
   it('Should return Document Rejected', () => {
     cy.get('select[name="document_type"]').select('Passport')
     cy.findByLabelText('Enter your document number').type('G0000001')
