@@ -36,7 +36,7 @@ Cypress.Commands.add('c_openPositionsPanel', () => {
 const screenSizes = ['small', 'desktop']
 
 screenSizes.forEach((screenSize) => {
-  describe(`Verify deriv app self exclusion scenarios: ${screenSize}`, () => {
+  describe(`QATEST-116807 - Verify maximum open positions setting for self exclusion: ${screenSize}`, () => {
     beforeEach(() => {
       cy.clearAllCookies()
       cy.clearAllLocalStorage()
@@ -47,21 +47,17 @@ screenSizes.forEach((screenSize) => {
       if (!cypressContext.includes('Turbos')) {
         cy.c_login({ user: 'selfExclusionOptions', rateLimitCheck: true })
       } else {
-        cy.c_login({ rateLimitCheck: true })
+        cy.c_login({ user: 'selfExclusion', rateLimitCheck: true })
       }
 
-      cy.log('navigating to Personal Details page')
-      cy.c_visitResponsive('account/self-exclusion', screenSize, {
-        rateLimitCheck: true,
-      })
-
-      //NEED TO SKIP PASSKEYS OPTIONS FOR MOBILE
       if (screenSize == 'small') {
+        cy.log('NEED TO SKIP PASSKEYS OPTIONS FOR MOBILE')
         cy.c_skipPasskeysV2()
       }
       cy.c_visitResponsive('account/self-exclusion', screenSize, {
         rateLimitCheck: true,
       })
+
       cy.c_setSelfExclusionMaxOptionsTo(0)
       cy.c_visitResponsive('/', screenSize, {
         rateLimitCheck: true,
@@ -76,7 +72,7 @@ screenSizes.forEach((screenSize) => {
       }
     })
 
-    it('Create test for QATEST-116807 Self Exclusion [Options - Turbos]', () => {
+    it('validates maximum open positions setting for trade type [Options - Turbos]', () => {
       cy.c_visitResponsive('account/self-exclusion', screenSize, {
         rateLimitCheck: true,
       })
@@ -96,7 +92,7 @@ screenSizes.forEach((screenSize) => {
 
       cy.get('#dt_contract_turboslong_item').should('be.visible')
 
-      cy.log('turbos option visible')
+      cy.log('TURBOS OPTION VISIBLE')
       cy.get('#dt_contract_turboslong_item').click()
 
       if (screenSize == 'small') {
@@ -117,7 +113,7 @@ screenSizes.forEach((screenSize) => {
       } else {
         cy.get('.dc-contract-card-item__footer').should('have.length', 1)
       }
-
+      cy.log('TRY TO MAKE SECOND TRADE')
       cy.get('#dt_purchase_turboslong_button').click()
 
       cy.findByText(
@@ -125,19 +121,19 @@ screenSizes.forEach((screenSize) => {
       ).should('be.visible')
 
       if (screenSize != 'small') {
+        cy.log('CLOSE THE TRADE PANEL ON MOBILE RESOLTION')
         cy.findByRole('button', { name: 'OK' }).click()
       }
 
-      cy.log('Going to validate the number of elements appearing')
       if (screenSize == 'small') {
         cy.c_openPositionsPanel()
       }
-
+      cy.log('VALIDATE THE NUMBER OF OPEN TRADE POSITIONS')
       cy.get('.dc-contract-card-item__footer').should('have.length', 1)
       cy.c_clearTrades()
     })
 
-    it('Create test for QATEST-116807 Self Exclusion [Multipliers - Multipliers]', () => {
+    it('validates maximum open positions setting for trade type [Multipliers - Multipliers]', () => {
       cy.c_visitResponsive('account/self-exclusion', screenSize, {
         rateLimitCheck: true,
       })
@@ -157,7 +153,7 @@ screenSizes.forEach((screenSize) => {
 
       cy.get('#dt_contract_multiplier_item > span').should('be.visible')
 
-      cy.log('turbos option visible')
+      cy.log('MULTIPLIER OPTION VISIBLE')
       cy.get('#dt_contract_multiplier_item > span').click()
 
       cy.get('#dt_purchase_multup_button').click()
@@ -169,7 +165,7 @@ screenSizes.forEach((screenSize) => {
       } else {
         cy.get('.dc-contract-card-item__footer').should('have.length', 1)
       }
-
+      cy.log('TRY TO MAKE SECOND TRADE')
       cy.get('#dt_purchase_multup_button').click()
 
       cy.findByText(
@@ -185,7 +181,7 @@ screenSizes.forEach((screenSize) => {
       if (screenSize == 'small') {
         cy.c_openPositionsPanel()
       }
-
+      cy.log('VALIDATE THE NUMBER OF OPEN TRADE POSITIONS')
       cy.get('.dc-contract-card-item__footer').should('have.length', 1)
       cy.c_clearTrades()
     })
