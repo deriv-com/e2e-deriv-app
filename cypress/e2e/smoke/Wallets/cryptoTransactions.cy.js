@@ -2,48 +2,75 @@ import '@testing-library/cypress/add-commands'
 
 function crypto_transfer(to_account, transferAmount) {
   cy.findByText('Transfer to').click()
-  cy.findByText(`${to_account} Wallet`).click()
+  cy.findByText(`${to_account}`).click()
   cy.get('input[class="wallets-atm-amount-input__input"]')
     .eq(1)
     .click()
-    .type('0.000003000')
-  if (to_account == 'USD') {
+    .type(transferAmount)
+  if (to_account == 'USD Wallet') {
     cy.contains(
       'lifetime transfer limit from BTC Wallet to any fiat Wallets is'
     )
   } else {
-    cy.contains('lifetime transfer limit between cryptocurrency Wallets is')
+    if (to_account == 'Options') {
+      cy.contains('transfer limit between your BTC Wallet and Options')
+    } else {
+      cy.contains('lifetime transfer limit between cryptocurrency Wallets is')
+    }
   }
+
   cy.get('form')
     .findByRole('button', { name: 'Transfer', exact: true })
     .should('be.enabled')
     .click()
   cy.c_transferLimit(transferAmount)
-  cy.contains('Transfer fees:')
+  if (`${to_account}` != 'Options') {
+    cy.contains('Transfer fees:')
+  }
+
   cy.findByRole('button', { name: 'Make a new transfer' }).click()
+}
+
+function setupTradeAccount(wallet) {
+  cy.c_switchWalletsAccount(wallet)
+  cy.findByRole('button', { name: 'Get' })
+    .should(() => {})
+    .then((button) => {
+      if (button.length) {
+        cy.wrap(button).click()
+        cy.wait(1000)
+        cy.findByRole('button', { name: 'Transfer funds' }).should('be.visible')
+        cy.findByRole('button', { name: 'Maybe later', timeout: 3000 })
+          .should('be.visible')
+          .and('be.enabled')
+          .click()
+      }
+    })
 }
 
 describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypto transactions and QATEST-99429 Transfer conversion rate and QATEST-99714 Life time transfer limit message', () => {
   //Prerequisites: Crypto wallet account in any qa box with 1.00000000 BTC balance and USD, ETH and LTC wallets
-  let transferAmount = '0.00003000 BTC'
+  let transferAmount = '0.00003000'
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ user: 'walletloginEmail' })
   })
 
   it('should be able to perform transfer from crypto account', () => {
     cy.log('Transfer from Crypto account')
-    cy.c_visitResponsive('/wallets', 'large')
+    cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    setupTradeAccount('BTC')
     cy.c_switchWalletsAccount('BTC')
     cy.contains('Transfer').click()
-    crypto_transfer('USD', transferAmount)
-    crypto_transfer('ETH', transferAmount)
-    crypto_transfer('LTC', transferAmount)
+    crypto_transfer('USD Wallet', transferAmount)
+    crypto_transfer('ETH Wallet', transferAmount)
+    crypto_transfer('LTC Wallet', transferAmount)
+    crypto_transfer('Options', transferAmount)
   })
 
   it('should be able to view transactions of crypto account', () => {
     cy.log('View Transactions of Crypto account')
-    cy.c_visitResponsive('/wallets', 'large')
+    cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccount('BTC')
     cy.contains('Transfer').click()
@@ -65,23 +92,24 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
     cy.findAllByText(/USD Wallet/)
       .first()
       .should('be.visible')
-    cy.findAllByText(`-${transferAmount}`).first().should('be.visible')
+    cy.contains(`-${transferAmount}`).first().should('be.visible')
   })
 
   it('should be able to perform transfer from crypto account in responsive', () => {
     cy.log('Transfer from Crypto account')
-    cy.c_visitResponsive('/wallets', 'small')
+    cy.c_visitResponsive('/', 'small')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccountResponsive('BTC')
     cy.contains('Transfer').parent().click()
-    crypto_transfer('USD', transferAmount)
-    crypto_transfer('ETH', transferAmount)
-    crypto_transfer('LTC', transferAmount)
+    crypto_transfer('USD Wallet', transferAmount)
+    crypto_transfer('ETH Wallet', transferAmount)
+    crypto_transfer('LTC Wallet', transferAmount)
+    crypto_transfer('Options', transferAmount)
   })
 
   it('should be able to view transactions of crypto account in responsive', () => {
     cy.log('View Transactions of Crypto account')
-    cy.c_visitResponsive('/wallets', 'small')
+    cy.c_visitResponsive('/', 'small')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccountResponsive('BTC')
     cy.contains('Transfer').parent().click()
@@ -103,6 +131,9 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
     cy.findAllByText(/USD Wallet/)
       .first()
       .should('be.visible')
-    cy.findAllByText(`-${transferAmount}`).first().should('be.visible')
+    cy.findAllByText(/Options/)
+      .first()
+      .should('be.visible')
+    cy.contains(`-${transferAmount}`).first().should('be.visible')
   })
 })

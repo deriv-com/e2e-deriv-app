@@ -9,10 +9,11 @@ let paymentIDForCopyAdSell = generateAccountNumberString(12)
 const pm1 = 'Other'
 const pm2 = 'Bank Transfer'
 const pm3 = 'Skrill'
+let paymentID = generateAccountNumberString(12)
 
 Cypress.Commands.add('c_createNewAd', (adType) => {
-  cy.findByTestId('dt_initial_loader').should('not.exist')
-  cy.get('body', { timeout: 10000 }).then((body) => {
+  cy.c_loadingCheck()
+  cy.get('body', { timeout: 30000 }).then((body) => {
     if (body.find('.no-ads__message', { timeout: 10000 }).length > 0) {
       cy.findByRole('button', { name: 'Create new ad' })
         .should('be.visible')
@@ -153,8 +154,7 @@ Cypress.Commands.add(
           sessionStorage.setItem('c_localCurrency', localCurrency.trim())
         })
     } else if (rateType == 'float') {
-      cy.findByTestId('float_rate_type')
-        .next('span.dc-text')
+      cy.get('.floating-rate__hint')
         .invoke('text')
         .then((localCurrency) => {
           sessionStorage.setItem('c_localCurrency', localCurrency.trim())
@@ -168,6 +168,7 @@ Cypress.Commands.add(
           .should('have.value', rateValue)
       } else if (rateType == 'float') {
         cy.findByTestId('float_rate_type')
+          .clear()
           .type(rateValue)
           .should('have.value', rateValue)
       }
@@ -201,11 +202,11 @@ Cypress.Commands.add(
           .find('.dc-checkbox')
           .and('exist')
           .click()
+        cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+        cy.findByText('Set ad conditions').should('be.visible')
       } else if (adType == 'Buy') {
         cy.c_PaymentMethod()
       }
-      cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
-      cy.findByText('Set ad conditions').should('be.visible')
       cy.c_verifyPostAd()
       cy.c_verifyAdOnMyAdsScreen(
         adType,
@@ -213,7 +214,8 @@ Cypress.Commands.add(
         sessionStorage.getItem('c_localCurrency'),
         rateValue,
         minOrder,
-        maxOrder
+        maxOrder,
+        rateType
       )
     })
   }
@@ -221,13 +223,25 @@ Cypress.Commands.add(
 
 Cypress.Commands.add(
   'c_verifyAdOnMyAdsScreen',
-  (adType, fiatCurrency, localCurrency, rateValue, minOrder, maxOrder) => {
+  (
+    adType,
+    fiatCurrency,
+    localCurrency,
+    rateValue,
+    minOrder,
+    maxOrder,
+    rateType
+  ) => {
     cy.findByText('Active').should('be.visible')
     cy.findByText(`${adType} ${fiatCurrency}`).should('be.visible')
-    cy.findByText(`${rateValue} ${localCurrency}`)
+    if (rateType === 'float') {
+      cy.findByText(`+${rateValue}%`).should('be.visible')
+    } else if (rateType === 'fixed') {
+      cy.findByText(`${rateValue} ${localCurrency}`).should('be.visible')
+    }
     cy.findByText(
       `${minOrder.toFixed(2)} - ${maxOrder.toFixed(2)} ${fiatCurrency}`
-    )
+    ).should('be.visible')
   }
 )
 
@@ -513,16 +527,30 @@ Cypress.Commands.add('c_postAd', () => {
 
 Cypress.Commands.add('c_removeExistingAds', (adType) => {
   cy.get('.my-ads-table__row .dc-dropdown-container')
-    .should('be.visible')
-    .click()
-  cy.findByText('Delete').parent().click()
-  cy.findByText('Do you want to delete this ad?').should('be.visible')
-  cy.findByText('You will NOT be able to restore it.').should('be.visible')
-  cy.findByRole('button', { name: 'Delete' })
-    .should('be.enabled')
-    .click()
-    .should('not.exist', {
-      timeout: 10000,
+    .its('length')
+    .then((numberOfAds) => {
+      cy.log('Number of Ads:', numberOfAds)
+      cy.get('.my-ads-table__row .dc-dropdown-container').each(
+        ($el, index, $list) => {
+          cy.log('The index is:', index)
+          cy.wrap($el).click()
+          cy.findByText('Delete').parent().click()
+          cy.findByText('Do you want to delete this ad?').should('be.visible')
+          cy.findByText('You will NOT be able to restore it.').should(
+            'be.visible'
+          )
+          cy.findByRole('button', { name: 'Delete' })
+            .should('be.enabled')
+            .click()
+            .should('not.exist', {
+              timeout: 10000,
+            })
+          if (index < numberOfAds - 1) {
+            // this wait needed to provide a buffer after deleting each row, which helps avoid flaky failures.
+            cy.wait(1000)
+          }
+        }
+      )
     })
   if (adType == 'sell') {
     cy.findByText('My profile').click()
@@ -888,5 +916,60 @@ Cypress.Commands.add(
       .then((spanText) => {
         expect(spanText).to.eq(regexPattern)
       })
+  }
+)
+Cypress.Commands.add('c_filterByPaymentMethod', (PM) => {
+  cy.findByText('Payment methods').should('be.visible').click()
+  cy.findByText(PM).should('be.visible').click()
+  cy.findByRole('button', { name: 'Confirm' }).should('be.enabled').click()
+  cy.findByRole('button', { name: 'Apply' }).should('be.enabled').click()
+})
+
+Cypress.Commands.add('c_resetFilter', () => {
+  cy.findByTestId('sort-div').next().click()
+  cy.findByText('Deriv P2P', { timeout: 10000 }).should('not.be.visible')
+  cy.findByText('Filter', { timeout: 10000 }).should('be.visible')
+  cy.findByRole('button', { name: 'Reset' }).should('be.enabled').click()
+})
+
+Cypress.Commands.add(
+  'c_addBuyOrderDetails',
+  (paymentMethod, amount, rate, min, max) => {
+    cy.findByTestId('offer_amount').click().type(amount)
+    cy.findByTestId('fixed_rate_type').type(rate)
+    cy.findByTestId('min_transaction').click().type(min)
+    cy.findByTestId('max_transaction').click().type(max)
+    cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+    cy.findByPlaceholderText('Add').should('be.visible').click()
+    cy.findByText(paymentMethod).click()
+    cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+    cy.c_verifyPostAd()
+  }
+)
+
+Cypress.Commands.add(
+  'c_addSellOrderDetails',
+  (paymentMethod, amount, rate, min, max) => {
+    cy.get(':nth-child(2) > .dc-radio-group__circle').click()
+    cy.findByTestId('offer_amount').click().type(amount)
+    cy.findByTestId('fixed_rate_type').type(rate)
+    cy.findByTestId('min_transaction').click().type(min)
+    cy.findByTestId('max_transaction').click().type(max)
+    cy.findByTestId('contact_info').click().type('Test')
+    cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+    cy.get('body', { timeout: 10000 }).then((body) => {
+      if (body.find(paymentMethod, { timeout: 10000 }).length > 0) {
+        cy.contains(paymentMethod).click()
+      } else {
+        cy.findByTestId('dt_payment_method_card_add_icon')
+          .should('be.visible')
+          .click()
+        cy.get('input[name="payment_method"]').click()
+        cy.c_addPaymentMethod(paymentID, paymentMethod)
+        cy.contains(paymentMethod).click()
+      }
+    })
+    cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+    cy.c_verifyPostAd()
   }
 )
