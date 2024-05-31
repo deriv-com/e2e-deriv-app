@@ -24,8 +24,14 @@ describe('QATEST-154042 -  Client with USD more than 3 months, but registered fo
     cy.findByRole('link', { name: 'Deriv P2P' }).should('be.visible').click()
     cy.findByText('My profile').should('be.visible').click()
     cy.get('.my-profile-stats__navigation').contains('.dc-text', 'Stats')
-    cy.get('.my-profile-stats__navigation').contains('.dc-text', 'Payment methods')
+    cy.get('.my-profile-stats__navigation').contains(
+      '.dc-text',
+      'Payment methods'
+    )
     cy.get('.my-profile-stats__navigation').contains('.dc-text', 'Ad details')
-    cy.get('.my-profile-stats__navigation').contains('.dc-text', 'My counterparties')
+    cy.get('.my-profile-stats__navigation').contains(
+      '.dc-text',
+      'My counterparties'
+    )
   })
 })

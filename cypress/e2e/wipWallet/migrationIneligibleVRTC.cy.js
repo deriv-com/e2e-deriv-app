@@ -46,6 +46,8 @@ describe('QATEST-154139 -  Client with only VRTC', () => {
     cy.findByRole('heading', { name: 'Add a Deriv account' }).should(
       'be.visible'
     )
-    cy.get('.account-wizard__header-steps').contains('.dc-text', 'Step 1: Account currency (1 of 4)' ).should('be.visible')
+    cy.get('.account-wizard__header-steps')
+      .contains('.dc-text', 'Step 1: Account currency (1 of 4)')
+      .should('be.visible')
   })
 })

@@ -8,10 +8,9 @@ describe('QATEST-154138 -  Client without currency added', () => {
     cy.c_checkForBanner()
     cy.findByText('No currency assigned').should('be.visible')
   })
-it('Responsive - Client without currency added should not see  Wallets - Enable now banner', () => {
-  cy.c_visitResponsive('/', 'small')
-  cy.c_checkForBanner()
-  cy.findByText('No currency assigned').should('be.visible')
+  it('Responsive - Client without currency added should not see  Wallets - Enable now banner', () => {
+    cy.c_visitResponsive('/', 'small')
+    cy.c_checkForBanner()
+    cy.findByText('No currency assigned').should('be.visible')
+  })
 })
-})
-

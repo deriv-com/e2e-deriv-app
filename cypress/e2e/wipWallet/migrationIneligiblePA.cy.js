@@ -26,7 +26,7 @@ describe('QATEST-154043 - Client with USD more than 3 months & Payment agent', (
     cy.get('#dt_mobile_drawer_toggle').should('be.visible').click()
     cy.get('.dc-text').contains('Cashier').click()
     cy.get('.dc-text').contains('Transfer to client').click()
-    cy.findByText('Transfer to client' ).should('be.visible')
+    cy.findByText('Transfer to client').should('be.visible')
     cy.findByTestId('dt_payment_agent_transfer_form_input_loginid').should(
       'be.visible'
     )

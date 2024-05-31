@@ -14,5 +14,4 @@ describe('QATEST-154041 -  Client with USD for less than 3 months', () => {
     cy.c_checkForBanner()
     cy.findByText('US Dollar').should('be.visible')
   })
-
 })
