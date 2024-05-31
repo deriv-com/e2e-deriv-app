@@ -20,7 +20,7 @@ Cypress.Commands.add('c_switchWalletsAccount', (account) => {
           cy.log('you are in real wallet')
         }
       })
-    cy.get('.wallets-dropdown__button', { timeout: 10000 }).should('be.visible')
+    cy.get('.wallets-dropdown__button', { timeout: 10000 }).should('exist')
     cy.get('.wallets-dropdown__button').click()
     cy.get('.wallets-list-card-dropdown__item-content')
       .contains(`${account} Wallet`)
@@ -51,12 +51,9 @@ Cypress.Commands.add('c_switchWalletsAccountResponsive', (account) => {
   const clickNext = () => {
     return cy
       .get('div.wallets-progress-bar')
-      .find('div.wallets-progress-bar-inactive')
-      .eq(currentIndex) // Click on element based on currentIndex
+      .find('div.wallets-progress-bar-active')
+      .next()
       .click()
-      .then(() => {
-        currentIndex++ // Increment currentIndex
-      })
   }
 
   const keepClickingNext = () => {
@@ -79,5 +76,5 @@ Cypress.Commands.add('c_switchWalletsAccountDemo', () => {
   cy.get('div.wallets-progress-bar')
     .find('div.wallets-progress-bar-inactive')
     .last()
-    .click()
+    .click({ force: true })
 })

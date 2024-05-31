@@ -26,18 +26,18 @@ function verifyEmailandPerformWithdraw(platform) {
   cy.findByText('Withdraw').should('be.visible').click()
   cy.c_emailVerification(
     'request_payment_withdraw.html',
-    Cypress.env('walletEmail')
+    Cypress.env('credentials').test.walletloginEmail.ID
   )
   cy.then(() => {
     let verification_code = Cypress.env('walletsWithdrawalCode')
     if (`${platform}` == `mobile`) {
       cy.c_visitResponsive(
-        `/wallet/withdraw?verification=${verification_code}`,
+        `/wallet/withdrawal?verification=${verification_code}`,
         'small'
       )
     } else {
       cy.c_visitResponsive(
-        `/wallet/withdraw?verification=${verification_code}`,
+        `/wallet/withdrawal?verification=${verification_code}`,
         'large'
       )
     }

@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands'
-function addcryptowallet() {
+function addcryptowallet(platform) {
   cy.get('.wallets-add-more__carousel-wrapper')
     .find('button')
     .then((buttons) => {
@@ -11,7 +11,11 @@ function addcryptowallet() {
         cy.log('Button with text "Add" found')
         for (let i = buttoncount; i > 0; i--) {
           cy.findByTestId('dt-wallets-add-more').scrollIntoView()
+          cy.get('.wallets-add-more__banner')
+            .first({ timeout: 3000 })
+            .should('be.visible')
           let walletname
+          cy.wait(5000) // this wait is needed as text updated with a slight delay that should be fixed in next phase
           cy.get('.wallets-add-more__content')
             .eq(0)
             .find('span')
@@ -30,6 +34,9 @@ function addcryptowallet() {
                 .find('button')
                 .then((button) => {
                   expect(button).to.contain('Added')
+                  if (`${platform}` == `desktop`) {
+                    checkWalletAccountSwitcher(walletname)
+                  }
                 })
             })
         }
@@ -37,6 +44,11 @@ function addcryptowallet() {
         cy.log('All wallets are already added')
       }
     })
+}
+function checkWalletAccountSwitcher(walletname) {
+  cy.get('.wallets-dropdown__button', { timeout: 10000 }).should('be.visible')
+  cy.get('.wallets-dropdown__button').click()
+  cy.contains(`${walletname}`).should('exist')
 }
 
 describe('QATEST-98773 - Add crypto wallet account', () => {
@@ -46,10 +58,10 @@ describe('QATEST-98773 - Add crypto wallet account', () => {
 
   it('should be able to add more wallets', () => {
     cy.c_visitResponsive('/', 'large')
-    addcryptowallet()
+    addcryptowallet('desktop')
   })
   it('should be able to add more wallets in Responsive', () => {
     cy.c_visitResponsive('/', 'small')
-    addcryptowallet()
+    addcryptowallet('mobile')
   })
 })
