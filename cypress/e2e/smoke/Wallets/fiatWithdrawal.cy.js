@@ -8,12 +8,12 @@ Cypress.Commands.add(
     const verification_code = code[1]
     if (`${platform}` == `mobile`) {
       cy.c_visitResponsive(
-        `/wallet/withdraw?verification=${verification_code}`,
+        `/wallet/withdrawal?verification=${verification_code}`,
         'small'
       )
     } else {
       cy.c_visitResponsive(
-        `/wallet/withdraw?verification=${verification_code}`,
+        `/wallet/withdrawal?verification=${verification_code}`,
         'large'
       )
     }
