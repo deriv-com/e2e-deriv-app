@@ -26,18 +26,18 @@ function verifyEmailandPerformWithdraw(platform) {
   cy.findByText('Withdraw').should('be.visible').click()
   cy.c_emailVerification(
     'request_payment_withdraw.html',
-    Cypress.env('walletloginEmail')
+    Cypress.env('walletEmail')
   )
   cy.then(() => {
     let verification_code = Cypress.env('walletsWithdrawalCode')
     if (`${platform}` == `mobile`) {
       cy.c_visitResponsive(
-        `/wallets/cashier/withdraw?verification=${verification_code}`,
+        `/wallet/withdraw?verification=${verification_code}`,
         'small'
       )
     } else {
       cy.c_visitResponsive(
-        `/wallets/cashier/withdraw?verification=${verification_code}`,
+        `/wallet/withdraw?verification=${verification_code}`,
         'large'
       )
     }
@@ -84,12 +84,12 @@ function verifyEmailandPerformWithdraw(platform) {
 }
 describe('WALL-2830 - Crypto withdrawal send email', () => {
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ user: 'walletloginEmail' })
   })
 
   it('should be able to send withdrawal verification link', () => {
     cy.log('Send Crypto Withdrawal Verification')
-    cy.c_visitResponsive('/wallets', 'large')
+    cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     sendWithdrawEmail()
   })
@@ -98,12 +98,12 @@ describe('WALL-2830 - Crypto withdrawal send email', () => {
 describe('QATEST-98698 - Crypto withdrawal content access from email', () => {
   //Prerequisites: Crypto wallet account in qa29 with BTC balance
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ user: 'walletloginEmail' })
   })
 
   it('should be able to access crypto withdrawal content and perform withdrawal', () => {
     cy.log('Access Crypto Withdrawal Content Through Email Link')
-    cy.c_visitResponsive('/wallets', 'large')
+    cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     verifyEmailandPerformWithdraw('desktop')
   })

@@ -47,12 +47,12 @@ function expandDemoWallet() {
 
 describe('QATEST-98821 - Add demo derivx account and QATEST-98824 add real derivx account', () => {
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ user: 'walletloginEmail' })
   })
 
   it('should be able to add DerivX USD account', () => {
     cy.log('add derivx account')
-    cy.c_visitResponsive('/wallets', 'large')
+    cy.c_visitResponsive('/', 'large')
     const Text = Cypress.$(
       ":contains('This account offers CFDs on a highly customisable CFD trading platform.')"
     )
@@ -68,7 +68,7 @@ describe('QATEST-98821 - Add demo derivx account and QATEST-98824 add real deriv
   })
   it('should be able to add DerivX USD account in responsive', () => {
     cy.log('add derivx account')
-    cy.c_visitResponsive('/wallets', 'small')
+    cy.c_visitResponsive('/', 'small')
     const Text = Cypress.$(
       ":contains('This account offers CFDs on a highly customisable CFD trading platform.')"
     )
@@ -80,7 +80,7 @@ describe('QATEST-98821 - Add demo derivx account and QATEST-98824 add real deriv
   })
   it('should be able to add Demo DerivX USD account in responsive', () => {
     cy.log('add derivx account')
-    cy.c_visitResponsive('/wallets', 'small')
+    cy.c_visitResponsive('/', 'small')
     cy.c_switchWalletsAccountDemo()
     const Text = Cypress.$(
       ":contains('This account offers CFDs on a highly customisable CFD trading platform.')"

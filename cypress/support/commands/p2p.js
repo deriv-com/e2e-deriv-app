@@ -153,8 +153,7 @@ Cypress.Commands.add(
           sessionStorage.setItem('c_localCurrency', localCurrency.trim())
         })
     } else if (rateType == 'float') {
-      cy.findByTestId('float_rate_type')
-        .next('span.dc-text')
+      cy.get('.floating-rate__hint')
         .invoke('text')
         .then((localCurrency) => {
           sessionStorage.setItem('c_localCurrency', localCurrency.trim())
@@ -168,6 +167,7 @@ Cypress.Commands.add(
           .should('have.value', rateValue)
       } else if (rateType == 'float') {
         cy.findByTestId('float_rate_type')
+          .clear()
           .type(rateValue)
           .should('have.value', rateValue)
       }
@@ -201,11 +201,11 @@ Cypress.Commands.add(
           .find('.dc-checkbox')
           .and('exist')
           .click()
+        cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+        cy.findByText('Set ad conditions').should('be.visible')
       } else if (adType == 'Buy') {
         cy.c_PaymentMethod()
       }
-      cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
-      cy.findByText('Set ad conditions').should('be.visible')
       cy.c_verifyPostAd()
       cy.c_verifyAdOnMyAdsScreen(
         adType,
@@ -213,7 +213,8 @@ Cypress.Commands.add(
         sessionStorage.getItem('c_localCurrency'),
         rateValue,
         minOrder,
-        maxOrder
+        maxOrder,
+        rateType
       )
     })
   }
@@ -221,13 +222,25 @@ Cypress.Commands.add(
 
 Cypress.Commands.add(
   'c_verifyAdOnMyAdsScreen',
-  (adType, fiatCurrency, localCurrency, rateValue, minOrder, maxOrder) => {
+  (
+    adType,
+    fiatCurrency,
+    localCurrency,
+    rateValue,
+    minOrder,
+    maxOrder,
+    rateType
+  ) => {
     cy.findByText('Active').should('be.visible')
     cy.findByText(`${adType} ${fiatCurrency}`).should('be.visible')
-    cy.findByText(`${rateValue} ${localCurrency}`)
+    if (rateType === 'float') {
+      cy.findByText(`+${rateValue}%`).should('be.visible')
+    } else if (rateType === 'fixed') {
+      cy.findByText(`${rateValue} ${localCurrency}`).should('be.visible')
+    }
     cy.findByText(
       `${minOrder.toFixed(2)} - ${maxOrder.toFixed(2)} ${fiatCurrency}`
-    )
+    ).should('be.visible')
   }
 )
 
@@ -513,16 +526,30 @@ Cypress.Commands.add('c_postAd', () => {
 
 Cypress.Commands.add('c_removeExistingAds', (adType) => {
   cy.get('.my-ads-table__row .dc-dropdown-container')
-    .should('be.visible')
-    .click()
-  cy.findByText('Delete').parent().click()
-  cy.findByText('Do you want to delete this ad?').should('be.visible')
-  cy.findByText('You will NOT be able to restore it.').should('be.visible')
-  cy.findByRole('button', { name: 'Delete' })
-    .should('be.enabled')
-    .click()
-    .should('not.exist', {
-      timeout: 10000,
+    .its('length')
+    .then((numberOfAds) => {
+      cy.log('Number of Ads:', numberOfAds)
+      cy.get('.my-ads-table__row .dc-dropdown-container').each(
+        ($el, index, $list) => {
+          cy.log('The index is:', index)
+          cy.wrap($el).click()
+          cy.findByText('Delete').parent().click()
+          cy.findByText('Do you want to delete this ad?').should('be.visible')
+          cy.findByText('You will NOT be able to restore it.').should(
+            'be.visible'
+          )
+          cy.findByRole('button', { name: 'Delete' })
+            .should('be.enabled')
+            .click()
+            .should('not.exist', {
+              timeout: 10000,
+            })
+          if (index < numberOfAds - 1) {
+            // this wait needed to provide a buffer after deleting each row, which helps avoid flaky failures.
+            cy.wait(1000)
+          }
+        }
+      )
     })
   if (adType == 'sell') {
     cy.findByText('My profile').click()
