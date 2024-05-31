@@ -51,12 +51,9 @@ Cypress.Commands.add('c_switchWalletsAccountResponsive', (account) => {
   const clickNext = () => {
     return cy
       .get('div.wallets-progress-bar')
-      .find('div.wallets-progress-bar-inactive')
-      .eq(currentIndex) // Click on element based on currentIndex
+      .find('div.wallets-progress-bar-active')
+      .next()
       .click()
-      .then(() => {
-        currentIndex++ // Increment currentIndex
-      })
   }
 
   const keepClickingNext = () => {
