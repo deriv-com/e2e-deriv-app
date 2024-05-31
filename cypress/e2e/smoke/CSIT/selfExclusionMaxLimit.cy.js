@@ -27,7 +27,7 @@ Cypress.Commands.add('c_clearTrades', () => {
 Cypress.Commands.add('c_openPositionsPanel', () => {
   cy.c_rateLimit({
     waitTimeAfterError: 15000,
-    isLanguageTest: true,
+    isLanguageTest: false,
     maxRetries: 5,
   })
   cy.findAllByTestId('dt_positions_toggle').click()
@@ -62,8 +62,7 @@ screenSizes.forEach((screenSize) => {
       cy.c_visitResponsive('/', screenSize, {
         rateLimitCheck: true,
       })
-
-      cy.contains('button', 'Open').eq(0).click()
+      cy.findAllByRole('button', { name: 'Open' }).first().click()
       cy.c_openPositionsPanel()
       cy.c_clearTrades()
 
@@ -86,7 +85,7 @@ screenSizes.forEach((screenSize) => {
         rateLimitCheck: true,
       })
 
-      cy.contains('button', 'Open').eq(0).click()
+      cy.findAllByRole('button', { name: 'Open' }).first().click()
       cy.findByTestId('dt_contract_dropdown').should('be.visible')
       cy.findByTestId('dt_contract_dropdown').click()
 
@@ -121,7 +120,7 @@ screenSizes.forEach((screenSize) => {
       ).should('be.visible')
 
       if (screenSize != 'small') {
-        cy.log('CLOSE THE TRADE PANEL ON MOBILE RESOLTION')
+        cy.log('CLOSE THE TRADE PANEL ON MOBILE RESOLUTION')
         cy.findByRole('button', { name: 'OK' }).click()
       }
 
@@ -147,7 +146,7 @@ screenSizes.forEach((screenSize) => {
         rateLimitCheck: true,
       })
 
-      cy.contains('button', 'Open').eq(0).click()
+      cy.findAllByRole('button', { name: 'Open' }).first().click()
       cy.findByTestId('dt_contract_dropdown').should('be.visible')
       cy.findByTestId('dt_contract_dropdown').click()
 
