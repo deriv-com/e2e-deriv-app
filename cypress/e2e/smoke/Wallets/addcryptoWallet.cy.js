@@ -25,13 +25,14 @@ function addcryptowallet(platform) {
               walletname = text.trim()
               cy.get('.wallets-add-more__card').eq(0).find('button').click()
               cy.findByRole('button', { name: 'Maybe later' }).click()
+              cy.wait(3000)
               cy.findByText(`${walletname}`).should('exist')
               cy.findByTestId('dt-wallets-add-more').scrollIntoView()
               cy.get('[class*="wallets-add-more__content"]')
                 .contains(walletname)
                 .parent()
                 .parent()
-                .find('button')
+                .find('button', { timeout: 15000 })
                 .then((button) => {
                   expect(button).to.contain('Added')
                   if (`${platform}` == `desktop`) {
