@@ -2,7 +2,7 @@ import '@testing-library/cypress/add-commands'
 
 describe('QATEST-153921 -  Client without VRTC', () => {
   beforeEach(() => {
-    cy.c_login({ user: 'walletMigrationWithoutVRTC' })
+    cy.c_login({ user: 'walletMigrationNoVRTC' })
   })
   it('Client without VRTC should not see  Wallets - Enable now banner', () => {
     cy.c_visitResponsive('/', 'large')

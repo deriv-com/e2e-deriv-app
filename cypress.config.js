@@ -245,8 +245,8 @@ module.exports = defineConfig({
         ID: process.env.E2E_WALET_MIGRATION_NEWCLIENT,
         PSWD: process.env.E2E_DERIV_PASSWORD,
       },
-      walletMigrationWithoutVRTC: {
-        ID: process.env.E2E_WALLET_MIGRATION_WITHOUTVRTC,
+      walletMigrationNoVRTC: {
+        ID: process.env.E2E_WALLET_MIGRATION_NO_VRTC,
         PSWD: process.env.E2E_DERIV_PASSWORD,
       },
       walletMigrationVRTConly: {
