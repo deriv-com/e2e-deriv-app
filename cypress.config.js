@@ -274,7 +274,7 @@ module.exports = defineConfig({
         PSWD: process.env.E2E_DERIV_PASSWORD,
       },
       walletMigrationP2P:{
-        ID: process.env.E2E_WALLET_MIGRATIION_P2P,
+        ID: process.env.E2E_WALLET_MIGRATION_P2P,
         PSWD: process.env.E2E_DERIV_PASSWORD,
       },
       walletMigrationPA:{
