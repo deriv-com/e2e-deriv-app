@@ -32,16 +32,15 @@ function verifyEmailandPerformWithdraw(platform) {
     let verification_code = Cypress.env('walletsWithdrawalCode')
     if (`${platform}` == `mobile`) {
       cy.c_visitResponsive(
-        `/wallet/withdraw?verification=${verification_code}`,
+        `/wallet/withdrawal?verification=${verification_code}`,
         'small'
       )
     } else {
       cy.c_visitResponsive(
-        `/wallet/withdraw?verification=${verification_code}`,
+        `/wallet/withdrawal?verification=${verification_code}`,
         'large'
       )
     }
-
     cy.contains('Transaction status')
     cy.contains('Your Bitcoin cryptocurrency wallet address').click().type(
       '1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71' //Example bitcoin wallet address

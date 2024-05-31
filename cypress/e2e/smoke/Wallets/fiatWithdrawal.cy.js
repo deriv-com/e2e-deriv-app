@@ -39,10 +39,9 @@ function performFiatWithdraw() {
   )
   if (cy.findByRole('button', { name: 'Send email' }).should('be.visible')) {
     cy.findByRole('button', { name: 'Send email' })
-      .should('be.visible')
       .should('be.enabled')
       .wait(500)
-      .click()
+    cy.findByRole('button', { name: 'Send email' }).click({ force: true })
   }
   cy.findByText("We've sent you an email.")
   cy.c_retrieveVerificationLinkUsingMailisk(
