@@ -197,6 +197,14 @@ module.exports = defineConfig({
         ID: process.env.E2E_LOGIN_ID_P2P_EMPTYSTATE,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
+      p2pFilterPaymentMethodBase: {
+        ID: process.env.E2E_P2P_FILTER_PM_BASE,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      p2pFilterPaymentMethodSelector: {
+        ID: process.env.E2E_P2P_FILTER_PM_SELECTOR,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
       allcrypto: {
         ID: process.env.E2E_CRYPTO,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
@@ -239,6 +247,10 @@ module.exports = defineConfig({
       },
       walletloginEmail: {
         ID: process.env.E2E_DERIV_LOGIN_WALLET,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      walletloginEmailMobile: {
+        ID: process.env.E2E_DERIV_LOGIN_WALLET_MOBILE,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       walletMigrationNewClient: {
