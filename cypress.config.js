@@ -254,7 +254,7 @@ module.exports = defineConfig({
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       walletMigrationNewClient: {
-        ID: process.env.E2E_WALET_MIGRATION_NEWCLIENT,
+        ID: process.env.E2E_WALLET_MIGRATION_NEWCLIENT,
         PSWD: process.env.E2E_DERIV_PASSWORD,
       },
       walletMigrationNoVRTC: {
