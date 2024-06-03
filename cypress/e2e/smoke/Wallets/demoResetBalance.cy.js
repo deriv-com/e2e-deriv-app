@@ -18,30 +18,29 @@ function reset_balance_demo(platform) {
   cy.findByText('Success').should('exist')
   cy.findByRole('button', { name: 'Transfer funds' }).click()
   //To check if Transfer tab is active on clicking Transfer funds
-  cy.get('[class*="wallets-cashier-header__tab"].wallets-cashier-header__tab')
-    .findByText('Transfer')
-    .parent()
-    .should('be.visible')
-    .invoke('attr', 'class') //would return the string of that class
-    .should('include', 'wallets-cashier-header__tab--active') //find if the class has "active" string
+  cy.get('.wallets-cashier-header__tab--active').should(
+    'contain.text',
+    'Transfer'
+  )
 }
 
 describe('QATEST-98815 - Demo reset balance', () => {
   //Prerequisites: Demo wallet account in any qa box with USD demo funds
   beforeEach(() => {
-    cy.c_login({ app: 'wallets' })
+    cy.c_login({ user: 'walletloginEmail' })
   })
 
   it('should be able to reset balance for demo wallet', () => {
     cy.log('Reset Balance for Demo Account')
-    cy.c_visitResponsive('/wallets', 'large')
+    cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     reset_balance_demo('desktop')
   })
   it('should be able to reset balance for demo wallet in responsive', () => {
     cy.log('Reset Balance for Demo Account')
-    cy.c_visitResponsive('/wallets', 'small')
+    cy.c_visitResponsive('/', 'small')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.c_skipPasskeysV2()
     reset_balance_demo('mobile')
   })
 })
