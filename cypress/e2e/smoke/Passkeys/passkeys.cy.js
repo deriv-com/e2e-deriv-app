@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
 
-describe('QATEST - 142511, QATEST - 125330 - Passkeys Login Page Button Check', () => {
+describe('QATEST-142511, QATEST-125357 - Passkeys Login Page Button Check', () => {
   const size = ['small', 'desktop']
 
   size.forEach((size) => {
@@ -11,7 +11,8 @@ describe('QATEST - 142511, QATEST - 125330 - Passkeys Login Page Button Check', 
         size
       )
       if (isMobile) {
-        cy.findByText('Passkey').should('be.visible')
+        // cy.findByText('Passkey').should('be.visible')
+        cy.findByLabelText('Login with passkeys').should('be.visible')
       } else {
         cy.get('a#btnPasskeys.button.passkey-btn').should('not.exist')
       }
