@@ -29,6 +29,7 @@ describe('QATEST-109419: Run custom strategy Even Odd', () => {
         const icon2 = $elem2[0].getBoundingClientRect()
         // Ensure that even it purchased first then odd from txn list
         expect(icon1.top).to.be.lessThan(icon2.top)
+        cy.c_checkRunPanel(true)
       })
     })
   })
