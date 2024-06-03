@@ -9,8 +9,6 @@ function validateAccountSwitcher(swticherTitle, CFDbanner) {
         timeout: 20000,
       }).should('be.visible')
     })
-  cy.log('the parm passed' + CFDbanner)
-  cy.log('2nd parm ' + swticherTitle)
   cy.get(swticherTitle)
     .should('have.length.greaterThan', 0)
     .each(($el) => {
