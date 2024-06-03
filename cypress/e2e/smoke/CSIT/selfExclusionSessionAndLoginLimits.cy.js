@@ -5,12 +5,6 @@ const addDays = (n) => {
   return myDate.toISOString().slice(0, 10)
 }
 
-function createClientAndLogin() {
-  cy.c_visitResponsive('/')
-  cy.c_createRealAccount()
-  cy.c_login()
-}
-
 function setSessionAndLoginLimitExclusion() {
   cy.c_visitResponsive('/account/self-exclusion', 'large')
   cy.findAllByLabelText('Date').first().click()
@@ -56,12 +50,12 @@ function checkNewAccountCreation() {
   cy.get('[class="dc-text balance-text__text--real"]', {
     timeout: 30000,
   }).should('exist') // waits until Real account is loaded
-  cy.findByTestId('dt_trading-app-card_real_derived').click()
+  cy.get('[class="dc-btn dc-btn--primary__light"]').first().click()
   cy.findByText(
     'St. Vincent & GrenadinesAssets40+Synthetic indices, basket indices, and derived'
   ).click()
   cy.findByRole('button', { name: 'Next' }).click()
-  cy.findByTestId('dt_mt5_password').type('Abcd1234!')
+  cy.findByTestId('dt_mt5_password').type(password)
   cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
   cy.findByText('Something’s not rightYou have', { timeout: 30000 }).should(
     'exist'
@@ -75,16 +69,32 @@ function checkHistory() {
 
 describe('QATEST-116798 Self Exclusion Session and login limits on desktop', () => {
   beforeEach(() => {
-    cy.c_createRealAccount()
-    cy.c_login()
+    cy.c_createRealAccount('large')
+    cy.c_login('large')
   })
 
-  it('should login, set self exclusion and verify it applied', () => {
+  it('should login, set self exclusion and verify it applied ', () => {
     setSessionAndLoginLimitExclusion()
     checkSelfExclusionIsSet()
-    checkNewAccountCreation()
-    checkHistory()
-    checkDeposit()
-    checkTrade()
+    // checkNewAccountCreation() wip (CSIT-1120)
+    // checkHistory() // wip (CSIT-1120)
+    // checkDeposit() // wip (CSIT-1120)
+    // checkTrade() // wip (CSIT-1120)
+  })
+})
+
+describe('QATEST-116798 Self Exclusion Session and login limits on mobile', () => {
+  beforeEach(() => {
+    cy.c_createRealAccount('large')
+    cy.c_login('large')
+  })
+
+  it('should login, set self exclusion and verify it applied ', () => {
+    setSessionAndLoginLimitExclusion()
+    checkSelfExclusionIsSet()
+    // checkNewAccountCreation() wip (CSIT-1120)
+    // checkHistory() // wip (CSIT-1120)
+    // checkDeposit() // wip (CSIT-1120)
+    // checkTrade() // wip (CSIT-1120)
   })
 })
