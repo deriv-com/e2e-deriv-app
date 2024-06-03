@@ -6,7 +6,7 @@ function validateAccountSwitcher(swticherTitle, CFDbanner) {
     .then(() => {
       cy.findByRole('heading', {
         name: 'Options accounts',
-        timeout: 20000,
+        timeout: 10000,
       }).should('be.visible')
     })
   cy.get(swticherTitle)
