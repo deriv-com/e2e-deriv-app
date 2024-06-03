@@ -6,7 +6,7 @@ describe('QATEST-136582: Redirection to other pages from dbot', () => {
   beforeEach(() => {
     cy.c_login({ user: 'dBot', rateLimitCheck: true })
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
-    tradersHub.openBotButton.click()
+    cy.c_openDbotThub()
     cy.c_skipTour()
   })
 
