@@ -103,7 +103,7 @@ const allWalletAdded = () => {
     })
 }
 
-describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets', () => {
+describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-98504  Launch onboarding from different pages', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })
   })
@@ -111,6 +111,24 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets', () => {
   it('User onboarding for desktop', () => {
     cy.c_visitResponsive('/', 'large')
     const walletAdded = allWalletAdded()
+    setupTest('large')
+    desktopSteps.forEach((step, index) => {
+      if (index === 3 && walletAdded) return
+      checkStep(
+        step.backButtonExists,
+        step.nextButtonName,
+        step.title,
+        step.description
+      )
+    })
+    cy.get('[data-test-id="spotlight"]').should('not.exist')
+  })
+  it('User onboarding from USD wallet cashier', () => {
+    cy.c_visitResponsive('/', 'large')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    const walletAdded = allWalletAdded()
+    cy.findByText('Deposit').click()
+    cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
     setupTest('large')
     desktopSteps.forEach((step, index) => {
       if (index === 3 && walletAdded) return
