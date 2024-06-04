@@ -50,7 +50,7 @@ describe('QATEST-129858 -  Trade page account switcher', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })
   })
-  it('Navigate to account swticher from Trade page &  Manage account settings page', () => {
+  it('Navigate to account switcher from Trade page &  Manage account settings page', () => {
     cy.c_visitResponsive('/', 'large')
     goToAcctSwitcherFromTradepage()
     cy.get('#dt_reports_tab').should('be.visible')
@@ -59,11 +59,10 @@ describe('QATEST-129858 -  Trade page account switcher', () => {
     validateAccountSwitcher('.account-switcher-wallet__looking-for-cfds')
   })
 
-  it.only('Responsive - Navigate to account swticher from Trade page &  Manage account settings page', () => {
+  it('Responsive - Navigate to account switcher from Trade page &  Manage account settings page', () => {
     cy.c_visitResponsive('/', 'small')
     cy.findByText('Options').click()
     goToAcctSwitcherFromTradepage()
-
     cy.get('#dt_positions_toggle').should('be.visible')
     validateAccountSwitcher('.account-switcher-wallet-mobile__footer')
     goToAcctSwitcherFromManagesetting('Personal details')
