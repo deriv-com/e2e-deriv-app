@@ -13,7 +13,7 @@ function checkForCashierMenu() {
   cy.get('.header__menu-links').should('not.contain', 'Cashier')
   cy.get('.header__menu-links').should('contain', 'Reports')
 }
-function checkForCashierMenumobile() {
+function checkForCashierMenuMobile() {
   cy.get('#dt_mobile_drawer_toggle').should('be.visible').click()
   cy.get('.dc-mobile-drawer__header-wrapper')
     .contains('.dc-text', 'Menu')
@@ -38,6 +38,6 @@ describe('QATEST-156095 -  Cashier tab should not be displayed in the menu', () 
       .contains('.wallets-text', 'Deriv Trader')
       .should('be.visible')
       .click()
-    checkForCashierMenumobile()
+    checkForCashierMenuMobile()
   })
 })
