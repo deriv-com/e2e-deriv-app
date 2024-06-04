@@ -1092,6 +1092,7 @@ Cypress.Commands.add('c_confirmSellOrder', (nicknameAndAmount) => {
     cy.findByText('How would you rate this transaction?').should('be.visible')
   })
 })
+
 Cypress.Commands.add('c_filterByPaymentMethod', (PM) => {
   cy.findByText('Payment methods').should('be.visible').click()
   cy.findByText(PM).should('be.visible').click()
