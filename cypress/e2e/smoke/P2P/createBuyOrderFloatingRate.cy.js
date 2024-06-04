@@ -70,12 +70,14 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       ).then((sendAmount) => {
         nicknameAndAmount.amount = sendAmount
       })
-      cy.c_verifyOrderPlacementScreen(
-        sellerNickname,
-        sessionStorage.getItem('c_rateOfOneDollar'),
-        sessionStorage.getItem('c_paymentMethods'),
-        sessionStorage.getItem('c_sellersInstructions')
-      )
+      cy.then(() => {
+        cy.c_verifyOrderPlacementScreen(
+          nicknameAndAmount.seller,
+          sessionStorage.getItem('c_rateOfOneDollar'),
+          sessionStorage.getItem('c_paymentMethods'),
+          sessionStorage.getItem('c_sellersInstructions')
+        )
+      })
       cy.then(() => {
         cy.c_verifyPaymentConfirmationScreenContent(
           nicknameAndAmount.amount,

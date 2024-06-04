@@ -822,6 +822,14 @@ Cypress.Commands.add(
 Cypress.Commands.add(
   'c_verifyOrderPlacementScreen',
   (nickname, rateOfOneDollar, paymentMethods, instructions) => {
+    // if(rateOfOneDollar == null || paymentMethods == null || instructions == null){
+    //   cy.then(()=>{
+    //     rateOfOneDollar = sessionStorage.getItem('c_rateOfOneDollar')
+    //     paymentMethods = sessionStorage.getItem('c_paymentMethods')
+    //     instructions = sessionStorage.getItem('c_sellersInstructions')
+    //   })
+    // }
+    cy.log({ nickname, rateOfOneDollar, paymentMethods, instructions })
     cy.findByText(nickname).should('be.visible')
     cy.findByText(rateOfOneDollar).should('be.visible')
     cy.findByText(paymentMethods).should('be.visible')
@@ -1031,11 +1039,12 @@ Cypress.Commands.add(
           orderCompletionTime.trim()
         )
       })
-    cy.then(() => {
+    return cy.then(() => {
       cy.findByRole('button', { name: 'Cancel' }).should('be.enabled')
       cy.findByRole('button', { name: 'Confirm' })
         .should('not.be.disabled')
         .click()
+      cy.findByRole('button', { name: "I've paid" }).should('be.visible')
       cy.findByText('Send')
         .next('span')
         .invoke('text')
