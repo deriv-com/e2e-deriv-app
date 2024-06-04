@@ -3,7 +3,6 @@ import { generateEpoch } from '../../../support/helper/utility'
 
 describe('QATEST-24427,5533,5827 - Cypress test for ROW account sign up', () => {
   const size = ['small', 'desktop']
-  // const size = ['desktop']
   let countryIDV = Cypress.env('countries').KE
   let nationalIDNumIDV = Cypress.env('nationalIDNum').KE
   let taxIDNumIDV = Cypress.env('taxIDNum').KE
@@ -25,16 +24,6 @@ describe('QATEST-24427,5533,5827 - Cypress test for ROW account sign up', () => 
       cy.findByText('Add a Deriv account').should('not.exist')
       cy.c_switchToReal()
       cy.findByText('Add a Deriv account').should('be.visible')
-      // cy.contains('Add a Derivs account')
-      //   //
-      //   .then(($el) => {
-      //     if (!($el.length > 0)) {
-      //       cy.c_switchToReal()
-      //       cy.findByTestId('dt_trading-app-card_real_deriv-account')
-      //         .findByRole('button', { name: 'Get' })
-      //         .click()
-      //     } else cy.log('Create account modal already open!!!')
-      //   })
       cy.c_generateRandomName().then((firstName) => {
         cy.c_personalDetails(
           firstName,

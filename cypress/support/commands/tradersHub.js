@@ -10,7 +10,6 @@ Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
       .first()
       .scrollIntoView({ position: 'bottom' })
       .should('be.visible')
-    // cy.findByText('Other CFD Platforms').scrollIntoView({ position: 'bottom' })
     cy.findByRole('button', { name: 'CFDs' }).click()
     cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'Options' }).click()
@@ -21,9 +20,6 @@ Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
       .first()
       .scrollIntoView({ position: 'bottom' })
       .should('be.visible')
-    // cy.findByText('Other CFD Platforms').scrollIntoView({
-    //   position: 'bottom',
-    // })
     cy.findByText('Options').click()
   }
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
@@ -457,7 +453,6 @@ Cypress.Commands.add('c_addAccountMF', (type, options = {}) => {
     cy.findByRole('button', {
       name: lang.addRealAccountTexts.maybeLaterBtn,
     }).click()
-    // cy.c_completeTradersHubTour(options)
   })
 })
 
@@ -488,10 +483,6 @@ Cypress.Commands.add(
         cy.c_selectCountryOfResidence(country, options)
         cy.c_selectCitizenship(country, options)
         cy.c_enterPassword(options)
-        //Disabling onboarding check
-        // if (!countriesToCheck.includes(country)) {
-        //   cy.c_completeOnboarding()
-        // }
       })
     })
   }
