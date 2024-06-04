@@ -1,4 +1,5 @@
 import '@testing-library/cypress/add-commands'
+
 function goToAcctSwitcherFromTradepage() {
   const derivAppProdUrl = `${Cypress.env('prodURL')}dtrader?chart_type=`
   const derivAppStagingUrl = `${Cypress.env('stagingUrl')}dtrader?chart_type=`
