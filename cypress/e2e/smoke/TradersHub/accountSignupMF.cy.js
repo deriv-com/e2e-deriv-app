@@ -42,8 +42,6 @@ describe('QATEST-5569: Verify MF Signup flow', () => {
         'have.text',
         '0.00EUR'
       )
-      //TODO: Temp disable. Re-enable after debugging.
-      // if (isMobile)
       cy.c_manageAccountsetting(country, {
         isMobile: isMobile,
       })

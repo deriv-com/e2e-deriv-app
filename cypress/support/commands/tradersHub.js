@@ -328,11 +328,8 @@ Cypress.Commands.add('c_manageAccountsetting', (CoR, options = {}) => {
     )
     if (isMobile) cy.get(`select[name='country_input']`).select(CoR)
     else {
-      cy.findByLabelText('Country').should('not.be.disabled').as('GGG')
-      cy.get('@GGG').type(CoR)
-      // cy.wait(1000)
-      // cy.findByText(CoR).as('COR').scrollIntoView().should('be.visible')
-      // cy.get('@COR', { timeout: 15000 }).click()
+      cy.findByLabelText('Country').should('not.be.disabled').as('COR')
+      cy.get('@COR').type(CoR)
       cy.findByText(CoR).click()
     }
     cy.findByRole('button', { name: lang.realAccountFormUtils.nextBtn }).should(
