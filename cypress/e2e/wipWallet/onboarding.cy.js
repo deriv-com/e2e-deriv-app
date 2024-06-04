@@ -157,4 +157,22 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
     })
     cy.get('[data-test-id="spotlight"]').should('not.exist')
   })
+  it.only('User onboarding from USD wallet cashier in responsive', () => {
+    cy.c_visitResponsive('/', 'small')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    const walletAdded = allWalletAdded()
+    cy.findByText('Deposit').parent().should('be.visible').click()
+    cy.contains('Oops, something went wrong!').should('be.visible')
+    setupTest()
+    mobileSteps.forEach((step, index) => {
+      if (index === 3 && walletAdded) return
+      checkStep(
+        step.backButtonExists,
+        step.nextButtonName,
+        step.title,
+        step.description
+      )
+    })
+    cy.get('[data-test-id="spotlight"]').should('not.exist')
+  })
 })
