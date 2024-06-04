@@ -252,6 +252,46 @@ module.exports = defineConfig({
       walletloginEmailMobile: {
         ID: process.env.E2E_DERIV_LOGIN_WALLET_MOBILE,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      walletMigrationNewClient: {
+        ID: process.env.E2E_WALLET_MIGRATION_NEWCLIENT,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      walletMigrationNoVRTC: {
+        ID: process.env.E2E_WALLET_MIGRATION_NO_VRTC,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      walletMigrationVRTConly: {
+        ID: process.env.E2E_WALLET_MIGRATION_VRTCONLY,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      walletMigrationNoCurrency: {
+        ID: process.env.E2E_WALLET_MIGRATION_NO_CURRENCY,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      walletMigratioNonUSD: {
+        ID: process.env.E2E_WALLET_MIGRATION_NON_USD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      walletMigrationP2P:{
+        ID: process.env.E2E_WALLET_MIGRATION_P2P,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      walletMigrationPA:{
+        ID: process.env.E2E_WALLET_MIGRATION_PA,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      walletMigrationPAclient:{
+        ID: process.env.E2E_WALLET_MIGRATION_PA_CLIENT,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      selfExclusion:{
+        ID: process.env.E2E_SELF_EXCLUSION,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      selfExclusionOptions:{
+        ID: process.env.E2E_SELF_EXCLUSION_OPTIONS,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       }
     },
     production:{
@@ -348,6 +388,8 @@ module.exports = defineConfig({
     actualAmount : process.env.E2E_ACTUAL_AMOUNT,
     appRegisterID: process.env.E2E_APP_REGISTER,
     appRegisterUrl: process.env.E2E_APP_REGISTER_URL,
+    passkeyUrl: process.env.E2E_PASSKEY_URL,
+    passkeyAppId: process.env.E2E_PASSKEY_APP_ID,
     countries: {
       ZA: "South Africa",
       CO: "Colombia",
