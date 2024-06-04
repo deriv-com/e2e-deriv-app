@@ -67,7 +67,6 @@ const mobileSteps = [
 ]
 
 const setupTest = () => {
-  cy.contains('Wallet', { timeout: 10000 }).should('exist')
   cy.findByTestId('dt_traders_hub_onboarding_icon').click()
   cy.contains('USD Wallet', { timeout: 10000 }).should('exist')
   cy.get('#react-joyride-portal').should('exist')
@@ -111,6 +110,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
   it('User onboarding for desktop', () => {
     cy.c_visitResponsive('/', 'large')
     const walletAdded = allWalletAdded()
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
     setupTest('large')
     desktopSteps.forEach((step, index) => {
       if (index === 3 && walletAdded) return
@@ -141,7 +141,78 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
     })
     cy.get('[data-test-id="spotlight"]').should('not.exist')
   })
-
+  it('User onboarding from USD wallet compare account', () => {
+    cy.c_visitResponsive('/', 'large')
+    const walletAdded = allWalletAdded()
+    cy.findByText('Compare accounts').click()
+    cy.contains('Compare CFDs accounts').should('be.visible')
+    setupTest('large')
+    desktopSteps.forEach((step, index) => {
+      if (index === 3 && walletAdded) return
+      checkStep(
+        step.backButtonExists,
+        step.nextButtonName,
+        step.title,
+        step.description
+      )
+    })
+    cy.get('[data-test-id="spotlight"]').should('not.exist')
+  })
+  it('User onboarding from BTC wallet cashier', () => {
+    cy.c_visitResponsive('/', 'large')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.c_switchWalletsAccount('BTC')
+    const walletAdded = allWalletAdded()
+    cy.findByText('Deposit').click()
+    // cy.get('canvas').should('be.visible')
+    setupTest('large')
+    desktopSteps.forEach((step, index) => {
+      if (index === 3 && walletAdded) return
+      checkStep(
+        step.backButtonExists,
+        step.nextButtonName,
+        step.title,
+        step.description
+      )
+    })
+    cy.get('[data-test-id="spotlight"]').should('not.exist')
+  })
+  it('User onboarding from BTC wallet traders hub', () => {
+    cy.c_visitResponsive('/', 'large')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.c_switchWalletsAccount('BTC')
+    const walletAdded = allWalletAdded()
+    setupTest('large')
+    desktopSteps.forEach((step, index) => {
+      if (index === 3 && walletAdded) return
+      checkStep(
+        step.backButtonExists,
+        step.nextButtonName,
+        step.title,
+        step.description
+      )
+    })
+    cy.get('[data-test-id="spotlight"]').should('not.exist')
+  })
+  it('User onboarding from BTC wallet compare account', () => {
+    cy.c_visitResponsive('/', 'large')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.c_switchWalletsAccount('BTC')
+    cy.findByText('Compare accounts').click()
+    cy.contains('Compare CFDs accounts').should('be.visible')
+    const walletAdded = allWalletAdded()
+    setupTest('large')
+    desktopSteps.forEach((step, index) => {
+      if (index === 3 && walletAdded) return
+      checkStep(
+        step.backButtonExists,
+        step.nextButtonName,
+        step.title,
+        step.description
+      )
+    })
+    cy.get('[data-test-id="spotlight"]').should('not.exist')
+  })
   it('User onboarding for mobile', () => {
     cy.c_visitResponsive('/', 'small')
     const walletAdded = allWalletAdded()
@@ -157,12 +228,66 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
     })
     cy.get('[data-test-id="spotlight"]').should('not.exist')
   })
-  it.only('User onboarding from USD wallet cashier in responsive', () => {
+  it('User onboarding from USD wallet cashier in responsive', () => {
     cy.c_visitResponsive('/', 'small')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     const walletAdded = allWalletAdded()
     cy.findByText('Deposit').parent().should('be.visible').click()
     cy.contains('Oops, something went wrong!').should('be.visible')
+    setupTest()
+    mobileSteps.forEach((step, index) => {
+      if (index === 3 && walletAdded) return
+      checkStep(
+        step.backButtonExists,
+        step.nextButtonName,
+        step.title,
+        step.description
+      )
+    })
+    cy.get('[data-test-id="spotlight"]').should('not.exist')
+  })
+  it('User onboarding from BTC wallet tradershub in responsive', () => {
+    cy.c_visitResponsive('/', 'small')
+    cy.findByText('Compare accounts').click()
+    cy.contains('Compare CFDs accounts').should('be.visible')
+    cy.findByText('Deposit').parent().should('be.visible').click()
+    cy.contains('Oops, something went wrong!').should('be.visible')
+    setupTest()
+    mobileSteps.forEach((step, index) => {
+      if (index === 3 && walletAdded) return
+      checkStep(
+        step.backButtonExists,
+        step.nextButtonName,
+        step.title,
+        step.description
+      )
+    })
+    cy.get('[data-test-id="spotlight"]').should('not.exist')
+  })
+  it('User onboarding from BTC wallet cashier in responsive', () => {
+    cy.c_visitResponsive('/', 'small')
+    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.c_switchWalletsAccountResponsive('BTC')
+    const walletAdded = allWalletAdded()
+    setupTest()
+    mobileSteps.forEach((step, index) => {
+      if (index === 3 && walletAdded) return
+      checkStep(
+        step.backButtonExists,
+        step.nextButtonName,
+        step.title,
+        step.description
+      )
+    })
+    cy.get('[data-test-id="spotlight"]').should('not.exist')
+  })
+
+  it('User onboarding from BTC wallet compare account in responsive', () => {
+    cy.c_visitResponsive('/', 'small')
+    cy.c_switchWalletsAccountResponsive('BTC')
+    cy.findByText('Compare accounts').click()
+    cy.contains('Compare CFDs accounts').should('be.visible')
+    const walletAdded = allWalletAdded()
     setupTest()
     mobileSteps.forEach((step, index) => {
       if (index === 3 && walletAdded) return
