@@ -255,35 +255,35 @@ module.exports = defineConfig({
       },
       walletMigrationNewClient: {
         ID: process.env.E2E_WALLET_MIGRATION_NEWCLIENT,
-        PSWD: process.env.E2E_DERIV_PASSWORD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
       walletMigrationNoVRTC: {
         ID: process.env.E2E_WALLET_MIGRATION_NO_VRTC,
-        PSWD: process.env.E2E_DERIV_PASSWORD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
       walletMigrationVRTConly: {
         ID: process.env.E2E_WALLET_MIGRATION_VRTCONLY,
-        PSWD: process.env.E2E_DERIV_PASSWORD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
       walletMigrationNoCurrency: {
         ID: process.env.E2E_WALLET_MIGRATION_NO_CURRENCY,
-        PSWD: process.env.E2E_DERIV_PASSWORD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
       walletMigratioNonUSD: {
         ID: process.env.E2E_WALLET_MIGRATION_NON_USD,
-        PSWD: process.env.E2E_DERIV_PASSWORD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
       walletMigrationP2P:{
         ID: process.env.E2E_WALLET_MIGRATION_P2P,
-        PSWD: process.env.E2E_DERIV_PASSWORD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
       walletMigrationPA:{
         ID: process.env.E2E_WALLET_MIGRATION_PA,
-        PSWD: process.env.E2E_DERIV_PASSWORD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       },
       walletMigrationPAclient:{
         ID: process.env.E2E_WALLET_MIGRATION_PA_CLIENT,
-        PSWD: process.env.E2E_DERIV_PASSWORD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
       }
     },
     production:{
