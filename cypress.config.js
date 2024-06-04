@@ -43,6 +43,12 @@ module.exports = defineConfig({
           return null;
         }
       }),
+      on("task", {
+        log(args) {
+          console.log(...args);
+          return null;
+        }
+      }),
       on('task', {
         wsConnect() {
           // Check if there is an existing connection and close it if open

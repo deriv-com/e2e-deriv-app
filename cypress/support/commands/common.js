@@ -1,4 +1,4 @@
-import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
+import { getOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
 Cypress.prevUser = ''
@@ -80,6 +80,8 @@ Cypress.Commands.add('c_login', (options = {}) => {
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
   })
+  cy.log(`USER>>>${loginEmail}`)
+  cy.log(`PASSWORD>>>${loginPassword}`)
   cy.c_visitResponsive('/endpoint', 'large', { rateLimitCheck: rateLimitCheck })
 
   if (app == 'doughflow') {
@@ -770,4 +772,15 @@ Cypress.Commands.add('c_login_setToken', () => {
     Cypress.env('loginEmail'),
     Cypress.env('loginPassword')
   )
+})
+
+Cypress.Commands.overwrite('log', function (log, ...args) {
+  if (Cypress.browser.isHeadless) {
+    return cy.task('log', args, { log: false }).then(() => {
+      return log(...args)
+    })
+  } else {
+    console.log(...args)
+    return log(...args)
+  }
 })
