@@ -1,5 +1,4 @@
 import '@testing-library/cypress/add-commands'
-import { generateAccountNumberString } from '../../../support/helper/utility'
 
 let floatRate = 1.25
 let minOrder = 1
