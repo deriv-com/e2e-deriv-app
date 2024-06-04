@@ -284,6 +284,14 @@ module.exports = defineConfig({
       walletMigrationPAclient:{
         ID: process.env.E2E_WALLET_MIGRATION_PA_CLIENT,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      selfExclusion:{
+        ID: process.env.E2E_SELF_EXCLUSION,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      selfExclusionOptions:{
+        ID: process.env.E2E_SELF_EXCLUSION_OPTIONS,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       }
     },
     production:{
