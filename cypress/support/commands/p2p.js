@@ -822,13 +822,6 @@ Cypress.Commands.add(
 Cypress.Commands.add(
   'c_verifyOrderPlacementScreen',
   (nickname, rateOfOneDollar, paymentMethods, instructions) => {
-    // if(rateOfOneDollar == null || paymentMethods == null || instructions == null){
-    //   cy.then(()=>{
-    //     rateOfOneDollar = sessionStorage.getItem('c_rateOfOneDollar')
-    //     paymentMethods = sessionStorage.getItem('c_paymentMethods')
-    //     instructions = sessionStorage.getItem('c_sellersInstructions')
-    //   })
-    // }
     cy.log({ nickname, rateOfOneDollar, paymentMethods, instructions })
     cy.findByText(nickname).should('be.visible')
     cy.findByText(rateOfOneDollar).should('be.visible')
