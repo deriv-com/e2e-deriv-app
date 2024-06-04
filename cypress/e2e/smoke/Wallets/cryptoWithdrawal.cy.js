@@ -41,7 +41,6 @@ function verifyEmailandPerformWithdraw(platform) {
         'large'
       )
     }
-
     cy.contains('Transaction status')
     cy.contains('Your Bitcoin cryptocurrency wallet address').click().type(
       '1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71' //Example bitcoin wallet address

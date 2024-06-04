@@ -12,7 +12,7 @@ describe('QATEST-99420: Import and run custom strategy', () => {
   beforeEach(() => {
     cy.c_login({ user: 'dBot' })
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
-    tradersHub.openBotButton.click()
+    cy.c_openDbotThub()
     cy.c_loadingCheck()
     cy.c_skipTour()
     cy.c_switchToDemoBot()
