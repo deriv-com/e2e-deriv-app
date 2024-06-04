@@ -16,7 +16,7 @@ describe('QATEST-5724: CFDs - Create a demo Financial account using existing MT5
       cy.c_checkTradersHubHomePage(isMobile)
       cy.c_switchToDemo()
       if (isMobile) cy.findByRole('button', { name: 'CFDs' }).click()
-      cy.findByTestId('dt_trading-app-card_demo_derived')
+      cy.findByTestId('dt_trading-app-card_demo_standard')
         .findByRole('button', { name: 'Get' })
         .click()
       cy.findByText('Create a Deriv MT5 password').should('be.visible')
@@ -31,7 +31,7 @@ describe('QATEST-5724: CFDs - Create a demo Financial account using existing MT5
       cy.findByRole('heading', { name: 'Success!' }).should('be.visible')
       cy.get('.dc-modal-body').should(
         'contain.text',
-        'Success!Your demo Derived account is ready.'
+        'Success!Your demo Standard account is ready.'
       )
       cy.findByRole('button', { name: 'Continue' }).click()
       cy.findByText('10,000.00 USD').should('be.visible')

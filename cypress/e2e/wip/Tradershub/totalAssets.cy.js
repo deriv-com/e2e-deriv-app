@@ -3,7 +3,7 @@ import '@testing-library/cypress/add-commands'
 const createDemoAccounts = (isMobile = false) => {
   //Demo Mt5 account
   if (isMobile) cy.findByRole('button', { name: 'CFDs' }).click()
-  cy.findByTestId('dt_trading-app-card_demo_derived')
+  cy.findByTestId('dt_trading-app-card_demo_standard')
     .findByRole('button', { name: 'Get' })
     .click()
   cy.findByText('Create a Deriv MT5 password').should('be.visible')
@@ -19,7 +19,7 @@ const createDemoAccounts = (isMobile = false) => {
   cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
   cy.get('.dc-modal-body').should(
     'contain.text',
-    'Success!Your demo Derived account is ready'
+    'Success!Your demo Standard account is ready'
   )
   cy.findByRole('button', { name: 'Continue' }).click()
 
@@ -42,7 +42,7 @@ const createDemoAccounts = (isMobile = false) => {
 const createRealAccounts = (isMobile = false) => {
   //Real Mt5 account
   if (isMobile) cy.findByRole('button', { name: 'CFDs' }).click()
-  cy.findByTestId('dt_trading-app-card_real_derived')
+  cy.findByTestId('dt_trading-app-card_real_standard')
     .findByRole('button', { name: 'Get' })
     .click()
   cy.findByText('St. Vincent & Grenadines').click()
@@ -55,7 +55,7 @@ const createRealAccounts = (isMobile = false) => {
   cy.findByRole('button', { name: 'Add account' }).click()
   cy.get('.dc-modal-body').should(
     'contain.text',
-    'Success!Your Deriv MT5 Derived account is ready. Enable trading with your first transfer.'
+    'Success!Your Deriv MT5 Standard account is ready. Enable trading with your first transfer.'
   )
   cy.findByRole('button', { name: 'Maybe later' }).click()
 

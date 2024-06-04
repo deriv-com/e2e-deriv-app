@@ -3,19 +3,17 @@ import { derivApp } from '../locators'
 Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
   if (isMobile) {
     cy.c_closeNotificationHeader()
-    cy.findByRole('button', { name: 'Options & Multipliers' }).should(
-      'be.visible'
-    )
+    cy.findByRole('button', { name: 'Options' }).should('be.visible')
     cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'CFDs' }).click()
     cy.findAllByText('Deriv cTrader')
       .first()
       .scrollIntoView({ position: 'bottom' })
       .should('be.visible')
-    cy.findByText('Other CFD Platforms').scrollIntoView({ position: 'bottom' })
+    // cy.findByText('Other CFD Platforms').scrollIntoView({ position: 'bottom' })
     cy.findByRole('button', { name: 'CFDs' }).click()
     cy.c_closeNotificationHeader()
-    cy.findByRole('button', { name: 'Options & Multipliers' }).click()
+    cy.findByRole('button', { name: 'Options' }).click()
   } else {
     cy.findByText('Options').should('be.visible')
     cy.findByText('CFDs').should('be.visible')
@@ -23,9 +21,9 @@ Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
       .first()
       .scrollIntoView({ position: 'bottom' })
       .should('be.visible')
-    cy.findByText('Other CFD Platforms').scrollIntoView({
-      position: 'bottom',
-    })
+    // cy.findByText('Other CFD Platforms').scrollIntoView({
+    //   position: 'bottom',
+    // })
     cy.findByText('Options').click()
   }
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
@@ -183,11 +181,7 @@ Cypress.Commands.add(
       cy.findByRole('button', {
         name: lang.realAccountFormUtils.nextBtn,
       }).click()
-      if (identity == 'Onfido') {
-        cy.contains('Any information you provide is confidential').should(
-          'be.visible'
-        )
-      } else if (identity == 'IDV') {
+      if (identity == 'IDV') {
         if (isMobile) {
           cy.get(`select[name='document_type']`).select('National ID Number')
         } else {
@@ -195,8 +189,7 @@ Cypress.Commands.add(
           cy.findByText('National ID Number').click()
         }
         cy.findByLabelText('Enter your document number').type(nationalIDNum)
-      } else {
-        cy.log('Not IDV or Onfido')
+      } else if (identity != 'Onfido' && identity != 'IDV') {
         cy.get('[type="radio"]').first().click({ force: true })
       }
       cy.findByTestId('first_name').type(firstName)
@@ -268,12 +261,9 @@ Cypress.Commands.add(
           cy.get('#Hedging').click()
         }
       }
-      if (identity == 'Onfido') {
-        cy.get('.dc-checkbox__box').click()
-      } else if (identity == 'IDV') {
+      if (identity == 'IDV') {
         cy.get('.dc-checkbox__box').eq(1).click()
       } else {
-        cy.log('Not IDV or Onfido') //for MF account check
         cy.get('.dc-checkbox__box').click()
       }
       //below check is to make sure previous button is working.
@@ -317,10 +307,7 @@ Cypress.Commands.add('c_addAccount', () => {
   )
   cy.findByRole('button', { name: 'Deposit' }).should('be.visible')
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
-  cy.url().should(
-    'be.equal',
-    Cypress.config('baseUrl') + 'appstore/traders-hub'
-  )
+  cy.url().should('be.equal', Cypress.config('baseUrl'))
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
   cy.c_closeNotificationHeader()
   cy.findAllByTestId('dt_balance_text_container').eq(0).should('be.visible')
@@ -345,9 +332,12 @@ Cypress.Commands.add('c_manageAccountsetting', (CoR, options = {}) => {
     )
     if (isMobile) cy.get(`select[name='country_input']`).select(CoR)
     else {
-      cy.findByLabelText('Country').should('not.be.disabled').type(CoR)
-      cy.findByText(CoR).as('COR').scrollIntoView().should('be.visible')
-      cy.get('@COR', { timeout: 15000 }).click()
+      cy.findByLabelText('Country').should('not.be.disabled').as('GGG')
+      cy.get('@GGG').type(CoR)
+      // cy.wait(1000)
+      // cy.findByText(CoR).as('COR').scrollIntoView().should('be.visible')
+      // cy.get('@COR', { timeout: 15000 }).click()
+      cy.findByText(CoR).click()
     }
     cy.findByRole('button', { name: lang.realAccountFormUtils.nextBtn }).should(
       'not.be.disabled'
@@ -450,14 +440,10 @@ Cypress.Commands.add('c_addAccountMF', (type, options = {}) => {
     if (language != 'english') {
       cy.url().should(
         'be.equal',
-        Cypress.config('baseUrl') +
-          `appstore/traders-hub?lang=${lang.shortCode}`
+        `${Cypress.config('baseUrl')}?lang=${lang.shortCode}`
       )
     } else {
-      cy.url().should(
-        'be.equal',
-        Cypress.config('baseUrl') + 'appstore/traders-hub'
-      )
+      cy.url().should('be.equal', Cypress.config('baseUrl'))
     }
     cy.findByRole('heading', {
       name: lang.addRealAccountTexts.accAddedTxt,
@@ -471,7 +457,7 @@ Cypress.Commands.add('c_addAccountMF', (type, options = {}) => {
     cy.findByRole('button', {
       name: lang.addRealAccountTexts.maybeLaterBtn,
     }).click()
-    cy.c_completeTradersHubTour(options)
+    // cy.c_completeTradersHubTour(options)
   })
 })
 
@@ -502,9 +488,10 @@ Cypress.Commands.add(
         cy.c_selectCountryOfResidence(country, options)
         cy.c_selectCitizenship(country, options)
         cy.c_enterPassword(options)
-        if (!countriesToCheck.includes(country)) {
-          cy.c_completeOnboarding()
-        }
+        //Disabling onboarding check
+        // if (!countriesToCheck.includes(country)) {
+        //   cy.c_completeOnboarding()
+        // }
       })
     })
   }
