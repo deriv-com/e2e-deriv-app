@@ -60,14 +60,3 @@ Cypress.Commands.add('c_openDbotThub', () => {
     .click({ force: true })
   cy.c_loadingCheck()
 })
-
-Cypress.Commands.add('c_skipPasskeyBot', () => {
-  cy.wait(3000)
-  cy.get('body', { timeout: 8000 }).then(($body) => {
-    if ($body.find(':contains("Effortless login with passkeys")').length > 0) {
-      cy.findByText('Maybe later').click()
-    } else {
-      cy.log('Passkey is disabled')
-    }
-  })
-})
