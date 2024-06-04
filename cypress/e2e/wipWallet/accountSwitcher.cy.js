@@ -46,7 +46,7 @@ function goToAcctSwitcherFromManagesetting(pageSetting) {
   cy.findByText(pageSetting).should('be.visible')
 }
 
-describe('QATEST-129858 -  Trade page account switcher', () => {
+describe('QATEST-129858 -  Validate account switcher ', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })
   })
