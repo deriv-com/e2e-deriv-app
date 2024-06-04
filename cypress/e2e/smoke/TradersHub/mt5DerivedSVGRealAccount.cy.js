@@ -43,7 +43,7 @@ describe('QATEST-5972: Create a Derived SVG account', () => {
         .findByRole('button', { name: 'Open' })
         .click({ force: true })
       cy.get('div.cfd-trade-modal-container')
-        .findByText('Derived SVG')
+        .findByText('Standard SVG')
         .should('be.visible')
       cy.get('div.cfd-trade-modal-container')
         .findByText('Deriv (SVG) LLC')
