@@ -16,6 +16,8 @@ describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
     it(`Run Martingale Quick Strategy ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
       cy.c_visitResponsive('appstore/traders-hub', size)
+      //Wait for page to completely load
+      cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
       if (isMobile) cy.c_skipPasskeysV2()
       cy.c_openDbotThub()
       if (isMobile) cy.findByTestId('close-icon', { timeout: 7000 }).click()

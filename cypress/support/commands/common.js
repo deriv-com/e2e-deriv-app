@@ -687,7 +687,6 @@ Cypress.Commands.add('c_skipPasskeysV2', (options = {}) => {
   const { language = 'english', retryCount = 0, maxRetries = 3 } = options
   cy.fixture('common/common.json').then((langData) => {
     const lang = langData[language]
-    cy.wait(3000)
     cy.findByText(lang.passkeysModal.title)
       .should(() => {})
       .then(($el) => {
