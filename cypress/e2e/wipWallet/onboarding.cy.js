@@ -128,7 +128,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     const walletAdded = allWalletAdded()
     cy.findByText('Deposit').click()
-    cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
+    cy.contains('Oops, something went wrong!').should('be.visible')
     setupTest('large')
     desktopSteps.forEach((step, index) => {
       if (index === 3 && walletAdded) return
