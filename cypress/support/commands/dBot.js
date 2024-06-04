@@ -53,3 +53,10 @@ Cypress.Commands.add('c_checkRunPanel', (clearPanel = false) => {
     }
   })
 })
+
+Cypress.Commands.add('c_openDbotThub', () => {
+  cy.findByTestId('dt_trading-app-card_real_deriv-bot')
+    .findByRole('button', { name: 'Open' })
+    .click({ force: true })
+  cy.c_loadingCheck()
+})
