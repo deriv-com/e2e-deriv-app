@@ -1,7 +1,7 @@
 import '@testing-library/cypress/add-commands'
 import { getCurrentDate } from '../../../support/helper/utility'
 
-const BO_URL = `https://${Cypress.env('configServer')}/d/backoffice/login.cgi`
+const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
 const CURRENT_DATE = getCurrentDate()
 
 describe('QATEST-4835 POA Verified/Rejected', () => {

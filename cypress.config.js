@@ -294,6 +294,7 @@ module.exports = defineConfig({
     qaBoxLoginEmail: process.env.E2E_QABOX_LOGIN,
     qaBoxLoginPassword: process.env.E2E_QABOX_PASSWORD,
     qaBoxBaseUrl: process.env.E2E_QABOX_BASEURL,
+    qaBOEndpoint: process.env.BO_ENDPOINT,
     mainQaBoxBaseUrl: process.env.E2E_MAIN_QABOX_BASEURL,
     mt5Login: process.env.E2E_MT5_LOGIN,
     mt5Password: process.env.E2E_MT5_PASSWORD,
