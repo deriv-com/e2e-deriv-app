@@ -3,9 +3,9 @@ import '@testing-library/cypress/add-commands'
 function resetBalanceDemo(platform) {
   if (`${platform}` == `mobile`) {
     cy.c_switchWalletsAccountDemo()
-    cy.contains('Reset balance', { timeout: 10000 })
-      .should('be.visible')
-      .click()
+    cy.contains('Reset balance', { timeout: 10000 }).should('be.visible')
+    cy.findByTestId('dt_wallet_card_details').con.should('be.visible').click()
+    cy.findByText('Reset Balance').click()
   } else {
     cy.c_switchWalletsAccount('USD Demo')
     cy.findByText('Reset balance').should('be.visible').click()
