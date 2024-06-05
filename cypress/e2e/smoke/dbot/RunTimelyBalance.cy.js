@@ -1,10 +1,8 @@
 import '@testing-library/cypress/add-commands'
-import TradersHub from '../pageobjects/traders_hub'
-import BotDashboard from '../pageobjects/bot_dashboard_page'
-import RunPanel from '../pageobjects/run_panel'
+import BotDashboard from '../../../support/pageobjects/dbot/bot_dashboard_page'
+import RunPanel from '../../../support/pageobjects/dbot/run_panel'
 
 describe('QATEST-99419: Import and run custom strategy', () => {
-  const tradersHub = new TradersHub()
   const botDashboard = new BotDashboard()
   const runPanel = new RunPanel()
   let beforePurchaseBalanceString
@@ -14,7 +12,7 @@ describe('QATEST-99419: Import and run custom strategy', () => {
   beforeEach(() => {
     cy.c_login({ user: 'dBot' })
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
-    tradersHub.openBotButton.click()
+    cy.c_openDbotThub()
     cy.c_loadingCheck()
     cy.c_skipTour()
     cy.c_switchToDemoBot()
@@ -33,6 +31,7 @@ describe('QATEST-99419: Import and run custom strategy', () => {
     })
 
     cy.c_runBot()
+    cy.c_checkRunPanel()
     cy.c_stopBot(7000)
     runPanel.journalTab.click()
     runPanel.runPanelScrollbar

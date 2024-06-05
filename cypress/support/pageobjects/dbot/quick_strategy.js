@@ -33,10 +33,6 @@ class QuickStrategy {
     return cy.xpath('//input[@name="size"]')
   }
 
-  get quickStrategyTradeType() {
-    return cy.findByTestId('qs_autocomplete_tradetype')
-  }
-
   runBotQuickStrategy = () => {
     this.quickStrategyRunBtn.should('exist').click()
   }
@@ -55,7 +51,6 @@ class QuickStrategy {
   }
 
   chooseTradeType = () => {
-    this.quickStrategyTradeType.click()
     cy.findAllByTestId('dt_themed_scrollbars')
       .eq(3)
       .should('be.visible')
@@ -75,4 +70,4 @@ class QuickStrategy {
   }
 }
 
-export default new QuickStrategy()
+export default QuickStrategy

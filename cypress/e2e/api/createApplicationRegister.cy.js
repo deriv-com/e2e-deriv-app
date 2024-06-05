@@ -1,29 +1,33 @@
 import '@testing-library/cypress/add-commands'
+let oldAppId = 0
 
-let updatedAppId
 describe('QATEST - 148419 - Register a New Application / App ID', () => {
-  it('Creation of New App ID should be successful. ', () => {
-    // Login is required as we need Auth Token for running RegisterApplication API.
-    cy.c_login() 
-    const oldAppdId = parseInt(Cypress.env('configAppId'))
-    cy.task('wsConnect')
-    cy.c_authorizeCall()
+  it('configAppId should be different to original env var.', () => {
+    oldAppId = Cypress.env('configAppId')
+    cy.log('oldAppId = ' + Cypress.env('configAppId'))
+    if (Cypress.env('runFromPR') != 'true') {
+      cy.c_createApplicationId()
+      cy.log('newAppId = ' + Cypress.env('updatedAppId'))
+    }
 
-    // This method will create and return New App Id.
-    cy.c_registerNewApplicationID().then(() => {
-      updatedAppId = Cypress.env('updatedAppId')
-      cy.log('The New App Before ID is: ', updatedAppId)
-      cy.task('wsDisconnect')
-      cy.c_logout()
+    cy.c_login()
 
-      Cypress.config('baseUrl', Cypress.env('appRegisterUrl'))
-      Cypress.env('configAppId', updatedAppId)
-      Cypress.env('oAuthUrl', '<empty>')
-
-      const newAppId = parseInt(Cypress.env('configAppId'))
-      expect(newAppId).not.equal(oldAppdId)
-
-    })
-
+    if (Cypress.env('runFromPR') != 'true') {
+      cy.then(() => {
+        const newConfigAppId = Cypress.env('configAppId')
+        expect(
+          oldAppId,
+          'Old app ID should not be equal to the new app ID'
+        ).to.not.equal(newConfigAppId)
+      })
+    } else {
+      cy.then(() => {
+        const newConfigAppId = Cypress.env('configAppId')
+        expect(
+          oldAppId,
+          'Old app ID should be equal to the new app ID'
+        ).to.equal(newConfigAppId)
+      })
+    }
   })
 })

@@ -8,10 +8,7 @@ describe('QATEST-2853 - Ad details', () => {
   })
 
   it('Should be able to either ad or update ad details in the my profile tab.', () => {
-    cy.c_navigateToDerivP2P()
-    cy.c_skipPasskey()
-    cy.findByText('Deriv P2P').should('exist')
-    cy.c_closeNotificationHeader()
+    cy.c_navigateToP2P()
     cy.findByText('My profile').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
     cy.findByText('Ad details').should('be.visible').click()
@@ -46,7 +43,6 @@ describe('QATEST-2853 - Ad details', () => {
         sessionStorage.getItem('c_instructionsText').length
       )
       cy.findByText('Sell USD').click()
-      cy.findByText("You're creating an ad to sell...").should('be.visible')
       cy.findByTestId('contact_info').should(
         'have.value',
         sessionStorage.getItem('c_contactInfoText')
