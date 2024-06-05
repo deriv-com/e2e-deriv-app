@@ -40,7 +40,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
     cy.c_navigateToP2P()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
-    cy.c_getProfileName('seller').then((name) => {
+    cy.c_getProfileName().then((name) => {
       nicknameAndAmount.seller = name
     })
     cy.c_getProfileBalance().then((balance) => {
@@ -54,7 +54,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
     cy.c_navigateToP2P()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
-    cy.c_getProfileName('buyer').then((name) => {
+    cy.c_getProfileName().then((name) => {
       nicknameAndAmount.buyer = name
     })
     cy.c_getProfileBalance().then((balance) => {

@@ -919,7 +919,7 @@ Cypress.Commands.add(
   }
 )
 
-Cypress.Commands.add('c_getProfileName', (profileType) => {
+Cypress.Commands.add('c_getProfileName', () => {
   return cy
     .get('.my-profile-name__column')
     .children('.dc-text')
