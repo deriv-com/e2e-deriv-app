@@ -330,6 +330,7 @@ Cypress.Commands.add(
       )}@${baseUrl}`,
       { log: false }
     )
+    cy.viewport('macbook-16')
     cy.origin(
       `https://${Cypress.env('qaBoxLoginEmail', { log: false })}:${Cypress.env(
         'qaBoxLoginPassword',
@@ -396,6 +397,7 @@ Cypress.Commands.add(
   (requestType, accountEmail, options = {}) => {
     const { baseUrl = Cypress.env('configServer') + '/events' } = options
     cy.log(`Visit ${baseUrl}`)
+    cy.viewport('macbook-16')
     cy.visit(
       `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
         'qaBoxLoginPassword'
