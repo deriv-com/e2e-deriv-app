@@ -1,7 +1,7 @@
 import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/helper/utility'
 
-describe('QATEST-5168 MF financial assessment (Appropriateness Test) - Fail scenario but successful account creation', () => {
+describe('QATEST-5178 MF financial assessment (Appropriateness Test) - Check on declining the appropriateness warning after failiing trading assessment', () => {
   const size = ['small', 'desktop']
   let country = Cypress.env('countries').ES
   let nationalIDNum = Cypress.env('nationalIDNum').ES
