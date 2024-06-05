@@ -86,3 +86,41 @@ Cypress.Commands.add('c_checkForBanner', () => {
   cy.findByText('Deriv Trader', { timeout: 20000 }).should('be.visible')
   cy.findByText('Enjoy seamless transactions').should('not.exist')
 })
+
+Cypress.Commands.add('c_setupTradeAccount', (wallet) => {
+  cy.c_switchWalletsAccount(wallet)
+  cy.findByRole('button', { name: 'Get' })
+    .should(() => {})
+    .then((button) => {
+      if (button.length) {
+        cy.wrap(button).click()
+        cy.wait(1000)
+        cy.findByRole('button', { name: 'Transfer funds' }).should('be.visible')
+        cy.findByRole('button', { name: 'Maybe later', timeout: 3000 })
+          .should('be.visible')
+          .and('be.enabled')
+          .click()
+        cy.contains("Trader's Hub").should('be.visible')
+      }
+    })
+})
+
+Cypress.Commands.add('c_setupTradeAccountResponsive', (wallet) => {
+  cy.findByRole('button', { name: 'Options' }).click()
+  // cy.wait(2000)
+  cy.findByRole('button', { name: 'Get' })
+    .should(() => {})
+    .then((button) => {
+      if (button.length) {
+        cy.wrap(button).click()
+        // cy.wait(1000)
+        cy.findByRole('button', { name: 'Transfer funds' }).should('be.visible')
+        cy.wait(500)
+        cy.findByRole('button', { name: 'Maybe later', timeout: 3000 })
+          .should('be.visible')
+          .and('be.enabled')
+          .click()
+        cy.contains("Trader's Hub").should('be.visible')
+      }
+    })
+})

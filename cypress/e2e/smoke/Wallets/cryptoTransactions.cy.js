@@ -31,22 +31,27 @@ function crypto_transfer(to_account, transferAmount) {
   cy.findByRole('button', { name: 'Make a new transfer' }).click()
 }
 
-function setupTradeAccount(wallet) {
-  cy.c_switchWalletsAccount(wallet)
-  cy.findByRole('button', { name: 'Get' })
-    .should(() => {})
-    .then((button) => {
-      if (button.length) {
-        cy.wrap(button).click()
-        cy.wait(1000)
-        cy.findByRole('button', { name: 'Transfer funds' }).should('be.visible')
-        cy.findByRole('button', { name: 'Maybe later', timeout: 3000 })
-          .should('be.visible')
-          .and('be.enabled')
-          .click()
-      }
-    })
-}
+// function setupTradeAccount(wallet) {
+//   cy.c_switchWalletsAccount(wallet)
+//   cy.findByRole('button', { name: 'Get' })
+//     .should(() => {})
+//     .then((button) => {
+//       if (button.length) {
+//         cy.wrap(button).click()
+//         cy.wait(1000)
+//         cy.findByRole('button', { name: 'Transfer funds' }).should('be.visible')
+//         cy.findByRole('button', { name: 'Maybe later', timeout: 3000 })
+//           .should('be.visible')
+//           .and('be.enabled')
+//           .click()
+//           cy.reload();
+//           cy.contains('Trader\'s Hub').should('be.visible');
+//           // cy.wait(500)
+//           // cy.scrollTo('top', { ensureScrollable: false });
+//       }
+
+//     })
+// }
 
 describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypto transactions and QATEST-99429 Transfer conversion rate and QATEST-99714 Life time transfer limit message', () => {
   //Prerequisites: Crypto wallet account in any qa box with 1.00000000 BTC balance and USD, ETH and LTC wallets
@@ -92,7 +97,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
     cy.findAllByText(/USD Wallet/)
       .first()
       .should('be.visible')
-    cy.contains(`-${transferAmount}`).first().should('be.visible')
+    cy.findAllByText(`-${transferAmount}`).first().should('be.visible')
   })
 
   it('should be able to perform transfer from crypto account in responsive', () => {
