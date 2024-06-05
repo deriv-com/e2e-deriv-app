@@ -17,10 +17,13 @@ describe('QATEST-24427,5533,5827 - Cypress test for ROW account sign up', () => 
       const signUpEmail = `sanity${generateEpoch()}onfido@deriv.com`
       cy.c_setEndpoint(signUpEmail, size)
       cy.c_demoAccountSignup(countryOnfido, signUpEmail, size)
+      if (isMobile) cy.findByTestId('dt_dc_mobile_dialog_close_btn').click()
+      else cy.findByTestId('dt_modal_close_icon').click()
+      cy.findByText('Take me to Demo account').should('be.visible')
+      cy.findByRole('button', { name: 'Yes' }).click()
+      cy.findByText('Add a Deriv account').should('not.exist')
       cy.c_switchToReal()
-      cy.findByTestId('dt_trading-app-card_real_deriv-account')
-        .findByRole('button', { name: 'Get' })
-        .click()
+      cy.findByText('Add a Deriv account').should('be.visible')
       cy.c_generateRandomName().then((firstName) => {
         cy.c_personalDetails(
           firstName,
@@ -46,10 +49,11 @@ describe('QATEST-24427,5533,5827 - Cypress test for ROW account sign up', () => 
       const signUpEmail = `sanity${generateEpoch()}idv@deriv.com`
       cy.c_setEndpoint(signUpEmail, size)
       cy.c_demoAccountSignup(countryIDV, signUpEmail, size)
-      cy.c_switchToReal()
-      cy.findByTestId('dt_trading-app-card_real_deriv-account')
-        .findByRole('button', { name: 'Get' })
-        .click()
+      if (isMobile) cy.findByTestId('dt_dc_mobile_dialog_close_btn').click()
+      else cy.findByTestId('dt_modal_close_icon').click()
+      cy.findByText('Take me to Demo account').should('be.visible')
+      cy.findByRole('button', { name: 'No' }).click()
+      cy.findByText('Add a Deriv account').should('be.visible')
       cy.c_generateRandomName().then((firstName) => {
         cy.c_personalDetails(
           firstName,

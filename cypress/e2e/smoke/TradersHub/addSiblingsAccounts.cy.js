@@ -31,8 +31,7 @@ describe('QATEST-5797, QATEST-5820 - Add siblings accounts', () => {
 
   it('Create siblings accounts from USD account ', () => {
     cy.c_demoAccountSignup(country, signUpEmail)
-    cy.c_switchToReal()
-    cy.findByRole('button', { name: 'Get a Deriv account' }).click()
+    cy.findByText('Add a Deriv account').should('be.visible')
     cy.c_generateRandomName().then((firstName) => {
       cy.c_personalDetails(
         firstName,

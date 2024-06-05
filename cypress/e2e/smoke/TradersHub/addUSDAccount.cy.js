@@ -13,8 +13,7 @@ describe('QATEST 5813 - Add USD account for existing BTC account', () => {
   })
   it('Create a new crypto account and add USD account', () => {
     cy.c_demoAccountSignup(country, signUpEmail)
-    cy.c_switchToReal()
-    cy.findByRole('button', { name: 'Get a Deriv account' }).click()
+    cy.findByText('Add a Deriv account').should('be.visible')
     cy.c_generateRandomName().then((firstName) => {
       cy.c_personalDetails(
         firstName,
