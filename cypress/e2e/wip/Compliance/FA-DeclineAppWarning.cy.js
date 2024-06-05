@@ -104,6 +104,8 @@ describe('QATEST-5168 MF financial assessment (Appropriateness Test) - Fail scen
       cy.findByRole('button', { name: 'Add account' }).click()
       cy.findByText('Appropriateness Test Warning').should('be.visible')
       cy.findByRole('button', { name: 'Decline' }).click()
+      cy.findByText('24-hour Cool Down Warning').should('be.visible')
+      cy.findByRole('button', { name: 'OK' }).click()
       cy.get('#traders-hub').scrollIntoView({ position: 'top' })
     })
   })
