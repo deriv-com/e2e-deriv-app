@@ -13,15 +13,7 @@ describe('QATEST-145618 - Copy Ad - Fixed Rate - Buy Ad', () => {
   })
 
   it('Should be able to copy an already existing buy type advert successfully.', () => {
-    cy.c_navigateToDerivP2P()
-    cy.c_rateLimit({
-      waitTimeAfterError: 15000,
-      isLanguageTest: true,
-      maxRetries: 5,
-    })
-    cy.c_skipPasskey()
-    cy.findByText('Deriv P2P').should('exist')
-    cy.c_closeNotificationHeader()
+    cy.c_navigateToP2P()
     cy.c_clickMyAdTab()
     cy.c_checkForExistingAds().then((adExists) => {
       if (adExists == false) {

@@ -23,10 +23,7 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
   it('Should be able to create sell type advert and verify all fields and messages for fixed rate.', () => {
-    cy.c_navigateToDerivP2P()
-    cy.c_skipPasskey()
-    cy.findByText('Deriv P2P').should('exist')
-    cy.c_closeNotificationHeader()
+    cy.c_navigateToP2P()
     cy.c_clickMyAdTab()
     cy.c_createNewAd('sell')
     cy.findByText('Sell USD').click()
