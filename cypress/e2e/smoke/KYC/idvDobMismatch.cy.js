@@ -7,10 +7,6 @@ describe('QATEST-23042 IDV DOB Mismatch by Smile Identity provider', () => {
     cy.c_navigateToPoiResponsive('Ghana')
   })
 
-  afterEach(() => {
-    cy.c_resetData()
-  })
-
   it('Should return Date of birth mismatch', () => {
     cy.get('select[name="document_type"]').select(
       'Social Security and National Insurance Trust (SSNIT)'

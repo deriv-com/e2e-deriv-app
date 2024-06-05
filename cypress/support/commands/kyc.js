@@ -1,4 +1,6 @@
 import { generateRandomName } from '../helper/loginUtility'
+
+const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
 Cypress.Commands.add('c_navigateToPoi', (country) => {
   cy.get('a[href="/account/personal-details"]').click()
   cy.findByRole('link', { name: 'Proof of identity' }).click()
@@ -40,7 +42,7 @@ Cypress.Commands.add('c_onfidoSecondRun', (country) => {
 
 Cypress.Commands.add('c_resetData', () => {
   cy.c_visitResponsive('/', 'large')
-  cy.visit('https://qa10.deriv.dev/d/backoffice/login.cgi')
+  cy.visit(BO_URL)
   cy.findByText('Please login.').click()
   cy.findByText('Client Management').click()
   cy.findByPlaceholderText('email@domain.com')
