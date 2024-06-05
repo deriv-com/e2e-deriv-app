@@ -15,7 +15,7 @@ describe('QATEST-5972: Create a Derived SVG account', () => {
       if (isMobile) cy.c_skipPasskeysV2()
       cy.c_checkTradersHubHomePage(isMobile)
       if (isMobile) cy.findByRole('button', { name: 'CFDs' }).click()
-      cy.findByTestId('dt_trading-app-card_real_derived')
+      cy.findByTestId('dt_trading-app-card_real_standard')
         .findByRole('button', { name: 'Get' })
         .click()
       cy.findByText('St. Vincent & Grenadines').click()
@@ -33,17 +33,17 @@ describe('QATEST-5972: Create a Derived SVG account', () => {
       cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
       cy.get('.dc-modal-body').should(
         'contain.text',
-        'Success!Your Deriv MT5 Derived account is ready. Enable trading with your first transfer.'
+        'Success!Your Deriv MT5 Standard account is ready. Enable trading with your first transfer.'
       )
       cy.findByRole('button', { name: 'Transfer now' }).should('exist')
       cy.findByRole('button', { name: 'Maybe later' }).click()
       cy.findByText('0.00 USD').should('be.visible')
       cy.findByRole('button', { name: 'Transfer' }).should('exist')
-      cy.findByTestId('dt_trading-app-card_real_derived_svg')
+      cy.findByTestId('dt_trading-app-card_real_standard_svg')
         .findByRole('button', { name: 'Open' })
         .click({ force: true })
       cy.get('div.cfd-trade-modal-container')
-        .findByText('Derived SVG')
+        .findByText('Standard SVG')
         .should('be.visible')
       cy.get('div.cfd-trade-modal-container')
         .findByText('Deriv (SVG) LLC')

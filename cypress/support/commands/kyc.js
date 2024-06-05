@@ -55,7 +55,7 @@ Cypress.Commands.add('c_verifyAccount', () => {
   cy.c_rateLimit({
     waitTimeAfterError: 15000,
     isLanguageTest: true,
-    maxRetries: 5,
+    maxRetries: 6,
   })
   cy.c_closeNotificationHeader()
   cy.c_visitResponsive('/account/proof-of-identity', 'small')

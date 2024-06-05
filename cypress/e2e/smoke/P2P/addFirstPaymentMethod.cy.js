@@ -12,10 +12,7 @@ describe('QATEST-2821 - My Profile page : User add their first payment method', 
   })
 
   it('Should be able to add first payment method in responsive mode.', () => {
-    cy.c_navigateToDerivP2P()
-    cy.c_skipPasskey()
-    cy.findByText('Deriv P2P').should('exist')
-    cy.c_closeNotificationHeader()
+    cy.c_navigateToP2P()
     cy.findByText('My profile').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
     cy.findByText('Payment methods').should('be.visible').click()
