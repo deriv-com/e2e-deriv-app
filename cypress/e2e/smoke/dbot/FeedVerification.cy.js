@@ -1,4 +1,4 @@
-import charts from '../../../../support/pageobjects/dbot/charts'
+import charts from '../../../support/pageobjects/dbot/charts'
 import '@testing-library/cypress/add-commands'
 describe('QATEST-99340: Verify feed is loading on charts tab', () => {
   const size = ['small', 'desktop']

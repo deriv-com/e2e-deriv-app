@@ -1,7 +1,7 @@
 import '@testing-library/cypress/add-commands'
-import RunPanel from '../../../../support/pageobjects/dbot/run_panel'
-import BotBuilder from '../../../../support/pageobjects/dbot/bot_builder_page'
-import QuickStrategy from '../../../../support/pageobjects/dbot/quick_strategy'
+import RunPanel from '../../../support/pageobjects/dbot/run_panel'
+import BotBuilder from '../../../support/pageobjects/dbot/bot_builder_page'
+import QuickStrategy from '../../../support/pageobjects/dbot/quick_strategy'
 
 describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
   const size = ['small', 'desktop']
