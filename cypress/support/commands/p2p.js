@@ -822,7 +822,6 @@ Cypress.Commands.add(
 Cypress.Commands.add(
   'c_verifyOrderPlacementScreen',
   (nickname, rateOfOneDollar, paymentMethods, instructions) => {
-    cy.log({ nickname, rateOfOneDollar, paymentMethods, instructions })
     cy.findByText(nickname).should('be.visible')
     cy.findByText(rateOfOneDollar).should('be.visible')
     cy.findByText(paymentMethods).should('be.visible')
