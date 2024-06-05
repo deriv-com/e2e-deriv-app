@@ -1,7 +1,7 @@
 import '@testing-library/cypress/add-commands'
-import BotDashboard from '../pageobjects/bot_dashboard_page'
-import RunPanel from '../pageobjects/run_panel'
-import BotBuilder from '../pageobjects/bot_builder_page'
+import BotDashboard from '../../../../support/pageobjects/dbot/bot_dashboard_page'
+import RunPanel from '../../../../support/pageobjects/dbot/run_panel'
+import BotBuilder from '../../../../support/pageobjects/dbot/bot_builder_page'
 
 describe('QATEST-109419: Run custom strategy Even Odd', () => {
   const botDashboard = new BotDashboard()

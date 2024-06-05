@@ -70,4 +70,4 @@ class QuickStrategy {
   }
 }
 
-export default new QuickStrategy()
+export default QuickStrategy

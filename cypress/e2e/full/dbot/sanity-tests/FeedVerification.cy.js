@@ -1,8 +1,6 @@
-import charts from '../pageobjects/charts'
+import charts from '../../../../support/pageobjects/dbot/charts'
 import '@testing-library/cypress/add-commands'
-import TradersHub from '../pageobjects/traders_hub'
 describe('QATEST-99340: Verify feed is loading on charts tab', () => {
-  const tradersHub = new TradersHub()
   const size = ['small', 'desktop']
   beforeEach(() => {
     if (Cypress.config().baseUrl === Cypress.env('prodURL')) {

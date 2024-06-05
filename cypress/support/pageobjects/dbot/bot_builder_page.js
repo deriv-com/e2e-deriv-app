@@ -1,4 +1,4 @@
-import { DOWNLOAD_PATH, FILEPATH } from '../constants'
+import { DOWNLOAD_PATH, FILEPATH } from './constants'
 class BotBuilder {
   marketIndex = 1
   previewTabName = 'Local'
