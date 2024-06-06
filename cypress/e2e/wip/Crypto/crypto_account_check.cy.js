@@ -55,7 +55,6 @@ describe('QATEST-707 - Create crypto account', () => {
       cy.c_addressDetails()
       cy.c_completeFatcaDeclarationAgreement()
       cy.c_addAccount()
-      cy.c_closeNotificationHeader()
       cy.c_checkTradersHubHomePage(isMobile)
       cy.c_closeNotificationHeader()
       const cryptocurrencies = [
@@ -63,9 +62,10 @@ describe('QATEST-707 - Create crypto account', () => {
         'Ethereum',
         'Litecoin',
         'Tether TRC20',
+        'Tether ERC20',
         'USD Coin',
       ]
-      const currency_code = ['BTC', 'ETH', 'LTC', 'tUSDT', 'USDC']
+      const currency_code = ['BTC', 'ETH', 'LTC', 'tUSDT', 'eUSDT', 'USDC']
       // loop to make sure it check for all available currency
       cryptocurrencies.forEach((crypto, index) => {
         const code = currency_code[index]
@@ -77,7 +77,7 @@ describe('QATEST-707 - Create crypto account', () => {
       cy.findByText('0.00000000 ETH').should('be.visible')
       cy.findByText('0.00000000 LTC').should('be.visible')
       cy.findByText('0.00 tUSDT').should('be.visible')
-      cy.findByText('0.00 USDC').should('be.visible')
+      cy.findByText('0.00 eUSDT').should('be.visible')
     })
   })
 })
