@@ -6,10 +6,7 @@ function checkForCashierMenu() {
     'be.visible'
   )
   cy.findByText('Cashier').should('not.exist')
-  cy.get('.wallets-options-and-multipliers-listing__content__details')
-    .contains('.wallets-text', 'Deriv Trader')
-    .should('be.visible')
-    .click()
+  cy.findByText('Deriv Trader').click()
   cy.findByRole('link', { name: 'Cashier Cashier' }).should('not.exist')
   cy.findByText('Reports').should('be.visible').trigger('mouseover')
 }
