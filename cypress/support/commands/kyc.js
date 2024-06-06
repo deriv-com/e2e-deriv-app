@@ -21,6 +21,11 @@ Cypress.Commands.add('c_navigateToPoiResponsive', (country, options = {}) => {
   cy.contains('button', 'Next').click()
 })
 
+Cypress.Commands.add('c_navigateToPoaResponsive', () => {
+  cy.c_visitResponsive('/account/proof-of-address', 'small')
+  cy.c_closeNotificationHeader()
+})
+
 Cypress.Commands.add('c_submitIdv', () => {
   cy.get('select[name="document_type"]').select('Passport')
   cy.findByLabelText('Enter your document number').type('G0000001')
@@ -55,7 +60,7 @@ Cypress.Commands.add('c_verifyAccount', () => {
   cy.c_rateLimit({
     waitTimeAfterError: 15000,
     isLanguageTest: true,
-    maxRetries: 5,
+    maxRetries: 6,
   })
   cy.c_closeNotificationHeader()
   cy.c_visitResponsive('/account/proof-of-identity', 'small')

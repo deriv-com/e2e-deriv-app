@@ -1,4 +1,4 @@
-import { FILEPATH } from '../constants'
+import { FILEPATH } from './constants'
 class BotDashboard {
   get dashboardTab() {
     return cy.get('#id-dbot-dashboard', { timeout: 5000 }).contains('Dashboard')

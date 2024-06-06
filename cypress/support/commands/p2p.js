@@ -918,6 +918,182 @@ Cypress.Commands.add(
       })
   }
 )
+
+Cypress.Commands.add('c_getProfileName', () => {
+  return cy
+    .get('.my-profile-name__column')
+    .children('.dc-text')
+    .invoke('text')
+    .then((name) => {
+      return name
+    })
+})
+
+Cypress.Commands.add('c_getProfileBalance', () => {
+  return cy
+    .get('.my-profile-balance__amount')
+    .children('span')
+    .invoke('text')
+    .then((balanceText) => {
+      const cleanedText = balanceText.replace(',', '').replace('USD', '').trim()
+      const floatValue = parseFloat(cleanedText).toFixed(2)
+      return floatValue
+    })
+})
+
+Cypress.Commands.add('c_navigateToP2P', () => {
+  cy.c_navigateToDerivP2P()
+  cy.c_rateLimit({
+    waitTimeAfterError: 15000,
+    isLanguageTest: true,
+    maxRetries: 5,
+  })
+  cy.c_skipPasskey()
+  cy.findByText('Deriv P2P').should('exist')
+  cy.c_closeNotificationHeader()
+})
+
+Cypress.Commands.add(
+  'c_confirmBalance',
+  (balanceBefore, balanceAfter, buyingAmount, advertiserType) => {
+    let calculatedBalanceAfter
+    if (advertiserType === 'buyer') {
+      calculatedBalanceAfter = (
+        parseFloat(balanceBefore) - parseFloat(buyingAmount)
+      ).toFixed(2)
+    } else if (advertiserType === 'seller') {
+      calculatedBalanceAfter = (
+        parseFloat(balanceBefore) + parseFloat(buyingAmount)
+      ).toFixed(2)
+    } else {
+      throw new Error('Invalid transaction type')
+    }
+    if (balanceAfter !== calculatedBalanceAfter) {
+      throw new Error(
+        `Balance is not correct: Balance Before Buying = ${balanceBefore}, Balance After Buying = ${balanceAfter}, Buying amount = ${buyingAmount}`
+      )
+    } else {
+      cy.log(
+        `Balance is correct: Balance Before Buying = ${balanceBefore}, Balance After Buying = ${balanceAfter}, Buying amount = ${buyingAmount}`
+      )
+    }
+  }
+)
+
+Cypress.Commands.add(
+  'c_createBuyOrder',
+  (sellerNickname, minOrder, maxOrder, fiatCurrency) => {
+    cy.findByText('Buy / Sell').should('be.visible').click()
+    cy.findByPlaceholderText('Search')
+      .should('be.visible')
+      .type(sellerNickname)
+      .should('have.value', sellerNickname)
+    cy.get('.buy-sell-row__advertiser')
+      .next('.buy-sell-row__information')
+      .find('button[type="submit"]')
+      .should('be.visible')
+      .click()
+    cy.findByRole('button', { name: 'Confirm' }).should('be.visible')
+    cy.findByText('Seller').next('p').should('have.text', sellerNickname)
+    cy.findByText(
+      `Limit: ${minOrder.toFixed(2)}–${maxOrder.toFixed(2)} ${fiatCurrency}`
+    ).should('be.visible')
+    cy.c_verifyBuyOrderField(minOrder, maxOrder, fiatCurrency)
+    cy.findAllByText('Rate (1 USD)')
+      .eq(0)
+      .next('p')
+      .invoke('text')
+      .then((rateOfOneDollar) => {
+        sessionStorage.setItem('c_rateOfOneDollar', rateOfOneDollar.trim())
+      })
+    cy.findByText('Payment methods')
+      .next('div')
+      .children('p')
+      .invoke('text')
+      .then((paymentMethods) => {
+        sessionStorage.setItem('c_paymentMethods', paymentMethods.trim())
+      })
+    cy.findByText("Seller's instructions")
+      .next('p')
+      .invoke('text')
+      .then((sellersInstructions) => {
+        sessionStorage.setItem(
+          'c_sellersInstructions',
+          sellersInstructions.trim()
+        )
+      })
+    cy.findByText('Orders must be completed in')
+      .next('p')
+      .invoke('text')
+      .then((orderCompletionTime) => {
+        sessionStorage.setItem(
+          'c_orderCompletionTime',
+          orderCompletionTime.trim()
+        )
+      })
+    return cy.then(() => {
+      cy.findByRole('button', { name: 'Cancel' }).should('be.enabled')
+      cy.findByRole('button', { name: 'Confirm' })
+        .should('not.be.disabled')
+        .click()
+      cy.findByRole('button', { name: "I've paid" }).should('be.visible')
+      cy.findByText('Send')
+        .next('span')
+        .invoke('text')
+        .then((sendAmount) => {
+          return sendAmount
+        })
+    })
+  }
+)
+
+Cypress.Commands.add('c_uploadPOT', (filePath) => {
+  cy.findByTestId('dt_file_upload_input').selectFile(filePath, { force: true })
+  cy.findByTestId('dt_remove_file_icon').should('be.visible')
+  cy.findByRole('button', { name: 'Go Back' })
+    .should('be.visible')
+    .and('be.enabled')
+  cy.findByRole('button', { name: 'Confirm' })
+    .should('be.visible')
+    .and('be.enabled')
+    .click()
+  cy.c_rateLimit({
+    waitTimeAfterError: 15000,
+    isLanguageTest: true,
+    maxRetries: 5,
+  })
+})
+
+Cypress.Commands.add('c_confirmSellOrder', (nicknameAndAmount) => {
+  cy.findByText('Confirm payment').should('be.visible').click()
+  cy.findByText(
+    "Don't risk your funds with cash transactions. Use bank transfers or e-wallets instead."
+  ).should('be.visible')
+  cy.then(() => {
+    cy.findByRole('button', { name: "I've received payment" })
+      .should('be.enabled')
+      .click()
+    cy.findByText('Has the buyer paid you?').should('be.visible')
+    cy.findByText('I didn’t receive the email').should('be.visible')
+    cy.findByTestId('dt_modal_close_icon').should('be.visible').click()
+    cy.c_emailVerification(
+      'track_p2p_order_confirm_verify.html',
+      Cypress.env('credentials').test.p2pFloatingSellAd1.ID
+    )
+    cy.then(() => {
+      cy.c_visitResponsive(Cypress.env('verificationUrl'), 'small')
+    })
+    cy.findByText('One last step before we close this order').should(
+      'be.visible'
+    )
+    cy.findByText(
+      `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.seller} in your bank account or e-wallet, hit the button below to complete the order.`
+    ).should('be.visible')
+    cy.findByRole('button', { name: 'Confirm' }).should('be.enabled').click()
+    cy.findByText('How would you rate this transaction?').should('be.visible')
+  })
+})
+
 Cypress.Commands.add('c_filterByPaymentMethod', (PM) => {
   cy.findByText('Payment methods').should('be.visible').click()
   cy.findByText(PM).should('be.visible').click()
