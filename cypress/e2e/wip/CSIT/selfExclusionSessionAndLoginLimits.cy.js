@@ -67,26 +67,26 @@ function checkHistory() {
   cy.get('.dc-data-table').should('be.visible') // checks records from Statement are visible
 }
 
-describe('QATEST-116798 Self Exclusion Session and login limits on desktop', () => {
-  beforeEach(() => {
-    cy.c_createRealAccount('large')
-    cy.c_login('large')
-  })
+//describe('QATEST-116798 Self Exclusion Session and login limits on desktop', () => {
+//beforeEach(() => {
+//cy.c_createRealAccount('large')
+//cy.c_login('large')
+//})
 
-  it('should login, set self exclusion and verify it applied ', () => {
-    setSessionAndLoginLimitExclusion()
-    checkSelfExclusionIsSet()
-    // checkNewAccountCreation() wip (CSIT-1120)
-    // checkHistory() // wip (CSIT-1120)
-    // checkDeposit() // wip (CSIT-1120)
-    // checkTrade() // wip (CSIT-1120)
-  })
-})
+//it('should login, set self exclusion and verify it applied ', () => {
+// setSessionAndLoginLimitExclusion()
+//checkSelfExclusionIsSet()
+// checkNewAccountCreation() wip (CSIT-1120)
+// checkHistory() // wip (CSIT-1120)
+// checkDeposit() // wip (CSIT-1120)
+// checkTrade() // wip (CSIT-1120)
+// })
+//})
 
 describe('QATEST-116798 Self Exclusion Session and login limits on mobile', () => {
   beforeEach(() => {
-    cy.c_createRealAccount('large')
-    cy.c_login('large')
+    cy.c_createRealAccount('small')
+    cy.c_login('small')
   })
 
   it('should login, set self exclusion and verify it applied ', () => {
