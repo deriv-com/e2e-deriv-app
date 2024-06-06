@@ -107,13 +107,11 @@ Cypress.Commands.add('c_setupTradeAccount', (wallet) => {
 
 Cypress.Commands.add('c_setupTradeAccountResponsive', (wallet) => {
   cy.findByRole('button', { name: 'Options' }).click()
-  // cy.wait(2000)
   cy.findByRole('button', { name: 'Get' })
     .should(() => {})
     .then((button) => {
       if (button.length) {
         cy.wrap(button).click()
-        // cy.wait(1000)
         cy.findByRole('button', { name: 'Transfer funds' }).should('be.visible')
         cy.wait(500)
         cy.findByRole('button', { name: 'Maybe later', timeout: 3000 })

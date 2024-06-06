@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
 
-describe('QATEST-156146- Add trading account to wallet account (Crypto)', () => {
+describe('QATEST-156146 - Add trading account to wallet account (Crypto)', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })
   })
@@ -10,7 +10,7 @@ describe('QATEST-156146- Add trading account to wallet account (Crypto)', () => 
     { scrollBehavior: false },
     () => {
       cy.c_visitResponsive('/', 'large')
-      cy.contains('Wallet', { timeout: 10000 }).should('exist')
+      cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
       cy.c_setupTradeAccount('BTC')
       cy.c_setupTradeAccount('ETH')
       cy.c_setupTradeAccount('LTC')
@@ -23,9 +23,9 @@ describe('QATEST-156146- Add trading account to wallet account (Crypto)', () => 
     () => {
       cy.c_visitResponsive('/', 'small')
       cy.c_skipPasskeysV2()
-      cy.contains('Wallet', { timeout: 10000 }).should('exist')
+      cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
       cy.c_skipPasskeysV2()
-      cy.contains('Deposit', { timeout: 10000 }).should('exist')
+      cy.findAllByText(/Deposit/, { timeout: 10000 }).should('exist')
       cy.c_skipPasskeysV2()
       cy.c_switchWalletsAccountResponsive('BTC')
       cy.c_setupTradeAccountResponsive('BTC')
