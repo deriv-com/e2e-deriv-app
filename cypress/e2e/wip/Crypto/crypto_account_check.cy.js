@@ -78,6 +78,7 @@ describe('QATEST-707 - Create crypto account', () => {
       cy.findByText('0.00000000 LTC').should('be.visible')
       cy.findByText('0.00 tUSDT').should('be.visible')
       cy.findByText('0.00 eUSDT').should('be.visible')
+      cy.findByText('0.00 USDC').should('be.visible')
     })
   })
 })
