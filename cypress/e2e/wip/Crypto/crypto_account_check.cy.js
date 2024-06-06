@@ -28,53 +28,56 @@ const addcryptoaccount = (crypto, code) => {
 }
 
 describe('QATEST-707 - Create crypto account', () => {
-  const signUpEmail = `sanity${generateEpoch()}crypto@deriv.com`
+  const size = ['small', 'desktop']
   let country = Cypress.env('countries').CO
   let nationalIDNum = Cypress.env('nationalIDNum').CO
   let taxIDNum = Cypress.env('taxIDNum').CO
   let currency = Cypress.env('accountCurrency').USD
-  beforeEach(() => {
-    cy.c_setEndpoint(signUpEmail)
-  })
-  it('should be able to create crypto account from Traders Hub.', () => {
-    cy.c_demoAccountSignup(country, signUpEmail)
-    cy.c_switchToReal()
-    cy.c_completeTradersHubTour()
-    cy.findByRole('button', { name: 'Get a Deriv account' }).click()
-    cy.c_generateRandomName().then((firstName) => {
-      cy.c_personalDetails(
-        firstName,
-        'Onfido',
-        country,
-        nationalIDNum,
-        taxIDNum,
-        currency
-      )
+
+  size.forEach((size) => {
+    it(`should be able to create crypto account from Traders Hub on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
+      const isMobile = size == 'small' ? true : false
+      const signUpEmail = `sanity${generateEpoch()}crypto@deriv.com`
+      cy.c_setEndpoint(signUpEmail, size)
+      cy.c_demoAccountSignup(country, signUpEmail, size)
+      cy.findByText('Add a Deriv account').should('be.visible')
+      cy.c_generateRandomName().then((firstName) => {
+        cy.c_personalDetails(
+          firstName,
+          'Onfido',
+          country,
+          nationalIDNum,
+          taxIDNum,
+          currency,
+          { isMobile: isMobile }
+        )
+      })
+      cy.c_addressDetails()
+      cy.c_completeFatcaDeclarationAgreement()
+      cy.c_addAccount()
+      cy.c_closeNotificationHeader()
+      cy.c_checkTradersHubHomePage(isMobile)
+      cy.c_closeNotificationHeader()
+      const cryptocurrencies = [
+        'Bitcoin',
+        'Ethereum',
+        'Litecoin',
+        'Tether TRC20',
+        'USD Coin',
+      ]
+      const currency_code = ['BTC', 'ETH', 'LTC', 'tUSDT', 'USDC']
+      // loop to make sure it check for all available currency
+      cryptocurrencies.forEach((crypto, index) => {
+        const code = currency_code[index]
+        addcryptoaccount(crypto, code)
+      })
+      // to check for the account balance after creation
+      cryptoconfig.elements.currencyswitcher().should('be.visible').click()
+      cy.findByText('0.00000000 BTC').should('be.visible')
+      cy.findByText('0.00000000 ETH').should('be.visible')
+      cy.findByText('0.00000000 LTC').should('be.visible')
+      cy.findByText('0.00 tUSDT').should('be.visible')
+      cy.findByText('0.00 USDC').should('be.visible')
     })
-    cy.c_addressDetails()
-    cy.c_completeFatcaDeclarationAgreement()
-    cy.c_addAccount()
-    cy.c_checkTradersHubHomePage()
-    cy.c_closeNotificationHeader()
-    const cryptocurrencies = [
-      'Bitcoin',
-      'Ethereum',
-      'Litecoin',
-      'Tether TRC20',
-      'USD Coin',
-    ]
-    const currency_code = ['BTC', 'ETH', 'LTC', 'tUSDT', 'USDC']
-    // loop to make sure it check for all available currency
-    cryptocurrencies.forEach((crypto, index) => {
-      const code = currency_code[index]
-      addcryptoaccount(crypto, code)
-    })
-    // to check for the account balance after creation
-    cryptoconfig.elements.currencyswitcher().should('be.visible').click()
-    cy.findByText('0.00000000 BTC').should('be.visible')
-    cy.findByText('0.00000000 ETH').should('be.visible')
-    cy.findByText('0.00000000 LTC').should('be.visible')
-    cy.findByText('0.00 tUSDT').should('be.visible')
-    cy.findByText('0.00 USDC').should('be.visible')
   })
 })
