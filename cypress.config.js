@@ -17,7 +17,7 @@ let newAppId = null;
 module.exports = defineConfig({
   e2e: {
     projectId: "rjvf4u",
-    baseUrl: "https://staging-app.deriv.com/",
+    baseUrl: "https://deriv-app-git-fork-shahzaib-deriv-trah-3657-remove-trade-a57941.binary.sx",
     defaultCommandTimeout: 15000,
     supportFile: "cypress/support/e2e.js",
     experimentalWebKitSupport: true,
@@ -143,7 +143,7 @@ module.exports = defineConfig({
   },
   env: {
     runFromPR: process.env.E2E_RUN_FROM_PR,
-    stagingUrl: "https://staging-app.deriv.com/",
+    stagingUrl: "https://deriv-app-git-fork-shahzaib-deriv-trah-3657-remove-trade-a57941.binary.sx",
     prodURL: "https://app.deriv.com/",
     derivComProdURL: "https://deriv.com/",
     derivComStagingURL: "https://staging.deriv.com/",
