@@ -133,6 +133,8 @@ Cypress.Commands.add('c_login', (options = {}) => {
       loginEmail,
       loginPassword
     )
+    cy.log('login Email')
+    cy.log(loginEmail)
   } else {
     cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
   }
