@@ -78,3 +78,11 @@ Cypress.Commands.add('c_switchWalletsAccountDemo', () => {
     .last()
     .click({ force: true })
 })
+
+Cypress.Commands.add('c_checkForBanner', () => {
+  cy.findByTestId('dt_div_100_vh')
+    .findByText("Trader's Hub")
+    .should('be.visible')
+  cy.findByText('Deriv Trader', { timeout: 20000 }).should('be.visible')
+  cy.findByText('Enjoy seamless transactions').should('not.exist')
+})
