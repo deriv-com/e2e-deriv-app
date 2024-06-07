@@ -76,7 +76,7 @@ class QuickStrategy {
 
   fillUpLossProfitTreshold = () => {
     this.quickStrategyLoss.type('4')
-    this.quickStrategyProfit.type('5')
+    this.quickStrategyProfit.type('9')
   }
 }
 
