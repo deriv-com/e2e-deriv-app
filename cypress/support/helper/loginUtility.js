@@ -85,6 +85,8 @@ export function getOAuthUrl(callback, loginEmail, loginPassword) {
     Cypress.env('configAppId') +
     '&l=en&brand=deriv&date_first_contact='
   // Step 1: Perform a GET on the OAuth Url in order to generate a CSRF token.
+  cy.log('THIS IS THE LOGIN EMAIL')
+  cy.log(loginEmail)
   cy.request({
     method: 'GET',
     url: URL,
