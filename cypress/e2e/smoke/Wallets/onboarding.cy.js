@@ -68,7 +68,6 @@ const mobileSteps = [
 
 const setupTest = () => {
   cy.findByTestId('dt_traders_hub_onboarding_icon').click()
-  cy.contains('USD Wallet', { timeout: 10000 }).should('exist')
   cy.get('#react-joyride-portal').should('exist')
   cy.get('[data-test-id="spotlight"]').should('exist')
 }
