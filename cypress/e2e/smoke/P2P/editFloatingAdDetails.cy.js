@@ -4,7 +4,7 @@ let floatRate = 1.25
 let minOrder = 5
 let maxOrder = 10
 
-describe('QATEST-2469 - Edit Advert Details - Fixed Rate', () => {
+describe('QATEST-2488 - Edit Advert Details - Float Rate', () => {
   beforeEach(() => {
     cy.clearAllLocalStorage()
     cy.clearAllSessionStorage()
@@ -12,7 +12,7 @@ describe('QATEST-2469 - Edit Advert Details - Fixed Rate', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
 
-  it('Should be able to edit buy type advert and verify all fields and messages for fixed rate.', () => {
+  it('Should be able to edit buy type advert and verify all fields and messages for floating rate.', () => {
     cy.c_navigateToP2P()
     cy.c_clickMyAdTab()
     cy.c_createNewAd('buy')
