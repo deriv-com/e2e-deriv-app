@@ -31,23 +31,6 @@ function crypto_transfer(to_account, transferAmount) {
   cy.findByRole('button', { name: 'Make a new transfer' }).click()
 }
 
-function setupTradeAccount(wallet) {
-  cy.c_switchWalletsAccount(wallet)
-  cy.findByRole('button', { name: 'Get' })
-    .should(() => {})
-    .then((button) => {
-      if (button.length) {
-        cy.wrap(button).click()
-        cy.wait(1000)
-        cy.findByRole('button', { name: 'Transfer funds' }).should('be.visible')
-        cy.findByRole('button', { name: 'Maybe later', timeout: 3000 })
-          .should('be.visible')
-          .and('be.enabled')
-          .click()
-      }
-    })
-}
-
 describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypto transactions and QATEST-99429 Transfer conversion rate and QATEST-99714 Life time transfer limit message', () => {
   //Prerequisites: Crypto wallet account in any qa box with 1.00000000 BTC balance and USD, ETH and LTC wallets
   let transferAmount = '0.00003000'
@@ -59,7 +42,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
     cy.log('Transfer from Crypto account')
     cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    setupTradeAccount('BTC')
+    cy.c_setupTradeAccount('BTC')
     cy.c_switchWalletsAccount('BTC')
     cy.contains('Transfer').click()
     crypto_transfer('USD Wallet', transferAmount)
@@ -92,7 +75,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
     cy.findAllByText(/USD Wallet/)
       .first()
       .should('be.visible')
-    cy.contains(`-${transferAmount}`).first().should('be.visible')
+    cy.findAllByText(`-${transferAmount}`).first().should('be.visible')
   })
 
   it('should be able to perform transfer from crypto account in responsive', () => {
