@@ -43,22 +43,26 @@ function checkWalletBanner(deviceType) {
   }
 }
 function checkAccountNotMigrated() {
-  cy.contains(`Trader's Hub`, { timeout: 30000 }).should('be.visible')
-  for (let i = 1; i < 4; i++) {
-    cy.get('input[value="USD Wallet"]')
-      .should(() => {})
-      .then(($text) => {
-        if ($text.length) {
-          cy.log('Account is migrated!')
-          cy.c_walletLogout()
-          cy.c_visitResponsive('/', 'large')
-          cy.c_login({ user: `eligibleMigration${i}` })
-        } else {
-          cy.log('account is not migrated!')
-          return
-        }
-      })
-  }
+  return new Cypress.Promise((resolve) => {
+    cy.contains(`Trader's Hub`, { timeout: 30000 }).should('be.visible')
+    let accountNotMigrated = true
+    for (let i = 1; i < 4; i++) {
+      cy.get('input[value="USD Wallet"]')
+        .should(() => {})
+        .then(($text) => {
+          if ($text.length) {
+            cy.log('Account is migrated!')
+            cy.c_walletLogout()
+            cy.c_visitResponsive('/', 'large')
+            cy.c_login({ user: `eligibleMigration${i}` })
+          } else {
+            cy.log('Account is not migrated!')
+            accountNotMigrated = true
+            resolve(accountNotMigrated)
+          }
+        })
+    }
+  })
 }
 describe('QATEST-154253 - Migration country eligibility', () => {
   beforeEach(() => {
@@ -67,13 +71,18 @@ describe('QATEST-154253 - Migration country eligibility', () => {
 
   it('should be able to see the tour for Fiat Wallets', () => {
     cy.c_visitResponsive('/', 'large')
-    checkAccountNotMigrated()
-    cy.contains('Enjoy seamless transactions').should('be.visible')
-    cy.get('#modal_root').findByRole('button', { name: 'Enable now' }).click()
-    checkWalletBanner('desktop')
-    cy.contains('— A smarter way to manage').should('be.visible')
-    cy.findByRole('button', { name: 'Enable now' }).click()
-    checkWalletBanner('desktop')
+    checkAccountNotMigrated().then((accountNotMigrated) => {
+      if (accountNotMigrated) {
+        cy.contains('Enjoy seamless transactions').should('be.visible')
+        cy.get('#modal_root')
+          .findByRole('button', { name: 'Enable now' })
+          .click()
+        checkWalletBanner('desktop')
+        cy.contains('— A smarter way to manage').should('be.visible')
+        cy.findByRole('button', { name: 'Enable now' }).click()
+        checkWalletBanner('desktop')
+      }
+    })
   })
 
   it('should be able to see the tour for Fiat Wallets in responsive', () => {
