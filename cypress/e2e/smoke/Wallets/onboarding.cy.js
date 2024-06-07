@@ -121,7 +121,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
         step.description
       )
     })
-    cy.get('[data-test-id="spotlight"]').should('not.exist')
+    cy.findByTestId('spotlight').should('not.exist')
   })
   it('User onboarding from USD wallet cashier', () => {
     cy.c_visitResponsive('/', 'large')
@@ -139,7 +139,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
         step.description
       )
     })
-    cy.get('[data-test-id="spotlight"]').should('not.exist')
+    cy.findByTestId('spotlight').should('not.exist')
   })
   it('User onboarding from USD wallet compare account', () => {
     cy.c_visitResponsive('/', 'large')
@@ -156,7 +156,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
         step.description
       )
     })
-    cy.get('[data-test-id="spotlight"]').should('not.exist')
+    cy.findByTestId('spotlight').should('not.exist')
   })
   it('User onboarding from BTC wallet cashier', () => {
     cy.c_visitResponsive('/', 'large')
@@ -174,7 +174,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
         step.description
       )
     })
-    cy.get('[data-test-id="spotlight"]').should('not.exist')
+    cy.findByTestId('spotlight').should('not.exist')
   })
   it('User onboarding from BTC wallet traders hub', () => {
     cy.c_visitResponsive('/', 'large')
@@ -191,7 +191,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
         step.description
       )
     })
-    cy.get('[data-test-id="spotlight"]').should('not.exist')
+    cy.findByTestId('spotlight').should('not.exist')
   })
   it('User onboarding from BTC wallet compare account', () => {
     cy.c_visitResponsive('/', 'large')
@@ -210,7 +210,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
         step.description
       )
     })
-    cy.get('[data-test-id="spotlight"]').should('not.exist')
+    cy.findByTestId('spotlight').should('not.exist')
   })
   it('User onboarding for mobile', () => {
     cy.c_visitResponsive('/', 'small')
@@ -225,10 +225,11 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
         step.description
       )
     })
-    cy.get('[data-test-id="spotlight"]').should('not.exist')
+    cy.findByTestId('spotlight').should('not.exist')
   })
   it('User onboarding from USD wallet cashier in responsive', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.c_skipPasskeysV2()
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     const walletAdded = allWalletAdded()
     cy.findByText('Deposit').parent().should('be.visible').click()
@@ -243,7 +244,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
         step.description
       )
     })
-    cy.get('[data-test-id="spotlight"]').should('not.exist')
+    cy.findByTestId('spotlight').should('not.exist')
   })
   it('User onboarding from BTC wallet tradershub in responsive', () => {
     cy.c_visitResponsive('/', 'small')
@@ -258,7 +259,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
         step.description
       )
     })
-    cy.get('[data-test-id="spotlight"]').should('not.exist')
+    cy.findByTestId('spotlight').should('not.exist')
   })
   it('User onboarding from BTC wallet cashier in responsive', () => {
     cy.c_visitResponsive('/', 'small')
@@ -294,6 +295,6 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
         step.description
       )
     })
-    cy.get('[data-test-id="spotlight"]').should('not.exist')
+    cy.findByTestId('spotlight').should('not.exist')
   })
 })
