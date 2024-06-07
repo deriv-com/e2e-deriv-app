@@ -6,7 +6,7 @@ let maxOrder = 10
 let nicknameAndAmount = {
   sellerBalanceBeforeSelling: '',
   sellerBalanceAfterSelling: '',
-  buyerBalanceBeforeBuying: '9750',
+  buyerBalanceBeforeBuying: '',
   buyerBalanceAfterBuying: '',
   buyer: '',
   seller: '',
