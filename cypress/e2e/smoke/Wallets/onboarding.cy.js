@@ -102,7 +102,7 @@ const allWalletAdded = () => {
     })
 }
 
-describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-98504  Launch onboarding from different pages', () => {
+describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch onboarding from different pages', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })
   })
