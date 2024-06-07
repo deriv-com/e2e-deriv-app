@@ -145,7 +145,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
     cy.c_visitResponsive('/', 'large')
     const walletAdded = allWalletAdded()
     cy.findByText('Compare accounts').click()
-    cy.contains('Compare CFDs accounts').should('be.visible')
+    cy.findByText('Compare CFDs accounts').should('be.visible')
     setupTest('large')
     desktopSteps.forEach((step, index) => {
       if (index === 3 && walletAdded) return
@@ -199,7 +199,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
     const walletAdded = allWalletAdded()
     cy.c_switchWalletsAccount('BTC')
     cy.findByText('Compare accounts').click()
-    cy.contains('Compare CFDs accounts').should('be.visible')
+    cy.findByText('Compare CFDs accounts').should('be.visible')
     setupTest('large')
     desktopSteps.forEach((step, index) => {
       if (index === 3 && walletAdded) return
@@ -284,7 +284,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
     const walletAdded = allWalletAdded()
     cy.c_switchWalletsAccountResponsive('BTC')
     cy.findByText('Compare accounts').click()
-    cy.contains('Compare CFDs accounts').should('be.visible')
+    cy.findByText('Compare CFDs accounts').should('be.visible')
     setupTest()
     mobileSteps.forEach((step, index) => {
       if (index === 3 && walletAdded) return
