@@ -181,6 +181,143 @@ Cypress.Commands.add(
   }
 )
 
+Cypress.Commands.add('c_checkContractDetailsPageMobile', (stakeAmount) => {
+  cy.findByRole('link', { class: 'data-list__item--wrapper' }).click()
+  cy.findByText('Contract details').should('be.visible')
+  cy.contains('span[data-testid="dt_span"]', stakeAmount).should('be.visible')
+  cy.findByTestId('dt_handle_button').click()
+
+  let buyReference, sellReference
+  cy.get('#dt_id_label')
+    .find('.contract-audit__value')
+    .invoke('text')
+    .then((text) => {
+      const match = text.match(/(\d+) \(Buy\)/)
+      if (match) {
+        buyReference = match[1]
+      }
+    })
+    .then(() => {
+      cy.get('#dt_id_label')
+        .find('.contract-audit__value2')
+        .invoke('text')
+        .then((text) => {
+          const match = text.match(/(\d+) \(Sell\)/)
+          if (match) {
+            sellReference = match[1]
+          }
+        })
+        .then(() => {
+          cy.findByTestId('dt_positions_toggle').click()
+          cy.findByRole('link', { name: 'Go to Reports' }).click()
+          cy.c_checkTradeTablePageResponsive(buyReference)
+          cy.c_checkStatementPageResponsive(buyReference, sellReference)
+        })
+    })
+})
+
+const clearStakeField = () => {
+  cy.findByRole('button', { name: '⌫' }).then(($button) => {
+    if (!$button.is(':disabled')) {
+      cy.wrap($button)
+        .click()
+        .then(() => {
+          clearStakeField()
+        })
+    }
+  })
+}
+
+Cypress.Commands.add('c_inputStakeAmountMobile', () => {
+  const stakeAmount = '5'
+  cy.findByTestId('dt_themed_scrollbars').findByText('Stake').click()
+  clearStakeField()
+  cy.findByTestId('dt_themed_scrollbars')
+    .findByRole('button', { name: stakeAmount })
+    .click()
+  cy.findByRole('button', { name: 'OK' }).click()
+})
+
+Cypress.Commands.add('c_placeEvenorOddTradetype', (tradeType) => {
+  if (tradeType == 'Even') {
+    cy.get('button.btn-purchase.btn-purchase--1').click()
+  } else if (tradeType == 'Odd') {
+    cy.get('button.btn-purchase.btn-purchase--2').click()
+  } else {
+    cy.log('Please check trade type entered and locator')
+  }
+})
+
+Cypress.Commands.add(
+  'c_validateContractNotification',
+  (symbol, stakeAmount) => {
+    cy.contains('.swipeable-notification', stakeAmount).should('be.visible')
+    cy.contains('.swipeable-notification', symbol).should('be.visible')
+  }
+)
+
+Cypress.Commands.add(
+  'c_checkRecentPositionIconAndOpenPosition',
+  (stakeAmount) => {
+    cy.findByTestId('dt_positions_toggle').click()
+    cy.findByText('Even').should('be.visible')
+    cy.findByRole('link', { name: 'Go to Reports' }).click()
+    cy.findByText('Ref. ID').should('be.visible')
+    cy.findByText('Currency').should('be.visible')
+    cy.contains('.data-list', stakeAmount).should('be.visible')
+    cy.contains('.data-list', 'Contract value').should('be.visible')
+    cy.contains('.data-list', 'Potential payout').should('be.visible')
+    cy.contains('.data-list', 'Total profit/loss').should('be.visible')
+    cy.contains('.data-list', 'Resale not offered').should('be.visible')
+  }
+)
+
+Cypress.Commands.add('c_checkDigitStatsChartsAndStakePayoutError', () => {
+  cy.get('.digits--trade').should('be.visible')
+  cy.get('.dc-swipeable__nav__item').eq(1).should('be.visible').click()
+  cy.get('.chartContainer').should('be.visible')
+  cy.get('.dc-swipeable__nav__item').eq(0).should('be.visible').click()
+  cy.get('.digits--trade').should('be.visible')
+  cy.get('.digits__toast-info').should('be.visible')
+
+  cy.findByRole('button', { name: 'Stake' }).click()
+  cy.findByTestId('dt_themed_scrollbars').findByText('Payout').click()
+  cy.findByTestId('dt_themed_scrollbars').findByText('Stake').click()
+  clearStakeField()
+  cy.findByText('Should not be 0 or empty').should('be.visible')
+  cy.findByTestId('dt_themed_scrollbars')
+    .findByRole('button', { name: '0' })
+    .click()
+  cy.findByText('Should not be 0 or empty').should('be.visible')
+  clearStakeField()
+  cy.findByTestId('dt_themed_scrollbars')
+    .findByRole('button', { name: '5' }) // Find and click the button with name "5"
+    .click()
+
+  for (let i = 0; i < 4; i++) {
+    cy.findByTestId('dt_themed_scrollbars')
+      .findByRole('button', { name: '0' })
+      .click()
+  }
+  cy.findByRole('button', { name: 'OK' }).click()
+  cy.get('.btn-purchase__error').should('be.visible')
+  cy.findByRole('button', { name: 'Stake' }).click()
+  cy.findByTestId('dt_themed_scrollbars').findByText('Payout').click()
+  clearStakeField()
+  cy.findByTestId('dt_themed_scrollbars')
+    .findByRole('button', { name: '8' })
+    .click()
+
+  for (let i = 0; i < 4; i++) {
+    cy.findByTestId('dt_themed_scrollbars')
+      .findByRole('button', { name: '0' })
+      .click()
+  }
+  cy.findByRole('button', { name: 'OK' }).click()
+  cy.get('.btn-purchase__error').should('be.visible')
+  cy.findByRole('button', { name: 'Payout' }).click()
+})
+
 Cypress.Commands.add(
   'c_compareElementScreenshots',
   (elementSelector, imageName1, imageName2, diffImageName) => {
