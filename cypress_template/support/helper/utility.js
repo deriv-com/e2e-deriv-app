@@ -117,6 +117,8 @@ export const getOAuthUrl = (callback) => {
     cy.log('Cookie Test:' + response.headers['set-cookie'])
 
     // Step 3: Make a POST request with the CSRF token and cookie.
+    cy.log('LOGIN EMAIL IS:')
+    cy.log(loginEmail)
     cy.request({
       method: 'POST',
       url:
