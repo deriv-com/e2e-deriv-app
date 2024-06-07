@@ -7,7 +7,6 @@ const addDays = (n) => {
 
 describe('QATEST-116798 Self Exclusion Session and login limits on desktop', () => {
   beforeEach(() => {
-    cy.log('<E2EOAuthUrl - beforeEach>' + Cypress.env('oAuthUrl'))
     cy.c_visitResponsive('/')
     cy.c_createRealAccount()
     cy.c_login()
@@ -26,9 +25,7 @@ describe('QATEST-116798 Self Exclusion Session and login limits on desktop', () 
     cy.findByTestId('dt_dropdown_display').click()
     cy.get('#real', { timeout: 10000 }).should('exist')
     cy.get('#real').click()
-    cy.get('[class="dc-text balance-text__text--real"]', {
-      timeout: 30000,
-    }).should('exist') // waits until Real account is loaded
+    cy.findAllByTestId('dt_balance_text_container').should('have.length', '2') // waits until Real account is loaded
     cy.c_visitResponsive('/account/self-exclusion', 'large')
     cy.get('input[name="timeout_until"]').should('not.be.empty')
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
@@ -45,10 +42,7 @@ describe('QATEST-116798 Self Exclusion Session and login limits on desktop', () 
       Cypress.env('credentials').test.diel.PSWD
     )
     cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
-    cy.get('[class="dc-dialog__dialog"]').should(
-      'contain.text',
-      'Something’s not right'
-    )
+    cy.get('.dc-dialog__dialog').should('contain.text', 'Something’s not right')
     cy.c_visitResponsive('/cashier/deposit', 'large')
     cy.get('.empty-state').should('be.visible') // checks Deposit is locked
     cy.c_visitResponsive(
@@ -61,6 +55,6 @@ describe('QATEST-116798 Self Exclusion Session and login limits on desktop', () 
       { timeout: 30000 }
     ).should('exist')
     cy.findByRole('button', { name: 'Up 10.00 USD' }).click()
-    cy.get('[class="dc-modal-body"]').should('be.visible') // checks Trade is unavailable
+    cy.get('.dc-modal-body').should('be.visible') // checks Trade is unavailable
   })
 })
