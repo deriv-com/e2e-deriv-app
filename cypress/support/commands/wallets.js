@@ -25,6 +25,7 @@ Cypress.Commands.add('c_switchWalletsAccount', (account) => {
     cy.get('.wallets-list-card-dropdown__item-content')
       .contains(`${account} Wallet`)
       .click()
+    cy.get('.wallets-list-card').click()
     cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
   }
 })
@@ -121,6 +122,30 @@ Cypress.Commands.add('c_setupTradeAccountResponsive', (wallet) => {
           .and('be.enabled')
           .click()
         cy.findByText("Trader's Hub").should('be.visible')
+      } else {
+        cy.log('selected wallet already has a trading account')
       }
     })
+})
+
+Cypress.Commands.add('c_setupUSDTradeAccountResponsive', (wallet) => {
+  cy.get('.wallets-progress-bar')
+    .children()
+    .first()
+    .should('have.class', 'wallets-progress-bar-active')
+  cy.get('.wallets-progress-bar-active')
+    .parentsUntil('.wallets-carousel-content__cards')
+    .then((list) => {
+      cy.log('inside then')
+      cy.wrap(list)
+        .find('.wallets-card')
+        .first()
+        .find('.wallets-text')
+        .then(($el) => {
+          const text = $el.text().trim() // Trim any extra whitespace
+          cy.log('Text found:', text) // Log the actual text to debug
+          expect(text).to.include('USD')
+        })
+    })
+  cy.c_setupTradeAccountResponsive(wallet)
 })

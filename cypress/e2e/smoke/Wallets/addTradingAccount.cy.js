@@ -11,9 +11,25 @@ describe('QATEST-156146 - Add trading account to wallet account (Crypto)', () =>
     () => {
       cy.c_visitResponsive('/', 'large')
       cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+      cy.c_setupTradeAccount('USD')
       cy.c_setupTradeAccount('BTC')
       cy.c_setupTradeAccount('ETH')
       cy.c_setupTradeAccount('LTC')
+    }
+  )
+
+  it(
+    'should add USD trading account to wallet account in responsive',
+    { scrollBehavior: false },
+    () => {
+      cy.c_visitResponsive('/', 'small')
+      cy.c_skipPasskeysV2()
+      cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
+      cy.c_skipPasskeysV2()
+      cy.findAllByText(/Deposit/, { timeout: 10000 }).should('exist')
+      cy.c_skipPasskeysV2()
+      cy.findByText("Trader's Hub").should('be.visible')
+      cy.c_setupUSDTradeAccountResponsive('USD')
     }
   )
 
