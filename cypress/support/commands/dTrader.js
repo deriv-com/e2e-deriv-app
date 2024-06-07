@@ -5,17 +5,30 @@ import { derivApp } from '../locators'
 const dTraderSharedLocators = derivApp.dTraderPage.sharedLocators
 const dTraderDesktopLocators = derivApp.dTraderPage.desktopLocators
 
-Cypress.Commands.add('c_selectSymbol', (symbolName) => {
-  dTraderSharedLocators.symbolSelectBtn(20000).should('be.visible')
-  dTraderSharedLocators.symbolSelectBtn().click()
-  dTraderDesktopLocators.symbolExpandIcon().should('be.visible')
+Cypress.Commands.add('c_selectSymbol', (symbolName, deviceName) => {
+  derivApp.dTraderPage.sharedLocators
+    .symbolSelectBtn(20000)
+    .should('be.visible')
+  derivApp.dTraderPage.sharedLocators.symbolSelectBtn().click()
+  if (deviceName == 'mobile') {
+    derivApp.dTraderPage.mobileLocators.symbolExpandIcon().should('be.visible')
+  } else if (deviceName == 'desktop') {
+    derivApp.dTraderPage.desktopLocators.symbolExpandIcon().should('be.visible')
+  } else {
+    cy.log('Please check device entered')
+  }
   cy.findByText('Synthetics').should('be.visible').click()
-  cy.findAllByText(symbolName).last().click()
+  cy.contains('div.sc-mcd__item__name', symbolName).click()
 })
 
 Cypress.Commands.add('c_selectTradeType', (category, tradeType) => {
   cy.findByTestId('dt_contract_dropdown').click()
-  cy.findByText(category).click()
+  //cy.findByText(category).click()
+
+  // Scroll to a specific element
+  cy.findByText(tradeType).scrollIntoView()
+
+  // Click on the element after scrolling
   cy.findByText(tradeType).should('be.visible').click()
 })
 
@@ -43,6 +56,26 @@ Cypress.Commands.add('c_validateDurationDigits', (tradetype) => {
     cy.findByRole('button', { name: 'Minutes' }).should('not.exist')
     cy.findByRole('button', { name: 'End time' }).should('not.exist')
     cy.findByRole('button', { name: 'Duration' }).should('not.exist')
+  }
+})
+Cypress.Commands.add('c_validateDurationDigitsResponsive', (tradetype) => {
+  if (tradetype == 'Matches/Differs' || 'Even/Odd' || 'Over/Under') {
+    //cy.findByRole('button', { name: '5 ticks' }).click()
+    cy.get('.mobile-widget__duration').click()
+    //cy.get('.dc-tabs__list').click()
+    cy.findByText('button', { name: 'Ticks' }).should('not.exist')
+    cy.findByText('button', { name: 'Minutes' }).should('not.exist')
+    cy.findByText('button', { name: 'End time' }).should('not.exist')
+    cy.findByText('button', { name: 'Duration' }).should('not.exist')
+    cy.findByTestId('dt_themed_scrollbars')
+      .findAllByRole('button')
+      .eq(0)
+      .should('be.visible')
+    cy.findByTestId('dt_themed_scrollbars')
+      .findAllByRole('button')
+      .eq(1)
+      .should('be.visible')
+    cy.findByRole('button', { name: 'OK' }).click()
   }
 })
 
@@ -92,6 +125,20 @@ Cypress.Commands.add('c_checkStatementPage', (buyReference, sellReference) => {
   cy.contains(buyReference).should('be.visible')
   cy.contains(buyReference).should('be.visible')
 })
+Cypress.Commands.add('c_checkTradeTablePageResponsive', (buyReference) => {
+  cy.get('.dc-select-native__picker').select('Trade table')
+  cy.get('.data-list__item').eq(0).should('be.visible')
+  cy.contains(buyReference).should('be.visible')
+})
+Cypress.Commands.add(
+  'c_checkStatementPageResponsive',
+  (buyReference, sellReference) => {
+    cy.get('.dc-select-native__picker').select('Statement')
+    cy.get('.data-list__item').eq(0).should('be.visible')
+    cy.contains(buyReference).should('be.visible')
+    cy.contains(sellReference).should('be.visible')
+  }
+)
 
 Cypress.Commands.add(
   'c_checkContractDetailsPage',

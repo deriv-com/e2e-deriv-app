@@ -2,6 +2,7 @@ export const dTraderPageLocators = {
   mobileLocators: {
     //mobileLocator1 : () => cy.findByTestId('abc')
     //mobileLocator2 : () => cy.findByTestId('xyz')
+    symbolExpandIcon: () => cy.get('.sc-mcd__category--active'),
   },
   desktopLocators: {
     //commonDesktopLocator1 : () => cy.findByTestId('abc')
