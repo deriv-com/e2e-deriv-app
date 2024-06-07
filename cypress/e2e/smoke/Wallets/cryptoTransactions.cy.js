@@ -42,7 +42,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
     cy.log('Transfer from Crypto account')
     cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    setupTradeAccount('BTC')
+    cy.c_setupTradeAccount('BTC')
     cy.c_switchWalletsAccount('BTC')
     cy.contains('Transfer').click()
     crypto_transfer('USD Wallet', transferAmount)

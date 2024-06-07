@@ -100,7 +100,9 @@ Cypress.Commands.add('c_setupTradeAccount', (wallet) => {
           .should('be.visible')
           .and('be.enabled')
           .click()
-        cy.contains("Trader's Hub").should('be.visible')
+        cy.findByTestId('dt_themed_scrollbars')
+          .findByText("Trader's Hub")
+          .should('be.visible')
       }
     })
 })
@@ -118,7 +120,7 @@ Cypress.Commands.add('c_setupTradeAccountResponsive', (wallet) => {
           .should('be.visible')
           .and('be.enabled')
           .click()
-        cy.contains("Trader's Hub").should('be.visible')
+        cy.findByText("Trader's Hub").should('be.visible')
       }
     })
 })
