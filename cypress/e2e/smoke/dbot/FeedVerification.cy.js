@@ -21,7 +21,7 @@ describe('QATEST-99340: Verify feed is loading on charts tab', () => {
       if (isMobile) cy.findByTestId('close-icon', { timeout: 7000 }).click()
       cy.c_skipTour()
       charts.openChartsTab()
-      cy.findByTestId('dt_initial_loader').should('not.exist')
+      cy.c_loadingCheck()
       cy.findByText('Retrieving Chart Data...').should('not.be.visible')
       if (size === 'desktop') {
         cy.log('Checking feed on real account')
