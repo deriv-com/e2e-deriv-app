@@ -50,13 +50,23 @@ class QuickStrategy {
     this.quickStrategyTab.should('be.visible').click()
   }
 
-  chooseTradeType = () => {
-    cy.findAllByTestId('dt_themed_scrollbars')
-      .eq(3)
-      .should('be.visible')
-      .within(() => {
-        cy.findByText('Matches/Differs').click()
-      })
+  chooseTradeType = (size) => {
+    const isMobile = size === 'small' ? true : false
+    if (isMobile) {
+      cy.findAllByTestId('dt_themed_scrollbars')
+        .eq(1)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Matches/Differs').click()
+        })
+    } else {
+      cy.findAllByTestId('dt_themed_scrollbars')
+        .eq(3)
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Matches/Differs').click()
+        })
+    }
   }
 
   fillUpContractSize = () => {
