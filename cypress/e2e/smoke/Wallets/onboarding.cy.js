@@ -128,7 +128,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     const walletAdded = allWalletAdded()
     cy.findByText('Deposit').click()
-    cy.contains('Oops, something went wrong!').should('be.visible')
+    cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
     setupTest('large')
     desktopSteps.forEach((step, index) => {
       if (index === 3 && walletAdded) return
@@ -164,7 +164,6 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
     cy.c_switchWalletsAccount('BTC')
     const walletAdded = allWalletAdded()
     cy.findByText('Deposit').click()
-    // cy.get('canvas').should('be.visible')
     setupTest('large')
     desktopSteps.forEach((step, index) => {
       if (index === 3 && walletAdded) return
@@ -233,7 +232,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     const walletAdded = allWalletAdded()
     cy.findByText('Deposit').parent().should('be.visible').click()
-    cy.contains('Oops, something went wrong!').should('be.visible')
+    cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
     setupTest()
     mobileSteps.forEach((step, index) => {
       if (index === 3 && walletAdded) return
@@ -276,7 +275,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and QATEST-
         step.description
       )
     })
-    cy.get('[data-test-id="spotlight"]').should('not.exist')
+    cy.findByTestId('spotlight').should('not.exist')
   })
 
   it('User onboarding from BTC wallet compare account in responsive', () => {
