@@ -138,7 +138,8 @@ Cypress.Commands.add('c_getAdTypeAndRateType', () => {
 
 Cypress.Commands.add(
   'c_inputAdDetails',
-  (rateValue, minOrder, maxOrder, adType, rateType) => {
+  (rateValue, minOrder, maxOrder, adType, rateType, options = {}) => {
+    const { paymentMethod = 'PayPal' } = options
     cy.findByText(`${adType} USD`).click()
     cy.findByTestId('offer_amount')
       .next('span.dc-text')
@@ -194,7 +195,7 @@ Cypress.Commands.add(
         cy.findByTestId('dt_payment_method_card_add_icon')
           .should('be.visible')
           .click()
-        cy.c_addPaymentMethod(paymentIDForCopyAdSell, 'PayPal')
+        cy.c_addPaymentMethod(paymentIDForCopyAdSell, paymentMethod)
         cy.findByText(paymentIDForCopyAdSell)
           .should('exist')
           .parent()
@@ -246,9 +247,7 @@ Cypress.Commands.add(
 )
 
 Cypress.Commands.add('c_getExistingAdDetailsForValidation', (adType) => {
-  cy.get('.my-ads-table__row .dc-dropdown-container')
-    .should('be.visible')
-    .click()
+  cy.findByTestId('dt_dropdown_container').should('be.visible').click()
   cy.findByText('Edit').parent().click()
   cy.findByTestId('offer_amount')
     .invoke('val')
@@ -1149,3 +1148,27 @@ Cypress.Commands.add(
     cy.c_verifyPostAd()
   }
 )
+
+Cypress.Commands.add('c_editAdAndVerify', (minOrder, maxOrder) => {
+  cy.findByTestId('dt_dropdown_container').should('be.visible').click()
+  cy.findByText('Edit').parent().click()
+  cy.findByTestId('offer_amount').should('be.disabled')
+  cy.findByTestId('min_transaction')
+    .clear()
+    .type(minOrder + 1)
+  cy.findByTestId('max_transaction').clear().type(maxOrder)
+  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+  cy.findByText('Edit payment details').should('be.visible')
+  cy.findByTestId('dt_dropdown_display').click()
+  cy.get('#1800').should('be.visible').click()
+  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+  cy.findByText('Edit ad conditions').should('be.visible')
+  cy.findByRole('button', { name: 'Save changes' }).should('be.enabled').click()
+  cy.findByTestId('dt_dropdown_container').should('be.visible').click()
+  cy.findByText('Edit').parent().click()
+  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+  cy.findByText('Edit payment details').should('be.visible')
+  cy.findByTestId('dt_dropdown_display').should('have.text', '30 minutes')
+  cy.get('.wizard__main-step').prev().children().last().click()
+  cy.findByText(`${(minOrder + 1).toFixed(2)} - ${maxOrder.toFixed(2)} USD`)
+})
