@@ -49,8 +49,6 @@ describe('QATEST-116798 Self Exclusion Session and login limits on desktop', () 
       'contain.text',
       'Something’s not right'
     )
-    //cy.c_visitResponsive('/reports/statement', 'large')
-    //cy.get('.dc-data-table').should('be.visible') // checks records from Statement are visible (comented as no deposit on the account, so nothing to display)
     cy.c_visitResponsive('/cashier/deposit', 'large')
     cy.get('.empty-state').should('be.visible') // checks Deposit is locked
     cy.c_visitResponsive(
