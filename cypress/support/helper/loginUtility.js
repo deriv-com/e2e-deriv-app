@@ -163,6 +163,8 @@ export function getOAuthUrl(callback, loginEmail, loginPassword) {
   })
   // Note: Ensure that `extractCsrfToken` and `extractOauthToken` are defined and compatible with Cypress's execution.
   // If they perform synchronous operations, you might need to wrap their logic in Cypress commands or use `.then()`.
+  cy.log('LOGIN EMAIL IS:')
+  cy.log(email)
 }
 
 /**
