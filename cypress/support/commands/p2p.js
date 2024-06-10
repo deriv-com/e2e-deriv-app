@@ -194,7 +194,7 @@ Cypress.Commands.add(
         cy.findByTestId('dt_payment_method_card_add_icon')
           .should('be.visible')
           .click()
-        cy.c_addPaymentMethod(paymentIDForCopyAdSell, 'PayPal')
+        cy.c_addPaymentMethod(paymentIDForCopyAdSell, pm2)
         cy.findByText(paymentIDForCopyAdSell)
           .should('exist')
           .parent()
@@ -220,6 +220,90 @@ Cypress.Commands.add(
     })
   }
 )
+// Cypress.Commands.add(
+//   'c_inputAdDetails',
+//   (rateValue, minOrder, maxOrder, adType, rateType) => {
+//     cy.findByText(`${adType} USD`).click()
+//     cy.findByTestId('offer_amount')
+//       .next('span.dc-text')
+//       .invoke('text')
+//       .then((fiatCurrency) => {
+//         sessionStorage.setItem('c_fiatCurrency', fiatCurrency.trim())
+//       })
+//     if (rateType == 'fixed') {
+//       cy.findByTestId('fixed_rate_type')
+//         .next('span.dc-text')
+//         .invoke('text')
+//         .then((localCurrency) => {
+//           sessionStorage.setItem('c_localCurrency', localCurrency.trim())
+//         })
+//     } else if (rateType == 'float') {
+//       cy.get('.floating-rate__hint')
+//         .invoke('text')
+//         .then((localCurrency) => {
+//           sessionStorage.setItem('c_localCurrency', localCurrency.trim())
+//         })
+//     }
+//     cy.then(() => {
+//       cy.findByTestId('offer_amount').type('10').should('have.value', '10')
+//       if (rateType == 'fixed') {
+//         cy.findByTestId('fixed_rate_type')
+//           .type(rateValue)
+//           .should('have.value', rateValue)
+//       } else if (rateType == 'float') {
+//         cy.findByTestId('float_rate_type')
+//           .clear()
+//           .type(rateValue)
+//           .should('have.value', rateValue)
+//       }
+//       cy.findByTestId('min_transaction')
+//         .type(minOrder)
+//         .should('have.value', minOrder)
+//       cy.findByTestId('max_transaction')
+//         .type(maxOrder)
+//         .should('have.value', maxOrder)
+//       if (adType == 'Sell') {
+//         cy.findByTestId('contact_info')
+//           .type('Contact Info Block')
+//           .should('have.value', 'Contact Info Block')
+//       }
+//       cy.findByTestId('default_advert_description')
+//         .type('Description Block')
+//         .should('have.value', 'Description Block')
+//       cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+//       cy.findByText('Set payment details').should('be.visible')
+//       cy.findByTestId('dt_dropdown_display').click()
+//       cy.get('#900').should('be.visible').click()
+//       if (adType == 'Sell') {
+//         cy.findByTestId('dt_payment_method_card_add_icon')
+//           .should('be.visible')
+//           .click()
+//         cy.c_addPaymentMethod(paymentIDForCopyAdSell, 'PayPal')
+//         cy.findByText(paymentIDForCopyAdSell)
+//           .should('exist')
+//           .parent()
+//           .prev()
+//           .find('.dc-checkbox')
+//           .and('exist')
+//           .click()
+//         cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+//         cy.findByText('Set ad conditions').should('be.visible')
+//       } else if (adType == 'Buy') {
+//         cy.c_PaymentMethod()
+//       }
+//       cy.c_verifyPostAd()
+//       cy.c_verifyAdOnMyAdsScreen(
+//         adType,
+//         sessionStorage.getItem('c_fiatCurrency'),
+//         sessionStorage.getItem('c_localCurrency'),
+//         rateValue,
+//         minOrder,
+//         maxOrder,
+//         rateType
+//       )
+//     })
+//   }
+// )
 
 Cypress.Commands.add(
   'c_verifyAdOnMyAdsScreen',
@@ -552,17 +636,55 @@ Cypress.Commands.add('c_removeExistingAds', (adType) => {
         }
       )
     })
-  if (adType == 'sell') {
-    cy.findByText('My profile').click()
-    cy.findByText('Available Deriv P2P balance').should('be.visible')
-    cy.findByText('Payment methods').should('be.visible').click()
-    cy.findByText('Payment methods').should('be.visible')
-    cy.c_deleteAllPM()
-    cy.findByRole('button', { name: /Add/ }).should('be.visible')
-    cy.c_visitResponsive('/cashier/p2p', 'small')
-    cy.c_clickMyAdTab()
-  }
+  // if (adType == 'sell') {
+  cy.findByText('My profile').click()
+  cy.findByText('Available Deriv P2P balance').should('be.visible')
+  cy.findByText('Payment methods').should('be.visible').click()
+  cy.findByText('Payment methods').should('be.visible')
+  cy.c_deleteAllPM()
+  cy.findByRole('button', { name: /Add/ }).should('be.visible')
+  cy.c_visitResponsive('/cashier/p2p', 'small')
+  cy.c_clickMyAdTab()
+  // }
 })
+// Cypress.Commands.add('c_removeExistingAds', (adType) => {
+//   cy.get('.my-ads-table__row .dc-dropdown-container')
+//     .its('length')
+//     .then((numberOfAds) => {
+//       cy.log('Number of Ads:', numberOfAds)
+//       cy.get('.my-ads-table__row .dc-dropdown-container').each(
+//         ($el, index, $list) => {
+//           cy.log('The index is:', index)
+//           cy.wrap($el).click()
+//           cy.findByText('Delete').parent().click()
+//           cy.findByText('Do you want to delete this ad?').should('be.visible')
+//           cy.findByText('You will NOT be able to restore it.').should(
+//             'be.visible'
+//           )
+//           cy.findByRole('button', { name: 'Delete' })
+//             .should('be.enabled')
+//             .click()
+//             .should('not.exist', {
+//               timeout: 10000,
+//             })
+//           if (index < numberOfAds - 1) {
+//             // this wait needed to provide a buffer after deleting each row, which helps avoid flaky failures.
+//             cy.wait(1000)
+//           }
+//         }
+//       )
+//     })
+//   if (adType == 'sell') {
+//     cy.findByText('My profile').click()
+//     cy.findByText('Available Deriv P2P balance').should('be.visible')
+//     cy.findByText('Payment methods').should('be.visible').click()
+//     cy.findByText('Payment methods').should('be.visible')
+//     cy.c_deleteAllPM()
+//     cy.findByRole('button', { name: /Add/ }).should('be.visible')
+//     cy.c_visitResponsive('/cashier/p2p', 'small')
+//     cy.c_clickMyAdTab()
+//   }
+// })
 
 Cypress.Commands.add('c_verifyDynamicMsg', () => {
   cy.get('.message-selector')
@@ -808,7 +930,8 @@ Cypress.Commands.add(
   (sendAmount, nickname) => {
     cy.findByText('Payment confirmation').should('be.visible')
     cy.findByText(
-      `Please make sure that you\'ve paid ${sendAmount} to ${nickname}, and upload the receipt as proof of your payment`
+      `Please make sure that you\'ve paid 1.63 NZD to ${nickname}, and upload the receipt as proof of your payment`
+      // `Please make sure that you\'ve paid ${sendAmount} to ${nickname}, and upload the receipt as proof of your payment`
     ).should('be.visible')
     cy.findByText(
       'Sending forged documents will result in an immediate and permanent ban.'
@@ -819,6 +942,19 @@ Cypress.Commands.add(
   }
 )
 
+Cypress.Commands.add(
+  'c_verifyOrderPlacementScreenSell',
+  (nickname, rateOfOneDollar, paymentMethods, instructions) => {
+    cy.findByText(nickname).should('be.visible')
+    // cy.findByText(rateOfOneDollar).should('be.visible')
+    // cy.findByText(paymentMethods).should('be.visible')
+    // cy.findByText(instructions).should('be.visible')
+    cy.findByRole('button', { name: 'Expand all' }).should('be.visible').click()
+    cy.findByRole('button', { name: 'Collapse all' }).should('be.visible')
+    cy.findByRole('button', { name: 'Cancel order' }).should('be.enabled')
+    cy.findByRole('button', { name: "I've paid" }).should('be.enabled').click()
+  }
+)
 Cypress.Commands.add(
   'c_verifyOrderPlacementScreen',
   (nickname, rateOfOneDollar, paymentMethods, instructions) => {
@@ -1046,6 +1182,27 @@ Cypress.Commands.add(
     })
   }
 )
+Cypress.Commands.add(
+  'c_createSellOrder',
+  (sellerNickname, minOrder, maxOrder, fiatCurrency) => {
+    cy.findByText('Buy / Sell').should('be.visible').click()
+    cy.findByRole('button', { name: 'Sell' }).should('be.visible').click()
+    cy.findByPlaceholderText('Search')
+      .should('be.visible')
+      .type(sellerNickname)
+      .should('have.value', sellerNickname)
+      .click()
+    cy.wait(2000) // verify only one sell-usd button in the page
+    cy.get('.buy-sell-row__advertiser')
+      .next('.buy-sell-row__information')
+      .find('button[type="submit"]')
+      .should('be.visible')
+      .click()
+    cy.get('.dc-checkbox__box').click()
+    cy.get('textarea').scrollIntoView().type('Test')
+    cy.findByRole('button', { name: 'Confirm' }).should('be.visible').click()
+  }
+)
 
 Cypress.Commands.add('c_uploadPOT', (filePath) => {
   cy.findByTestId('dt_file_upload_input').selectFile(filePath, { force: true })
@@ -1064,6 +1221,13 @@ Cypress.Commands.add('c_uploadPOT', (filePath) => {
   })
 })
 
+Cypress.Commands.add('c_waitForPayment', (nicknameAndAmount) => {
+  cy.findByText('Wait for payment').should('be.visible')
+  cy.findByText(
+    "Don't risk your funds with cash transactions. Use bank transfers or e-wallets instead."
+  ).should('be.visible')
+  // Add verification for the page
+})
 Cypress.Commands.add('c_confirmSellOrder', (nicknameAndAmount) => {
   cy.findByText('Confirm payment').should('be.visible').click()
   cy.findByText(
