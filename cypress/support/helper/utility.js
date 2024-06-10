@@ -47,3 +47,20 @@ export const generateCPFNumber = () => {
   const getRandomDigit = () => Math.floor(Math.random() * 10)
   return `0${getRandomDigit()}${getRandomDigit()}.${getRandomDigit()}${getRandomDigit()}${getRandomDigit()}.${getRandomDigit()}${getRandomDigit()}${getRandomDigit()}-${getRandomDigit()}${getRandomDigit()}`
 }
+
+/**
+ * @description Used to generate a random 8-character long name
+ * @returns {string} Randomly generated 8-character string
+ * @example
+ * const randomName = generateRandomName();
+ * console.log(randomName); // e.g., 'a1B2c3D4'
+ */
+export function generateRandomName() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+  let result = ''
+  const charactersLength = characters.length
+  for (let i = 0; i < 8; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return result
+}
