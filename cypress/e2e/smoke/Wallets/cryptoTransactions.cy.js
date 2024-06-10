@@ -39,7 +39,7 @@ function crypto_transfer(to_account, transferAmount) {
     .eq(1)
     .click()
     .type(transferAmount)
-  cy.wait(3000)
+  cy.wait(1000) // to sget transfer amount
   checkTranferExchangeRate(to_account, transferAmount)
   if (to_account == 'USD Wallet') {
     cy.contains(
