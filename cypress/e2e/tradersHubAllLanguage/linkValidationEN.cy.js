@@ -16,11 +16,8 @@ describe('QATEST-125246 Verify the hyperlinks on Traders Hub', () => {
         cy.wait(2000)
         cy.c_skipPasskeysV2()
         cy.c_checkTradersHubHomePage(isMobile)
-        cy.c_changeLanguageMobile('EN')
-      } else {
-        cy.c_changeLanguageDesktop('EN')
+        cy.checkHyperLinks('EN', isMobile)
       }
-      cy.checkHyperLinks('EN', isMobile)
     })
   })
 })

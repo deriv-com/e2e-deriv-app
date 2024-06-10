@@ -120,7 +120,7 @@ export const linkValidations = {
     {
       linkName: 'Más información',
       expectedUrl: '/es/trade-types/cfds/',
-      contentCheck: 'rica en funciones',
+      contentCheck: 'Trading de CFD',
     },
   ],
   BN: [
@@ -228,7 +228,7 @@ export const linkValidations = {
     {
       linkName: 'เรียนรู้เพิ่มเติม',
       expectedUrl: '/th/trade-types/cfds/',
-      contentCheck: 'การซื้อขาย CFD',
+      contentCheck: 'การเทรด CFD',
     },
   ],
   TR: [
@@ -251,7 +251,7 @@ export const linkValidations = {
     },
     {
       linkName: 'Tìm hiểu thêm',
-      expectedUrl: '/tr/trade-types/cfds/',
+      expectedUrl: '/vi/trade-types/cfds/',
       contentCheck: 'Giao dịch CFD',
     },
   ],
@@ -314,7 +314,7 @@ export const translations = {
   },
   PL: {
     compareAccount: 'Porównaj konta',
-    urlPart: 'appstore/cfd-compare-acccounts?lang=PL',
+    urlPart: 'cfd-compare-acccounts?lang=PL',
     compareAccountContent: 'Porównaj konta CFD',
   },
   RU: {
@@ -424,7 +424,7 @@ export const clickText = {
 
 export const CFD = {
   EN: 'CFDs',
-  ES: 'CFDs',
+  ES: 'CFD',
   BN: 'CFD',
   DE: 'CFDs',
   KO: '차액거래',

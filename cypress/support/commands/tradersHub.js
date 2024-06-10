@@ -848,7 +848,7 @@ Cypress.Commands.add('c_changeLanguageMobile', (language) => {
   const { lang } = languages[language]
   cy.get('#dt_mobile_drawer_toggle').click()
   cy.findByTestId('dt_icon').click()
-  cy.findByText(lang).should('be.visible').click()
+  cy.findByText(lang).scrollIntoView().should('be.visible').click()
   cy.wait(1000)
 })
 
@@ -864,36 +864,43 @@ Cypress.Commands.add('c_checkLanguage', (language) => {
   cy.checkHyperLinks(language)
 })
 
-const validateLink = (index, linkName, expectedUrl, contentCheck) => {
-  cy.log(index)
-  cy.findByRole('link', { name: linkName }).then(($link) => {
-    const url = $link.prop('href')
-    cy.visit(url, {
-      onBeforeLoad: (win) => {
-        cy.stub(win, 'open').as('windowOpen')
-      },
+const validateLink = (
+  language,
+  index,
+  linkName,
+  expectedUrl,
+  contentCheck,
+  isMobile
+) => {
+  if (isMobile || ['BN', 'DE'].includes(language)) {
+    cy.findByRole('link', { name: linkName }).then(($link) => {
+      const url = $link.prop('href')
+      cy.visit(url, {
+        onBeforeLoad: (win) => {
+          cy.stub(win, 'open').as('windowOpen')
+        },
+      })
+      cy.url().should('contain', expectedUrl)
+      cy.findByRole('heading', { name: `${contentCheck}` })
     })
-    cy.url().should('contain', expectedUrl)
-    cy.findByRole('heading', { name: `${contentCheck}` })
-  })
-  cy.go('back')
+    cy.go('back')
+  } else {
+    cy.findAllByRole('link', { name: linkName })
+      .eq(index)
+      .then(($link) => {
+        const url = $link.prop('href')
+        cy.visit(url, {
+          onBeforeLoad: (win) => {
+            cy.stub(win, 'open').as('windowOpen')
+          },
+        })
+        cy.url().should('contain', expectedUrl)
+        cy.findByRole('heading', { name: `${contentCheck}` })
+      })
+    cy.go('back')
+  }
 }
 Cypress.Commands.add('checkHyperLinks', (language, isMobile = false) => {
-  /*cy.wait(2000)
-  const CFDButton = CFD[language]
-  const bviCFD = BVI[language]
-  const vanuatuCFD = Vanuatu[language]
-  const labuanCFD = Labuan[language]
-  const validations = linkValidations[language]
-  validations.forEach(({ linkName, expectedUrl, contentCheck }, index) => {
-    if (isMobile) {
-      cy.findByRole('button', { name: CFDButton }).click()
-      validateLink(index, linkName, expectedUrl, contentCheck)
-    }
-  })
-  if (isMobile) cy.findByRole('button', { name: CFDButton }).click()
-  clickCompareAccounts(language)
-  clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD, isMobile)*/
   const CFDButton = CFD[language]
   cy.wait(2000)
   const bviCFD = BVI[language]
@@ -908,7 +915,7 @@ Cypress.Commands.add('checkHyperLinks', (language, isMobile = false) => {
         cy.findByRole('button', { name: CFDButton }).click()
       }
     }
-    validateLink(index, linkName, expectedUrl, contentCheck)
+    validateLink(language, index, linkName, expectedUrl, contentCheck, isMobile)
     counter++
   })
   if (isMobile) cy.findByRole('button', { name: CFDButton }).click()
