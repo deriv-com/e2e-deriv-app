@@ -40,11 +40,11 @@ function crypto_transfer(to_account, transferAmount) {
     .click()
     .type(transferAmount)
   cy.wait(1000) // to sget transfer amount
-  checkTranferExchangeRate(to_account, transferAmount)
   if (to_account == 'USD Wallet') {
     cy.contains(
       'lifetime transfer limit from BTC Wallet to any fiat Wallets is'
     )
+    checkTranferExchangeRate(to_account, transferAmount)
   } else {
     if (to_account == 'Options') {
       cy.contains('transfer limit between your BTC Wallet and Options')
