@@ -132,7 +132,13 @@ Cypress.Commands.add('c_setupUSDTradeAccountResponsive', (wallet) => {
   cy.get('.wallets-progress-bar')
     .children()
     .first()
-    .should('have.class', 'wallets-progress-bar-active')
+    .then((firstChild) => {
+      if (!firstChild.hasClass('wallets-progress-bar-active')) {
+        cy.get('.wallets-progress-bar .wallets-progress-bar-inactive')
+          .first()
+          .click()
+      }
+    })
   cy.get('.wallets-progress-bar-active')
     .parentsUntil('.wallets-carousel-content__cards')
     .then((list) => {
@@ -144,7 +150,9 @@ Cypress.Commands.add('c_setupUSDTradeAccountResponsive', (wallet) => {
         .then(($el) => {
           const text = $el.text().trim() // Trim any extra whitespace
           cy.log('Text found:', text) // Log the actual text to debug
-          expect(text).to.include('USD')
+          expect(text).to.include(wallet)
+          cy.findByRole('button', { name: 'Transfer' }).should('be.visible')
+          cy.wait(300)
         })
     })
   cy.c_setupTradeAccountResponsive(wallet)

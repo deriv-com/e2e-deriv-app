@@ -23,9 +23,7 @@ describe('QATEST-156146 - Add trading account to wallet account (Crypto)', () =>
     { scrollBehavior: false },
     () => {
       cy.c_visitResponsive('/', 'small')
-      cy.c_skipPasskeysV2()
       cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
-      cy.c_skipPasskeysV2()
       cy.findAllByText(/Deposit/, { timeout: 10000 }).should('exist')
       cy.c_skipPasskeysV2()
       cy.findByText("Trader's Hub").should('be.visible')
