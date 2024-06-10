@@ -50,10 +50,6 @@ function crypto_transfer(to_account, transferAmount) {
       cy.contains('transfer limit between your BTC Wallet and Options')
     } else {
       cy.contains('lifetime transfer limit between cryptocurrency Wallets is')
-      cy.getCurrentExchangeRate('USD', 'EUR', 100).then((finalRate) => {
-        cy.log('EXCHANGE RATE IS:')
-        cy.log(finalRate)
-      })
     }
   }
 
