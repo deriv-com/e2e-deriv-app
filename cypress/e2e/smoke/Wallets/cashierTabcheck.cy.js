@@ -2,9 +2,7 @@ import '@testing-library/cypress/add-commands'
 
 function checkForCashierMenu() {
   cy.findByText('CFDs', { exact: true }).should('be.visible')
-  cy.findByRole('button', { name: /Derived SVG [\d.,]+ USD/ }).should(
-    'be.visible'
-  )
+  cy.findByText('Financial').should('be.visible')
   cy.findByText('Cashier').should('not.exist')
   cy.findByText('Deriv Trader').click()
   cy.findByRole('link', { name: 'Cashier Cashier' }).should('not.exist')
@@ -28,14 +26,9 @@ describe('QATEST-156095 -  Cashier tab should not be displayed in the menu', () 
   it('Responsive - Cashier tab should not be displayed in the menu for wallet accounts ', () => {
     cy.c_visitResponsive('/', 'small')
     checkForCashierMenuMobile()
-    cy.findByRole('button', { name: /Derived SVG [\d.,]+ USD/ }).should(
-      'be.visible'
-    )
+    cy.findByText('Financial').should('be.visible')
     cy.findByRole('button', { name: 'Options' }).click({ force: true })
-    cy.get('.wallets-options-and-multipliers-listing__content__details')
-      .contains('.wallets-text', 'Deriv Trader')
-      .should('be.visible')
-      .click()
+    cy.findByText('Deriv Trader').click()
     cy.findByTestId('dt_positions_toggle').should('be.visible')
     checkForCashierMenuMobile()
   })
