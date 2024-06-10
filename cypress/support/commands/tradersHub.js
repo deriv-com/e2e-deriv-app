@@ -844,6 +844,7 @@ Cypress.Commands.add(
 )
 
 Cypress.Commands.add('c_changeLanguageMobile', (language) => {
+  console.log('Changing language to:', language)
   const { lang } = languages[language]
   cy.get('#dt_mobile_drawer_toggle').click()
   cy.findByTestId('dt_icon').click()
@@ -877,7 +878,7 @@ const validateLink = (index, linkName, expectedUrl, contentCheck) => {
   })
   cy.go('back')
 }
-Cypress.Commands.add('checkHyperLinks', (CFD, language, isMobile = false) => {
+Cypress.Commands.add('checkHyperLinks', (language, isMobile = false) => {
   /*cy.wait(2000)
   const CFDButton = CFD[language]
   const bviCFD = BVI[language]
@@ -910,7 +911,7 @@ Cypress.Commands.add('checkHyperLinks', (CFD, language, isMobile = false) => {
     validateLink(index, linkName, expectedUrl, contentCheck)
     counter++
   })
-  cy.findByRole('button', { name: CFDButton }).click()
+  if (isMobile) cy.findByRole('button', { name: CFDButton }).click()
   clickCompareAccounts(language)
   clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD, isMobile)
 })
@@ -925,14 +926,7 @@ function clickCompareAccounts(language) {
   cy.go('back')
 }
 
-function clickAndGetTerms(
-  CFD,
-  language,
-  bviCFD,
-  vanuatuCFD,
-  labuanCFD,
-  isMobile
-) {
+function clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD, isMobile) {
   const { getButton, termsConditionLink } = clickText[language]
   const CFDButton = CFD[language]
   if (bviCFD) {
