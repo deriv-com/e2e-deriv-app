@@ -1,4 +1,7 @@
+import { generateRandomName } from '../helper/loginUtility'
 import { generateCPFNumber } from '../helper/utility'
+
+const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
 
 Cypress.Commands.add('c_navigateToPoi', (country) => {
   cy.get('a[href="/account/personal-details"]').click()
@@ -47,6 +50,23 @@ Cypress.Commands.add('c_onfidoSecondRun', (country) => {
   cy.findByText('Continue').click()
   cy.get('.onfido-sdk-ui-Camera-btn').click()
   cy.findByText('Confirm').click()
+})
+
+Cypress.Commands.add('c_resetData', () => {
+  cy.c_visitResponsive('/', 'large')
+  cy.visit(BO_URL)
+  cy.findByText('Please login.').click()
+  cy.findByText('Client Management').click()
+  cy.findByPlaceholderText('email@domain.com')
+    .should('exist')
+    .clear()
+    .type(Cypress.env('credentials').test.masterUser.ID)
+  cy.findByRole('button', { name: /View \/ Edit/i }).click()
+  cy.get('.link').eq(1).should('be.visible').click()
+  cy.get('input[name="last_name"]')
+    .clear()
+    .type(generateRandomName())
+    .type('{enter}')
 })
 
 Cypress.Commands.add('c_verifyAccount', () => {
