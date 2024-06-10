@@ -1,21 +1,30 @@
 import { derivApp } from '../locators'
+import {
+  BVI,
+  clickText,
+  Labuan,
+  languages,
+  linkValidations,
+  termsAndConditions,
+  translations,
+  Vanuatu,
+  CFD,
+} from '../../fixtures/tradersHub/allLinks'
 
 Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
   if (isMobile) {
     cy.c_closeNotificationHeader()
-    cy.findByRole('button', { name: 'Options & Multipliers' }).should(
-      'be.visible'
-    )
+    cy.findByRole('button', { name: 'Options' }).should('be.visible')
     cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'CFDs' }).click()
     cy.findAllByText('Deriv cTrader')
       .first()
       .scrollIntoView({ position: 'bottom' })
       .should('be.visible')
-    cy.findByText('Other CFD Platforms').scrollIntoView({ position: 'bottom' })
+    //cy.findByText('Other CFD Platforms').scrollIntoView({ position: 'bottom' })
     cy.findByRole('button', { name: 'CFDs' }).click()
     cy.c_closeNotificationHeader()
-    cy.findByRole('button', { name: 'Options & Multipliers' }).click()
+    cy.findByRole('button', { name: 'Options' }, { timeout: 80000 }).click()
   } else {
     cy.findByText('Options').should('be.visible')
     cy.findByText('CFDs').should('be.visible')
@@ -23,9 +32,9 @@ Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
       .first()
       .scrollIntoView({ position: 'bottom' })
       .should('be.visible')
-    cy.findByText('Other CFD Platforms').scrollIntoView({
-      position: 'bottom',
-    })
+    // cy.findByText('Other CFD Platforms').scrollIntoView({
+    //   position: 'bottom',
+    // })
     cy.findByText('Options').click()
   }
   cy.get('#traders-hub').scrollIntoView({ position: 'top' })
@@ -856,3 +865,131 @@ Cypress.Commands.add(
     }
   }
 )
+
+Cypress.Commands.add('c_changeLanguageMobile', (language) => {
+  const { lang } = languages[language]
+  cy.get('#dt_mobile_drawer_toggle').click()
+  cy.findByTestId('dt_icon').click()
+  cy.findByText(lang).should('be.visible').click()
+  cy.wait(1000)
+})
+
+Cypress.Commands.add('c_changeLanguageDesktop', (language) => {
+  const { lang, langChangeCheck } = languages[language]
+  cy.findAllByTestId('dt_icon').eq(0).click()
+  cy.findByText(lang).should('be.visible').click()
+  cy.wait(1000)
+  cy.findByText(langChangeCheck).should('be.visible')
+})
+
+Cypress.Commands.add('c_checkLanguage', (language) => {
+  cy.checkHyperLinks(language)
+})
+
+const validateLink = (index, linkName, expectedUrl, contentCheck) => {
+  cy.log(index)
+  cy.findByRole('link', { name: linkName }).then(($link) => {
+    const url = $link.prop('href')
+    cy.visit(url, {
+      onBeforeLoad: (win) => {
+        cy.stub(win, 'open').as('windowOpen')
+      },
+    })
+    cy.url().should('contain', expectedUrl)
+    cy.findByRole('heading', { name: `${contentCheck}` })
+  })
+  cy.go('back')
+}
+Cypress.Commands.add('checkHyperLinks', (CFD, language, isMobile = false) => {
+  /*cy.wait(2000)
+  const CFDButton = CFD[language]
+  const bviCFD = BVI[language]
+  const vanuatuCFD = Vanuatu[language]
+  const labuanCFD = Labuan[language]
+  const validations = linkValidations[language]
+  validations.forEach(({ linkName, expectedUrl, contentCheck }, index) => {
+    if (isMobile) {
+      cy.findByRole('button', { name: CFDButton }).click()
+      validateLink(index, linkName, expectedUrl, contentCheck)
+    }
+  })
+  if (isMobile) cy.findByRole('button', { name: CFDButton }).click()
+  clickCompareAccounts(language)
+  clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD, isMobile)*/
+  const CFDButton = CFD[language]
+  cy.wait(2000)
+  const bviCFD = BVI[language]
+  const vanuatuCFD = Vanuatu[language]
+  const labuanCFD = Labuan[language]
+  let counter = 0
+  cy.log(language)
+  const validations = linkValidations[language]
+  validations.forEach(({ linkName, expectedUrl, contentCheck }, index) => {
+    if (counter === 1) {
+      if (isMobile) {
+        cy.findByRole('button', { name: CFDButton }).click()
+      }
+    }
+    validateLink(index, linkName, expectedUrl, contentCheck)
+    counter++
+  })
+  cy.findByRole('button', { name: CFDButton }).click()
+  clickCompareAccounts(language)
+  clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD, isMobile)
+})
+
+function clickCompareAccounts(language) {
+  const { compareAccount, urlPart, compareAccountContent } =
+    translations[language]
+
+  cy.findByText(compareAccount).click()
+  cy.url().should('contain', urlPart)
+  cy.findByText(compareAccountContent).should('be.visible')
+  cy.go('back')
+}
+
+function clickAndGetTerms(
+  CFD,
+  language,
+  bviCFD,
+  vanuatuCFD,
+  labuanCFD,
+  isMobile
+) {
+  const { getButton, termsConditionLink } = clickText[language]
+  const CFDButton = CFD[language]
+  if (bviCFD) {
+    ;[bviCFD, vanuatuCFD].forEach((term) => {
+      cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
+      if (isMobile) cy.findByRole('button', { name: CFDButton }).click()
+      cy.findAllByRole('button', { name: getButton }).first().click()
+      cy.findByText(term).click()
+      cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
+      cy.findAllByRole('link', { name: termsConditionLink })
+        .invoke('attr', 'target', '_self')
+        .click()
+        .then(() => {
+          cy.url().should('eq', termsAndConditions[term])
+          cy.go('back')
+        })
+    })
+  }
+
+  cy.c_rateLimit({ maxRetries: 6 })
+  if (bviCFD) {
+    ;[bviCFD, vanuatuCFD, labuanCFD].forEach((term) => {
+      cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
+      if (isMobile) cy.findByRole('button', { name: CFDButton }).click()
+      cy.findAllByRole('button', { name: getButton }).eq(1).click()
+      cy.findByText(term).click()
+      cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
+      cy.findAllByRole('link', { name: termsConditionLink })
+        .invoke('attr', 'target', '_self')
+        .click()
+        .then(() => {
+          cy.url().should('eq', termsAndConditions[term])
+          cy.go('back')
+        })
+    })
+  }
+}
