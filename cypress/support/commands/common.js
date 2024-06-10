@@ -789,3 +789,31 @@ Cypress.Commands.add('c_login_setToken', () => {
     Cypress.env('loginPassword')
   )
 })
+Cypress.Commands.add(
+  'getCurrentExchangeRate',
+  (fromCurrency, toCurrency, amount) => {
+    cy.request({
+      method: 'GET',
+      url: 'https://api.coinbase.com/v2/exchange-rates',
+      qs: {
+        currency: fromCurrency,
+      },
+    }).then((response) => {
+      expect(response.status).to.eq(200)
+      const currentExchangeRate_fullList = JSON.stringify(response.body)
+      const regexp = new RegExp(`${toCurrency}":"([^"]+)"`)
+      const getOnlyRelatedCurrencyExchangeRate =
+        currentExchangeRate_fullList.match(regexp)[1]
+      const getFinalExchangeRate =
+        getOnlyRelatedCurrencyExchangeRate.substr(0, 8) +
+        getOnlyRelatedCurrencyExchangeRate.substr(11)
+      const calculatedFinalExhangeRate =
+        parseFloat(getFinalExchangeRate) * amount
+      const calculatedFinalExhangeRate_roundOff =
+        calculatedFinalExhangeRate.toFixed(2)
+      cy.wrap(calculatedFinalExhangeRate_roundOff).as(
+        'calculatedFinalExhangeRate_roundOff'
+      )
+    })
+  }
+)

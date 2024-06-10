@@ -1,5 +1,37 @@
 import '@testing-library/cypress/add-commands'
-
+function checkTranferExchangeRate(to_account, transferAmount) {
+  cy.get('input[class="wallets-atm-amount-input__input"]')
+    .eq(2)
+    .invoke('val')
+    .then((val) => {
+      cy.log('Converted Amount is:')
+      cy.log(val)
+      cy.getCurrentExchangeRate(
+        'BTC',
+        to_account.split(' ')[0],
+        transferAmount
+      ).then((finalRate) => {
+        cy.log('EXCHANGE RATE IS:')
+        cy.log(finalRate)
+        const getFivePercentValueOfCurrentExchangeRate = 0.05 * finalRate
+        const getMinimumFivePercentOfCurrentExchangeRate =
+          finalRate - getFivePercentValueOfCurrentExchangeRate
+        cy.log('Mimnimum is')
+        cy.log(getMinimumFivePercentOfCurrentExchangeRate)
+        const getMaximumFivePercentOfCurrentExchangeRate =
+          finalRate + getFivePercentValueOfCurrentExchangeRate
+        cy.log('Maximum is')
+        cy.log(getMaximumFivePercentOfCurrentExchangeRate)
+        const TrasnferValue = parseFloat(val.split(' ')[0])
+        expect(TrasnferValue).to.be.greaterThan(
+          getMinimumFivePercentOfCurrentExchangeRate
+        )
+        expect(TrasnferValue).to.be.gte(
+          parseFloat(getMaximumFivePercentOfCurrentExchangeRate)
+        )
+      })
+    })
+}
 function crypto_transfer(to_account, transferAmount) {
   cy.findByText('Transfer to').click()
   cy.findByText(`${to_account}`).click()
@@ -7,6 +39,8 @@ function crypto_transfer(to_account, transferAmount) {
     .eq(1)
     .click()
     .type(transferAmount)
+  cy.wait(3000)
+  checkTranferExchangeRate(to_account, transferAmount)
   if (to_account == 'USD Wallet') {
     cy.contains(
       'lifetime transfer limit from BTC Wallet to any fiat Wallets is'
@@ -16,6 +50,10 @@ function crypto_transfer(to_account, transferAmount) {
       cy.contains('transfer limit between your BTC Wallet and Options')
     } else {
       cy.contains('lifetime transfer limit between cryptocurrency Wallets is')
+      cy.getCurrentExchangeRate('USD', 'EUR', 100).then((finalRate) => {
+        cy.log('EXCHANGE RATE IS:')
+        cy.log(finalRate)
+      })
     }
   }
 
@@ -38,7 +76,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
     cy.c_login({ user: 'walletloginEmail' })
   })
 
-  it('should be able to perform transfer from crypto account', () => {
+  it.only('should be able to perform transfer from crypto account', () => {
     cy.log('Transfer from Crypto account')
     cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
