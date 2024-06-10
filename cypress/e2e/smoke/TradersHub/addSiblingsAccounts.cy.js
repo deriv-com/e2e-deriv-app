@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/helper/utility'
 
 function createSiblingAcct(acctCount) {

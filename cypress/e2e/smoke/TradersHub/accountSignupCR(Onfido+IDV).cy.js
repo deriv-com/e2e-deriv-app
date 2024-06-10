@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/helper/utility'
 
 describe('QATEST-24427,5533,5827 - Cypress test for ROW account sign up', () => {

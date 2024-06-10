@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 const desktopSteps = [
   {
     backButtonExists: false,

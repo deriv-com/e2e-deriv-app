@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 let balanceAmount = 10000
 
 describe('QATEST - 145407 - Checking the Balance', () => {

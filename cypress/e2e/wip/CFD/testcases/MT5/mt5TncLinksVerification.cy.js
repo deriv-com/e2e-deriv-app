@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-123240: Verify Mt5 Terms and Conditions for English and non-english languages', () => {
   let appLang
   let derivComProdURL = Cypress.env('derivComProdURL')

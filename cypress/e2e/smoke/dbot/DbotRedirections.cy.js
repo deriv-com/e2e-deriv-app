@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-136582: Redirection to other pages from dbot', () => {
   beforeEach(() => {
     cy.c_login({ user: 'dBot', rateLimitCheck: true })
