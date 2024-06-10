@@ -22,11 +22,11 @@ describe.skip('QATEST-2292, QATEST-2316, QATEST-2324, QATEST-2300, QATEST-2308, 
     cy.c_login()
     cy.c_navigateToPoiResponsive('Brazil', { runFor: 'p2p' })
     cy.c_verifyAccount()
+    cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
 
   it('Should be able to set a nickname for P2P in responsive mode.', () => {
-    cy.c_visitResponsive('/cashier/p2p', 'small')
-    cy.findByText('Deriv P2P').should('exist')
+    cy.c_navigateToP2P()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByRole('heading', { name: 'What’s your nickname?' }).should(
       'be.visible'

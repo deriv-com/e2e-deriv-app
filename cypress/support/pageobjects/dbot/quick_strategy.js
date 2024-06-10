@@ -33,10 +33,6 @@ class QuickStrategy {
     return cy.xpath('//input[@name="size"]')
   }
 
-  get quickStrategyTradeType() {
-    return cy.findByTestId('qs_autocomplete_tradetype')
-  }
-
   runBotQuickStrategy = () => {
     this.quickStrategyRunBtn.should('exist').click()
   }
@@ -54,10 +50,10 @@ class QuickStrategy {
     this.quickStrategyTab.should('be.visible').click()
   }
 
-  chooseTradeType = () => {
-    this.quickStrategyTradeType.click()
+  chooseTradeType = (isMobile = false) => {
+    const index = isMobile ? 1 : 3
     cy.findAllByTestId('dt_themed_scrollbars')
-      .eq(3)
+      .eq(index)
       .should('be.visible')
       .within(() => {
         cy.findByText('Matches/Differs').click()
@@ -71,8 +67,8 @@ class QuickStrategy {
 
   fillUpLossProfitTreshold = () => {
     this.quickStrategyLoss.type('4')
-    this.quickStrategyProfit.type('5')
+    this.quickStrategyProfit.type('9')
   }
 }
 
-export default new QuickStrategy()
+export default QuickStrategy

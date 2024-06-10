@@ -197,6 +197,14 @@ module.exports = defineConfig({
         ID: process.env.E2E_LOGIN_ID_P2P_EMPTYSTATE,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
+      p2pFilterPaymentMethodBase: {
+        ID: process.env.E2E_P2P_FILTER_PM_BASE,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      p2pFilterPaymentMethodSelector: {
+        ID: process.env.E2E_P2P_FILTER_PM_SELECTOR,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
       allcrypto: {
         ID: process.env.E2E_CRYPTO,
         PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
@@ -219,23 +227,71 @@ module.exports = defineConfig({
       },
       eligibleMigration1: {
         ID: process.env.E2E_WALLETS_MIGARTION_MAIN,
-        PSWD: process.env.E2E_DERIV_PASSWORD
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       eligibleMigration2: {
         ID: process.env.E2E_WALLETS_MIGARTION_BACKUP1,
-        PSWD: process.env.E2E_DERIV_PASSWORD
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       eligibleMigration3: {
         ID: process.env.E2E_WALLETS_MIGARTION_BACKUP2,
-        PSWD: process.env.E2E_DERIV_PASSWORD
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       eligibleMigration4: {
         ID: process.env.E2E_WALLETS_MIGARTION_BACKUP3,
-        PSWD: process.env.E2E_DERIV_PASSWORD
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       },
       eligibleMigration5: {
         ID: process.env.E2E_WALLETS_MIGARTION_BACKUP4,
-        PSWD: process.env.E2E_DERIV_PASSWORD
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      walletloginEmail: {
+        ID: process.env.E2E_DERIV_LOGIN_WALLET,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      walletloginEmailMobile: {
+        ID: process.env.E2E_DERIV_LOGIN_WALLET_MOBILE,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      walletMigrationNewClient: {
+        ID: process.env.E2E_WALLET_MIGRATION_NEWCLIENT,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      walletMigrationNoVRTC: {
+        ID: process.env.E2E_WALLET_MIGRATION_NO_VRTC,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      walletMigrationVRTConly: {
+        ID: process.env.E2E_WALLET_MIGRATION_VRTCONLY,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      walletMigrationNoCurrency: {
+        ID: process.env.E2E_WALLET_MIGRATION_NO_CURRENCY,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      walletMigratioNonUSD: {
+        ID: process.env.E2E_WALLET_MIGRATION_NON_USD,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      walletMigrationP2P:{
+        ID: process.env.E2E_WALLET_MIGRATION_P2P,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      walletMigrationPA:{
+        ID: process.env.E2E_WALLET_MIGRATION_PA,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      walletMigrationPAclient:{
+        ID: process.env.E2E_WALLET_MIGRATION_PA_CLIENT,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+      },
+      selfExclusion:{
+        ID: process.env.E2E_SELF_EXCLUSION,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
+      },
+      selfExclusionOptions:{
+        ID: process.env.E2E_SELF_EXCLUSION_OPTIONS,
+        PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD
       }
     },
     production:{
@@ -264,9 +320,8 @@ module.exports = defineConfig({
     viewPortSize: "small",
     baseUrl: process.env.CYPRESS_BASE_URL,
     loginEmail: process.env.E2E_DERIV_LOGIN,
-    walletloginEmail: process.env.E2E_DERIV_LOGIN_WALLET,
-    walletloginPassword:process.env.E2E_QA_ACCOUNT_PASSWORD,
     loginPassword: process.env.E2E_DERIV_PASSWORD,
+    walletEmail: process.env.E2E_DERIV_LOGIN_WALLET,
     p2pbuyloginEmail: process.env.E2E_P2P_BUY,
     p2psellloginEmail: process.env.E2E_P2P_SELL,
     loginEmailProd: process.env.E2E_DERIV_LOGIN_PROD,
@@ -279,6 +334,7 @@ module.exports = defineConfig({
     qaBoxLoginEmail: process.env.E2E_QABOX_LOGIN,
     qaBoxLoginPassword: process.env.E2E_QABOX_PASSWORD,
     qaBoxBaseUrl: process.env.E2E_QABOX_BASEURL,
+    qaBOEndpoint: process.env.BO_ENDPOINT,
     mainQaBoxBaseUrl: process.env.E2E_MAIN_QABOX_BASEURL,
     mt5Login: process.env.E2E_MT5_LOGIN,
     mt5Password: process.env.E2E_MT5_PASSWORD,
@@ -331,8 +387,11 @@ module.exports = defineConfig({
     dielCountry: "South Africa",
     updatedAppId : process.env.E2E_UPDATED_APPID,
     actualAmount : process.env.E2E_ACTUAL_AMOUNT,
+    qaBOEndpoint: process.env.BO_ENDPOINT,
     appRegisterID: process.env.E2E_APP_REGISTER,
     appRegisterUrl: process.env.E2E_APP_REGISTER_URL,
+    passkeyUrl: process.env.E2E_PASSKEY_URL,
+    passkeyAppId: process.env.E2E_PASSKEY_APP_ID,
     countries: {
       ZA: "South Africa",
       CO: "Colombia",

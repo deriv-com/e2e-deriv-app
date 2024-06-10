@@ -8,10 +8,7 @@ describe('QATEST-2853 - Ad details', () => {
   })
 
   it('Should be able to either ad or update ad details in the my profile tab.', () => {
-    cy.c_navigateToDerivP2P()
-    cy.c_skipPasskey()
-    cy.findByText('Deriv P2P').should('exist')
-    cy.c_closeNotificationHeader()
+    cy.c_navigateToP2P()
     cy.findByText('My profile').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
     cy.findByText('Ad details').should('be.visible').click()

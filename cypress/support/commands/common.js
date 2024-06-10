@@ -120,24 +120,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
     localStorage.setItem('config.server_url', Cypress.env('configServer'))
     localStorage.setItem('config.app_id', Cypress.env('configAppId'))
   }
-  if (
-    (app || user) == 'wallets' ||
-    app == 'doughflow' ||
-    app == 'demoonlywallet'
-  ) {
-    cy.contains('next_wallet').then(($element) => {
-      //Check if the element exists
-      if ($element.length) {
-        // If the element exists, click on it
-        cy.wrap($element).click()
-      }
-    })
-  }
-  if (
-    Cypress.env('oAuthUrl') == '<empty>' &&
-    app != 'wallets' &&
-    app != 'doughflow'
-  ) {
+  if (Cypress.env('oAuthUrl') == '<empty>') {
     getOAuthUrl(
       (oAuthUrl) => {
         Cypress.env('oAuthUrl', oAuthUrl)
@@ -150,15 +133,6 @@ Cypress.Commands.add('c_login', (options = {}) => {
       loginEmail,
       loginPassword
     )
-  } else if (
-    (Cypress.env('oAuthUrl') == '<empty>' && app == 'wallets') ||
-    app == 'doughflow'
-  ) {
-    getWalletOAuthUrl((oAuthUrl) => {
-      cy.log('came inside wallet getOauth')
-      Cypress.env('oAuthUrl', oAuthUrl)
-      cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
-    })
   } else {
     cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
   }
@@ -348,6 +322,7 @@ Cypress.Commands.add(
       retryCount = 0,
       maxRetries = 3,
       baseUrl = Cypress.env('configServer') + '/events',
+      isMT5ResetPassword = false,
     } = options
     cy.log(`Visit ${baseUrl}`)
     const userID = Cypress.env('qaBoxLoginEmail')
@@ -363,8 +338,8 @@ Cypress.Commands.add(
         'qaBoxLoginPassword',
         { log: false }
       )}@${baseUrl}`,
-      { args: [requestType, accountEmail] },
-      ([requestType, accountEmail]) => {
+      { args: [requestType, accountEmail, isMT5ResetPassword] },
+      ([requestType, accountEmail, isMT5ResetPassword]) => {
         cy.document().then((doc) => {
           const allRelatedEmails = Array.from(
             doc.querySelectorAll(`a[href*="${requestType}"]`)
@@ -372,25 +347,42 @@ Cypress.Commands.add(
           if (allRelatedEmails.length) {
             const verificationEmail = allRelatedEmails.pop()
             cy.wrap(verificationEmail).click()
-            cy.get('p')
-              .filter(`:contains('${accountEmail}')`)
-              .last()
-              .should('be.visible')
-              .parent()
-              .children()
-              .contains('a', Cypress.config('baseUrl'))
-              .invoke('attr', 'href')
-              .then((href) => {
-                if (href) {
-                  Cypress.env('verificationUrl', href)
-                  const code = href.match(/code=([A-Za-z0-9]{8})/)
-                  verification_code = code[1]
-                  Cypress.env('walletsWithdrawalCode', verification_code)
-                  cy.log('Verification link found')
-                } else {
-                  cy.log('Verification link not found')
-                }
-              })
+            if (isMT5ResetPassword) {
+              cy.get('p')
+                .should('be.visible')
+                .parent()
+                .children()
+                .contains('a', Cypress.config('baseUrl'))
+                .invoke('attr', 'href')
+                .then((href) => {
+                  if (href) {
+                    Cypress.env('verificationUrl', href)
+                    cy.log('MT5 reset password link found')
+                  } else {
+                    cy.log('MT5 reset password link not found')
+                  }
+                })
+            } else {
+              cy.get('p')
+                .filter(`:contains('${accountEmail}')`)
+                .last()
+                .should('be.visible')
+                .parent()
+                .children()
+                .contains('a', Cypress.config('baseUrl'))
+                .invoke('attr', 'href')
+                .then((href) => {
+                  if (href) {
+                    Cypress.env('verificationUrl', href)
+                    const code = href.match(/code=([A-Za-z0-9]{8})/)
+                    verification_code = code[1]
+                    Cypress.env('walletsWithdrawalCode', verification_code)
+                    cy.log('Verification link found')
+                  } else {
+                    cy.log('Verification link not found')
+                  }
+                })
+            }
           } else {
             cy.log('email not found')
           }
@@ -532,6 +524,11 @@ Cypress.Commands.add('c_logout', () => {
   cy.get('[data-testid="acc-switcher"]').within(() => {
     cy.contains('Log out').click()
   })
+})
+Cypress.Commands.add('c_walletLogout', () => {
+  cy.visit('/account/personal-details')
+  cy.findByText('Log out').should('exist')
+  cy.findByText('Log out').click()
 })
 
 /*
