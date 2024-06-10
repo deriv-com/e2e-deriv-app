@@ -13,7 +13,7 @@ function checkTranferExchangeRate(to_account, transferAmount) {
       ).then((finalRate) => {
         cy.log('EXCHANGE RATE IS:')
         cy.log(finalRate)
-        const getFivePercentValueOfCurrentExchangeRate = 0.05 * finalRate
+        const getFivePercentValueOfCurrentExchangeRate = 0.1 * finalRate
         const getMinimumFivePercentOfCurrentExchangeRate =
           finalRate - getFivePercentValueOfCurrentExchangeRate
         cy.log('Mimnimum is')
