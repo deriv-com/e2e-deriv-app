@@ -1,23 +1,27 @@
 import '@testing-library/cypress/add-commands'
 
-function goToAcctSwitcherFromTradepage() {
+function goToAcctSwitcherFromTradepage(deviceType) {
   const derivAppProdUrl = `${Cypress.env('prodURL')}dtrader?chart_type=`
   const derivAppStagingUrl = `${Cypress.env('stagingUrl')}dtrader?chart_type=`
-  cy.get('.wallets-deriv-apps-section__title-and-badge')
-    .contains('.wallets-text', 'Options')
-    .should('be.visible')
-    .then(() => {
-      cy.get('.wallets-list-card__badge')
-        .contains('.wallets-text', 'SVG')
-        .should('be.visible')
-      cy.get('.wallets-options-and-multipliers-listing__content__details')
-        .contains('.wallets-text', 'Deriv Trader')
-        .should('be.visible')
-        .click() //Navigate to Trade page
-      if (Cypress.config().baseUrl.includes('staging'))
-        cy.url().should('include', derivAppStagingUrl)
-      else cy.url().should('include', derivAppProdUrl)
-    })
+  if (deviceType == 'Desktop') {
+    cy.findAllByText('Options')
+      .eq(1)
+      .should('be.visible')
+      .then(() => {
+        cy.findAllByText('SVG').eq(2).should('be.visible')
+      })
+  } else {
+    cy.findByTestId('dt_tab_panels')
+      .findAllByText('Options', { exact: true })
+      .should('be.visible')
+      .then(() => {
+        cy.findByText('SVG').should('be.visible')
+      })
+  }
+  cy.findByText('Deriv Trader').click() //Navigate to Trade page
+  if (Cypress.config().baseUrl.includes('staging'))
+    cy.url().should('include', derivAppStagingUrl)
+  else cy.url().should('include', derivAppProdUrl)
 }
 function validateAccountSwitcher(CFDbanner) {
   cy.findByTestId('dt_acc_info')
@@ -53,7 +57,7 @@ describe('QATEST-129858 -  Validate account switcher ', () => {
   })
   it('Navigate to account switcher from Trade page &  Manage account settings page', () => {
     cy.c_visitResponsive('/', 'large')
-    goToAcctSwitcherFromTradepage()
+    goToAcctSwitcherFromTradepage('Desktop')
     cy.get('#dt_reports_tab').should('be.visible')
     validateAccountSwitcher('.account-switcher-wallet__looking-for-cfds')
     goToAcctSwitcherFromManagesetting('Settings')
@@ -63,7 +67,7 @@ describe('QATEST-129858 -  Validate account switcher ', () => {
   it('Responsive - Navigate to account switcher from Trade page &  Manage account settings page', () => {
     cy.c_visitResponsive('/', 'small')
     cy.findByText('Options').click()
-    goToAcctSwitcherFromTradepage()
+    goToAcctSwitcherFromTradepage('Mobile')
     cy.get('#dt_positions_toggle').should('be.visible')
     validateAccountSwitcher('.account-switcher-wallet-mobile__footer')
     goToAcctSwitcherFromManagesetting('Personal details')
