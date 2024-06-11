@@ -17,7 +17,7 @@ describe('QATEST-142456, QATEST-158991 - Add Trading account', () => {
   )
 
   it(
-    'QATEST-158991 - should add USD trading account to wallet account in responsive',
+    'should add USD trading account to wallet account in responsive',
     { scrollBehavior: false },
     () => {
       cy.c_visitResponsive('/', 'small')
