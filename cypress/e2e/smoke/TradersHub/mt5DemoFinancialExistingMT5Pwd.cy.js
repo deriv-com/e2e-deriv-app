@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-5724: CFDs - Create a demo Financial account using existing MT5 account password', () => {
   const size = ['small', 'desktop']
   let countryCode = 'co'

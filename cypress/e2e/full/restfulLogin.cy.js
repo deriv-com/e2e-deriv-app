@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 const { getLoginToken } = require('../../support/common')
 
 describe('Get token using RESTful API Request', () => {

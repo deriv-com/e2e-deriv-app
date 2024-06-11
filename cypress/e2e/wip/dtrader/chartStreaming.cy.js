@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import '../../../support/dtrader'
 
 describe('QATEST-6247 - Verify if chart streaming is working with feeds', () => {
