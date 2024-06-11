@@ -4,24 +4,20 @@ function checkTranferExchangeRate(to_account, transferAmount) {
     .eq(2)
     .invoke('val')
     .then((val) => {
-      cy.log('Converted Amount is:')
-      cy.log(val)
+      cy.log(`Converted Amount is: ${val}`)
       cy.getCurrentExchangeRate(
         'BTC',
         to_account.split(' ')[0],
         transferAmount
       ).then((finalRate) => {
-        cy.log('EXCHANGE RATE IS:')
-        cy.log(finalRate)
+        cy.log(`EXCHANGE RATE IS: ${finalRate}`)
         const getFivePercentValueOfCurrentExchangeRate = 0.1 * finalRate
         const getMinimumFivePercentOfCurrentExchangeRate =
           finalRate - getFivePercentValueOfCurrentExchangeRate
-        cy.log('Mimnimum is')
-        cy.log(getMinimumFivePercentOfCurrentExchangeRate)
+        cy.log(`Mimnimum is: ${getMinimumFivePercentOfCurrentExchangeRate}`)
         const getMaximumFivePercentOfCurrentExchangeRate =
           finalRate + getFivePercentValueOfCurrentExchangeRate
-        cy.log('Maximum is')
-        cy.log(getMaximumFivePercentOfCurrentExchangeRate)
+        cy.log(`Maximum is: ${getMaximumFivePercentOfCurrentExchangeRate}`)
         const TrasnferValue = parseFloat(val.split(' ')[0])
         expect(TrasnferValue).to.be.greaterThan(
           getMinimumFivePercentOfCurrentExchangeRate
@@ -72,7 +68,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
     cy.c_login({ user: 'walletloginEmail' })
   })
 
-  it.only('should be able to perform transfer from crypto account', () => {
+  it('should be able to perform transfer from crypto account', () => {
     cy.log('Transfer from Crypto account')
     cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
