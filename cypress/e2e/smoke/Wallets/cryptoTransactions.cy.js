@@ -1,3 +1,32 @@
+function checkTranferExchangeRate(to_account, transferAmount) {
+  cy.get('input[class="wallets-atm-amount-input__input"]')
+    .eq(2)
+    .invoke('val')
+    .then((val) => {
+      cy.log(`Converted Amount is: ${val}`)
+      cy.getCurrentExchangeRate(
+        'BTC',
+        to_account.split(' ')[0],
+        transferAmount
+      ).then((finalRate) => {
+        cy.log(`EXCHANGE RATE IS: ${finalRate}`)
+        const getFivePercentValueOfCurrentExchangeRate = 0.1 * finalRate
+        const getMinimumFivePercentOfCurrentExchangeRate =
+          finalRate - getFivePercentValueOfCurrentExchangeRate
+        cy.log(`Mimnimum is: ${getMinimumFivePercentOfCurrentExchangeRate}`)
+        const getMaximumFivePercentOfCurrentExchangeRate =
+          finalRate + getFivePercentValueOfCurrentExchangeRate
+        cy.log(`Maximum is: ${getMaximumFivePercentOfCurrentExchangeRate}`)
+        const TransferValue = parseFloat(val.split(' ')[0])
+        expect(TransferValue).to.be.greaterThan(
+          getMinimumFivePercentOfCurrentExchangeRate
+        )
+        expect(TransferValue).to.be.gte(
+          parseFloat(getMaximumFivePercentOfCurrentExchangeRate)
+        )
+      })
+    })
+}
 function crypto_transfer(to_account, transferAmount) {
   cy.findByText('Transfer to').click()
   cy.findByText(`${to_account}`).click()
@@ -5,10 +34,12 @@ function crypto_transfer(to_account, transferAmount) {
     .eq(1)
     .click()
     .type(transferAmount)
+  cy.wait(1000) // to sget transfer amount
   if (to_account == 'USD Wallet') {
     cy.contains(
       'lifetime transfer limit from BTC Wallet to any fiat Wallets is'
     )
+    checkTranferExchangeRate(to_account, transferAmount)
   } else {
     if (to_account == 'Options') {
       cy.contains('transfer limit between your BTC Wallet and Options')

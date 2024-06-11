@@ -1,4 +1,4 @@
-import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
+import { getOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
 Cypress.prevUser = ''
@@ -64,8 +64,11 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
     }).should('be.visible', { timeout: 30000 })
   }
 
-  if (path.includes('traders-hub')) {
+  if (path.includes('traders-hub') || path === '/') {
     //Wait for relevent elements to appear (based on page)
+    if (size == 'small')
+      cy.findAllByText("Trader's Hub").should('have.length', '1')
+    else cy.findAllByText("Trader's Hub").should('have.length', '2')
     cy.log('Trader Hub Selected')
   }
 })
@@ -178,7 +181,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
           cy.findByRole('banner').should('be.visible')
         } else {
           //To redirect to trader's hub page
-          cy.findAllByText("Trader's Hub").last().should('be.visible')
+          cy.findAllByText("Trader's Hub").should('have.length', '2')
         }
       })
     } else {
@@ -192,7 +195,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
         cy.findByRole('banner').should('be.visible')
       } else {
         //when deriv charts popup is not available and if we need to redirect to trader's hub page
-        cy.findAllByText("Trader's Hub").last().should('be.visible')
+        cy.findAllByText("Trader's Hub").should('have.length', '2')
       }
     }
   })
@@ -789,3 +792,31 @@ Cypress.Commands.add('c_login_setToken', () => {
     Cypress.env('loginPassword')
   )
 })
+Cypress.Commands.add(
+  'getCurrentExchangeRate',
+  (fromCurrency, toCurrency, amount) => {
+    cy.request({
+      method: 'GET',
+      url: 'https://api.coinbase.com/v2/exchange-rates',
+      qs: {
+        currency: fromCurrency,
+      },
+    }).then((response) => {
+      expect(response.status).to.eq(200)
+      const currentExchangeRate_fullList = JSON.stringify(response.body)
+      const regexp = new RegExp(`${toCurrency}":"([^"]+)"`)
+      const getOnlyRelatedCurrencyExchangeRate =
+        currentExchangeRate_fullList.match(regexp)[1]
+      const getFinalExchangeRate =
+        getOnlyRelatedCurrencyExchangeRate.substr(0, 8) +
+        getOnlyRelatedCurrencyExchangeRate.substr(11)
+      const calculatedFinalExhangeRate =
+        parseFloat(getFinalExchangeRate) * amount
+      const calculatedFinalExhangeRate_roundOff =
+        calculatedFinalExhangeRate.toFixed(2)
+      cy.wrap(calculatedFinalExhangeRate_roundOff).as(
+        'calculatedFinalExhangeRate_roundOff'
+      )
+    })
+  }
+)
