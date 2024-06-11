@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 const stakeAmount = '10.00'
 describe('QATEST-5040 -  Verify contract for Digits', () => {
   beforeEach(() => {

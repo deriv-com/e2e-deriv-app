@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-5925: Verify Change currency functionality for the account which has balance', () => {
   const size = { mobile: 'small', desktop: 'large' }
 

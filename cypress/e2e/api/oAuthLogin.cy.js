@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('Get oAuthUrl', () => {
   beforeEach(() => {
     cy.log('<E2EOAuthUrl - beforeEach>' + Cypress.env('oAuthUrl'))

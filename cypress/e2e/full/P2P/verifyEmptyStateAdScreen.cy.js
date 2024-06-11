@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 let currency = {
   name: 'Indonesian Rupiah',
   code: 'IDR',

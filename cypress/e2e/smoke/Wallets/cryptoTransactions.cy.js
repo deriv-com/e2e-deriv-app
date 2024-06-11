@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function crypto_transfer(to_account, transferAmount) {
   cy.findByText('Transfer to').click()
   cy.findByText(`${to_account}`).click()
@@ -75,13 +73,14 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
     cy.findAllByText(/USD Wallet/)
       .first()
       .should('be.visible')
-    cy.findAllByText(`-${transferAmount}`).first().should('be.visible')
+    cy.contains(`-${transferAmount}`).first().should('be.visible')
   })
 
   it('should be able to perform transfer from crypto account in responsive', () => {
     cy.log('Transfer from Crypto account')
     cy.c_visitResponsive('/', 'small')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.c_skipPasskeysV2()
     cy.c_switchWalletsAccountResponsive('BTC')
     cy.contains('Transfer').parent().click()
     crypto_transfer('USD Wallet', transferAmount)
@@ -94,6 +93,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
     cy.log('View Transactions of Crypto account')
     cy.c_visitResponsive('/', 'small')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.c_skipPasskeysV2()
     cy.c_switchWalletsAccountResponsive('BTC')
     cy.contains('Transfer').parent().click()
     cy.findByText('Transactions').first().click()

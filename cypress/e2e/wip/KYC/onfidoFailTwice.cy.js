@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-127508 - Onfido (2 attempts) failed clients are redirected to manual upload', () => {
   beforeEach(() => {
     cy.c_visitResponsive('/')

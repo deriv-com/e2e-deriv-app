@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-20309, QATEST-20310 - Log in to an existing account.', () => {
   beforeEach(() => {
     cy.c_mt5login()

@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function clickAddMt5Button(mt5AccountType) {
   cy.get('span.wallets-text').contains(mt5AccountType).click()
 }

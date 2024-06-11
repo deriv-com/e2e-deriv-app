@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-4782 Onfido verified profile', () => {
   beforeEach(() => {
     cy.c_visitResponsive('/')

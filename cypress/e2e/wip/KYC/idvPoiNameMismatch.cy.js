@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-23015 - IDV POI Name Mismatch - Mobile view', () => {
   beforeEach(() => {
     cy.c_visitResponsive('/')

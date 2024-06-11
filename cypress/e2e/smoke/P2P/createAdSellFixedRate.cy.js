@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import { generateAccountNumberString } from '../../../support/helper/utility'
 
 let fixedRate = 1.25

@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-5778, QATEST-5781, QATEST-5615', () => {
   beforeEach(() => {
     cy.c_login()
