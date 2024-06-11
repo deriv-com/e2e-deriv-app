@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-6032: Create MT5 account without using the existing MT5 password for the user(negative scenario)', () => {
   const size = ['small', 'desktop']
   let countryCode = 'co'

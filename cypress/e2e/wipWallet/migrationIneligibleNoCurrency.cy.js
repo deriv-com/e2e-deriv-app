@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 describe('QATEST-154138 -  Client without currency added', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletMigrationNoCurrency' })

@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import { derivApp } from '../../../support/locators'
 
 describe(`QATEST-00001 - fiat withdrawal request for screen size: small`, () => {

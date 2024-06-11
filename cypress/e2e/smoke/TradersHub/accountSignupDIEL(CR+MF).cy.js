@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/helper/utility'
 
 describe('QATEST-5554: Verify DIEL Signup flow - CR + MF', () => {

@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-24444 - Verify the user is able to close the personal details pop up during sign up', () => {
   const size = ['small', 'desktop']
   let countryCode = 'co'

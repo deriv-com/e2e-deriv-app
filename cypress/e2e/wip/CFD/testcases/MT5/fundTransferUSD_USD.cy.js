@@ -1,6 +1,5 @@
-import '@testing-library/cypress/add-commands'
-import mt5_tradershub from '../../Pages/mt5PageObjects'
 import fundTransferPageObjects from '../../Pages/fundTransferPageObjects'
+import mt5_tradershub from '../../Pages/mt5PageObjects'
 
 describe('QATEST-37180 - MT5 Deposit & withdrawal for same fiat currency (USD-USD)', () => {
   beforeEach(() => {

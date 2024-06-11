@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function sendWithdrawEmail() {
   if (Cypress.config('viewportWidth') < 900) {
     cy.c_switchWalletsAccountResponsive('BTC')

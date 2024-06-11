@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 let prevLanguage = ''
 
 Cypress.Commands.add('c_verifyHeaderAndSidePanel', (language, size) => {

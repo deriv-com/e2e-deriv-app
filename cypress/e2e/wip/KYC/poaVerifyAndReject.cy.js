@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import { getCurrentDate } from '../../../support/helper/utility'
 
 const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
