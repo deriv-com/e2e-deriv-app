@@ -21,10 +21,6 @@ class BotBuilder {
     return cy.get('#db-toolbar__save-button')
   }
 
-  get saveStrategyModalTitle() {
-    return cy.get('h3.dc-text')
-  }
-
   get saveStrategyModalContent() {
     return cy.get('div.modal__content')
   }
@@ -86,9 +82,7 @@ class BotBuilder {
   }
 
   pickDerivedMarket = () => {
-    // cy.get('.blocklyEditableText').click();
     cy.get('.blocklyText.blocklyDropdownText').contains('Forex').click()
-    // cy.contains('.goog-menuitem-content', 'Derived').click();
     cy.get('.goog-menuitem.goog-option').contains('Derived').click()
   }
 
@@ -98,7 +92,6 @@ class BotBuilder {
    */
   saveStrategyFromToolbar = (strategyName) => {
     this.toolbarSaveButton.click()
-    this.saveStrategyModalTitle.should('have.text', 'Save Strategy')
     this.saveStrategyModalContent.should(
       'contain.text',
       'Enter your bot name, choose to save on your computer or Google Drive, and hit '

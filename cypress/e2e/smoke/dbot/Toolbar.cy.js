@@ -32,7 +32,9 @@ describe('QATEST-99418: Verify toolbar on bot builder page', () => {
       botDashboard.goToDashboard()
       botDashboard.strategySaveStatus(strategyName).should('have.text', 'Local')
       cy.log('Importing strategy from Toolbar')
+      botBuilder.openBotBuilderTab()
       botBuilder.importStrategyFromToolbar('MartingaleOld')
+      cy.c_loadingCheck()
       //TODO:Update once BOT-1469 done
       cy.get('.notification-content').should(
         'have.text',
