@@ -18,11 +18,11 @@ function checkTranferExchangeRate(to_account, transferAmount) {
         const getMaximumFivePercentOfCurrentExchangeRate =
           finalRate + getFivePercentValueOfCurrentExchangeRate
         cy.log(`Maximum is: ${getMaximumFivePercentOfCurrentExchangeRate}`)
-        const TrasnferValue = parseFloat(val.split(' ')[0])
-        expect(TrasnferValue).to.be.greaterThan(
+        const TransferValue = parseFloat(val.split(' ')[0])
+        expect(TransferValue).to.be.greaterThan(
           getMinimumFivePercentOfCurrentExchangeRate
         )
-        expect(TrasnferValue).to.be.gte(
+        expect(TransferValue).to.be.gte(
           parseFloat(getMaximumFivePercentOfCurrentExchangeRate)
         )
       })
