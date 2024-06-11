@@ -925,8 +925,24 @@ Cypress.Commands.add(
   }
 )
 
+// Cypress.Commands.add(
+//   'c_verifyPaymentConfirmationScreenContent',
+//   (sendAmount, nickname) => {
+//     cy.findByText('Payment confirmation').should('be.visible')
+//     cy.findByText(
+//       `Please make sure that you\'ve paid ${sendAmount} to ${nickname}, and upload the receipt as proof of your payment`
+//     ).should('be.visible')
+//     cy.findByText(
+//       'Sending forged documents will result in an immediate and permanent ban.'
+//     ).should('be.visible')
+//     cy.findByText('We accept JPG, PDF, or PNG (up to 5MB).').should(
+//       'be.visible'
+//     )
+//   }
+// )
+
 Cypress.Commands.add(
-  'c_verifyPaymentConfirmationScreenContent',
+  'c_verifyPaymentConfirmationScreenContent1',
   (sendAmount, nickname) => {
     cy.findByText('Payment confirmation').should('be.visible')
     cy.findByText(

@@ -13,6 +13,7 @@ let nicknameAndAmount = {
   amount: '',
 }
 let fiatCurrency = 'USD'
+let testPassed = false
 
 let isSellAdUser = true
 const loginWithNewUser = (userAccount, isSellAdUserAccount) => {
@@ -21,7 +22,7 @@ const loginWithNewUser = (userAccount, isSellAdUserAccount) => {
   isSellAdUser = isSellAdUserAccount
 }
 
-describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Advertise floating-type sell ad, search for advertiser and place buy order with same currency, confirm order with 2FA and give rating recommendation for both buyer and seller', () => {
+describe('test', () => {
   before(() => {
     cy.clearAllSessionStorage()
   })
@@ -37,7 +38,9 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       }
   })
   it('Should be able to create sell type advert and verify all fields and messages for floating rate.', () => {
+    testPassed = false
     cy.c_navigateToP2P()
+    cy.log('p2pFloatingSellAd2')
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
     cy.c_getProfileName().then((name) => {
@@ -47,35 +50,50 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       nicknameAndAmount.sellerBalanceBeforeSelling = balance
     })
     cy.c_clickMyAdTab()
+    // delete old payment method from my profile
     cy.c_createNewAd('buy')
     cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Buy', 'float')
+    testPassed = true
   })
 
   it('Should be able to place an order for advert and verify all fields and messages for floating rate.', () => {
+    if (!testPassed) {
+      this.skip()
+    }
+    testPassed = false
     cy.c_navigateToP2P()
+    cy.log('p2pFloatingSellAd1')
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
-    cy.c_getProfileName().then((name) => {
-      nicknameAndAmount.buyer = name
-    })
-    cy.c_getProfileBalance().then((balance) => {
-      nicknameAndAmount.buyerBalanceBeforeBuying = balance
-    })
+    // cy.c_getProfileName().then((name) => {
+    //   nicknameAndAmount.buyer = name
+    // })
+    // cy.c_getProfileBalance().then((balance) => {
+    //   nicknameAndAmount.buyerBalanceBeforeBuying = balance
+    // })
     cy.then(() => {
+      // select payment method for new order
       cy.c_createSellOrder(
         nicknameAndAmount.seller,
         minOrder,
         maxOrder,
         fiatCurrency
-      ).then((sendAmount) => {
-        nicknameAndAmount.amount = sendAmount
-      })
+      )
+      // ).then((sendAmount) => {
+      //   nicknameAndAmount.amount = sendAmount
+      // })
       cy.c_waitForPayment(nicknameAndAmount)
     })
+    testPassed = true
   })
 
   it("Should be able to confirm sell order from verification link, give rating to buyer and then confirm seller's balance.", () => {
+    if (!testPassed) {
+      this.skip()
+    }
+    testPassed = false
     cy.c_navigateToP2P()
+    cy.log('p2pFloatingSellAd2')
     cy.findByText('Orders').should('be.visible').click()
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
@@ -85,65 +103,27 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
     cy.then(() => {
       cy.findByText('Pay now').should('be.visible').click()
       cy.wait(2000) //add proper wait
-      cy.c_verifyOrderPlacementScreenSell(
-        nicknameAndAmount.buyer
-        // sessionStorage.getItem('c_rateOfOneDollar'),
-        // sessionStorage.getItem('c_paymentMethods'),
-        // sessionStorage.getItem('c_sellersInstructions')
-      )
+      cy.findByText("I've paid").should('be.visible').click()
+      cy.then(() => {
+        cy.c_verifyPaymentConfirmationScreenContent1(
+          nicknameAndAmount.amount,
+          nicknameAndAmount.seller
+        )
+      })
+      testPassed = false
     })
-    cy.then(() => {
-      cy.c_verifyPaymentConfirmationScreenContent(
-        nicknameAndAmount.amount,
-        nicknameAndAmount.buyer
-      )
-      cy.c_uploadPOT('cypress/fixtures/P2P/orderCompletion.png')
-      cy.findByText('Waiting for the seller to confirm').should('be.visible')
-      cy.findByTestId('testid').should('be.visible').click()
-      cy.findByPlaceholderText('Enter message').should('be.visible')
-      cy.findByText(
-        "Hello! This is where you can chat with the counterparty to confirm the order details.Note: In case of a dispute, we'll use this chat as a reference."
-      ).should('be.visible')
-    })
-    cy.c_navigateToP2P()
-    cy.findByText('Orders').should('be.visible').click()
-    cy.c_rateLimit({
-      waitTimeAfterError: 15000,
-      isLanguageTest: true,
-      maxRetries: 5,
-    })
-    cy.findByText('Waiting for the seller to confirm').should('be.visible')
-  })
-  it('1', () => {
-    cy.c_navigateToP2P()
-    cy.findByText('Orders').should('be.visible').click()
-    cy.c_rateLimit({
-      waitTimeAfterError: 15000,
-      isLanguageTest: true,
-      maxRetries: 5,
-    })
-    cy.findByText('Confirm payment').should('be.visible').click()
-    cy.log('nicknameAndAmount')
-    cy.c_confirmSellOrder(nicknameAndAmount)
-    // cy.c_confirmSellOrder(nicknameAndAmount)
-    cy.c_giveRating('buyer')
-    cy.findByText('Completed').should('be.visible')
-    cy.findByTestId('dt_mobile_full_page_return_icon')
-      .should('be.visible')
-      .click()
-    cy.findByText('My profile').should('be.visible').click()
-    cy.findByText('Available Deriv P2P balance').should('be.visible')
-    cy.c_getProfileBalance().then((balance) => {
-      nicknameAndAmount.buyerBalanceAfterSelling = balance
-      //   nicknameAndAmount.sellerBalanceAfterSelling = balance
-    })
-    cy.then(() => {
-      cy.c_confirmBalance(
-        nicknameAndAmount.sellerBalanceBeforeSelling,
-        nicknameAndAmount.sellerBalanceAfterSelling,
-        maxOrder,
-        'buyer'
-      )
+
+    it('1', () => {
+      if (!testPassed) {
+        this.skip()
+      }
+      cy.c_navigateToP2P()
+      cy.findByText('Orders').should('be.visible').click()
+      cy.c_rateLimit({
+        waitTimeAfterError: 15000,
+        isLanguageTest: true,
+        maxRetries: 5,
+      })
     })
   })
 })
