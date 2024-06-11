@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 Cypress.Commands.add(
   'c_verifyWalletsWithdrawalScreenContentAfterLink',
   (platform) => {

@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-139905 - user should be redirected to correct wallet cashier by clicking in wallet in responsive view', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })

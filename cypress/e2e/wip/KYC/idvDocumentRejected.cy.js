@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-22853 IDV Document Rejected by Smile Identity provider', () => {
   beforeEach(() => {
     cy.c_visitResponsive('/')

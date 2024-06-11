@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 const size = ['desktop', 'small']
 
 describe('QATEST-42150 Validate the EU statutory disclaimer in footer for EU users', () => {
