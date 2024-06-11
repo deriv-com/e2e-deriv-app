@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-142456, QATEST-158991 - Add Trading account', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })

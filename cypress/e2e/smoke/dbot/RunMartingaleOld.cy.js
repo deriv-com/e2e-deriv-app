@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import BotDashboard from '../../../support/pageobjects/dbot/bot_dashboard_page'
 import RunPanel from '../../../support/pageobjects/dbot/run_panel'
 
