@@ -11,14 +11,14 @@ Cypress.Commands.add('c_navigateToPoi', (country) => {
   cy.contains(country).click()
   cy.contains('button', 'Next').click()
 })
-
-Cypress.Commands.add('c_navigateToPoiResponsive', (country, options = {}) => {
-  const { runFor = '' } = options
-  if (runFor == 'p2p') {
-    cy.c_visitResponsive('/appstore/traders-hub', 'small')
-    cy.c_skipPasskeysV2()
-  }
+Cypress.Commands.add('c_skipPassKeys', () => {
+  cy.findByText('Maybe later').click()
   cy.c_visitResponsive('/account/proof-of-identity', 'small')
+})
+
+Cypress.Commands.add('c_navigateToPoiResponsive', (country) => {
+  cy.c_visitResponsive('/account/proof-of-identity', 'small')
+  cy.c_skipPassKeys()
   cy.c_closeNotificationHeader()
   cy.get('select[name="country_input"]').select(country)
   cy.contains('button', 'Next').click()
