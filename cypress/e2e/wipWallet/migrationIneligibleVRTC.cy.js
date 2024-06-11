@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-153921 -  Client without VRTC', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletMigrationNoVRTC' })

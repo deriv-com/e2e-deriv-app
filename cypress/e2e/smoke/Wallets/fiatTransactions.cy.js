@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function fiat_transfer(to_account) {
   cy.findByText('Transfer to').click()
   cy.findByText(`${to_account}`).click()

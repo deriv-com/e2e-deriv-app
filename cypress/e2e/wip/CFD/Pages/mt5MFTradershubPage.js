@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 const mt5locators = require('../PageElements/mt5TradershubLocators.json')
 const textVal = require('../PageElements/textValidation.json')
 const mt5timeout = 10000

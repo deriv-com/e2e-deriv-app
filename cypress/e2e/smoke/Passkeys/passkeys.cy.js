@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-142511, QATEST-125357 - Passkeys Login Page Button Check', () => {
   const size = ['small', 'desktop']
 

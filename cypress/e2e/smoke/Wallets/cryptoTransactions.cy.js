@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function crypto_transfer(to_account, transferAmount) {
   cy.findByText('Transfer to').click()
   cy.findByText(`${to_account}`).click()
