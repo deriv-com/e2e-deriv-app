@@ -1,18 +1,19 @@
+import { generateRandomName } from '../../../support/helper/utility'
+
 describe('QATEST-23015 - IDV POI Name Mismatch - Mobile view', () => {
   beforeEach(() => {
     cy.c_visitResponsive('/')
-    cy.c_createRealAccount('gh')
+    cy.c_createRealAccount('ke')
     cy.c_login()
-    cy.c_navigateToPoiResponsive('Ghana')
+    cy.findByTestId('dt_traders_hub').should('be.visible')
+    cy.c_navigateToPoiResponsive('Kenya')
   })
 
   it('Should return Name mismatch', () => {
-    cy.get('select[name="document_type"]').select(
-      'Social Security and National Insurance Trust (SSNIT)'
-    )
-    cy.findByLabelText('Enter your SSNIT number').type('C000000000000')
-    cy.findByTestId('first_name').clear().type('Test')
-    cy.findByTestId('last_name').clear().type('Name')
+    cy.get('select[name="document_type"]').select('National ID Number')
+    cy.findByLabelText('Enter your document number').type('00000000')
+    cy.findByTestId('first_name').clear().type('Test Name')
+    cy.findByTestId('last_name').clear().type(`${generateRandomName()}`)
     cy.findByTestId('date_of_birth').type('2000-09-20')
 
     cy.findByRole('button', { name: 'Verify' }).should('be.disabled')
@@ -27,7 +28,9 @@ describe('QATEST-23015 - IDV POI Name Mismatch - Mobile view', () => {
     cy.c_closeNotificationHeader()
     cy.reload()
 
-    cy.contains('Your identity verification failed').should('be.visible')
+    cy.contains('Your identity verification failed because:').should(
+      'be.visible'
+    )
     cy.contains(
       "The name on your identity document doesn't match your profile."
     ).should('be.visible')

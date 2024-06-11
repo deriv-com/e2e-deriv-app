@@ -1,5 +1,4 @@
-import { generateRandomName } from '../helper/loginUtility'
-import { generateCPFNumber } from '../helper/utility'
+import { generateCPFNumber, generateRandomName } from '../helper/utility'
 
 const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
 

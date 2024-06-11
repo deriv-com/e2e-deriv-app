@@ -3,7 +3,12 @@ describe('QATEST-22037 IDV verified by Smile Identity provider', () => {
     cy.c_visitResponsive('/')
     cy.c_createRealAccount('za')
     cy.c_login()
+    cy.findByTestId('dt_traders_hub').should('be.visible')
     cy.c_navigateToPoiResponsive('South Africa')
+  })
+
+  afterEach(() => {
+    cy.c_resetData()
   })
 
   it('Should Return IDV Verified', () => {
