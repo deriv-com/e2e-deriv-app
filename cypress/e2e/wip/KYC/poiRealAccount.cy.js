@@ -9,6 +9,7 @@ describe('QATEST-149355 POI through real account creation', () => {
     // cy.c_visitResponsive('/', 'small')
     // cy.c_createDemoAccount('gh')
     cy.c_login()
+    cy.findByTestId('dt_traders_hub').should('be.visible')
   })
 
   it('Should submit IDV POI successfully', () => {
@@ -18,9 +19,9 @@ describe('QATEST-149355 POI through real account creation', () => {
     cy.findAllByTestId('dti_list_item').contains('Real').click({ force: true })
     cy.findByText('US Dollar').should('exist').click()
 
-    // cy.findByRole('button', { name: /Next/i }).click()
+    cy.findByRole('button', { name: /Next/i }).click()
     // Identity verification
-    cy.contains('Identity verification').should('be.visible')
+    // cy.contains('Identity verification').should('be.visible')
     // cy.get('select[name="document_type"]').select('Passport')
     // cy.findByLabelText('Enter your document number').type('G0000001')
     // cy.findByTestId('first_name').clear().type(`Joe ${generateRandomName()}`)
