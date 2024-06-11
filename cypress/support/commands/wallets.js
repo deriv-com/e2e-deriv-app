@@ -142,7 +142,6 @@ Cypress.Commands.add('c_setupUSDTradeAccountResponsive', (wallet) => {
   cy.get('.wallets-progress-bar-active')
     .parentsUntil('.wallets-carousel-content__cards')
     .then((list) => {
-      cy.log('inside then')
       cy.wrap(list)
         .find('.wallets-card')
         .first()

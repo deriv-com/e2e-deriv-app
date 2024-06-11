@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
 
-describe('QATEST-156146 - Add trading account to wallet account (Crypto)', () => {
+describe('QATEST-156146 - Add trading account to wallet account (Crypto), QATEST-158991 - Add Trading account to wallet account (USD)', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })
   })
@@ -19,7 +19,7 @@ describe('QATEST-156146 - Add trading account to wallet account (Crypto)', () =>
   )
 
   it(
-    'should add USD trading account to wallet account in responsive',
+    'QATEST-158991 - should add USD trading account to wallet account in responsive',
     { scrollBehavior: false },
     () => {
       cy.c_visitResponsive('/', 'small')
