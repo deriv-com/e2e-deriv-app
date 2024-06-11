@@ -7,8 +7,6 @@ describe('QATEST-5813: Add USD account for existing BTC account', () => {
   beforeEach(() => {
     cy.c_createRealAccount(countryCode, cryptoCurrency)
     cy.c_login()
-    //Wait for page to completely load
-    cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
   })
   size.forEach((size) => {
     it(`Should create a new crypto account and add USD account on ${size == 'small' ? 'mobile' : 'dekstop'}`, () => {

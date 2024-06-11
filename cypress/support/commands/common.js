@@ -1,4 +1,4 @@
-import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
+import { getOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
 Cypress.prevUser = ''
@@ -64,8 +64,9 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
     }).should('be.visible', { timeout: 30000 })
   }
 
-  if (path.includes('traders-hub')) {
+  if (path.includes('traders-hub') || path === '/') {
     //Wait for relevent elements to appear (based on page)
+    cy.findByTestId('dt_div_100_vh').should('be.visible')
     cy.log('Trader Hub Selected')
   }
 })
@@ -178,7 +179,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
           cy.findByRole('banner').should('be.visible')
         } else {
           //To redirect to trader's hub page
-          cy.findAllByText("Trader's Hub").last().should('be.visible')
+          cy.findByTestId('dt_traders_hub').should('be.visible')
         }
       })
     } else {
@@ -192,7 +193,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
         cy.findByRole('banner').should('be.visible')
       } else {
         //when deriv charts popup is not available and if we need to redirect to trader's hub page
-        cy.findAllByText("Trader's Hub").last().should('be.visible')
+        cy.findByTestId('dt_traders_hub').should('be.visible')
       }
     }
   })

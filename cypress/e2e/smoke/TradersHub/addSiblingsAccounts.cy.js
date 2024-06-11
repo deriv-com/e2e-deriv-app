@@ -27,8 +27,6 @@ describe('QATEST-5797, QATEST-5820: Add siblings accounts', () => {
   beforeEach(() => {
     cy.c_createDemoAccount(countryCode, currencyCode)
     cy.c_login()
-    //Wait for page to completely load
-    cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
   })
   size.forEach((size) => {
     it(`Should Create siblings accounts from USD account on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
