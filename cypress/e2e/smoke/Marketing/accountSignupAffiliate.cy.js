@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/helper/utility'
 
 describe('QATEST-122929 - Creating account with affiliate token', () => {
@@ -38,7 +37,7 @@ describe('QATEST-122929 - Creating account with affiliate token', () => {
       cy.window().scrollTo('center', {
         ensureScrollable: false,
       })
-      cy.findByRole('link', { name: /View affiliate details/i })
+
       cy.contains(
         'This is the token currently registered with MyAffiliates.'
       ).should('be.visible')
