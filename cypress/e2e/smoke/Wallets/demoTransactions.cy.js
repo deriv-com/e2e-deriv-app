@@ -2,7 +2,7 @@ function resetBalanceDemo(platform) {
   if (`${platform}` == `mobile`) {
     cy.c_switchWalletsAccountDemo()
     cy.contains('Reset balance', { timeout: 10000 }).should('be.visible')
-    cy.scrollTo('top',{ensureScrollable: false} ) //to make sure page is on the top
+    cy.scrollTo('top', { ensureScrollable: false }) //to make sure page is on the top
     cy.findByLabelText('reset-balance').click()
   } else {
     cy.c_switchWalletsAccount('USD Demo')
