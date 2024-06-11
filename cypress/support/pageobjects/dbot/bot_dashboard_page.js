@@ -1,4 +1,4 @@
-import { FILEPATH } from '../constants'
+import { FILEPATH } from './constants'
 class BotDashboard {
   get dashboardTab() {
     return cy.get('#id-dbot-dashboard', { timeout: 5000 }).contains('Dashboard')
@@ -8,14 +8,16 @@ class BotDashboard {
     return cy.get('.tab__dashboard__table input[type=file]')
   }
 
-  get openStrategyButton() {
-    return cy.get('button.load-strategy__button-group--open')
-  }
-
   get deleteStrategyButton() {
     return cy
       .get('div.bot-list__item__actions__action-item', { timeout: 5000 })
       .last()
+  }
+
+  get openStrategyButton() {
+    return cy
+      .get('div.bot-list__item__actions__action-item', { timeout: 5000 })
+      .first()
   }
 
   get deleteModalConfirm() {
