@@ -65,6 +65,9 @@ describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
     cy.get('#card__content table tbody tr td b Withdrawal Locked').should(
       'not.exist'
     )
+    cy.get('select[name="client_aml_risk_classification"]')
+      .select('Low')
+      .should('be.visible')
 
     /* Check no cashier lock on FE */
     cy.c_visitResponsive('/cashier/deposit', 'small')
