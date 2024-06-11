@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 describe('QATEST-154042 -  Client with USD more than 3 months, but registered for P2P', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletMigrationP2P' })

@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function createMT5Account() {
   cy.findByTestId('dt_trading-app-card_real_standard')
     .findByRole('button', { name: 'Get' })

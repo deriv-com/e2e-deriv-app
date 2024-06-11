@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import BotDashboard from '../../../support/pageobjects/dbot/bot_dashboard_page'
 
 describe('QATEST-4126: Log in Deriv Bot platform page from deriv.com', () => {

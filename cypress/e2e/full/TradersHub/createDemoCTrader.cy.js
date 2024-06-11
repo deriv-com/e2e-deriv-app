@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-5708 - Create a new Demo cTrader account', () => {
   const size = ['small', 'desktop']
 

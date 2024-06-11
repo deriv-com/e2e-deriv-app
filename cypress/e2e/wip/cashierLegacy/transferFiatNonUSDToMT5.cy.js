@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import { derivApp } from '../../../support/locators'
 
 const toAccount = {
