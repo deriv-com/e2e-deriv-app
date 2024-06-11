@@ -136,6 +136,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
   } else {
     cy.c_doOAuthLogin(app, { rateLimitCheck: rateLimitCheck })
   }
+  cy.wait(10000)
 })
 
 Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {

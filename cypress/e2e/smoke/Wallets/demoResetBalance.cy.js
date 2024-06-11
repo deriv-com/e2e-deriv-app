@@ -2,10 +2,8 @@ function reset_balance_demo(platform) {
   if (`${platform}` == `mobile`) {
     cy.c_switchWalletsAccountDemo()
     cy.contains('Reset balance', { timeout: 10000 }).should('be.visible')
-    cy.findByTestId('dt_wallets_carousel_header_button')
-      .should('be.visible')
-      .click()
-    cy.findByText('Reset Balance').click()
+    cy.scrollTo('top',{ensureScrollable: false} ) //to make sure page is on the top
+    cy.findByLabelText('reset-balance').click()
   } else {
     cy.c_switchWalletsAccount('USD Demo')
     cy.findByText('Reset balance').should('be.visible').click()
