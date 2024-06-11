@@ -54,9 +54,12 @@ describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
       .select('Authenticated with scans')
       .type('{enter}')
 
-    cy.get('select[name="client_aml_risk_classification"]')
-      .select('Low')
-      .type('{enter}')
+    cy.get(
+      '#documents_wrapper table tbody tr td input[name^="expiration_date_"]'
+    )
+      .clear()
+      .type('2021-09-20')
+    cy.get('input[value="Save client details"]').last().click()
 
     /* No cashier lock in BO */
     cy.get('#card__content table tbody tr td b Withdrawal Locked').should(
