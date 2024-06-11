@@ -13,11 +13,14 @@ describe('QATEST-125246 Verify the hyperlinks on Traders Hub', () => {
       const isMobile = size == 'small' ? true : false
       cy.c_visitResponsive('/', size)
       if (isMobile) {
-        cy.wait(2000)
+        cy.findAllByTestId('dt_balance_text_container').should(
+          'have.length',
+          '2'
+        )
         cy.c_skipPasskeysV2()
         cy.c_checkTradersHubHomePage(isMobile)
-        cy.checkHyperLinks('EN', isMobile)
       }
+      cy.c_checkHyperLinks('EN', isMobile)
     })
   })
 })

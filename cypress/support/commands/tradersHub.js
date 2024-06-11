@@ -849,32 +849,21 @@ Cypress.Commands.add('c_changeLanguageMobile', (language) => {
   cy.get('#dt_mobile_drawer_toggle').click()
   cy.findByTestId('dt_icon').click()
   cy.findByText(lang).scrollIntoView().should('be.visible').click()
-  cy.wait(1000)
+  cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
 })
 
 Cypress.Commands.add('c_changeLanguageDesktop', (language) => {
   const { lang, langChangeCheck } = languages[language]
   cy.findAllByTestId('dt_icon').eq(0).click()
   cy.findByText(lang).should('be.visible').click()
-  cy.wait(1000)
   cy.findByText(langChangeCheck).should('be.visible')
 })
 
-Cypress.Commands.add('c_checkLanguage', (language) => {
-  cy.checkHyperLinks(language)
-})
-
-const validateLink = (
-  language,
-  index,
-  linkName,
-  expectedUrl,
-  contentCheck,
-  isMobile
-) => {
-  if (isMobile || ['BN', 'DE'].includes(language)) {
-    cy.findByRole('link', { name: linkName }).then(($link) => {
-      const url = $link.prop('href')
+Cypress.Commands.add(
+  'c_validateLink',
+  (language, index, linkName, expectedUrl, contentCheck, isMobile) => {
+    const visitAndCheck = (link) => {
+      const url = link.prop('href')
       cy.visit(url, {
         onBeforeLoad: (win) => {
           cy.stub(win, 'open').as('windowOpen')
@@ -882,25 +871,25 @@ const validateLink = (
       })
       cy.url().should('contain', expectedUrl)
       cy.findByRole('heading', { name: `${contentCheck}` })
-    })
-    cy.go('back')
-  } else {
-    cy.findAllByRole('link', { name: linkName })
-      .eq(index)
-      .then(($link) => {
-        const url = $link.prop('href')
-        cy.visit(url, {
-          onBeforeLoad: (win) => {
-            cy.stub(win, 'open').as('windowOpen')
-          },
-        })
-        cy.url().should('contain', expectedUrl)
-        cy.findByRole('heading', { name: `${contentCheck}` })
+    }
+
+    if (isMobile || ['BN', 'DE'].includes(language)) {
+      cy.findByRole('link', { name: linkName }).then(($link) => {
+        visitAndCheck($link)
       })
-    cy.go('back')
+      cy.go('back')
+    } else {
+      cy.findAllByRole('link', { name: linkName })
+        .eq(index)
+        .then(($link) => {
+          visitAndCheck($link)
+        })
+      cy.go('back')
+    }
   }
-}
-Cypress.Commands.add('checkHyperLinks', (language, isMobile = false) => {
+)
+
+Cypress.Commands.add('c_checkHyperLinks', (language, isMobile = false) => {
   const CFDButton = CFD[language]
   cy.wait(2000)
   const bviCFD = BVI[language]
@@ -915,15 +904,22 @@ Cypress.Commands.add('checkHyperLinks', (language, isMobile = false) => {
         cy.findByRole('button', { name: CFDButton }).click()
       }
     }
-    validateLink(language, index, linkName, expectedUrl, contentCheck, isMobile)
+    cy.c_validateLink(
+      language,
+      index,
+      linkName,
+      expectedUrl,
+      contentCheck,
+      isMobile
+    )
     counter++
   })
   if (isMobile) cy.findByRole('button', { name: CFDButton }).click()
-  clickCompareAccounts(language)
-  clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD, isMobile)
+  cy.c_clickCompareAccounts(language)
+  cy.c_clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD, isMobile)
 })
 
-function clickCompareAccounts(language) {
+Cypress.Commands.add('c_clickCompareAccounts', (language) => {
   const { compareAccount, urlPart, compareAccountContent } =
     translations[language]
 
@@ -931,43 +927,47 @@ function clickCompareAccounts(language) {
   cy.url().should('contain', urlPart)
   cy.findByText(compareAccountContent).should('be.visible')
   cy.go('back')
-}
+})
 
-function clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD, isMobile) {
-  const { getButton, termsConditionLink } = clickText[language]
-  const CFDButton = CFD[language]
-  if (bviCFD) {
-    ;[bviCFD, vanuatuCFD].forEach((term) => {
-      cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
-      if (isMobile) cy.findByRole('button', { name: CFDButton }).click()
-      cy.findAllByRole('button', { name: getButton }).first().click()
-      cy.findByText(term).click()
-      cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
-      cy.findAllByRole('link', { name: termsConditionLink })
-        .invoke('attr', 'target', '_self')
-        .click()
-        .then(() => {
-          cy.url().should('eq', termsAndConditions[term])
-          cy.go('back')
-        })
-    })
-  }
+Cypress.Commands.add(
+  'c_clickAndGetTerms',
+  (language, bviCFD, vanuatuCFD, labuanCFD, isMobile) => {
+    const { getButton, termsConditionLink } = clickText[language]
+    const CFDButton = CFD[language]
 
-  cy.c_rateLimit({ maxRetries: 6 })
-  if (bviCFD) {
-    ;[bviCFD, vanuatuCFD, labuanCFD].forEach((term) => {
-      cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
-      if (isMobile) cy.findByRole('button', { name: CFDButton }).click()
-      cy.findAllByRole('button', { name: getButton }).eq(1).click()
-      cy.findByText(term).click()
-      cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
-      cy.findAllByRole('link', { name: termsConditionLink })
-        .invoke('attr', 'target', '_self')
-        .click()
-        .then(() => {
-          cy.url().should('eq', termsAndConditions[term])
-          cy.go('back')
-        })
-    })
+    if (bviCFD) {
+      ;[bviCFD, vanuatuCFD].forEach((term) => {
+        cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
+        if (isMobile) cy.findByRole('button', { name: CFDButton }).click()
+        cy.findAllByRole('button', { name: getButton }).first().click()
+        cy.findByText(term).click()
+        cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
+        cy.findAllByRole('link', { name: termsConditionLink })
+          .invoke('attr', 'target', '_self')
+          .click()
+          .then(() => {
+            cy.url().should('eq', termsAndConditions[term])
+            cy.go('back')
+          })
+      })
+    }
+
+    cy.c_rateLimit({ maxRetries: 6 })
+    if (bviCFD) {
+      ;[bviCFD, vanuatuCFD, labuanCFD].forEach((term) => {
+        cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
+        if (isMobile) cy.findByRole('button', { name: CFDButton }).click()
+        cy.findAllByRole('button', { name: getButton }).eq(1).click()
+        cy.findByText(term).click()
+        cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
+        cy.findAllByRole('link', { name: termsConditionLink })
+          .invoke('attr', 'target', '_self')
+          .click()
+          .then(() => {
+            cy.url().should('eq', termsAndConditions[term])
+            cy.go('back')
+          })
+      })
+    }
   }
-}
+)
