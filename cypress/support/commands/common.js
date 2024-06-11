@@ -320,6 +320,7 @@ Cypress.Commands.add(
       retryCount = 0,
       maxRetries = 3,
       baseUrl = Cypress.env('configServer') + '/events',
+      isMT5ResetPassword = false,
     } = options
     cy.log(`Visit ${baseUrl}`)
     const userID = Cypress.env('qaBoxLoginEmail')
@@ -335,8 +336,8 @@ Cypress.Commands.add(
         'qaBoxLoginPassword',
         { log: false }
       )}@${baseUrl}`,
-      { args: [requestType, accountEmail] },
-      ([requestType, accountEmail]) => {
+      { args: [requestType, accountEmail, isMT5ResetPassword] },
+      ([requestType, accountEmail, isMT5ResetPassword]) => {
         cy.document().then((doc) => {
           const allRelatedEmails = Array.from(
             doc.querySelectorAll(`a[href*="${requestType}"]`)
@@ -344,25 +345,42 @@ Cypress.Commands.add(
           if (allRelatedEmails.length) {
             const verificationEmail = allRelatedEmails.pop()
             cy.wrap(verificationEmail).click()
-            cy.get('p')
-              .filter(`:contains('${accountEmail}')`)
-              .last()
-              .should('be.visible')
-              .parent()
-              .children()
-              .contains('a', Cypress.config('baseUrl'))
-              .invoke('attr', 'href')
-              .then((href) => {
-                if (href) {
-                  Cypress.env('verificationUrl', href)
-                  const code = href.match(/code=([A-Za-z0-9]{8})/)
-                  verification_code = code[1]
-                  Cypress.env('walletsWithdrawalCode', verification_code)
-                  cy.log('Verification link found')
-                } else {
-                  cy.log('Verification link not found')
-                }
-              })
+            if (isMT5ResetPassword) {
+              cy.get('p')
+                .should('be.visible')
+                .parent()
+                .children()
+                .contains('a', Cypress.config('baseUrl'))
+                .invoke('attr', 'href')
+                .then((href) => {
+                  if (href) {
+                    Cypress.env('verificationUrl', href)
+                    cy.log('MT5 reset password link found')
+                  } else {
+                    cy.log('MT5 reset password link not found')
+                  }
+                })
+            } else {
+              cy.get('p')
+                .filter(`:contains('${accountEmail}')`)
+                .last()
+                .should('be.visible')
+                .parent()
+                .children()
+                .contains('a', Cypress.config('baseUrl'))
+                .invoke('attr', 'href')
+                .then((href) => {
+                  if (href) {
+                    Cypress.env('verificationUrl', href)
+                    const code = href.match(/code=([A-Za-z0-9]{8})/)
+                    verification_code = code[1]
+                    Cypress.env('walletsWithdrawalCode', verification_code)
+                    cy.log('Verification link found')
+                  } else {
+                    cy.log('Verification link not found')
+                  }
+                })
+            }
           } else {
             cy.log('email not found')
           }

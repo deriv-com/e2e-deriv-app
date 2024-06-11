@@ -1,6 +1,6 @@
 import '@testing-library/cypress/add-commands'
-import BotDashboard from '../pageobjects/bot_dashboard_page'
-import BotBuilder from '../pageobjects/bot_builder_page'
+import BotDashboard from '../../../support/pageobjects/dbot/bot_dashboard_page'
+import BotBuilder from '../../../support/pageobjects/dbot/bot_builder_page'
 
 describe('QATEST-99418: Verify toolbar on bot builder page', () => {
   const botDashboard = new BotDashboard()

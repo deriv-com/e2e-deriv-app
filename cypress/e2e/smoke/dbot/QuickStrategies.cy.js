@@ -1,12 +1,13 @@
 import '@testing-library/cypress/add-commands'
-import RunPanel from '../pageobjects/run_panel'
-import BotBuilder from '../pageobjects/bot_builder_page'
-import quickStrategy from '../pageobjects/quick_strategy'
+import RunPanel from '../../../support/pageobjects/dbot/run_panel'
+import BotBuilder from '../../../support/pageobjects/dbot/bot_builder_page'
+import QuickStrategy from '../../../support/pageobjects/dbot/quick_strategy'
 
 describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
   const size = ['small', 'desktop']
   const runPanel = new RunPanel()
   const botBuilder = new BotBuilder()
+  const quickStrategy = new QuickStrategy()
 
   beforeEach(() => {
     cy.c_login({ user: 'dBot' })
@@ -25,7 +26,6 @@ describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
       cy.c_switchToDemoBot()
       botBuilder.openBotBuilderTab()
       cy.c_skipTour()
-      cy.get('.bot-dashboard.bot').should('be.visible') //TODO:Update once BOT-1469 done
       quickStrategy.clickQuickStrategies() //Click on Quick Strategy and fill up the details
       if (isMobile) {
         cy.get('#dt_components_select-native_select-tag').select('MARTINGALE')
@@ -37,14 +37,11 @@ describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
         'Volatility 100 (1s) Index'
       )
       cy.findByTestId('qs_autocomplete_tradetype').click()
-      if (isMobile) {
-        cy.findByText('Matches/Differs', { exact: false }).first().click()
-      } else {
-        quickStrategy.chooseTradeType()
-      }
+      quickStrategy.chooseTradeType(isMobile)
       quickStrategy.fillUpContractSize()
       quickStrategy.fillUpLossProfitTreshold()
       quickStrategy.runBotQuickStrategy()
+      cy.get('.bot-dashboard.bot').should('be.visible') //TODO:Update once BOT-1469 done
       //waiting for the bot to stop
       cy.findByRole('button', { name: 'Run' }, { timeout: 120000 }).should(
         'be.visible'
