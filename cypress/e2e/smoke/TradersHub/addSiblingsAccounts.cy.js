@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function createSiblingAcct(acctCount) {
   cy.findByTestId('dt_currency-switcher__arrow').click()
   cy.findByRole('button', { name: 'Add or manage account' }).click()
@@ -29,17 +27,17 @@ describe('QATEST-5797, QATEST-5820: Add siblings accounts', () => {
   beforeEach(() => {
     cy.c_createDemoAccount(countryCode, currencyCode)
     cy.c_login()
+    //Wait for page to completely load
+    cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
   })
   size.forEach((size) => {
     it(`Should Create siblings accounts from USD account on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
-      cy.c_visitResponsive('/appstore/traders-hub', size)
+      cy.c_visitResponsive('/', size)
       //Wait for page to completely load
       cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
       cy.c_switchToReal()
-      cy.findByTestId('dt_trading-app-card_real_deriv-account')
-        .findByRole('button', { name: 'Get' })
-        .click()
+      cy.findByText('Add a Deriv account').should('be.visible')
       cy.c_generateRandomName().then((firstName) => {
         cy.c_personalDetails(
           firstName,

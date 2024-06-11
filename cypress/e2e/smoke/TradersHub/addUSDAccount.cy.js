@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-5813: Add USD account for existing BTC account', () => {
   const size = ['small', 'desktop']
   let countryCode = 'co'
@@ -9,11 +7,15 @@ describe('QATEST-5813: Add USD account for existing BTC account', () => {
   beforeEach(() => {
     cy.c_createRealAccount(countryCode, cryptoCurrency)
     cy.c_login()
+    //Wait for page to completely load
+    cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
   })
   size.forEach((size) => {
     it(`Should create a new crypto account and add USD account on ${size == 'small' ? 'mobile' : 'dekstop'}`, () => {
       const isMobile = size == 'small' ? true : false
-      cy.c_visitResponsive('/appstore/traders-hub', size)
+      cy.c_visitResponsive('/', size)
+      //Wait for page to completely load
+      cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
       if (isMobile) cy.c_skipPasskeysV2()
       cy.c_checkTradersHubHomePage(isMobile)
       cy.c_closeNotificationHeader()
