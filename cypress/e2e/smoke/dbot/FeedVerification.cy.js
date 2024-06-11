@@ -1,5 +1,5 @@
 import charts from '../../../support/pageobjects/dbot/charts'
-import '@testing-library/cypress/add-commands'
+
 describe('QATEST-99340: Verify feed is loading on charts tab', () => {
   const size = ['small', 'desktop']
   beforeEach(() => {
@@ -21,18 +21,22 @@ describe('QATEST-99340: Verify feed is loading on charts tab', () => {
       if (isMobile) cy.findByTestId('close-icon', { timeout: 7000 }).click()
       cy.c_skipTour()
       charts.openChartsTab()
-      charts.selectSymbolOnCharts('Volatility 10 (1s) Index')
-      charts.verifyTickChange(5000)
-      charts.selectSymbolOnCharts('Gold Basket')
-      charts.verifyTickChange(5000)
-
-      //check feed on demo account
-      cy.c_switchToDemoBot()
-      charts.openChartsTab()
-      charts.selectSymbolOnCharts('AUD/JPY')
-      charts.verifyTickChange(5000)
-      charts.selectSymbolOnCharts('Gold/USD')
-      charts.verifyTickChange(5000)
+      cy.c_loadingCheck()
+      cy.findByText('Retrieving Chart Data...').should('not.be.visible')
+      if (size === 'desktop') {
+        cy.log('Checking feed on real account')
+        charts.selectSymbolOnCharts('Volatility 10 (1s) Index')
+        charts.verifyTickChange(5000)
+        charts.selectSymbolOnCharts('Gold Basket')
+        charts.verifyTickChange(5000)
+      } else {
+        cy.c_switchToDemoBot()
+        cy.log('Checking feed on demo account')
+        charts.selectSymbolOnCharts('AUD/JPY')
+        charts.verifyTickChange(5000)
+        charts.selectSymbolOnCharts('Gold/USD')
+        charts.verifyTickChange(5000)
+      }
     })
   })
 })

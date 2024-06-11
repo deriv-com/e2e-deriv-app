@@ -387,6 +387,7 @@ module.exports = defineConfig({
     dielCountry: "South Africa",
     updatedAppId : process.env.E2E_UPDATED_APPID,
     actualAmount : process.env.E2E_ACTUAL_AMOUNT,
+    qaBOEndpoint: process.env.BO_ENDPOINT,
     appRegisterID: process.env.E2E_APP_REGISTER,
     appRegisterUrl: process.env.E2E_APP_REGISTER_URL,
     passkeyUrl: process.env.E2E_PASSKEY_URL,

@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import mt5tradershub from '../../Pages/mt5MFTradershubPage'
 const mt5locators = require('../../PageElements/mt5TradershubLocators.json')
 const textVal = require('../../PageElements/textValidation.json')

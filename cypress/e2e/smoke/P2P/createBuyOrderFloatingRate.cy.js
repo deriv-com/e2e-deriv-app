@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 let floatRate = 1.25
 let minOrder = 1
 let maxOrder = 10

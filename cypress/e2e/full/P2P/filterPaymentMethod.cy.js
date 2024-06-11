@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function verifyOnePaymentMethod(orderTab, PM1, NonSelectedPM) {
   cy.findByRole('button', { name: orderTab }).click()
   const buttonText = orderTab === 'Sell' ? 'Sell USD' : 'Buy USD'
