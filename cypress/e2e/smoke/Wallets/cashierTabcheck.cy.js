@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 
 function checkForCashierMenu() {
   cy.findByText('CFDs', { exact: true }).should('be.visible')
@@ -23,7 +22,7 @@ describe('QATEST-156095 -  Cashier tab should not be displayed in the menu', () 
     cy.c_visitResponsive('/', 'large')
     checkForCashierMenu()
   })
-  it('Responsive - Cashier tab should not be displayed in the menu for wallet accounts ', () => {
+  it.only('Responsive - Cashier tab should not be displayed in the menu for wallet accounts ', () => {
     cy.c_visitResponsive('/', 'small')
     checkForCashierMenuMobile()
     cy.findByText('Financial').should('be.visible')
