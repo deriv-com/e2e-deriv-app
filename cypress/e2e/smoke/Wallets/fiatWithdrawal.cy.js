@@ -31,7 +31,7 @@ Cypress.Commands.add(
     )
   }
 )
-function performFiatWithdraw() {
+function performFiatWithdraw(platform) {
   cy.c_skipPasskeysV2()
   cy.findByText('Withdraw').parent().click()
   cy.findByText('Confirm your identity to make a withdrawal.').should(
@@ -44,17 +44,35 @@ function performFiatWithdraw() {
     cy.findByRole('button', { name: 'Send email' }).click({ force: true })
   }
   cy.findByText("We've sent you an email.")
-  cy.c_retrieveVerificationLinkUsingMailisk(
-    Cypress.env('credentials').production.wallets.ID.split('@')[0],
-    'withdrawal',
-    Math.floor((Date.now() - 500) / 1000)
+  // cy.c_retrieveVerificationLinkUsingMailisk(
+  //   Cypress.env('credentials').production.wallets.ID.split('@')[0],
+  //   'withdrawal',
+  //   Math.floor((Date.now() - 500) / 1000)
+  // )
+  cy.c_emailVerification(
+    'request_payment_withdraw.html',
+    Cypress.env('credentials').test.walletloginEmail.ID
   )
+  cy.then(() => {
+    let verification_code = Cypress.env('walletsWithdrawalCode')
+    if (`${platform}` == `mobile`) {
+      cy.c_visitResponsive(
+        `/wallet/withdrawal?verification=${verification_code}`,
+        'small'
+      )
+    } else {
+      cy.c_visitResponsive(
+        `/wallet/withdrawal?verification=${verification_code}`,
+        'large'
+      )
+    }
+  })
 }
 
 describe('QATEST-98812 - Fiat withdrawal access iframe from email verification link', () => {
   //Prerequisites: Fiat wallet account in backend prod staging with USD wallet
   beforeEach(() => {
-    cy.c_login({ user: 'wallets', backEndProd: true })
+    cy.c_login({ user: 'walletloginEmail' })
   })
 
   it('should be able to access doughflow iframe', () => {
@@ -64,7 +82,7 @@ describe('QATEST-98812 - Fiat withdrawal access iframe from email verification l
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_skipPasskeysV2()
     cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
-    performFiatWithdraw()
+    performFiatWithdraw('Desktop')
     cy.c_verifyWalletsWithdrawalScreenContentAfterLink('desktop')
   })
   it('should be able to access doughflow iframe in responsive', () => {
@@ -72,7 +90,7 @@ describe('QATEST-98812 - Fiat withdrawal access iframe from email verification l
     cy.c_visitResponsive('/', 'small')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
-    performFiatWithdraw()
+    performFiatWithdraw('Mobile')
     cy.c_verifyWalletsWithdrawalScreenContentAfterLink('mobile')
   })
 })
