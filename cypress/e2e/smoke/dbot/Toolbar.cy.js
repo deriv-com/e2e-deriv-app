@@ -28,7 +28,6 @@ describe('QATEST-99418: Verify toolbar on bot builder page', () => {
       botBuilder.changeMarketOnBlocklyWorkspace(1, 'Stock Indices')
       botBuilder.changeMarketOnBlocklyWorkspace(2, 'European indices')
       botBuilder.saveStrategyFromToolbar(strategyName)
-      cy.wait(5000)
       botDashboard.goToDashboard()
       botDashboard.strategySaveStatus(strategyName).should('have.text', 'Local')
       cy.log('Importing strategy from Toolbar')
