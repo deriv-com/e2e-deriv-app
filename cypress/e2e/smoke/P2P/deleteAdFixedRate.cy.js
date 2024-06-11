@@ -22,16 +22,12 @@ describe('QATEST-2482 - Delete Advert - Fixed Rate', () => {
   })
 
   it('Should be able to delete newly created advert for fixed rate.', () => {
-    cy.c_navigateToDerivP2P()
-    cy.c_skipPasskey()
-    cy.findByText('Deriv P2P').should('exist')
-    cy.c_closeNotificationHeader()
+    cy.c_navigateToP2P()
     cy.c_clickMyAdTab()
     cy.c_checkForExistingAds().then((adExists) => {
       if (adExists == false) {
         cy.c_createNewAd('buy')
         cy.findByText('Buy USD').click()
-        cy.findByText("You're creating an ad to buy...").should('be.visible')
         cy.findByTestId('offer_amount')
           .next('span.dc-text')
           .invoke('text')
@@ -58,6 +54,8 @@ describe('QATEST-2482 - Delete Advert - Fixed Rate', () => {
           cy.findByTestId('default_advert_description')
             .type('Description Block')
             .should('have.value', 'Description Block')
+          cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+          cy.findByText('Set payment details').should('be.visible')
           cy.findByTestId('dt_dropdown_display').click()
           cy.get('#900').should('be.visible').click()
           cy.c_PaymentMethod()

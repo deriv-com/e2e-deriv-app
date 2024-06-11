@@ -1,7 +1,7 @@
 import '@testing-library/cypress/add-commands'
 
 function createMT5Account() {
-  cy.findByTestId('dt_trading-app-card_real_derived')
+  cy.findByTestId('dt_trading-app-card_real_standard')
     .findByRole('button', { name: 'Get' })
     .click()
   cy.findByText('St. Vincent & Grenadines').click()
@@ -60,7 +60,7 @@ describe('QATEST-6064 Validate the transfer from CR to MT5 when CR account is ha
     cy.findByTestId('dt_traders_hub')
       .findByText('Deriv MT5')
       .should('be.visible')
-    cy.findByTestId('dt_trading-app-card_real_derived')
+    cy.findByTestId('dt_trading-app-card_real_standard')
       .should(() => {})
       .findByRole('button', {
         name: 'Get',
@@ -77,8 +77,11 @@ describe('QATEST-6064 Validate the transfer from CR to MT5 when CR account is ha
 
   it('Should validate the transfer functionality from CR to MT5 account when CR account is having balance in mobile ', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
+    //Wait for page to load
+    cy.findByTestId('dt_trading-app-card_real_deriv-trader')
+      .findByText('Deriv Trader')
+      .should('be.visible')
     cy.c_skipPasskeysV2()
-    cy.findByRole('link', { name: 'options' }).should('be.visible')
     cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'CFDs' }).click()
     validateTransferwithBalance()
@@ -98,8 +101,11 @@ describe('QATEST-6060 Validate the transfer from CR to MT5 when CR account is no
 
   it('Should validate the transfer functionality from CR to MT5 account when CR account is not having balance in mobile ', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
+    //Wait for page to load
+    cy.findByTestId('dt_trading-app-card_real_deriv-trader')
+      .findByText('Deriv Trader')
+      .should('be.visible')
     cy.c_skipPasskeysV2()
-    cy.findByRole('link', { name: 'options' }).should('be.visible')
     cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'CFDs' }).click()
     createMT5Account()

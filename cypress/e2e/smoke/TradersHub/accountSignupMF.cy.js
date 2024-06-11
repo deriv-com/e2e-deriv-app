@@ -1,6 +1,5 @@
 import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/helper/utility'
-import { derivApp } from '../../../support/locators'
 
 describe('QATEST-5569: Verify MF Signup flow', () => {
   let size = ['small', 'desktop']

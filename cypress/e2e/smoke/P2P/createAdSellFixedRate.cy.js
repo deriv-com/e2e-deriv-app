@@ -23,14 +23,10 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
   it('Should be able to create sell type advert and verify all fields and messages for fixed rate.', () => {
-    cy.c_navigateToDerivP2P()
-    cy.c_skipPasskey()
-    cy.findByText('Deriv P2P').should('exist')
-    cy.c_closeNotificationHeader()
+    cy.c_navigateToP2P()
     cy.c_clickMyAdTab()
     cy.c_createNewAd('sell')
     cy.findByText('Sell USD').click()
-    cy.findByText("You're creating an ad to sell...").should('be.visible')
     cy.findByTestId('offer_amount')
       .next('span.dc-text')
       .invoke('text')
@@ -45,19 +41,20 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
       })
     cy.then(() => {
       cy.c_verifyAmountFiled()
-      cy.c_verifyFixedRate(
-        'sell',
-        10,
-        fixedRate,
-        sessionStorage.getItem('c_fiatCurrency'),
-        sessionStorage.getItem('c_localCurrency')
-      )
+      cy.c_verifyFixedRate(fixedRate)
       cy.c_verifyMaxMin('min_transaction', minOrder, 'Min')
       cy.c_verifyMaxMin('max_transaction', maxOrder, 'Max')
       cy.c_verifyTextAreaBlock('contact_info')
       cy.c_verifyTextAreaBlock('default_advert_description')
       cy.c_verifyTooltip()
       cy.c_verifyCompletionOrderDropdown()
+      cy.c_verifyAdSummary(
+        'sell',
+        10,
+        fixedRate,
+        sessionStorage.getItem('c_fiatCurrency'),
+        sessionStorage.getItem('c_localCurrency')
+      )
       cy.findByTestId('dt_payment_method_card_add_icon')
         .should('be.visible')
         .click()
@@ -69,6 +66,8 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
         .find('.dc-checkbox')
         .and('exist')
         .click()
+      cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+      cy.findByText('Set ad conditions').should('be.visible')
       cy.c_verifyPostAd()
       verifyAdOnMyAdsScreen(
         'Sell',
