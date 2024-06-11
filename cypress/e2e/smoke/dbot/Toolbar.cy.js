@@ -24,7 +24,7 @@ describe('QATEST-99418: Verify toolbar on bot builder page', () => {
       cy.c_switchToDemoBot()
       botBuilder.openBotBuilderTab()
       cy.c_skipTour()
-
+      cy.log('Saving strategy from Toolbar')
       botBuilder.changeMarketOnBlocklyWorkspace(1, 'Stock Indices')
       botBuilder.changeMarketOnBlocklyWorkspace(2, 'European indices')
       botBuilder.saveStrategyFromToolbar(strategyName)
