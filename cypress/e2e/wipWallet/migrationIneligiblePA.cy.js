@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 describe('QATEST-154043 - Client with USD more than 3 months & Payment agent', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletMigrationPA' })

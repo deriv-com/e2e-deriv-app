@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-5918: Verify Change currency functionality for the account which has no balance', () => {
   const size = ['small', 'desktop']
   let newCurrency = Cypress.env('accountCurrency').EUR

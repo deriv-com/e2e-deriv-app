@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 describe('QATEST-154136 -  Client with Non-USD curency', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletMigratioNonUSD' })

@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-5972: Create a Derived SVG account', () => {
   const size = ['small', 'desktop']
   let countryCode = 'co'

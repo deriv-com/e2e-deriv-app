@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function performCryptoDeposit(platform) {
   cy.contains('Wallet', { timeout: 10000 }).should('exist')
   if (`${platform}` == `mobile`) {

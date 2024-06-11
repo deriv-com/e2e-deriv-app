@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-22808 IDV Expired scenario', () => {
   beforeEach(() => {
     cy.c_visitResponsive('/')
