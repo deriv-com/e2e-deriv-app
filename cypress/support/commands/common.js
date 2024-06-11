@@ -66,7 +66,9 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
 
   if (path.includes('traders-hub') || path === '/') {
     //Wait for relevent elements to appear (based on page)
-    cy.findAllByText("Trader's Hub").should('have.length', '2')
+    if (size == 'small')
+      cy.findAllByText("Trader's Hub").should('have.length', '1')
+    else cy.findAllByText("Trader's Hub").should('have.length', '2')
     cy.log('Trader Hub Selected')
   }
 })
