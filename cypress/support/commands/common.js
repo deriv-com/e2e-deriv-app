@@ -180,7 +180,8 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
         ) {
           cy.findByRole('banner').should('be.visible')
         } else {
-          cy.findByTestId('dt_traders_hub_home_button').should('be.visible')
+          //cy.findByTestId('dt_traders_hub_home_button').should('be.visible')
+          cy.findByTestId('dt_traders_hub').should('be.visible')
         }
       })
     } else {
@@ -193,7 +194,8 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
       ) {
         cy.findByRole('banner').should('be.visible')
       } else {
-        cy.findByTestId('dt_traders_hub_home_button').should('be.visible')
+        //cy.findByTestId('dt_traders_hub_home_button').should('be.visible')
+        cy.findByTestId('dt_traders_hub').should('be.visible')
       }
     }
   })

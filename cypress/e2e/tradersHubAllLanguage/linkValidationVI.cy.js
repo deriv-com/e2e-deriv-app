@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-125246 Verify the hyperlinks on Traders Hub', () => {
   const size = ['small']
   let countryCode = 'co'
