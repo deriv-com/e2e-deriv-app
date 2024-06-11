@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-20318 - Verify MT5 access from Traders Hub', () => {
   beforeEach(() => {
     cy.c_login()

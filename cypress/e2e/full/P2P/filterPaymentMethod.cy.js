@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function verifyOnePaymentMethod(orderTab, PM1, NonSelectedPM) {
   cy.findByRole('button', { name: orderTab }).click()
   const buttonText = orderTab === 'Sell' ? 'Sell USD' : 'Buy USD'
@@ -61,17 +59,13 @@ describe('QATEST-2853 - Ad details', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
   it('Filter for Payment Methods - Buy/Sell Ad', () => {
-    cy.c_navigateToDerivP2P()
-    cy.c_skipPasskey()
-    cy.c_closeNotificationHeader()
+    cy.c_navigateToP2P()
     cy.c_clickMyAdTab()
     cy.c_createNewAd('sell')
     addOrderWithPM()
     cy.c_login({ user: 'p2pFilterPaymentMethodSelector' })
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
-    cy.c_navigateToDerivP2P()
-    cy.c_skipPasskey()
-    cy.c_closeNotificationHeader()
+    cy.c_navigateToP2P()
     cy.c_clickMyAdTab()
     cy.findByText('Buy / Sell').should('be.visible').click()
     cy.findByTestId('sort-div').next().click()

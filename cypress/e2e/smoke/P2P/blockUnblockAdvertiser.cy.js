@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 Cypress.Commands.add('c_checkRateChanged', (options = {}) => {
   const { retryCount = 1, maxRetries = 3, retryWaitTime = 1000 } = options
 
@@ -169,10 +167,7 @@ describe('QATEST-2871 - Block and unblock user from advertisers profile page', (
   })
 
   it('Should be able to block and unblock the advertiser from profile page in responsive mode.', () => {
-    cy.c_navigateToDerivP2P()
-    cy.c_skipPasskey()
-    cy.findByText('Deriv P2P').should('exist')
-    cy.c_closeNotificationHeader()
+    cy.c_navigateToP2P()
     cy.get('.buy-sell-row__advertiser-name--text')
       .first()
       .invoke('text')

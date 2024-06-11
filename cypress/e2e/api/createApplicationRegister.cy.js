@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 let oldAppId = 0
 
 describe('QATEST - 148419 - Register a New Application / App ID', () => {

@@ -1,4 +1,7 @@
+import { generateRandomName } from '../helper/loginUtility'
 import { generateCPFNumber } from '../helper/utility'
+
+const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
 
 Cypress.Commands.add('c_navigateToPoi', (country) => {
   cy.get('a[href="/account/personal-details"]').click()
@@ -19,6 +22,11 @@ Cypress.Commands.add('c_navigateToPoiResponsive', (country, options = {}) => {
   cy.c_closeNotificationHeader()
   cy.get('select[name="country_input"]').select(country)
   cy.contains('button', 'Next').click()
+})
+
+Cypress.Commands.add('c_navigateToPoaResponsive', () => {
+  cy.c_visitResponsive('/account/proof-of-address', 'small')
+  cy.c_closeNotificationHeader()
 })
 
 Cypress.Commands.add('c_submitIdv', () => {
@@ -44,6 +52,23 @@ Cypress.Commands.add('c_onfidoSecondRun', (country) => {
   cy.findByText('Confirm').click()
 })
 
+Cypress.Commands.add('c_resetData', () => {
+  cy.c_visitResponsive('/', 'large')
+  cy.visit(BO_URL)
+  cy.findByText('Please login.').click()
+  cy.findByText('Client Management').click()
+  cy.findByPlaceholderText('email@domain.com')
+    .should('exist')
+    .clear()
+    .type(Cypress.env('credentials').test.masterUser.ID)
+  cy.findByRole('button', { name: /View \/ Edit/i }).click()
+  cy.get('.link').eq(1).should('be.visible').click()
+  cy.get('input[name="last_name"]')
+    .clear()
+    .type(generateRandomName())
+    .type('{enter}')
+})
+
 Cypress.Commands.add('c_verifyAccount', () => {
   const CPFDocumentNumber = generateCPFNumber()
   cy.get('select[name="document_type"]').select('CPF')
@@ -55,7 +80,7 @@ Cypress.Commands.add('c_verifyAccount', () => {
   cy.c_rateLimit({
     waitTimeAfterError: 15000,
     isLanguageTest: true,
-    maxRetries: 5,
+    maxRetries: 6,
   })
   cy.c_closeNotificationHeader()
   cy.c_visitResponsive('/account/proof-of-identity', 'small')

@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-24444 - Verify the user is able to close the personal details pop up during sign up', () => {
   const size = ['small', 'desktop']
   let countryCode = 'co'
@@ -17,11 +15,7 @@ describe('QATEST-24444 - Verify the user is able to close the personal details p
       //Wait for page to completely load
       cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
       if (isMobile) cy.c_skipPasskeysV2()
-      cy.c_switchToReal()
-
-      cy.findByTestId('dt_trading-app-card_real_deriv-account')
-        .findByRole('button', { name: 'Get' })
-        .click()
+      cy.findByText('Add a Deriv account').should('be.visible')
       cy.findByText('US Dollar').click()
       cy.findByRole('button', { name: 'Next' }).click()
       if (isMobile) cy.findByTestId('dt_dc_mobile_dialog_close_btn').click()

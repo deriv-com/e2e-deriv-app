@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/helper/utility'
 
 describe('QATEST-5168 MF financial assessment (Appropriateness Test) - Fail scenario but successful account creation', () => {

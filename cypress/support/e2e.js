@@ -1,8 +1,9 @@
-import './commands/index'
-import 'cypress-mailisk'
+import '@testing-library/cypress/add-commands'
 import 'cypress-iframe'
+import 'cypress-mailisk'
 import 'cypress-xpath'
 import jsQR from 'jsqr'
+import './commands/index'
 // Expose jsQR globally
 Cypress.jsQR = jsQR
 

@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-6032: Create MT5 account without using the existing MT5 password for the user(negative scenario)', () => {
   const size = ['small', 'desktop']
   let countryCode = 'co'
@@ -9,13 +7,13 @@ describe('QATEST-6032: Create MT5 account without using the existing MT5 passwor
     cy.c_login()
   })
   size.forEach((size) => {
-    it(`Verify the negative scenario of adding MT5 financial account with wrong password when there is already an mt5 derived account added on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
+    it(`Verify the negative scenario of adding MT5 financial account with wrong password when there is already an MT5 Standard account added on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
       cy.c_visitResponsive('appstore/traders-hub', size)
       if (isMobile) cy.c_skipPasskeysV2()
       cy.c_checkTradersHubHomePage(isMobile)
       if (isMobile) cy.findByRole('button', { name: 'CFDs' }).click()
-      cy.findByTestId('dt_trading-app-card_real_derived')
+      cy.findByTestId('dt_trading-app-card_real_standard')
         .findByRole('button', { name: 'Get' })
         .click()
       cy.findByText('St. Vincent & Grenadines').click()
@@ -32,7 +30,7 @@ describe('QATEST-6032: Create MT5 account without using the existing MT5 passwor
       cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
       cy.get('.dc-modal-body').should(
         'contain.text',
-        'Success!Your Deriv MT5 Derived account is ready. Enable trading with your first transfer.'
+        'Success!Your Deriv MT5 Standard account is ready. Enable trading with your first transfer.'
       )
       cy.findByRole('button', { name: 'Transfer now' }).should('exist')
       cy.findByRole('button', { name: 'Maybe later' }).click()

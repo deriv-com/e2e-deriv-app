@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
   beforeEach(() => {
     cy.clearAllLocalStorage()
@@ -8,9 +6,7 @@ describe('QATEST-2414 - Create a Buy type Advert : Floating Rate', () => {
   })
 
   it('should be able to create buy type advert and verify all fields and messages', () => {
-    cy.c_navigateToDerivP2P()
-    cy.c_skipPasskey()
-    cy.c_closeNotificationHeader()
+    cy.c_navigateToP2P()
     cy.c_clickMyAdTab()
     cy.c_createNewAd('buy')
     cy.c_verifyAmountFiled()

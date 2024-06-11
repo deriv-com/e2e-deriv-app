@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 const verifySortFunctionality = (adType) => {
   cy.c_getExchangeRatesFromScreen(adType, { sortArray: true }).then(
     (initialRatesArray) => {
@@ -26,10 +24,7 @@ describe('QATEST-2718 - Verify sorting of Buy and Sell ads by Exchange Rate', ()
   })
 
   it('Should be able to sort Buy and Sell ads by Exchange Rate.', () => {
-    cy.c_navigateToDerivP2P()
-    cy.c_skipPasskey()
-    cy.findByText('Deriv P2P').should('exist')
-    cy.c_closeNotificationHeader()
+    cy.c_navigateToP2P()
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
       isLanguageTest: true,

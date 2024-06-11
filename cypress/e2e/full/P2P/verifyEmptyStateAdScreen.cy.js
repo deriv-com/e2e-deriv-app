@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 let currency = {
   name: 'Indonesian Rupiah',
   code: 'IDR',
@@ -12,10 +10,7 @@ describe('QATEST-2538 Empty State/Buy Sell Page', () => {
   })
 
   it('Should be able to see an empty state of ads and verify message is displayed.', () => {
-    cy.c_navigateToDerivP2P()
-    cy.c_skipPasskey()
-    cy.findByText('Deriv P2P').should('exist')
-    cy.c_closeNotificationHeader()
+    cy.c_navigateToP2P()
     cy.c_checkForEmptyAdScreenMessage('Buy', 'Sell')
     cy.c_checkForEmptyAdScreenMessage('Sell', 'Buy')
     cy.findByTestId('dt_dropdown_container').should('be.visible').click()

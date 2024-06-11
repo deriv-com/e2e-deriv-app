@@ -1,6 +1,4 @@
-import '@testing-library/cypress/add-commands'
-
-describe('QATEST-5695: Create a Derived Demo CFD account', () => {
+describe('QATEST-5695: Create a Standard Demo CFD account', () => {
   const size = ['small', 'desktop']
   let countryCode = 'co'
 
@@ -10,14 +8,14 @@ describe('QATEST-5695: Create a Derived Demo CFD account', () => {
   })
 
   size.forEach((size) => {
-    it(`Verify I can signup for a demo derived CFD account on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
+    it(`Verify I can signup for a demo Standard CFD account on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
       cy.c_visitResponsive('appstore/traders-hub', size)
       if (isMobile) cy.c_skipPasskeysV2()
       cy.c_checkTradersHubHomePage(isMobile)
       cy.c_switchToDemo()
       if (isMobile) cy.findByRole('button', { name: 'CFDs' }).click()
-      cy.findByTestId('dt_trading-app-card_demo_derived')
+      cy.findByTestId('dt_trading-app-card_demo_standard')
         .findByRole('button', { name: 'Get' })
         .click()
       cy.findByText('Create a Deriv MT5 password').should('be.visible')
@@ -33,16 +31,16 @@ describe('QATEST-5695: Create a Derived Demo CFD account', () => {
       cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
       cy.get('.dc-modal-body').should(
         'contain.text',
-        'Success!Your demo Derived account is ready'
+        'Success!Your demo Standard account is ready'
       )
       cy.findByRole('button', { name: 'Continue' }).click()
       cy.findByText('10,000.00 USD').should('be.visible')
       cy.findByRole('button', { name: 'Top up' }).should('exist')
-      cy.findByTestId('dt_trading-app-card_demo_derived_svg')
+      cy.findByTestId('dt_trading-app-card_demo_standard_svg')
         .findByRole('button', { name: 'Open' })
         .click({ force: true })
       cy.get('div.cfd-trade-modal-container')
-        .findByText('Derived Demo')
+        .findByText('Standard Demo')
         .should('be.visible')
     })
   })
