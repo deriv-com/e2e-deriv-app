@@ -190,9 +190,11 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
         app == 'onramp'
       ) {
         cy.findByRole('banner').should('be.visible')
+        cy.wait(3000)
       } else {
         //when deriv charts popup is not available and if we need to redirect to trader's hub page
         cy.findAllByText("Trader's Hub").last().should('be.visible')
+        cy.wait(3000)
       }
     }
   })
