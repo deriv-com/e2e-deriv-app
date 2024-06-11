@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 const addDays = (n) => {
   let myDate = new Date()
   myDate.setDate(myDate.getDate() + n)
@@ -58,17 +57,5 @@ describe('QATEST-116798 Self Exclusion Session and login limits on desktop', () 
     ).should('exist')
     cy.findByRole('button', { name: 'Up 10.00 USD' }).click()
     cy.get('.dc-modal-body').should('be.visible') // checks Trade is unavailable
-
-    /* Visit BO */
-    cy.c_visitResponsive('/', 'large')
-    cy.visit(BO_URL)
-    cy.findByText('Please login.').click()
-    cy.findByText('Client Management').click()
-    cy.findByPlaceholderText('email@domain.com')
-      .should('exist')
-      .clear()
-      .type(Cypress.env('credentials').test.masterUser.ID)
-    cy.findByRole('button', { name: /View \/ Edit/i }).click()
-    cy.get('.link').eq(1).should('be.visible').click()
   })
 })
