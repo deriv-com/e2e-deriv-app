@@ -1,4 +1,3 @@
-
 function checkForCashierMenu() {
   cy.findByText('CFDs', { exact: true }).should('be.visible')
   cy.findByText('Financial').should('be.visible')
