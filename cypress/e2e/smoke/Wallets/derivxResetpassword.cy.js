@@ -8,15 +8,13 @@ function clickAddDerivxButton() {
 function verifyDerivxCreation(accountType) {
   let expectedText
   if (accountType === 'Real') {
-    expectedText = 'Create a Deriv X password'
-    cy.get('div').contains(expectedText).should('be.visible')
+    cy.get('div').contains('Create a Deriv X password').should('be.visible')
     cy.findByPlaceholderText('Deriv X password')
       .click()
       .type(Cypress.env('mt5Password'))
     cy.findByRole('button', { name: 'Create Deriv X password' }).click()
   } else {
-    expectedText = 'Enter your Deriv X password' // Adjust this text based on your actual requirement
-    cy.get('div').contains(expectedText).should('be.visible')
+    cy.get('div').contains('Enter your Deriv X password').should('be.visible')
     cy.findByPlaceholderText('Deriv X password')
       .click()
       .type(Cypress.env('mt5Password'))
@@ -27,8 +25,8 @@ function verifyDerivxCreation(accountType) {
 function verifyTransferFundsMessage(accountType) {
   if (accountType === 'Real') {
     cy.findByText('Your Deriv X account is ready').should('be.visible')
-    cy.findByRole('button', { name: 'Maybe later' }).should('exist')
-    cy.findByRole('button', { name: 'Transfer funds' }).should('exist')
+    cy.findByRole('button', { name: 'Maybe later' }).should('be.visible')
+    cy.findByRole('button', { name: 'Transfer funds' }).should('be.visible')
     cy.findByRole('button', { name: 'Maybe later' }).click()
   } else {
     cy.findByText('Your Deriv X demo account is ready').should('be.visible')
@@ -36,25 +34,6 @@ function verifyTransferFundsMessage(accountType) {
   }
 }
 
-function expandDemoWallet() {
-  cy.get('label').find('span').click()
-  cy.findByText('USD Demo Wallet').should('be.visible')
-}
-function existingAccountCheck(walletBanner) {
-  cy.get(walletBanner).contains('.wallets-text', ' USD').should('be.visible') //To check page load
-  cy.findByText('CFDs', { exact: true }).should('be.visible').click()
-  return cy
-    .get('.wallets-added-dxtrade__details, .wallets-available-dxtrade__details')
-    .then(($details) => {
-      if ($details.hasClass('wallets-added-dxtrade__details')) {
-        return 'added'
-      } else if ($details.hasClass('wallets-available-dxtrade__details')) {
-        return 'available'
-      } else {
-        return 'none'
-      }
-    })
-}
 function addDerivXaccount(status, accountType) {
   if (status === 'available') {
     cy.log(accountType + ' DerivX account ready to add')
