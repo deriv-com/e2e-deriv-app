@@ -9,6 +9,7 @@ function changeMT5Password() {
         .then((el) => {
           if (el.length) {
             cy.log('no MT5 account exist')
+            cy.fail('no MT5 account exist')
           } else {
             cy.log('changing MT5 password')
             cy.findAllByText('Derived')

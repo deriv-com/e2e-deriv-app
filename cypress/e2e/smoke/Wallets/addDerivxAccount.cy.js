@@ -69,6 +69,7 @@ function addDerivXaccount(status, accountType) {
       })
   } else {
     cy.log('Neither found')
+    cy.fail('DerivX account already exist')
   }
 }
 
