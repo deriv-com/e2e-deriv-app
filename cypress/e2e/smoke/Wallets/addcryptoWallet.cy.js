@@ -60,7 +60,6 @@ function addcryptowallet(platform) {
             })
         }
       } else {
-        cy.log('All wallets are already added')
         cy.fail('All wallets are already added')
       }
     })

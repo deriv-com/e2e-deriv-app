@@ -68,7 +68,6 @@ function addDerivXaccount(status, accountType) {
         cy.contains('.wallets-text', 'Deriv X').should('exist')
       })
   } else {
-    cy.log('Neither found')
     cy.fail('DerivX account already exist')
   }
 }

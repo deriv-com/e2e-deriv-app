@@ -112,7 +112,6 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
           'exist'
         )
       } else {
-        cy.log('Neither found')
         cy.fail('MT5 account already exist')
       }
     })
