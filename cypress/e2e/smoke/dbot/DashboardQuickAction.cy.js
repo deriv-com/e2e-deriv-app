@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import BotDashboard from '../../../support/pageobjects/dbot/bot_dashboard_page'
 import QuickStrategy from '../../../support/pageobjects/dbot/quick_strategy'
 describe('QATEST-4128: Dashboard quick action to Quick Strategy and Bot Builder', () => {

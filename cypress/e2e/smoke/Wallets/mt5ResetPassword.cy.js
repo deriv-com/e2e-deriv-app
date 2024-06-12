@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function changeMT5Password() {
   cy.findByText('Derived', { timeout: 10000 })
     .should('be.visible')

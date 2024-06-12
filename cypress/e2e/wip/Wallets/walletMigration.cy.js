@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function checkWalletBanner(deviceType) {
   cy.findByRole('heading', { name: 'Why Wallets' }).should('be.visible')
   cy.findByText('Deposit, transfer, trade').should('be.visible')

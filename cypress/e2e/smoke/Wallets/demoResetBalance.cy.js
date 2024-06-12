@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function reset_balance_demo(platform) {
   if (`${platform}` == `mobile`) {
     cy.c_switchWalletsAccountDemo()
