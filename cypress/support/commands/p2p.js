@@ -168,7 +168,9 @@ Cypress.Commands.add(
           .should('have.value', rateValue)
       } else if (rateType == 'float') {
         //   cy.findByTestId('float_rate_type').clear()
-        cy.findByTestId('float_rate_type').type(rateValue)
+        cy.findByTestId('float_rate_type')
+          .type(rateValue)
+          .should('have.value', '+'.concat(rateValue))
       }
       cy.findByTestId('min_transaction')
         .type(minOrder)
