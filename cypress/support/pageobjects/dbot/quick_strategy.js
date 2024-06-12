@@ -18,7 +18,7 @@ class QuickStrategy {
   }
 
   get quickStrategyMarketDropdown() {
-    return cy.xpath('//input[@data-testid="qs_autocomplete_symbol"]')
+    return cy.xpath('//input[@data-testid="dt_qs_symbol"]')
   }
 
   get quickStrategyProfit() {
