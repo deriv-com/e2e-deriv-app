@@ -41,7 +41,7 @@ function checkWalletBanner(deviceType) {
   }
 }
 function checkAccountNotMigrated() {
-  cy.findByText('Derived', { timeout: 30000 }).should('be.visible')
+  cy.findByText(`Trader's Hub`, { timeout: 30000 }).should('be.visible')
   for (let i = 1; i < 4; i++) {
     cy.get('input[value="USD Wallet"]')
       .should(() => {})
