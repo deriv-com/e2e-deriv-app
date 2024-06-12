@@ -17,10 +17,6 @@ class QuickStrategy {
     return cy.xpath('//button[@class="dc-btn dc-btn--secondary"]')
   }
 
-  get quickStrategyMarketDropdown() {
-    return cy.xpath('//input[@data-testid="dt_qs_symbol"]')
-  }
-
   get quickStrategyProfit() {
     return cy.xpath('//input[@name="profit"]')
   }
@@ -39,7 +35,7 @@ class QuickStrategy {
 
   clickQuickStrategies = () => {
     this.quickStrategyBotBuilder.click()
-    this.quickStrategyMarketDropdown.should('be.visible')
+    cy.findByTestId('dt_qs_symbol').should('be.visible')
   }
 
   /**  Click on strategy title from qstrategy modal
