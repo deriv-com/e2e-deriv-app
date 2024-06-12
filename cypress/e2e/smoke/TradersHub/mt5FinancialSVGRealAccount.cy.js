@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-6000: Create a Financial SVG account', () => {
   const size = ['small', 'desktop']
   let countryCode = 'co'

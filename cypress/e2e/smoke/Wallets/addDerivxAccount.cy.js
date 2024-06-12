@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function clickAddDerivxButton() {
   cy.get('.wallets-available-dxtrade__icon')
     .parent('.wallets-trading-account-card')

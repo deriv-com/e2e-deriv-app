@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/helper/utility'
 
 describe('QATEST-146444: Verify Sign-up Flow in ES Language', () => {

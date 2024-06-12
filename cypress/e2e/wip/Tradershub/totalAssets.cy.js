@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 const createDemoAccounts = (isMobile = false) => {
   //Demo Mt5 account
   if (isMobile) cy.findByRole('button', { name: 'CFDs' }).click()

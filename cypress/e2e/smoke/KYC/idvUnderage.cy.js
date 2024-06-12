@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-23076 IDV Underage', () => {
   // Note you will need to add QA provider to qabox
   beforeEach(() => {
