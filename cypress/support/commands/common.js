@@ -180,7 +180,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
         ) {
           cy.findByRole('banner').should('be.visible')
         } else {
-          cy.findByTestId('dt_traders_hub').should('be.visible')
+          cy.findAllByText("Trader's Hub").should('have.length', '2')
         }
       })
     } else {
@@ -193,7 +193,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
       ) {
         cy.findByRole('banner').should('be.visible')
       } else {
-        cy.findByTestId('dt_traders_hub').should('be.visible')
+        cy.findAllByText("Trader's Hub").should('have.length', '2')
       }
     }
   })

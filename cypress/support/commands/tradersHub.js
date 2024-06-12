@@ -948,6 +948,10 @@ Cypress.Commands.add(
           .then(() => {
             cy.url().should('eq', termsAndConditions[term])
             cy.go('back')
+            if (isMobile) cy.findByText("Trader's Hub").should('be.visible')
+            else {
+              cy.findAllByText("Trader's Hub").should('have.length', '2')
+            }
           })
       })
     }
@@ -966,6 +970,10 @@ Cypress.Commands.add(
           .then(() => {
             cy.url().should('eq', termsAndConditions[term])
             cy.go('back')
+            if (isMobile) cy.findByText("Trader's Hub").should('be.visible')
+            else {
+              cy.findAllByText("Trader's Hub").should('have.length', '2')
+            }
           })
       })
     }
