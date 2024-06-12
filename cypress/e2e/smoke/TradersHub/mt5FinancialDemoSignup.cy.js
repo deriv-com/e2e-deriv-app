@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-5699: Create a Financial Demo CFD account', () => {
   const size = ['small', 'desktop']
   let countryCode = 'co'

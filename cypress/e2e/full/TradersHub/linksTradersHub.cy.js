@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 const size = ['small', 'desktop']
 
 describe("QATEST-5930 - Validate the hyperlinks on Trader's hub", () => {

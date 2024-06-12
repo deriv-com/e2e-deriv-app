@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-2853 - Ad details', () => {
   beforeEach(() => {
     cy.clearAllLocalStorage()

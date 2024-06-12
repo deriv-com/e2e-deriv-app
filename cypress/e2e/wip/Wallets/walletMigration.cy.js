@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function checkWalletBanner(deviceType) {
   cy.findByRole('heading', { name: 'Why Wallets' }).should('be.visible')
   cy.findByText('Deposit, transfer, trade').should('be.visible')
@@ -43,7 +41,7 @@ function checkWalletBanner(deviceType) {
   }
 }
 function checkAccountNotMigrated() {
-  cy.findByText('Derived', { timeout: 30000 }).should('be.visible')
+  cy.findByText(`Trader's Hub`, { timeout: 30000 }).should('be.visible')
   for (let i = 1; i < 4; i++) {
     cy.get('input[value="USD Wallet"]')
       .should(() => {})

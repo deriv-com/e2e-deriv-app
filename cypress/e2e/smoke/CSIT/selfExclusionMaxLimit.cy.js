@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 Cypress.Commands.add('c_setSelfExclusionMaxOptionsTo', (value) => {
   cy.get('input[name="max_open_bets"]').clear().type(value)
   cy.findByRole('button', { name: 'Next' }).click({ force: true })

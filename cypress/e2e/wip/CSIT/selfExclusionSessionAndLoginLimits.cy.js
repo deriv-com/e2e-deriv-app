@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 const addDays = (n) => {
   let myDate = new Date()
   myDate.setDate(myDate.getDate() + n)

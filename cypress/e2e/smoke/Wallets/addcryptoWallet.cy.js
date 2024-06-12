@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 function addcryptowallet(platform) {
   cy.get('.wallets-add-more__carousel-wrapper')
     .find('button')
@@ -66,7 +65,9 @@ function addcryptowallet(platform) {
     })
 }
 function checkWalletAccountSwitcher(walletname) {
-  cy.get('.wallets-dropdown__button', { timeout: 10000 }).scrollIntoView()
+  cy.get('.wallets-dropdown__button', { timeout: 10000 })
+    .scrollIntoView()
+    .should('be.visible')
   cy.get('.wallets-dropdown__button').click()
   cy.contains(`${walletname}`).should('exist')
 }

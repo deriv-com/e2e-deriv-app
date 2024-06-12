@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-5704 - Create a new Swap free demo accounts ', () => {
   const size = ['small', 'desktop']
 
