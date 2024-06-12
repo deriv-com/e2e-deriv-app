@@ -167,8 +167,8 @@ Cypress.Commands.add(
           .type(rateValue)
           .should('have.value', rateValue)
       } else if (rateType == 'float') {
+        cy.findByTestId('float_rate_type').clear()
         cy.findByTestId('float_rate_type')
-          .clear()
           .type(rateValue)
           .should('have.value', rateValue)
       }

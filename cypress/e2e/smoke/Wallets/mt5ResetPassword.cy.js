@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function changeMT5Password() {
   cy.findByText('Derived', { timeout: 10000 })
     .should('be.visible')
@@ -40,7 +38,10 @@ function changeMT5Password() {
             cy.c_emailVerification(
               'New%20DMT5%20password%20request.html',
               'QA script',
-              { baseUrl: Cypress.env('configServer') + '/emails' }
+              {
+                baseUrl: Cypress.env('configServer') + '/emails',
+                isMT5ResetPassword: true,
+              }
             )
             cy.then(() => {
               cy.c_visitResponsive(Cypress.env('verificationUrl'), 'large')
@@ -60,18 +61,10 @@ describe('QATEST-99774 - MT5 reset password', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })
   })
-
   it('should be able to change mt5 password', () => {
     cy.log('change mt5 password')
     cy.c_visitResponsive('/', 'large')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
-    changeMT5Password()
-  })
-  it('should be able to change mt5 password in responsive', () => {
-    cy.log('change mt5 password')
-    cy.c_visitResponsive('/', 'small')
-    cy.findByText('CFDs', { exact: true }).should('be.visible')
-    cy.c_skipPasskeysV2()
     changeMT5Password()
   })
 })

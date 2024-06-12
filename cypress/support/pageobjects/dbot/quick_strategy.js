@@ -50,9 +50,10 @@ class QuickStrategy {
     this.quickStrategyTab.should('be.visible').click()
   }
 
-  chooseTradeType = () => {
+  chooseTradeType = (isMobile = false) => {
+    const index = isMobile ? 1 : 3
     cy.findAllByTestId('dt_themed_scrollbars')
-      .eq(3)
+      .eq(index)
       .should('be.visible')
       .within(() => {
         cy.findByText('Matches/Differs').click()
@@ -66,8 +67,8 @@ class QuickStrategy {
 
   fillUpLossProfitTreshold = () => {
     this.quickStrategyLoss.type('4')
-    this.quickStrategyProfit.type('5')
+    this.quickStrategyProfit.type('9')
   }
 }
 
-export default new QuickStrategy()
+export default QuickStrategy

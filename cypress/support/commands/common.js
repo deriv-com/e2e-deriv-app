@@ -1,4 +1,4 @@
-import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
+import { getOAuthUrl } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
 Cypress.prevUser = ''
@@ -64,8 +64,11 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
     }).should('be.visible', { timeout: 30000 })
   }
 
-  if (path.includes('traders-hub')) {
+  if (path.includes('traders-hub') || path === '/') {
     //Wait for relevent elements to appear (based on page)
+    if (size == 'small')
+      cy.findAllByText("Trader's Hub").should('have.length', '1')
+    else cy.findAllByText("Trader's Hub").should('have.length', '2')
     cy.log('Trader Hub Selected')
   }
 })
@@ -178,7 +181,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
           cy.findByRole('banner').should('be.visible')
         } else {
           //To redirect to trader's hub page
-          cy.findAllByText("Trader's Hub").last().should('be.visible')
+          cy.findAllByText("Trader's Hub").should('have.length', '2')
         }
       })
     } else {
@@ -192,7 +195,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
         cy.findByRole('banner').should('be.visible')
       } else {
         //when deriv charts popup is not available and if we need to redirect to trader's hub page
-        cy.findAllByText("Trader's Hub").last().should('be.visible')
+        cy.findAllByText("Trader's Hub").should('have.length', '2')
       }
     }
   })
@@ -320,6 +323,7 @@ Cypress.Commands.add(
       retryCount = 0,
       maxRetries = 3,
       baseUrl = Cypress.env('configServer') + '/events',
+      isMT5ResetPassword = false,
     } = options
     cy.log(`Visit ${baseUrl}`)
     const userID = Cypress.env('qaBoxLoginEmail')
@@ -335,8 +339,8 @@ Cypress.Commands.add(
         'qaBoxLoginPassword',
         { log: false }
       )}@${baseUrl}`,
-      { args: [requestType, accountEmail] },
-      ([requestType, accountEmail]) => {
+      { args: [requestType, accountEmail, isMT5ResetPassword] },
+      ([requestType, accountEmail, isMT5ResetPassword]) => {
         cy.document().then((doc) => {
           const allRelatedEmails = Array.from(
             doc.querySelectorAll(`a[href*="${requestType}"]`)
@@ -344,25 +348,42 @@ Cypress.Commands.add(
           if (allRelatedEmails.length) {
             const verificationEmail = allRelatedEmails.pop()
             cy.wrap(verificationEmail).click()
-            cy.get('p')
-              .filter(`:contains('${accountEmail}')`)
-              .last()
-              .should('be.visible')
-              .parent()
-              .children()
-              .contains('a', Cypress.config('baseUrl'))
-              .invoke('attr', 'href')
-              .then((href) => {
-                if (href) {
-                  Cypress.env('verificationUrl', href)
-                  const code = href.match(/code=([A-Za-z0-9]{8})/)
-                  verification_code = code[1]
-                  Cypress.env('walletsWithdrawalCode', verification_code)
-                  cy.log('Verification link found')
-                } else {
-                  cy.log('Verification link not found')
-                }
-              })
+            if (isMT5ResetPassword) {
+              cy.get('p')
+                .should('be.visible')
+                .parent()
+                .children()
+                .contains('a', Cypress.config('baseUrl'))
+                .invoke('attr', 'href')
+                .then((href) => {
+                  if (href) {
+                    Cypress.env('verificationUrl', href)
+                    cy.log('MT5 reset password link found')
+                  } else {
+                    cy.log('MT5 reset password link not found')
+                  }
+                })
+            } else {
+              cy.get('p')
+                .filter(`:contains('${accountEmail}')`)
+                .last()
+                .should('be.visible')
+                .parent()
+                .children()
+                .contains('a', Cypress.config('baseUrl'))
+                .invoke('attr', 'href')
+                .then((href) => {
+                  if (href) {
+                    Cypress.env('verificationUrl', href)
+                    const code = href.match(/code=([A-Za-z0-9]{8})/)
+                    verification_code = code[1]
+                    Cypress.env('walletsWithdrawalCode', verification_code)
+                    cy.log('Verification link found')
+                  } else {
+                    cy.log('Verification link not found')
+                  }
+                })
+            }
           } else {
             cy.log('email not found')
           }
@@ -771,3 +792,31 @@ Cypress.Commands.add('c_login_setToken', () => {
     Cypress.env('loginPassword')
   )
 })
+Cypress.Commands.add(
+  'getCurrentExchangeRate',
+  (fromCurrency, toCurrency, amount) => {
+    cy.request({
+      method: 'GET',
+      url: 'https://api.coinbase.com/v2/exchange-rates',
+      qs: {
+        currency: fromCurrency,
+      },
+    }).then((response) => {
+      expect(response.status).to.eq(200)
+      const currentExchangeRate_fullList = JSON.stringify(response.body)
+      const regexp = new RegExp(`${toCurrency}":"([^"]+)"`)
+      const getOnlyRelatedCurrencyExchangeRate =
+        currentExchangeRate_fullList.match(regexp)[1]
+      const getFinalExchangeRate =
+        getOnlyRelatedCurrencyExchangeRate.substr(0, 8) +
+        getOnlyRelatedCurrencyExchangeRate.substr(11)
+      const calculatedFinalExhangeRate =
+        parseFloat(getFinalExchangeRate) * amount
+      const calculatedFinalExhangeRate_roundOff =
+        calculatedFinalExhangeRate.toFixed(2)
+      cy.wrap(calculatedFinalExhangeRate_roundOff).as(
+        'calculatedFinalExhangeRate_roundOff'
+      )
+    })
+  }
+)

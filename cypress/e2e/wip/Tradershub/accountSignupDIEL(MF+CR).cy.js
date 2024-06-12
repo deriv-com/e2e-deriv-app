@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/helper/utility'
 
 /*Due to https://app.clickup.com/t/20696747/TRAH-3230, this flow is redundant. 

@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-5695: Create a Standard Demo CFD account', () => {
   const size = ['small', 'desktop']
   let countryCode = 'co'
