@@ -180,7 +180,6 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
         ) {
           cy.findByRole('banner').should('be.visible')
         } else {
-          //To redirect to trader's hub page
           cy.findAllByText("Trader's Hub").should('have.length', '2')
         }
       })
@@ -194,7 +193,6 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
       ) {
         cy.findByRole('banner').should('be.visible')
       } else {
-        //when deriv charts popup is not available and if we need to redirect to trader's hub page
         cy.findAllByText("Trader's Hub").should('have.length', '2')
       }
     }
