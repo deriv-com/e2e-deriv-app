@@ -27,6 +27,7 @@ screenSizes.forEach((screenSize) => {
       cy.c_login({ user: 'cashierLegacyNonUSD', rateLimitCheck: true })
       cy.c_visitResponsive('appstore/traders-hub', screenSize, {
         rateLimitCheck: true,
+        skipPassKeys: true,
       })
       if (screenSize == 'small') {
         cy.findByRole('button', { name: 'CFDs' }).should('be.visible')
