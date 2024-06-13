@@ -29,6 +29,10 @@ class QuickStrategy {
     return cy.xpath('//input[@name="size"]')
   }
 
+  get quickStrategyMarketDropdown() {
+    return cy.findByTestId('dt_qs_symbol').should('be.visible')
+  }
+
   runBotQuickStrategy = () => {
     this.quickStrategyRunBtn.should('exist').click()
   }

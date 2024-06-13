@@ -31,7 +31,7 @@ describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
       } else {
         quickStrategy.clickOnStrategyTab('Martingale')
       }
-      cy.findByTestId('dt_qs_symbol').should(
+      quickStrategy.quickStrategyMarketDropdown.should(
         'have.value',
         'Volatility 100 (1s) Index'
       )

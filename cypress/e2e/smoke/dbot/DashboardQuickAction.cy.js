@@ -19,6 +19,6 @@ describe('QATEST-4128: Dashboard quick action to Quick Strategy and Bot Builder'
   it('Open quick strategy modal', () => {
     botDashboard.openQsQaction()
     botDashboard.botBuilderActiveTab.should('exist')
-    cy.findByTestId('dt_qs_symbol').should('be.visible')
+    quickStrategy.quickStrategyMarketDropdown.should('be.visible')
   })
 })
