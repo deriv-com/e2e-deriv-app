@@ -576,6 +576,12 @@ Cypress.Commands.add('c_verifyDynamicMsg', () => {
 })
 
 Cypress.Commands.add('c_navigateToDerivP2P', () => {
+  cy.c_rateLimit({
+    waitTimeAfterError: 15000,
+    isLanguageTest: true,
+    maxRetries: 5,
+  })
+  cy.c_skipPasskey()
   cy.get('#dt_mobile_drawer_toggle').should('be.visible').click()
   cy.findByRole('heading', { name: 'Cashier' }).should('be.visible').click()
   cy.findByRole('link', { name: 'Deriv P2P' }).should('be.visible').click()
@@ -943,12 +949,6 @@ Cypress.Commands.add('c_getProfileBalance', () => {
 
 Cypress.Commands.add('c_navigateToP2P', () => {
   cy.c_navigateToDerivP2P()
-  cy.c_rateLimit({
-    waitTimeAfterError: 15000,
-    isLanguageTest: true,
-    maxRetries: 5,
-  })
-  cy.c_skipPasskey()
   cy.findByText('Deriv P2P').should('exist')
   cy.c_closeNotificationHeader()
 })
