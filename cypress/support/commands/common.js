@@ -688,7 +688,7 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
 })
 
 Cypress.Commands.add('c_skipPasskeysV2', (options = {}) => {
-  const { language = 'english', retryCount = 0, maxRetries = 3 } = options
+  const { language = 'english', retryCount = 0, maxRetries = 5 } = options
   cy.fixture('common/common.json').then((langData) => {
     const lang = langData[language]
     cy.findByText(lang.passkeysModal.title)

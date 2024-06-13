@@ -300,6 +300,10 @@ module.exports = defineConfig({
     actualAmount : process.env.E2E_ACTUAL_AMOUNT,
     appRegisterID: process.env.E2E_APP_REGISTER,
     appRegisterUrl: process.env.E2E_APP_REGISTER_URL,
+    passkeyUrl: process.env.E2E_PASSKEY_URL,
+    passkeyAppId: process.env.E2E_PASSKEY_APP_ID,
+    passkeyLoginEmail: process.env.E2E_PASSKEY_LOGIN,
+    passkeyPassword: process.env.E2E_PASSKEY_PASSWORD,
     countries: {
       ZA: "South Africa",
       CO: "Colombia",
