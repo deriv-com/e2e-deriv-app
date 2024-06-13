@@ -392,6 +392,8 @@ module.exports = defineConfig({
     appRegisterUrl: process.env.E2E_APP_REGISTER_URL,
     passkeyUrl: process.env.E2E_PASSKEY_URL,
     passkeyAppId: process.env.E2E_PASSKEY_APP_ID,
+    trackingLink: process.env.E2E_TRACKING_LINK,
+    trackingLinkToken: process.env.E2E_TRACKING_LINK_TOKEN,
     countries: {
       ZA: "South Africa",
       CO: "Colombia",
