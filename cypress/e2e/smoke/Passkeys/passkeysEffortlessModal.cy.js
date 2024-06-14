@@ -1,8 +1,36 @@
 import '@testing-library/cypress/add-commands'
+import { derivApp } from '../../../support/locators'
 
 const username = Cypress.env('passkeyLoginEmail')
 const password = Cypress.env('passkeyPassword')
 const size = ['small', 'desktop']
+
+function login(username, password) {
+  try {
+    cy.findByRole('button', { name: 'Log in' }).click()
+    cy.findByLabelText('Email').type(username)
+    cy.findByLabelText('Password').type(password, { log: false })
+    cy.findByRole('button', { name: 'Log in' }).click()
+    cy.log('after login button click')
+  } catch (error) {
+    cy.log(`Error logging in: ${error.message}`)
+    throw error
+  }
+}
+
+function logout() {
+  try {
+    derivApp.commonPage.mobileLocators.header.hamburgerMenuButton().click()
+    derivApp.commonPage.mobileLocators.sideMenu
+      .sidePanel()
+      .findByText('Log out')
+      .click()
+      .wait(1000)
+  } catch (error) {
+    cy.log(`Error logging out: ${error.message}`)
+    throw error
+  }
+}
 
 describe('QATEST-142681 - Effortless login with passkeys Modal check ', () => {
   const size = ['small', 'desktop']
@@ -27,11 +55,8 @@ describe('QATEST-142681 - Effortless login with passkeys Modal check ', () => {
       )
       // cy.c_login()
       //cy.c_visitResponsive('/', size)
-      cy.findByRole('button', { name: 'Log in' }).click()
-      cy.findByLabelText('Email').type(username)
-      cy.findByLabelText('Password').type(password, { log: false })
-      cy.findByRole('button', { name: 'Log in' }).click()
-      cy.log('after login button click')
+
+      login(username, password)
 
       if (isMobile) {
         cy.log('inside mobile ')
@@ -51,6 +76,7 @@ describe('QATEST-142681 - Effortless login with passkeys Modal check ', () => {
         cy.get('.dc-text.effortless-login-modal__overlay-tip').should(
           'be.visible'
         )
+        cy.findByRole('button', { name: 'Get started' }).should('be.visible')
         cy.get(
           'p[class="dc-text effortless-login-modal__overlay-tip"] span[class="dc-text"]'
         )
@@ -93,10 +119,57 @@ describe('QATEST-142681 - Effortless login with passkeys Modal check ', () => {
         )
         cy.findByText('Before using passkey:').should('be.visible')
         cy.findByText('Enable screen lock on your device.').should('be.visible')
-        cy.findByText('Sign in to your Google or iCloud account.').should(
-          'be.visible'
-        )
+        cy.findByText('Sign in to your Google or iCloud account.')
+          .scrollIntoView()
+          .should('be.visible')
         cy.findByText('Enable Bluetooth.').should('be.visible')
+        cy.findByRole('button', { name: 'Get started' }).should('be.visible')
+        //cy.get('.dc-icon effortless-login-modal__back-button').click()
+        cy.findByTestId('effortless_login_modal__back-button')
+          .should('be.visible')
+          .click()
+        cy.findByText('Maybe later').should('be.visible').click()
+
+        //logout
+        logout()
+        cy.get('#dt_login_button').click()
+        login(username, password)
+        cy.c_waitUntilElementIsFound({
+          cyLocator: () =>
+            cy.get('.dc-text.main-title-bar__text').should('be.visible'),
+          timeout: 3000,
+          maxRetries: 5,
+        })
+        cy.findByRole('button', { name: 'Get started' }).click()
+        cy.c_waitUntilElementIsFound({
+          cyLocator: () =>
+            cy
+              .findByTestId('dt_div_100_vh')
+              .should('contain.text', 'Experience safer logins'),
+          timeout: 5000,
+          maxRetries: 5,
+        })
+        logout()
+        cy.get('#dt_login_button').click()
+        login(username, password)
+        cy.get(
+          'p[class="dc-text effortless-login-modal__overlay-tip"] span[class="dc-text"]'
+        )
+          .should('be.visible')
+          .click()
+        cy.findByRole('button', { name: 'Get started' }).click()
+        cy.c_waitUntilElementIsFound({
+          cyLocator: () =>
+            cy
+              .findByTestId('dt_div_100_vh')
+              .should('contain.text', 'Experience safer logins'),
+          timeout: 5000,
+          maxRetries: 5,
+        })
+      } else {
+        // Verify 'Effortless login with passkeys Modal' option should not available under Security and safety menu for desktop
+        cy.log('inside Desktop')
+        cy.get('.dc-text.main-title-bar__text').should('not.exist')
       }
     })
   })
