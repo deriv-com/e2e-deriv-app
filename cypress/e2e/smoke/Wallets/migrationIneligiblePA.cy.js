@@ -42,6 +42,7 @@ describe('QATEST-154263 - Client with USD more than 3 months & used PA in recent
   })
   it('Responsive - Should not see  Wallets - Enable now banner', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.c_skipPasskeysV2()
     cy.c_checkForBanner('Deriv Trader', 'Deriv GO')
   })
 })

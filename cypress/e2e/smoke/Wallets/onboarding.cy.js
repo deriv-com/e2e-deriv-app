@@ -278,6 +278,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
 
   it('User onboarding from BTC wallet compare account in responsive', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.c_skipPasskeysV2()
     const walletAdded = allWalletAdded()
     cy.c_switchWalletsAccountResponsive('BTC')
     cy.findByText('Compare accounts').click()
