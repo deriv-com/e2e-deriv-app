@@ -15,7 +15,6 @@ describe('QATEST-116798 Self Exclusion Session and login limits on desktop', () 
 
   it('should login, set self exclusion, verify its applied, check from BO side, remove it from BO and verify restrictions are removed from FE side ', () => {
     /* Sets self exclusion on FE */
-    cy.findByTestId('dt_traders_hub').should('be.visible') //temp solution
     cy.c_visitResponsive('/account/self-exclusion', 'large')
     cy.findAllByLabelText('Date').first().click()
     cy.get(`[data-date='${addDays(40)}']`).click()
