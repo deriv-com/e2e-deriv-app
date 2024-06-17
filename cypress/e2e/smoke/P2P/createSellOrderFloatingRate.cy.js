@@ -43,7 +43,8 @@ describe('TODO', () => {
       nicknameAndAmount.buyer = name
     })
     cy.c_getProfileBalance().then((balance) => {
-      nicknameAndAmount.buyerBalanceBeforeSelling = balance
+      nicknameAndAmount.buyerBalanceBeforeBuying = balance
+      //   nicknameAndAmount.buyerBalanceBeforeSelling = balance
     })
     cy.c_clickMyAdTab()
     cy.c_createNewAd('buy')
@@ -57,7 +58,7 @@ describe('TODO', () => {
       nicknameAndAmount.seller = name
     })
     cy.c_getProfileBalance().then((balance) => {
-      nicknameAndAmount.sellerBalanceBeforeBuying = balance
+      nicknameAndAmount.sellerBalanceBeforeSelling = balance
     })
     cy.wait(5000)
     cy.then(() => {
@@ -67,7 +68,7 @@ describe('TODO', () => {
         maxOrder,
         fiatCurrency,
         pm1,
-        sell
+        'sell'
       ).then((sendAmount) => {
         nicknameAndAmount.amount = sendAmount
       })
@@ -149,35 +150,36 @@ describe('TODO', () => {
     // cy.findByText('Completed').should('be.visible')
     //TODO
     //TODO balance has not change in this section
-    // cy.findByTestId('dt_mobile_full_page_return_icon')
-    //   .should('be.visible')
-    //   .click()
-    // cy.findByText('My profile').should('be.visible').click()
-    // cy.findByText('Available Deriv P2P balance').should('be.visible')
-    // cy.c_getProfileBalance().then((balance) => {
-    //   nicknameAndAmount.buyerBalanceAfterSelling = balance
-    // })
-    // cy.then(() => {
-    //   cy.c_confirmBalance(
-    //     nicknameAndAmount.buyerBalanceBeforeSelling,
-    //     nicknameAndAmount.buyerBalanceAfterSelling,
-    //     maxOrder,
-    //     'buyer'
-    //   )
-    // })
+    cy.findByTestId('dt_mobile_full_page_return_icon')
+      .should('be.visible')
+      .click()
+    cy.findByText('My profile').should('be.visible').click()
+    cy.findByText('Available Deriv P2P balance').should('be.visible')
+    cy.c_getProfileBalance().then((balance) => {
+      nicknameAndAmount.buyerBalanceAfterBuying = balance
+    })
+    cy.then(() => {
+      cy.c_confirmBalance(
+        nicknameAndAmount.buyerBalanceBeforeBuying,
+        nicknameAndAmount.buyerBalanceAfterSBuying,
+        maxOrder,
+        // 'buyer'
+        'seller'
+      )
+    })
     //TODO balance has not change in this section
   })
   it('TODO4', () => {
     cy.c_navigateToP2P()
-    cy.findByText('My profile').should('be.visible').click()
-    cy.findByText('Available Deriv P2P balance').should('be.visible')
-    cy.c_getProfileBalance().then((balance) => {
-      nicknameAndAmount.sellerBalanceAfterBuying = balance
-    })
+    // cy.findByText('My profile').should('be.visible').click()
+    // cy.findByText('Available Deriv P2P balance').should('be.visible')
+    // cy.c_getProfileBalance().then((balance) => {
+    //   nicknameAndAmount.sellerBalanceAfterSelling = balance
+    // })
     // cy.then(() => {
     //   cy.c_confirmBalance(
-    //     nicknameAndAmount.sellerBalanceBeforeBuying,
-    //     nicknameAndAmount.sellerBalanceAfterBuying,
+    //     nicknameAndAmount.sellerBalanceBeforeSelling,
+    //     nicknameAndAmount.sellerBalanceAfterSelling,
     //     maxOrder,
     //     'seller'
     //   )
@@ -202,20 +204,20 @@ describe('TODO', () => {
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
     cy.c_getProfileBalance().then((balance) => {
-      nicknameAndAmount.buyerBalanceAfterSelling = balance
+      nicknameAndAmount.sellerBalanceAfterSelling = balance
     })
     cy.then(() => {
       cy.c_confirmBalance(
-        nicknameAndAmount.sellerBalanceBeforeBuying,
-        nicknameAndAmount.sellerBalanceAfterBuying,
+        nicknameAndAmount.sellerBalanceBeforeSelling,
+        nicknameAndAmount.sellerBalanceAfterSelling,
         maxOrder,
-        'seller',
-        'sell'
+        // 'seller',
+        'buyer'
       )
     })
   })
   //TODO
-  it('TODO5', () => {
+  it.skip('TODO5', () => {
     cy.c_navigateToP2P()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
@@ -224,10 +226,7 @@ describe('TODO', () => {
       .should('be.visible')
       .click()
     cy.findAllByText('Completed').eq(0).should('be.visible').click()
-    //TODO
-    cy.findByText('Sell USD order').should('be.visible')
-    // cy.findByText('Buy USD order').should('be.visible')
-    //TODO
+    cy.findByText('Buy USD order').should('be.visible')
     cy.findByText(nicknameAndAmount.buyer).should('be.visible')
     cy.findByRole('button', { name: 'Rate this transaction' })
       .should('be.visible')

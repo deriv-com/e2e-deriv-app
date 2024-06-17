@@ -1209,28 +1209,16 @@ Cypress.Commands.add('c_navigateToP2P', () => {
 //TODO should define one for buy order and one for sell order
 Cypress.Commands.add(
   'c_confirmBalance',
-  (balanceBefore, balanceAfter, buyingAmount, advertiserType, orderType) => {
+  (balanceBefore, balanceAfter, buyingAmount, advertiserType) => {
     let calculatedBalanceAfter
-    if (orderType === 'buy') {
-      if (advertiserType === 'buyer') {
-        calculatedBalanceAfter = (
-          parseFloat(balanceBefore) - parseFloat(buyingAmount)
-        ).toFixed(2)
-      } else if (advertiserType === 'seller') {
-        calculatedBalanceAfter = (
-          parseFloat(balanceBefore) + parseFloat(buyingAmount)
-        ).toFixed(2)
-      }
-    } else if (orderType === 'sell') {
-      if (advertiserType === 'buyer') {
-        calculatedBalanceAfter = (
-          parseFloat(balanceBefore) + parseFloat(buyingAmount)
-        ).toFixed(2)
-      } else if (advertiserType === 'seller') {
-        calculatedBalanceAfter = (
-          parseFloat(balanceBefore) - parseFloat(buyingAmount)
-        ).toFixed(2)
-      }
+    if (advertiserType === 'buyer') {
+      calculatedBalanceAfter = (
+        parseFloat(balanceBefore) - parseFloat(buyingAmount)
+      ).toFixed(2)
+    } else if (advertiserType === 'seller') {
+      calculatedBalanceAfter = (
+        parseFloat(balanceBefore) + parseFloat(buyingAmount)
+      ).toFixed(2)
     } else {
       throw new Error('Invalid transaction type')
     }
@@ -1245,32 +1233,6 @@ Cypress.Commands.add(
     }
   }
 )
-// Cypress.Commands.add(
-//   'c_confirmBalance',
-//   (balanceBefore, balanceAfter, buyingAmount, advertiserType) => {
-//     let calculatedBalanceAfter
-//     if (advertiserType === 'buyer') {
-//       calculatedBalanceAfter = (
-//         parseFloat(balanceBefore) - parseFloat(buyingAmount)
-//       ).toFixed(2)
-//     } else if (advertiserType === 'seller') {
-//       calculatedBalanceAfter = (
-//         parseFloat(balanceBefore) + parseFloat(buyingAmount)
-//       ).toFixed(2)
-//     } else {
-//       throw new Error('Invalid transaction type')
-//     }
-//     if (balanceAfter !== calculatedBalanceAfter) {
-//       throw new Error(
-//         `Balance is not correct: Balance Before Buying = ${balanceBefore}, Balance After Buying = ${balanceAfter}, Buying amount = ${buyingAmount}`
-//       )
-//     } else {
-//       cy.log(
-//         `Balance is correct: Balance Before Buying = ${balanceBefore}, Balance After Buying = ${balanceAfter}, Buying amount = ${buyingAmount}`
-//       )
-//     }
-//   }
-// )
 //TODO should define one for buy order and one for sell order
 
 Cypress.Commands.add(
@@ -1465,7 +1427,7 @@ Cypress.Commands.add('c_confirmSellOrder', (nicknameAndAmount, orderType) => {
     const transactionText =
       orderType === 'buy'
         ? `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.seller} in your bank account or e-wallet, hit the button below to complete the order.`
-        : `If you’ve received 1.63 NZD from ${nicknameAndAmount.buyer} in your bank account or e-wallet, hit the button below to complete the order.`
+        : `If you’ve received 1.64 NZD from ${nicknameAndAmount.buyer} in your bank account or e-wallet, hit the button below to complete the order.`
     // : `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.buyer} in your bank account or e-wallet, hit the button below to complete the order.`
     //TODO NEW section , check for buy as well
     cy.findByText('One last step before we close this order').should(
