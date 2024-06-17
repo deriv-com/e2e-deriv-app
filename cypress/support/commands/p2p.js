@@ -136,9 +136,10 @@ Cypress.Commands.add('c_getAdTypeAndRateType', () => {
   })
 })
 
+//TODO
 Cypress.Commands.add(
   'c_inputAdDetails',
-  (rateValue, minOrder, maxOrder, adType, rateType) => {
+  (rateValue, minOrder, maxOrder, adType, rateType, orderType) => {
     cy.findByText(`${adType} USD`).click()
     cy.findByTestId('offer_amount')
       .next('span.dc-text')
@@ -167,11 +168,18 @@ Cypress.Commands.add(
           .type(rateValue)
           .should('have.value', rateValue)
       } else if (rateType == 'float') {
+        const ratePrefix = orderType === 'buy' ? '+' : '-'
         cy.findByTestId('float_rate_type').should(
           'have.value',
-          '+'.concat(rateValue)
+          ratePrefix.concat(rateValue)
         )
+        // .should(
+        //   'have.value',
+        //   // '+'.concat(rateValue)
+        //   '-'.concat(rateValue)
+        // )
       }
+      //TODO
       cy.findByTestId('min_transaction')
         .type(minOrder)
         .should('have.value', minOrder)
@@ -304,6 +312,7 @@ Cypress.Commands.add(
 //     })
 //   }
 // )
+//TODO
 
 Cypress.Commands.add(
   'c_verifyAdOnMyAdsScreen',
@@ -314,12 +323,14 @@ Cypress.Commands.add(
     rateValue,
     minOrder,
     maxOrder,
-    rateType
+    rateType,
+    orderType
   ) => {
     cy.findByText('Active').should('be.visible')
     cy.findByText(`${adType} ${fiatCurrency}`).should('be.visible')
     if (rateType === 'float') {
-      cy.findByText(`+${rateValue}%`).should('be.visible')
+      const ratePrefix = orderType === 'buy' ? '+' : '-'
+      cy.findByText(`${ratePrefix}${rateValue}%`).should('be.visible')
     } else if (rateType === 'fixed') {
       cy.findByText(`${rateValue} ${localCurrency}`).should('be.visible')
     }
@@ -328,6 +339,33 @@ Cypress.Commands.add(
     ).should('be.visible')
   }
 )
+// Cypress.Commands.add(
+//   'c_verifyAdOnMyAdsScreen',
+//   (
+//     adType,
+//     fiatCurrency,
+//     localCurrency,
+//     rateValue,
+//     minOrder,
+//     maxOrder,
+//     rateType,
+//     orderType
+//   ) => {
+//     cy.findByText('Active').should('be.visible')
+//     cy.findByText(`${adType} ${fiatCurrency}`).should('be.visible')
+//     //TODO
+//     if (rateType === 'float') {
+//       cy.findByText(`-${rateValue}%`).should('be.visible')
+//       // cy.findByText(`+${rateValue}%`).should('be.visible')
+//     //TODO
+//     } else if (rateType === 'fixed') {
+//       cy.findByText(`${rateValue} ${localCurrency}`).should('be.visible')
+//     }
+//     cy.findByText(
+//       `${minOrder.toFixed(2)} - ${maxOrder.toFixed(2)} ${fiatCurrency}`
+//     ).should('be.visible')
+//   }
+// )
 
 Cypress.Commands.add('c_getExistingAdDetailsForValidation', (adType) => {
   cy.get('.my-ads-table__row .dc-dropdown-container')
@@ -722,14 +760,14 @@ Cypress.Commands.add('c_deleteAllPM', () => {
     }
   })
 })
-
+//TODO
 Cypress.Commands.add('c_addPaymentMethod', (paymentID, paymentMethod) => {
   if (paymentMethod == 'Bank Transfer') {
-    cy.findByRole('textbox', { name: 'Payment method' })
-      .clear()
-      .type(paymentMethod)
-      .should('have.value', paymentMethod)
-    cy.findByText(paymentMethod).click()
+    // cy.findByRole('textbox', { name: 'Payment method' })
+    //   .clear()
+    //   .type(paymentMethod)
+    //   .should('have.value', paymentMethod)
+    // cy.findByText(paymentMethod).click()
     cy.findByRole('textbox', { name: 'Account Number' })
       .clear()
       .type(paymentID)
@@ -795,6 +833,79 @@ Cypress.Commands.add('c_addPaymentMethod', (paymentID, paymentMethod) => {
     cy.findByText(paymentID).should('be.visible')
   }
 })
+// Cypress.Commands.add('c_addPaymentMethod', (paymentID, paymentMethod) => {
+//   if (paymentMethod == 'Bank Transfer') {
+//     cy.findByRole('textbox', { name: 'Payment method' })
+//       .clear()
+//       .type(paymentMethod)
+//       .should('have.value', paymentMethod)
+//     cy.findByText(paymentMethod).click()
+//     cy.findByRole('textbox', { name: 'Account Number' })
+//       .clear()
+//       .type(paymentID)
+//       .should('have.value', paymentID)
+//     cy.findByRole('textbox', { name: 'SWIFT or IFSC code' })
+//       .clear()
+//       .type('9087')
+//       .should('have.value', '9087')
+//     cy.findByRole('textbox', { name: 'Bank Name' })
+//       .clear()
+//       .type('Banking Name')
+//       .should('have.value', 'Banking Name')
+//     cy.findByRole('textbox', { name: 'Branch' })
+//       .clear()
+//       .type('Branch number 42')
+//       .should('have.value', 'Branch number 42')
+//     cy.get('textarea[name="instructions"]')
+//       .type('Follow instructions.')
+//       .should('have.value', 'Follow instructions.')
+//     cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
+//     cy.findByText('Payment methods').should('be.visible')
+//     cy.findByText(paymentID).should('be.visible')
+//   } else if (
+//     paymentMethod === 'PayPal' ||
+//     paymentMethod === 'WeChat Pay' ||
+//     paymentMethod === 'Skrill' ||
+//     paymentMethod === 'Alipay'
+//   ) {
+//     cy.findByRole('textbox', { name: 'Payment method' })
+//       .clear()
+//       .type(paymentMethod)
+//       .should('have.value', paymentMethod)
+//     cy.findByText(paymentMethod).click()
+//     cy.get('input[name="account"]')
+//       .clear()
+//       .type(paymentID)
+//       .should('have.value', paymentID)
+//     cy.get('textarea[name="instructions"]')
+//       .type('Follow instructions.')
+//       .should('have.value', 'Follow instructions.')
+//     cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
+//     cy.findByText('Payment methods').should('be.visible')
+//     cy.findByText(paymentID).should('be.visible')
+//   } else if (paymentMethod == 'Other') {
+//     cy.findByRole('textbox', { name: 'Payment method' })
+//       .clear()
+//       .type(paymentMethod)
+//       .should('have.value', paymentMethod)
+//     cy.findByText(paymentMethod).click()
+//     cy.findByRole('textbox', { name: 'Account ID / phone number / email' })
+//       .clear()
+//       .type(paymentID)
+//       .should('have.value', paymentID)
+//     cy.findByRole('textbox', { name: 'Payment method name' })
+//       .clear()
+//       .type(paymentMethod)
+//       .should('have.value', paymentMethod)
+//     cy.get('textarea[name="instructions"]')
+//       .type('Follow instructions.')
+//       .should('have.value', 'Follow instructions.')
+//     cy.findByRole('button', { name: 'Add' }).should('not.be.disabled').click()
+//     cy.findByText('Payment methods').should('be.visible')
+//     cy.findByText(paymentID).should('be.visible')
+//   }
+// })
+//TODO
 
 Cypress.Commands.add('c_deletePaymentMethod', (paymentID, paymentName) => {
   cy.findByText(paymentID)
@@ -924,7 +1035,7 @@ Cypress.Commands.add(
       .should('have.value', maxOrder)
   }
 )
-
+//TODO
 // Cypress.Commands.add(
 //   'c_verifyPaymentConfirmationScreenContent',
 //   (sendAmount, nickname) => {
@@ -942,13 +1053,16 @@ Cypress.Commands.add(
 // )
 
 Cypress.Commands.add(
-  'c_verifyPaymentConfirmationScreenContent1',
+  'c_verifyPaymentConfirmationScreenContent',
   (sendAmount, nickname) => {
     cy.findByText('Payment confirmation').should('be.visible')
+    //TODO
+    cy.log(`sendAmount is ${sendAmount}`)
     cy.findByText(
       `Please make sure that you\'ve paid 1.63 NZD to ${nickname}, and upload the receipt as proof of your payment`
       // `Please make sure that you\'ve paid ${sendAmount} to ${nickname}, and upload the receipt as proof of your payment`
     ).should('be.visible')
+    //TODO
     cy.findByText(
       'Sending forged documents will result in an immediate and permanent ban.'
     ).should('be.visible')
@@ -957,20 +1071,7 @@ Cypress.Commands.add(
     )
   }
 )
-
-Cypress.Commands.add(
-  'c_verifyOrderPlacementScreenSell',
-  (nickname, rateOfOneDollar, paymentMethods, instructions) => {
-    cy.findByText(nickname).should('be.visible')
-    // cy.findByText(rateOfOneDollar).should('be.visible')
-    // cy.findByText(paymentMethods).should('be.visible')
-    // cy.findByText(instructions).should('be.visible')
-    cy.findByRole('button', { name: 'Expand all' }).should('be.visible').click()
-    cy.findByRole('button', { name: 'Collapse all' }).should('be.visible')
-    cy.findByRole('button', { name: 'Cancel order' }).should('be.enabled')
-    cy.findByRole('button', { name: "I've paid" }).should('be.enabled').click()
-  }
-)
+//TODO
 Cypress.Commands.add(
   'c_verifyOrderPlacementScreen',
   (nickname, rateOfOneDollar, paymentMethods, instructions) => {
@@ -1105,18 +1206,31 @@ Cypress.Commands.add('c_navigateToP2P', () => {
   cy.c_closeNotificationHeader()
 })
 
+//TODO should define one for buy order and one for sell order
 Cypress.Commands.add(
   'c_confirmBalance',
-  (balanceBefore, balanceAfter, buyingAmount, advertiserType) => {
+  (balanceBefore, balanceAfter, buyingAmount, advertiserType, orderType) => {
     let calculatedBalanceAfter
-    if (advertiserType === 'buyer') {
-      calculatedBalanceAfter = (
-        parseFloat(balanceBefore) - parseFloat(buyingAmount)
-      ).toFixed(2)
-    } else if (advertiserType === 'seller') {
-      calculatedBalanceAfter = (
-        parseFloat(balanceBefore) + parseFloat(buyingAmount)
-      ).toFixed(2)
+    if (orderType === 'buy') {
+      if (advertiserType === 'buyer') {
+        calculatedBalanceAfter = (
+          parseFloat(balanceBefore) - parseFloat(buyingAmount)
+        ).toFixed(2)
+      } else if (advertiserType === 'seller') {
+        calculatedBalanceAfter = (
+          parseFloat(balanceBefore) + parseFloat(buyingAmount)
+        ).toFixed(2)
+      }
+    } else if (orderType === 'sell') {
+      if (advertiserType === 'buyer') {
+        calculatedBalanceAfter = (
+          parseFloat(balanceBefore) + parseFloat(buyingAmount)
+        ).toFixed(2)
+      } else if (advertiserType === 'seller') {
+        calculatedBalanceAfter = (
+          parseFloat(balanceBefore) - parseFloat(buyingAmount)
+        ).toFixed(2)
+      }
     } else {
       throw new Error('Invalid transaction type')
     }
@@ -1131,6 +1245,33 @@ Cypress.Commands.add(
     }
   }
 )
+// Cypress.Commands.add(
+//   'c_confirmBalance',
+//   (balanceBefore, balanceAfter, buyingAmount, advertiserType) => {
+//     let calculatedBalanceAfter
+//     if (advertiserType === 'buyer') {
+//       calculatedBalanceAfter = (
+//         parseFloat(balanceBefore) - parseFloat(buyingAmount)
+//       ).toFixed(2)
+//     } else if (advertiserType === 'seller') {
+//       calculatedBalanceAfter = (
+//         parseFloat(balanceBefore) + parseFloat(buyingAmount)
+//       ).toFixed(2)
+//     } else {
+//       throw new Error('Invalid transaction type')
+//     }
+//     if (balanceAfter !== calculatedBalanceAfter) {
+//       throw new Error(
+//         `Balance is not correct: Balance Before Buying = ${balanceBefore}, Balance After Buying = ${balanceAfter}, Buying amount = ${buyingAmount}`
+//       )
+//     } else {
+//       cy.log(
+//         `Balance is correct: Balance Before Buying = ${balanceBefore}, Balance After Buying = ${balanceAfter}, Buying amount = ${buyingAmount}`
+//       )
+//     }
+//   }
+// )
+//TODO should define one for buy order and one for sell order
 
 Cypress.Commands.add(
   'c_createBuyOrder',
@@ -1198,9 +1339,10 @@ Cypress.Commands.add(
     })
   }
 )
+
 Cypress.Commands.add(
   'c_createSellOrder',
-  (sellerNickname, minOrder, maxOrder, fiatCurrency) => {
+  (sellerNickname, minOrder, maxOrder, fiatCurrency, paymentMethod) => {
     cy.findByText('Buy / Sell').should('be.visible').click()
     cy.findByRole('button', { name: 'Sell' }).should('be.visible').click()
     cy.findByPlaceholderText('Search')
@@ -1214,11 +1356,57 @@ Cypress.Commands.add(
       .find('button[type="submit"]')
       .should('be.visible')
       .click()
-    cy.get('.dc-checkbox__box').click()
+    cy.wait(3000)
+    cy.get('body', { timeout: 30000 }).then((body) => {
+      if (body.text().includes('You may choose up to 3.')) {
+        cy.get('.dc-checkbox__box', { timeout: 30000 })
+          .should('be.visible')
+          .click()
+      } else {
+        cy.findByText(
+          "To place an order, add one of the advertiser's preferred payment methods:"
+        ).should('be.visible')
+        cy.get('span.dc-text')
+          .contains('Bank Transfer')
+          .prev('svg')
+          .should('be.visible')
+          .click()
+        cy.get(
+          'input[name="choose_payment_method"][value="Bank Transfer"]'
+        ).should('be.visible')
+        cy.c_addPaymentMethod(paymentID, paymentMethod)
+        cy.contains(paymentMethod).click()
+        cy.get('.dc-checkbox__box', { timeout: 30000 })
+          .should('be.visible')
+          .click()
+      }
+    })
     cy.get('textarea').scrollIntoView().type('Test')
     cy.findByRole('button', { name: 'Confirm' }).should('be.visible').click()
   }
 )
+// Cypress.Commands.add(
+//   'c_createSellOrder',
+//   (sellerNickname, minOrder, maxOrder, fiatCurrency) => {
+//     cy.findByText('Buy / Sell').should('be.visible').click()
+//     cy.findByRole('button', { name: 'Sell' }).should('be.visible').click()
+//     cy.findByPlaceholderText('Search')
+//       .should('be.visible')
+//       .type(sellerNickname)
+//       .should('have.value', sellerNickname)
+//       .click()
+//     cy.wait(2000) // verify only one sell-usd button in the page
+//     cy.get('.buy-sell-row__advertiser')
+//       .next('.buy-sell-row__information')
+//       .find('button[type="submit"]')
+//       .should('be.visible')
+//       .click()
+//     cy.get('.dc-checkbox__box').click()
+//     cy.get('textarea').scrollIntoView().type('Test')
+//     cy.findByRole('button', { name: 'Confirm' }).should('be.visible').click()
+//   }
+// )
+//TODO
 
 Cypress.Commands.add('c_uploadPOT', (filePath) => {
   cy.findByTestId('dt_file_upload_input').selectFile(filePath, { force: true })
@@ -1244,11 +1432,13 @@ Cypress.Commands.add('c_waitForPayment', (nicknameAndAmount) => {
   ).should('be.visible')
   // Add verification for the page
 })
-Cypress.Commands.add('c_confirmSellOrder', (nicknameAndAmount) => {
+
+Cypress.Commands.add('c_confirmSellOrder', (nicknameAndAmount, orderType) => {
   cy.findByText('Confirm payment').should('be.visible').click()
   cy.findByText(
     "Don't risk your funds with cash transactions. Use bank transfers or e-wallets instead."
   ).should('be.visible')
+
   cy.then(() => {
     cy.findByRole('button', { name: "I've received payment" })
       .should('be.enabled')
@@ -1256,24 +1446,70 @@ Cypress.Commands.add('c_confirmSellOrder', (nicknameAndAmount) => {
     cy.findByText('Has the buyer paid you?').should('be.visible')
     cy.findByText('I didn’t receive the email').should('be.visible')
     cy.findByTestId('dt_modal_close_icon').should('be.visible').click()
+
+    const emailVerificationId =
+      orderType === 'buy'
+        ? Cypress.env('credentials').test.p2pFloatingSellAd1.ID
+        : Cypress.env('credentials').test.p2pFloatingSellAd2.ID
+
     cy.c_emailVerification(
       'track_p2p_order_confirm_verify.html',
-      Cypress.env('credentials').test.p2pFloatingSellAd1.ID
+      emailVerificationId
     )
+
     cy.then(() => {
       cy.c_visitResponsive(Cypress.env('verificationUrl'), 'small')
     })
+    cy.log(`nicknameAndAmount.amount is ${nicknameAndAmount.amount}`)
+    //TODO New section , check for buy as well
+    const transactionText =
+      orderType === 'buy'
+        ? `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.seller} in your bank account or e-wallet, hit the button below to complete the order.`
+        : `If you’ve received 1.63 NZD from ${nicknameAndAmount.buyer} in your bank account or e-wallet, hit the button below to complete the order.`
+    // : `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.buyer} in your bank account or e-wallet, hit the button below to complete the order.`
+    //TODO NEW section , check for buy as well
     cy.findByText('One last step before we close this order').should(
       'be.visible'
     )
-    cy.findByText(
-      `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.seller} in your bank account or e-wallet, hit the button below to complete the order.`
-    ).should('be.visible')
+    cy.findByText(transactionText).should('be.visible')
     cy.findByRole('button', { name: 'Confirm' }).should('be.enabled').click()
     cy.findByText('How would you rate this transaction?').should('be.visible')
   })
 })
 
+// Cypress.Commands.add('c_confirmSellOrder', (nicknameAndAmount) => {
+//   cy.findByText('Confirm payment').should('be.visible').click()
+//   cy.findByText(
+//     "Don't risk your funds with cash transactions. Use bank transfers or e-wallets instead."
+//   ).should('be.visible')
+//   cy.then(() => {
+//     cy.findByRole('button', { name: "I've received payment" })
+//       .should('be.enabled')
+//       .click()
+//     cy.findByText('Has the buyer paid you?').should('be.visible')
+//     cy.findByText('I didn’t receive the email').should('be.visible')
+//     cy.findByTestId('dt_modal_close_icon').should('be.visible').click()
+//     cy.c_emailVerification(
+//       'track_p2p_order_confirm_verify.html',
+//       //TODO
+//       Cypress.env('credentials').test.p2pFloatingSellAd2.ID
+//       // Cypress.env('credentials').test.p2pFloatingSellAd1.ID
+//       //TODO
+//     )
+//     cy.then(() => {
+//       cy.c_visitResponsive(Cypress.env('verificationUrl'), 'small')
+//     })
+//     cy.findByText('One last step before we close this order').should(
+//       'be.visible'
+//     )
+//     cy.findByText(
+//       `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.seller} in your bank account or e-wallet, hit the button below to complete the order.`
+//     ).should('be.visible')
+//     cy.findByRole('button', { name: 'Confirm' }).should('be.enabled').click()
+//     cy.findByText('How would you rate this transaction?').should('be.visible')
+//   })
+// })
+//TODO
 Cypress.Commands.add('c_filterByPaymentMethod', (PM) => {
   cy.findByText('Payment methods').should('be.visible').click()
   cy.findByText(PM).should('be.visible').click()
