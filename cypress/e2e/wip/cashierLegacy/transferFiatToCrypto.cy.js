@@ -27,11 +27,9 @@ screenSizes.forEach((screenSize) => {
         skipPassKeys: true,
       })
       if (screenSize == 'small') {
-        cy.findByRole('button', { name: 'Options & Multipliers' }).should(
-          'be.visible'
-        )
+        cy.findByRole('button', { name: 'Options' }).should('be.visible')
       } else {
-        cy.findByText('Options & Multipliers').should('be.visible')
+        cy.findByText('Options').should('be.visible')
       }
       cy.c_closeNotificationHeader()
       cy.c_verifyActiveCurrencyAccount(fromCurrency, { closeModalAtEnd: false })
@@ -85,12 +83,10 @@ screenSizes.forEach((screenSize) => {
         derivApp.commonPage.mobileLocators.sideMenu.sidePanel().within(() => {
           derivApp.commonPage.mobileLocators.sideMenu.tradersHubButton().click()
         })
-        cy.findByRole('button', { name: 'Options & Multipliers' }).should(
-          'be.visible'
-        )
+        cy.findByRole('button', { name: 'Options' }).should('be.visible')
       } else {
         derivApp.commonPage.desktopLocators.header.tradersHubButton().click()
-        cy.findByText('Options & Multipliers').should('be.visible')
+        cy.findByText('Options').should('be.visible')
       }
       cy.get('.currency-switcher-container').within(() => {
         cy.findByTestId('dt_balance_text_container').should('be.visible')

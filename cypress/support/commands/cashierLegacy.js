@@ -196,6 +196,45 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
             fromAccountBalance.withCurrency
           )
         })
+      } else if (sameCurrency == true) {
+        transferScreen.sharedLocators
+          .fromAmountField(sameCurrency)
+          .then(($toAmount) => {
+            expect(parseFloat($toAmount.val())).to.be.closeTo(
+              10 *
+                parseFloat(
+                  sessionStorage.getItem(
+                    `c_conversionRate${fromAccount.code}To${toAccount.code}`
+                  )
+                ),
+              toAccount.delta
+            )
+            let balanceToAccounAfterTransfer =
+              toAccount.type == 'Deriv MT5'
+                ? toAccountBalance.withoutCurrency +
+                  parseFloat($toAmount.val()) *
+                    parseFloat(
+                      sessionStorage.getItem(
+                        `c_conversionRate${fromAccount.code}To${toAccount.code}`
+                      )
+                    )
+                : toAccountBalance.withoutCurrency +
+                  (parseFloat($toAmount.val()) -
+                    calculateTransferFee(transferAmount) *
+                      parseFloat(
+                        sessionStorage.getItem(
+                          `c_conversionRate${fromAccount.code}To${toAccount.code}`
+                        )
+                      ))
+            cy.log(
+              'Expected balance in ToAccount after transfer',
+              balanceToAccounAfterTransfer
+            )
+            sessionStorage.setItem(
+              'c_expectedToAccountBalance',
+              balanceToAccounAfterTransfer
+            )
+          })
       }
     })
 

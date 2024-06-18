@@ -1,12 +1,11 @@
-import '@testing-library/cypress/add-commands'
 import { derivApp } from '../../../support/locators'
 
 const toAccount = {
   type: 'Deriv MT5',
-  subType: 'Derived',
+  subType: 'Standard',
   jurisdiction: 'SVG',
   fullJurisdiction: 'St. Vincent & Grenadines',
-  name: 'Derived SVG',
+  name: 'Standard SVG',
   code: 'USD',
   delta: 1.0, // needed for approximately equal to
   accurateDelta: 0.5, // this is to match exact exchangerate
@@ -19,7 +18,7 @@ const fromAccount = {
 }
 const amountToTransfer = 10.0
 
-const screenSizes = ['desktop']
+const screenSizes = ['desktop', 'small']
 
 screenSizes.forEach((screenSize) => {
   describe(`QATEST-34982 - Transfer: Perform Transfer from Fiat non-USD to MT5 in screen size: ${screenSize}`, () => {

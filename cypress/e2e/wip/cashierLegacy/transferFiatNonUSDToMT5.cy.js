@@ -2,10 +2,10 @@ import { derivApp } from '../../../support/locators'
 
 const toAccount = {
   type: 'Deriv MT5',
-  subType: 'Derived',
+  subType: 'Standard',
   jurisdiction: 'SVG',
   fullJurisdiction: 'St. Vincent & Grenadines',
-  name: 'Derived SVG',
+  name: 'Standard SVG',
   code: 'USD',
   delta: 1.5, // needed for approximately equal to
   accurateDelta: 0.5, // this is to match exact exchangerate
