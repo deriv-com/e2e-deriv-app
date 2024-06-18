@@ -21,7 +21,7 @@ const amountToTransfer = 10.0
 const screenSizes = ['desktop', 'small']
 
 screenSizes.forEach((screenSize) => {
-  describe(`QATEST-34982 - Transfer: Perform Transfer from Fiat USD to MT5 in screen size: ${screenSize}`, () => {
+  describe(`QATEST-20050 - Transfer: Perform Transfer from Fiat USD to MT5 in screen size: ${screenSize}`, () => {
     beforeEach(() => {
       cy.clearAllSessionStorage()
       cy.c_login({ user: 'cashierLegacyUSD', rateLimitCheck: true })
