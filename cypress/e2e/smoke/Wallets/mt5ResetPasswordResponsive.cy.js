@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function changeMT5Password() {
   cy.findByText('Derived', { timeout: 10000 })
     .should('be.visible')
@@ -8,7 +6,7 @@ function changeMT5Password() {
         .should(() => {})
         .then((el) => {
           if (el.length) {
-            cy.log('no MT5 account exist')
+            cy.fail('no MT5 account exist')
           } else {
             cy.log('changing MT5 password')
             cy.findAllByText('Derived')
@@ -40,7 +38,10 @@ function changeMT5Password() {
             cy.c_emailVerification(
               'New%20DMT5%20password%20request.html',
               'QA script',
-              { baseUrl: Cypress.env('configServer') + '/emails' }
+              {
+                baseUrl: Cypress.env('configServer') + '/emails',
+                isMT5ResetPassword: true,
+              }
             )
             cy.then(() => {
               cy.c_visitResponsive(Cypress.env('verificationUrl'), 'large')
