@@ -3,7 +3,7 @@ import '@testing-library/cypress/add-commands'
 const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
 describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
   beforeEach(() => {
-    cy.c_visitResponsive('/')
+    //cy.c_visitResponsive('/')
     cy.c_createRealAccount('aq')
     cy.c_login()
     cy.findByTestId('dt_traders_hub').should('be.visible')
