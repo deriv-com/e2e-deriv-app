@@ -5,7 +5,6 @@ const CURRENT_DATE = getCurrentDate()
 
 describe('QATEST-4835 POA Verified/Rejected', () => {
   beforeEach(() => {
-    cy.c_visitResponsive('/')
     cy.c_createRealAccount()
     cy.c_login()
     cy.c_navigateToPoaResponsive()

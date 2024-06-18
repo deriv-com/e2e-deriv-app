@@ -2,7 +2,6 @@ import { generateRandomName } from '../../../support/helper/utility'
 
 describe('QATEST-22853 IDV Document Rejected by Smile Identity provider', () => {
   beforeEach(() => {
-    cy.c_visitResponsive('/')
     cy.c_createRealAccount('gh')
     cy.c_login()
     cy.findByTestId('dt_traders_hub').should('be.visible')

@@ -2,7 +2,6 @@ import { generateRandomName } from '../../../support/helper/utility'
 
 describe('QATEST-22808 IDV Expired scenario', () => {
   beforeEach(() => {
-    cy.c_visitResponsive('/')
     cy.c_createRealAccount('ke')
     cy.c_login()
     cy.findByTestId('dt_traders_hub').should('be.visible')

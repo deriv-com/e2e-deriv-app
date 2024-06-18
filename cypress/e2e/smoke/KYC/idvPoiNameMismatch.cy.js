@@ -2,7 +2,6 @@ import { generateRandomName } from '../../../support/helper/utility'
 
 describe('QATEST-23015 - IDV POI Name Mismatch - Mobile view', () => {
   beforeEach(() => {
-    cy.c_visitResponsive('/')
     cy.c_createRealAccount('ke')
     cy.c_login()
     cy.findByTestId('dt_traders_hub').should('be.visible')
