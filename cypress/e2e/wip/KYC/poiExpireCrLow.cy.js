@@ -9,7 +9,7 @@ describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
     cy.c_navigateToPoiResponsive('Antarctica')
   })
 
-  it('Should have no cashier lock when POI expire for CR low risk', () => {
+  it('Should have no cashier lock when POI expire for CR low risk.', () => {
     /* Submit POA */
     cy.findByText('Passport').should('be.visible').click()
     cy.findByLabelText('Passport number*').type('232344')
