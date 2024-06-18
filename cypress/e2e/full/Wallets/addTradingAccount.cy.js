@@ -3,7 +3,7 @@ describe('QATEST-142456 - Add Trading account', () => {
     cy.c_login({ user: 'walletloginEmail' })
   })
 
-  it(
+  it.only(
     'should add trading account to wallet account (Crypto)',
     { scrollBehavior: false },
     () => {

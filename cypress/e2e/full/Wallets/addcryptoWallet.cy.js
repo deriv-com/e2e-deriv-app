@@ -77,7 +77,7 @@ describe('QATEST-98773 - Add crypto wallet account', () => {
     cy.c_login({ user: 'walletloginEmail' })
   })
 
-  it('should be able to add more wallets', () => {
+  it.only('should be able to add more wallets', () => {
     cy.c_visitResponsive('/', 'large')
     addcryptowallet('desktop')
   })
