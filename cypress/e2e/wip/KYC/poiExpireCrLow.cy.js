@@ -9,7 +9,7 @@ describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
     cy.c_navigateToPoiResponsive('Antarctica')
   })
 
-  it('No cashier lock when POI expire for CR low risk', () => {
+  it('Should have no cashier lock when POI expire for CR low risk', () => {
     /* Submit POA */
     cy.findByText('Passport').should('be.visible').click()
     cy.findByLabelText('Passport number*').type('232344')
@@ -32,7 +32,6 @@ describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
     cy.findByText('Your documents were submitted successfully').should(
       'be.visible'
     )
-
     /* Visit BO */
     cy.c_visitResponsive('/', 'large')
     cy.visit(BO_URL)
@@ -52,14 +51,12 @@ describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
     cy.get('select[name="client_authentication"]')
       .select('Authenticated with scans')
       .type('{enter}')
-
     cy.get(
       '#documents_wrapper table tbody tr td input[name^="expiration_date_"]'
     )
       .clear()
       .type('2021-09-20')
     cy.get('input[value="Save client details"]').last().click()
-
     /* No cashier lock in BO */
     cy.get('#card__content table tbody tr td b Withdrawal Locked').should(
       'not.exist'
@@ -67,7 +64,6 @@ describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
     cy.get('select[name="client_aml_risk_classification"]')
       .select('Low')
       .should('be.visible')
-
     /* Check no cashier lock on FE */
     cy.c_visitResponsive('/cashier/deposit', 'small')
     cy.findByText('Deposit via bank wire, credit card, and e-wallet').should(
