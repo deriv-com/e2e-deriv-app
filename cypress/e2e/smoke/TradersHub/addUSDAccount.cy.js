@@ -1,42 +1,38 @@
-import { generateEpoch } from '../../../support/helper/utility'
-
-describe('QATEST 5813 - Add USD account for existing BTC account', () => {
-  const signUpEmail = `sanity${generateEpoch()}crypto@deriv.com`
-  let country = Cypress.env('countries').CO
-  let nationalIDNum = Cypress.env('nationalIDNum').CO
-  let taxIDNum = Cypress.env('taxIDNum').CO
-  let currency = Cypress.env('accountCurrency').BTC
+describe('QATEST-5813: Add USD account for existing BTC account', () => {
+  const size = ['small', 'desktop']
+  let countryCode = 'co'
+  let cryptoCurrency = 'BTC'
+  let fiatCurrency = Cypress.env('accountCurrency').USD
 
   beforeEach(() => {
-    cy.c_setEndpoint(signUpEmail)
+    cy.c_createRealAccount(countryCode, cryptoCurrency)
+    cy.c_login()
   })
-  it('Create a new crypto account and add USD account', () => {
-    cy.c_demoAccountSignup(country, signUpEmail)
-    cy.findByText('Add a Deriv account').should('be.visible')
-    cy.c_generateRandomName().then((firstName) => {
-      cy.c_personalDetails(
-        firstName,
-        'Onfido',
-        country,
-        nationalIDNum,
-        taxIDNum,
-        currency
-      )
+  size.forEach((size) => {
+    it(`Should create a new crypto account and add USD account on ${size == 'small' ? 'mobile' : 'dekstop'}`, () => {
+      const isMobile = size == 'small' ? true : false
+      cy.c_visitResponsive('/', size)
+      //Wait for page to completely load
+      cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
+      if (isMobile) cy.c_skipPasskeysV2()
+      cy.c_checkTradersHubHomePage(isMobile)
+      cy.c_closeNotificationHeader()
+      cy.findAllByTestId('dt_balance_text_container')
+        .eq(1)
+        .should('contain.text', 'BTC')
+      cy.findByTestId('dt_currency-switcher__arrow').click()
+      cy.findByRole('button', { name: 'Add or manage account' }).click()
+      cy.findByText('Fiat currencies').click()
+      cy.findByText(fiatCurrency).click()
+      cy.findByRole('button', { name: 'Add account' }).click()
+      cy.findByRole('heading', { name: 'Success!' }).should('be.visible', {
+        timeout: 30000,
+      })
+      cy.findByText('You have added a USD account.').should('be.visible')
+      cy.findByRole('button', { name: 'Maybe later' }).click()
+      cy.findAllByTestId('dt_balance_text_container')
+        .eq(1)
+        .should('contain.text', 'USD')
     })
-    cy.c_addressDetails()
-    cy.c_completeFatcaDeclarationAgreement()
-    cy.c_addAccount()
-    cy.c_checkTradersHubHomePage()
-    cy.c_closeNotificationHeader()
-    cy.findByTestId('dt_currency-switcher__arrow').click()
-    cy.findByRole('button', { name: 'Add or manage account' }).click()
-    cy.findByText('Fiat currencies').click()
-    cy.findByText('US Dollar').click()
-    cy.findByRole('button', { name: 'Add account' }).click()
-    cy.findByRole('heading', { name: 'Success!' }).should('be.visible', {
-      timeout: 30000,
-    })
-    cy.findByText('You have added a USD account.').should('be.visible')
-    cy.findByRole('button', { name: 'Maybe later' }).click()
   })
 })

@@ -1,4 +1,4 @@
-let floatRate = 1.25
+let floatRate = 0.01
 let minOrder = 1
 let maxOrder = 10
 let nicknameAndAmount = {

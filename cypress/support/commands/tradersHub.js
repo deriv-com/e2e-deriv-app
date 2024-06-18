@@ -1,4 +1,15 @@
 import { derivApp } from '../locators'
+import {
+  BVI,
+  clickText,
+  Labuan,
+  languages,
+  linkValidations,
+  termsAndConditions,
+  translations,
+  Vanuatu,
+  CFD,
+} from '../../fixtures/tradersHub/allLinks'
 
 Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
   if (isMobile) {
@@ -828,6 +839,137 @@ Cypress.Commands.add(
     })
     if (closeModalAtEnd == true) {
       cy.c_closeModal()
+    }
+  }
+)
+
+Cypress.Commands.add('c_changeLanguageMobile', (language) => {
+  console.log('Changing language to:', language)
+  const { lang } = languages[language]
+  cy.get('#dt_mobile_drawer_toggle').click()
+  cy.findByTestId('dt_icon').click()
+  cy.findByText(lang).scrollIntoView().should('be.visible').click()
+  cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
+})
+
+Cypress.Commands.add('c_changeLanguageDesktop', (language) => {
+  const { lang, langChangeCheck } = languages[language]
+  cy.findAllByTestId('dt_icon').eq(0).click()
+  cy.findByText(lang).should('be.visible').click()
+  cy.findByText(langChangeCheck).should('be.visible')
+})
+
+Cypress.Commands.add(
+  'c_validateLink',
+  (language, index, linkName, expectedUrl, contentCheck, isMobile) => {
+    const visitAndCheck = (link) => {
+      const url = link.prop('href')
+      cy.visit(url, {
+        onBeforeLoad: (win) => {
+          cy.stub(win, 'open').as('windowOpen')
+        },
+      })
+      cy.url().should('contain', expectedUrl)
+      cy.findByRole('heading', { name: `${contentCheck}` })
+    }
+
+    if (isMobile || ['BN', 'DE'].includes(language)) {
+      cy.findByRole('link', { name: linkName }).then(($link) => {
+        visitAndCheck($link)
+      })
+      cy.go('back')
+    } else {
+      cy.findAllByRole('link', { name: linkName })
+        .eq(index)
+        .then(($link) => {
+          visitAndCheck($link)
+        })
+      cy.go('back')
+    }
+  }
+)
+
+Cypress.Commands.add('c_checkHyperLinks', (language, isMobile = false) => {
+  const CFDButton = CFD[language]
+  cy.wait(2000)
+  const bviCFD = BVI[language]
+  const vanuatuCFD = Vanuatu[language]
+  const labuanCFD = Labuan[language]
+  let counter = 0
+  cy.log(language)
+  const validations = linkValidations[language]
+  validations.forEach(({ linkName, expectedUrl, contentCheck }, index) => {
+    if (counter === 1) {
+      if (isMobile) {
+        cy.findByRole('button', { name: CFDButton }).click()
+      }
+    }
+    cy.c_validateLink(
+      language,
+      index,
+      linkName,
+      expectedUrl,
+      contentCheck,
+      isMobile
+    )
+    counter++
+  })
+  if (isMobile) cy.findByRole('button', { name: CFDButton }).click()
+  cy.c_clickCompareAccounts(language)
+  cy.c_clickAndGetTerms(language, bviCFD, vanuatuCFD, labuanCFD, isMobile)
+})
+
+Cypress.Commands.add('c_clickCompareAccounts', (language) => {
+  const { compareAccount, urlPart, compareAccountContent } =
+    translations[language]
+
+  cy.findByText(compareAccount).click()
+  cy.url().should('contain', urlPart)
+  cy.findByText(compareAccountContent).should('be.visible')
+  cy.go('back')
+})
+
+Cypress.Commands.add(
+  'c_clickAndGetTerms',
+  (language, bviCFD, vanuatuCFD, labuanCFD, isMobile) => {
+    const { getButton, termsConditionLink } = clickText[language]
+    const CFDButton = CFD[language]
+
+    if (bviCFD) {
+      ;[bviCFD, vanuatuCFD].forEach((term) => {
+        cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
+        if (isMobile) cy.findByRole('button', { name: CFDButton }).click()
+        cy.findAllByRole('button', { name: getButton }).first().click()
+        cy.findByText(term).click()
+        cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
+        cy.findAllByRole('link', { name: termsConditionLink })
+          .invoke('attr', 'target', '_self')
+          .click()
+          .then(() => {
+            cy.url().should('eq', termsAndConditions[term])
+            cy.go('back')
+            cy.findByTestId('dt_div_100_vh').should('be.visible')
+          })
+      })
+    }
+
+    cy.c_rateLimit({ maxRetries: 6 })
+    if (bviCFD) {
+      ;[bviCFD, vanuatuCFD, labuanCFD].forEach((term) => {
+        cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
+        if (isMobile) cy.findByRole('button', { name: CFDButton }).click()
+        cy.findAllByRole('button', { name: getButton }).eq(1).click()
+        cy.findByText(term).click()
+        cy.c_rateLimit({ maxRetries: 6, waitTimeAfterError: 15000 })
+        cy.findAllByRole('link', { name: termsConditionLink })
+          .invoke('attr', 'target', '_self')
+          .click()
+          .then(() => {
+            cy.url().should('eq', termsAndConditions[term])
+            cy.go('back')
+            cy.findByTestId('dt_div_100_vh').should('be.visible')
+          })
+      })
     }
   }
 )
