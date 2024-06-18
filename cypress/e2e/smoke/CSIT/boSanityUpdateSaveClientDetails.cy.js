@@ -1,17 +1,9 @@
+import { generateRandomName } from '../../../support/helper/loginUtility'
+
 const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
 
-const userName = (length) => {
-  let result = ''
-  const characters = 'abcdefghkl'
-  const charactersLength = characters.length
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength))
-  }
-  return result
-}
-
-let firstName = userName(5)
-let lastName = userName(7)
+const firstName = generateRandomName(5)
+const lastName = generateRandomName(7)
 
 describe('QATEST-115357 - BO General Sanity - Update/Save client details', () => {
   beforeEach(() => {
