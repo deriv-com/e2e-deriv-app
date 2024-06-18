@@ -1,16 +1,15 @@
 import '@testing-library/cypress/add-commands'
 
 const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
-describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
+describe('QATEST-160111 Cashier lock when POI expire CR - High.', () => {
   beforeEach(() => {
-    cy.c_visitResponsive('/')
     cy.c_createRealAccount('aq')
     cy.c_login()
     cy.findByTestId('dt_traders_hub').should('be.visible')
     cy.c_navigateToPoiResponsive('Antarctica')
   })
 
-  it('No cashier lock when POI expire for CR low risk', () => {
+  it('Should have cashier lock when POI expire for CR high risk', () => {
     /* Submit POA */
     cy.findByText('Passport').should('be.visible').click()
     cy.findByLabelText('Passport number*').type('232344')
@@ -33,7 +32,6 @@ describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
     cy.findByText('Your documents were submitted successfully').should(
       'be.visible'
     )
-
     /* Visit BO */
     cy.c_visitResponsive('/', 'large')
     cy.visit(BO_URL)
@@ -65,7 +63,6 @@ describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
     cy.get('select[name="client_aml_risk_classification"]')
       .select('High')
       .type('{enter}')
-
     /* cashier locks in BO */
     cy.get('b[style*="font-size: 1.3rem"][style*="color:var(--color-red)"]')
       .contains('Withdrawal Locked')
@@ -73,7 +70,6 @@ describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
     cy.get('b[style*="font-size: 1.3rem"][style*="color:var(--color-red)"]')
       .contains('Cashier Locked')
       .should('be.visible')
-
     // /* Check no cashier lock on FE */
     cy.c_visitResponsive('/cashier/deposit', 'small')
     cy.findByText('Cashier is locked').should('be.visible')
