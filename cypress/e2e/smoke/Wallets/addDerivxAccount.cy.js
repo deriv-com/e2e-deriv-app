@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function clickAddDerivxButton() {
   cy.get('.wallets-available-dxtrade__icon')
     .parent('.wallets-trading-account-card')
@@ -70,7 +68,7 @@ function addDerivXaccount(status, accountType) {
         cy.contains('.wallets-text', 'Deriv X').should('exist')
       })
   } else {
-    cy.log('Neither found')
+    cy.fail('DerivX account already exist')
   }
 }
 

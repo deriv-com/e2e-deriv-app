@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function clickAddMt5Button(mt5AccountType) {
   cy.get('span.wallets-text').contains(mt5AccountType).click()
 }
@@ -114,7 +112,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
           'exist'
         )
       } else {
-        cy.log('Neither found')
+        cy.fail('MT5 account already exist')
       }
     })
     existingAccountCheck('Financial').then((status) => {
@@ -132,6 +130,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
         )
       } else {
         cy.log('Neither found')
+        cy.fail('MT5 account already exist')
       }
     })
     // this part is commented due to this bug [https://app.clickup.com/t/20696747/WALL-3302]
@@ -182,7 +181,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
           'exist'
         )
       } else {
-        cy.log('Neither found')
+        cy.log('MT5 account already exist')
       }
     })
     cy.log('create demo mt5 svg financial account')
@@ -199,6 +198,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
         )
       } else {
         cy.log('Neither found')
+        cy.fail('MT5 account already exist')
       }
     })
     // this part is commented due to this bug [https://app.clickup.com/t/20696747/WALL-3302]
