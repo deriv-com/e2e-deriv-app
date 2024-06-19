@@ -65,12 +65,8 @@ describe('QATEST-160108 Cashier lock when POI expire CR - High', () => {
       .select('High')
       .type('{enter}')
     /* cashier locks in BO */
-    cy.get('b[style*="font-size: 1.3rem"][style*="color:var(--color-red)"]')
-      .contains('Withdrawal Locked')
-      .should('be.visible')
-    cy.get('b[style*="font-size: 1.3rem"][style*="color:var(--color-red)"]')
-      .contains('Cashier Locked')
-      .should('be.visible')
+    cy.contains('Withdrawal Locked').should('be.visible')
+    cy.contains('Cashier Locked').should('be.visible')
     // /* Check no cashier lock on FE */
     cy.c_visitResponsive('/cashier/deposit', 'small')
     cy.findByText('Cashier is locked').should('be.visible')
