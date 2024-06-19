@@ -17,10 +17,6 @@ class QuickStrategy {
     return cy.xpath('//button[@class="dc-btn dc-btn--secondary"]')
   }
 
-  get quickStrategyMarketDropdown() {
-    return cy.xpath('//input[@data-testid="qs_autocomplete_symbol"]')
-  }
-
   get quickStrategyProfit() {
     return cy.xpath('//input[@name="profit"]')
   }
@@ -31,6 +27,10 @@ class QuickStrategy {
 
   get quickStrategySize() {
     return cy.xpath('//input[@name="size"]')
+  }
+
+  get quickStrategyMarketDropdown() {
+    return cy.findByTestId('dt_qs_symbol').should('be.visible')
   }
 
   runBotQuickStrategy = () => {

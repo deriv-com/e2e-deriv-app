@@ -35,7 +35,7 @@ describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
         'have.value',
         'Volatility 100 (1s) Index'
       )
-      cy.findByTestId('qs_autocomplete_tradetype').click()
+      cy.findByTestId('dt_qs_tradetype').click()
       quickStrategy.chooseTradeType(isMobile)
       quickStrategy.fillUpContractSize()
       quickStrategy.fillUpLossProfitTreshold()
