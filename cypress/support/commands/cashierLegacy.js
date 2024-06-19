@@ -167,13 +167,7 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
           )
           let balanceToAccounAfterTransfer =
             toAccount.type == 'Deriv MT5'
-              ? toAccountBalance.withoutCurrency +
-                parseFloat($toAmount.val()) *
-                  parseFloat(
-                    sessionStorage.getItem(
-                      `c_conversionRate${fromAccount.code}To${toAccount.code}`
-                    )
-                  )
+              ? toAccountBalance.withoutCurrency + parseFloat($toAmount.val())
               : toAccountBalance.withoutCurrency +
                 (parseFloat($toAmount.val()) -
                   calculateTransferFee(transferAmount) *
@@ -211,13 +205,7 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
             )
             let balanceToAccounAfterTransfer =
               toAccount.type == 'Deriv MT5'
-                ? toAccountBalance.withoutCurrency +
-                  parseFloat($toAmount.val()) *
-                    parseFloat(
-                      sessionStorage.getItem(
-                        `c_conversionRate${fromAccount.code}To${toAccount.code}`
-                      )
-                    )
+                ? toAccountBalance.withoutCurrency + parseFloat($toAmount.val())
                 : toAccountBalance.withoutCurrency +
                   (parseFloat($toAmount.val()) -
                     calculateTransferFee(transferAmount) *
