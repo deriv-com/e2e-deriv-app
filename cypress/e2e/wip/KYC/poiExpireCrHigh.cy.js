@@ -1,5 +1,5 @@
 const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
-describe('QATEST-160108 Cashier lock when POI expire CR - High', () => {
+describe('QATEST-160111 Cashier lock when POI expire CR - High', () => {
   beforeEach(() => {
     cy.c_createRealAccount('aq')
     cy.c_login()
@@ -67,7 +67,7 @@ describe('QATEST-160108 Cashier lock when POI expire CR - High', () => {
     /* cashier locks in BO */
     cy.contains('Withdrawal Locked').should('be.visible')
     cy.contains('Cashier Locked').should('be.visible')
-    // /* Check no cashier lock on FE */
+    /* Check cashier lock on FE */
     cy.c_visitResponsive('/cashier/deposit', 'small')
     cy.findByText('Cashier is locked').should('be.visible')
     cy.findByText(
