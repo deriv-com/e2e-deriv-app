@@ -1,3 +1,4 @@
+const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
 describe('QATEST-4760 Onfido Expired document.', () => {
   beforeEach(() => {
     cy.c_createRealAccount('co')
@@ -39,5 +40,23 @@ describe('QATEST-4760 Onfido Expired document.', () => {
       .type(Cypress.env('credentials').test.masterUser.ID)
     cy.findByRole('button', { name: /View \/ Edit/i }).click()
     cy.get('.link').eq(1).should('be.visible').click()
+    cy.get(
+      '#documents_wrapper table tbody tr td input[name^="expiration_date_"]'
+    )
+      .clear()
+      .type('2021-09-20')
+    cy.get('input[value="Save client details"]').last().click()
+    cy.get('select[name="client_aml_risk_classification"]')
+      .select('High')
+      .type('{enter}')
+    /* cashier locks in BO */
+    cy.contains('Withdrawal Locked').should('not.be.visible')
+    cy.contains('Cashier Locked').should('not.be.visible')
+    /* Check cashier lock on FE */
+    cy.c_visitResponsive('/cashier/deposit', 'small')
+    cy.findByText('Cashier is locked').should('not.be.visible')
+    cy.findByText(
+      'The identification documents you submitted have expired. Please submit valid identity documents to unlock Cashier.'
+    ).should('be.visible')
   })
 })
