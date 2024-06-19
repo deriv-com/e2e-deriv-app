@@ -112,22 +112,17 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
     cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
-    const walletAdded = allWalletAdded()
+    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
     setupTest('large')
     desktopSteps.forEach((step, index) => {
-      // if (index === 3 && walletAdded) return
-      if (index === 3 && walletAdded) {
-        cy.log(index)
-        cy.log(walletAdded)
-        return
+      if (index !== 3 && walletCanBeAdded == 'false') {
+        checkStep(
+          step.backButtonExists,
+          step.nextButtonName,
+          step.title,
+          step.description
+        )
       }
-
-      checkStep(
-        step.backButtonExists,
-        step.nextButtonName,
-        step.title,
-        step.description
-      )
     })
     cy.findByTestId('spotlight').should('not.exist')
   })
@@ -135,18 +130,19 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
     cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.then(() => {
-      const walletAdded = sessionStorage.getItem('c_walletExist')
+      const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
       cy.findByText('Deposit').click()
       cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
       setupTest('large')
       desktopSteps.forEach((step, index) => {
-        if (index === 3 && walletAdded == 'false') return
-        checkStep(
-          step.backButtonExists,
-          step.nextButtonName,
-          step.title,
-          step.description
-        )
+        if (index !== 3 && walletCanBeAdded == 'false') {
+          checkStep(
+            step.backButtonExists,
+            step.nextButtonName,
+            step.title,
+            step.description
+          )
+        }
       })
     })
     cy.findByTestId('spotlight').should('not.exist')
@@ -154,18 +150,19 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
   it('User onboarding from USD wallet compare account', () => {
     cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    const walletAdded = allWalletAdded()
+    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
     cy.findByText('Compare accounts').click()
     cy.findByText('Compare CFDs accounts').should('be.visible')
     setupTest('large')
     desktopSteps.forEach((step, index) => {
-      if (index === 3 && walletAdded) return
-      checkStep(
-        step.backButtonExists,
-        step.nextButtonName,
-        step.title,
-        step.description
-      )
+      if (index !== 3 && walletCanBeAdded == 'false') {
+        checkStep(
+          step.backButtonExists,
+          step.nextButtonName,
+          step.title,
+          step.description
+        )
+      }
     })
     cy.findByTestId('spotlight').should('not.exist')
   })
@@ -173,17 +170,18 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
     cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccount('BTC')
-    const walletAdded = allWalletAdded()
+    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
     cy.findByText('Deposit').click()
     setupTest('large')
     desktopSteps.forEach((step, index) => {
-      if (index === 3 && walletAdded) return
-      checkStep(
-        step.backButtonExists,
-        step.nextButtonName,
-        step.title,
-        step.description
-      )
+      if (index !== 3 && walletCanBeAdded == 'false') {
+        checkStep(
+          step.backButtonExists,
+          step.nextButtonName,
+          step.title,
+          step.description
+        )
+      }
     })
     cy.findByTestId('spotlight').should('not.exist')
   })
@@ -191,35 +189,37 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
     cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccount('BTC')
-    const walletAdded = allWalletAdded()
+    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
     setupTest('large')
     desktopSteps.forEach((step, index) => {
-      if (index === 3 && walletAdded) return
-      checkStep(
-        step.backButtonExists,
-        step.nextButtonName,
-        step.title,
-        step.description
-      )
+      if (index !== 3 && walletCanBeAdded == 'false') {
+        checkStep(
+          step.backButtonExists,
+          step.nextButtonName,
+          step.title,
+          step.description
+        )
+      }
     })
     cy.findByTestId('spotlight').should('not.exist')
   })
   it('User onboarding from BTC wallet compare account', () => {
     cy.c_visitResponsive('/', 'large')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    const walletAdded = allWalletAdded()
+    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
     cy.c_switchWalletsAccount('BTC')
     cy.findByText('Compare accounts').click()
     cy.findByText('Compare CFDs accounts').should('be.visible')
     setupTest('large')
     desktopSteps.forEach((step, index) => {
-      if (index === 3 && walletAdded) return
-      checkStep(
-        step.backButtonExists,
-        step.nextButtonName,
-        step.title,
-        step.description
-      )
+      if (index !== 3 && walletCanBeAdded == 'false') {
+        checkStep(
+          step.backButtonExists,
+          step.nextButtonName,
+          step.title,
+          step.description
+        )
+      }
     })
     cy.findByTestId('spotlight').should('not.exist')
   })
@@ -227,16 +227,17 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
     cy.c_visitResponsive('/', 'small')
     cy.c_skipPasskeysV2()
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    const walletAdded = allWalletAdded()
+    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
     setupTest()
     mobileSteps.forEach((step, index) => {
-      if (index === 3 && walletAdded) return
-      checkStep(
-        step.backButtonExists,
-        step.nextButtonName,
-        step.title,
-        step.description
-      )
+      if (index !== 3 && walletCanBeAdded == 'false') {
+        checkStep(
+          step.backButtonExists,
+          step.nextButtonName,
+          step.title,
+          step.description
+        )
+      }
     })
     cy.findByTestId('spotlight').should('not.exist')
   })
@@ -244,18 +245,19 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
     cy.c_visitResponsive('/', 'small')
     cy.c_skipPasskeysV2()
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    const walletAdded = allWalletAdded()
+    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
     cy.findByText('Deposit').parent().should('be.visible').click()
     cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
     setupTest()
     mobileSteps.forEach((step, index) => {
-      if (index === 3 && walletAdded) return
-      checkStep(
-        step.backButtonExists,
-        step.nextButtonName,
-        step.title,
-        step.description
-      )
+      if (index !== 3 && walletCanBeAdded == 'false') {
+        checkStep(
+          step.backButtonExists,
+          step.nextButtonName,
+          step.title,
+          step.description
+        )
+      }
     })
     cy.findByTestId('spotlight').should('not.exist')
   })
@@ -263,16 +265,17 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
     cy.c_visitResponsive('/', 'small')
     cy.c_skipPasskeysV2()
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    const walletAdded = allWalletAdded()
+    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
     setupTest()
     mobileSteps.forEach((step, index) => {
-      if (index === 3 && walletAdded) return
-      checkStep(
-        step.backButtonExists,
-        step.nextButtonName,
-        step.title,
-        step.description
-      )
+      if (index !== 3 && walletCanBeAdded == 'false') {
+        checkStep(
+          step.backButtonExists,
+          step.nextButtonName,
+          step.title,
+          step.description
+        )
+      }
     })
     cy.findByTestId('spotlight').should('not.exist')
   })
@@ -281,16 +284,17 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
     cy.c_skipPasskeysV2()
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccountResponsive('BTC')
-    const walletAdded = allWalletAdded()
+    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
     setupTest()
     mobileSteps.forEach((step, index) => {
-      if (index === 3 && walletAdded) return
-      checkStep(
-        step.backButtonExists,
-        step.nextButtonName,
-        step.title,
-        step.description
-      )
+      if (index !== 3 && walletCanBeAdded == 'false') {
+        checkStep(
+          step.backButtonExists,
+          step.nextButtonName,
+          step.title,
+          step.description
+        )
+      }
     })
     cy.findByTestId('spotlight').should('not.exist')
   })
@@ -299,19 +303,20 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
     cy.c_visitResponsive('/', 'small')
     cy.c_skipPasskeysV2()
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
-    const walletAdded = allWalletAdded()
+    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
     cy.c_switchWalletsAccountResponsive('BTC')
     cy.findByText('Compare accounts').click()
     cy.findByText('Compare CFDs accounts').should('be.visible')
     setupTest()
     mobileSteps.forEach((step, index) => {
-      if (index === 3 && walletAdded) return
-      checkStep(
-        step.backButtonExists,
-        step.nextButtonName,
-        step.title,
-        step.description
-      )
+      if (index !== 3 && walletCanBeAdded == 'false') {
+        checkStep(
+          step.backButtonExists,
+          step.nextButtonName,
+          step.title,
+          step.description
+        )
+      }
     })
     cy.findByTestId('spotlight').should('not.exist')
   })
