@@ -1059,8 +1059,8 @@ Cypress.Commands.add(
     //TODO
     cy.log(`sendAmount is ${sendAmount}`)
     cy.findByText(
-      `Please make sure that you\'ve paid 1.63 NZD to ${nickname}, and upload the receipt as proof of your payment`
-      // `Please make sure that you\'ve paid ${sendAmount} to ${nickname}, and upload the receipt as proof of your payment`
+      // `Please make sure that you\'ve paid 1.63 NZD to ${nickname}, and upload the receipt as proof of your payment`
+      `Please make sure that you\'ve paid ${sendAmount} to ${nickname}, and upload the receipt as proof of your payment`
     ).should('be.visible')
     //TODO
     cy.findByText(
@@ -1427,8 +1427,8 @@ Cypress.Commands.add('c_confirmSellOrder', (nicknameAndAmount, orderType) => {
     const transactionText =
       orderType === 'buy'
         ? `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.seller} in your bank account or e-wallet, hit the button below to complete the order.`
-        : `If you’ve received 1.64 NZD from ${nicknameAndAmount.buyer} in your bank account or e-wallet, hit the button below to complete the order.`
-    // : `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.buyer} in your bank account or e-wallet, hit the button below to complete the order.`
+        : // : `If you’ve received 1.64 NZD from ${nicknameAndAmount.buyer} in your bank account or e-wallet, hit the button below to complete the order.`
+          `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.buyer} in your bank account or e-wallet, hit the button below to complete the order.`
     //TODO NEW section , check for buy as well
     cy.findByText('One last step before we close this order').should(
       'be.visible'
