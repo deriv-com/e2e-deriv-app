@@ -20,46 +20,47 @@ const loginWithNewUser = (userAccount, isSellAdUserAccount) => {
   isSellAdUser = isSellAdUserAccount
 }
 
+function getProfileData(userType, balanceType) {
+  cy.findByText('My profile').should('be.visible').click()
+  cy.findByText('Available Deriv P2P balance').should('be.visible')
+
+  cy.c_getProfileName().then((name) => {
+    if (userType) {
+      nicknameAndAmount[userType] = name
+    }
+  })
+
+  cy.c_getProfileBalance().then((balance) => {
+    nicknameAndAmount[balanceType] = balance
+  })
+}
+
 describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ads ', () => {
   before(() => {
     cy.clearAllSessionStorage()
   })
   beforeEach(() => {
     if (isSellAdUser == true) {
-      loginWithNewUser('p2pFloatingSellAd1', false)
+      loginWithNewUser('p2pFloatingSellOrder1', false)
     } else {
-      loginWithNewUser('p2pFloatingSellAd2', true)
+      loginWithNewUser('p2pFloatingSellOrder2', true)
     }
     cy.c_visitResponsive('/appstore/traders-hub', 'small'),
       {
         rateLimitCheck: true,
       }
   })
-  it('Should be able to create a Buy tyoe advert', () => {
+  it('Should be able to create a Buy type advert', () => {
     cy.c_navigateToP2P()
-    cy.findByText('My profile').should('be.visible').click()
-    cy.findByText('Available Deriv P2P balance').should('be.visible')
-    cy.c_getProfileName().then((name) => {
-      nicknameAndAmount.buyer = name
-    })
-    cy.c_getProfileBalance().then((balance) => {
-      nicknameAndAmount.buyerBalanceBeforeBuying = balance
-    })
+    getProfileData('buyer', 'buyerBalanceBeforeBuying')
     cy.c_clickMyAdTab()
     cy.c_createNewAd('buy')
     cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Buy', 'float', 'sell')
   })
   it('Should be able to create a Sell order', () => {
     cy.c_navigateToP2P()
-    cy.findByText('My profile').should('be.visible').click()
-    cy.findByText('Available Deriv P2P balance').should('be.visible')
-    cy.c_getProfileName().then((name) => {
-      nicknameAndAmount.seller = name
-    })
-    cy.c_getProfileBalance().then((balance) => {
-      nicknameAndAmount.sellerBalanceBeforeSelling = balance
-    })
-    cy.wait(5000)
+    getProfileData('seller', 'sellerBalanceBeforeSelling')
+    cy.wait(2000) // Give buffer before creating order
     cy.then(() => {
       cy.c_createSellOrder(
         nicknameAndAmount.buyer,
@@ -71,7 +72,7 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
       )
     })
   })
-  it("Buyer should be able to clicks on I've Paid and provides the POT attachment", () => {
+  it("Buyer should be able to click on I've Paid and provide the POT attachment", () => {
     cy.c_navigateToP2P()
     cy.findByText('Orders').should('be.visible').click()
     cy.c_rateLimit({
@@ -101,7 +102,7 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
         })
     })
   })
-  it("Seller should be able to see I've Received Button and confirm the paymen", () => {
+  it("Seller should be able to see I've Received Button and confirm the payment", () => {
     cy.c_navigateToP2P()
     cy.findByText('Orders').should('be.visible').click()
     cy.c_rateLimit({
@@ -113,11 +114,7 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
     cy.c_giveRating('buyer')
     cy.findByText('Completed').should('be.visible')
     cy.c_navigateToP2P()
-    cy.findByText('My profile').should('be.visible').click()
-    cy.findByText('Available Deriv P2P balance').should('be.visible')
-    cy.c_getProfileBalance().then((balance) => {
-      nicknameAndAmount.sellerBalanceAfterSelling = balance
-    })
+    getProfileData(null, 'sellerBalanceAfterSelling')
     cy.then(() => {
       cy.c_confirmBalance(
         nicknameAndAmount.sellerBalanceBeforeSelling,
@@ -129,16 +126,12 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
   })
   it('Should be able to verify completed order for buyer', () => {
     cy.c_navigateToP2P()
-    cy.findByText('My profile').should('be.visible').click()
-    cy.findByText('Available Deriv P2P balance').should('be.visible')
-    cy.c_getProfileBalance().then((balance) => {
-      nicknameAndAmount.buyerBalanceAfterBuying = balance
-    })
+    getProfileData(null, 'buyerBalanceAfterBuying')
     cy.then(() => {
       cy.c_confirmBalance(
         nicknameAndAmount.buyerBalanceBeforeBuying,
         nicknameAndAmount.buyerBalanceAfterBuying,
-        maxOrder,
+        minOrder,
         'seller'
       )
     })

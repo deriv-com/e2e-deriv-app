@@ -136,7 +136,6 @@ Cypress.Commands.add('c_getAdTypeAndRateType', () => {
   })
 })
 
-//TODO
 Cypress.Commands.add(
   'c_inputAdDetails',
   (rateValue, minOrder, maxOrder, adType, rateType, orderType) => {
@@ -173,13 +172,8 @@ Cypress.Commands.add(
           'have.value',
           ratePrefix.concat(rateValue)
         )
-        // .should(
-        //   'have.value',
-        //   // '+'.concat(rateValue)
-        //   '-'.concat(rateValue)
-        // )
       }
-      //TODO
+      cy.c_verifyRate()
       cy.findByTestId('min_transaction')
         .type(minOrder)
         .should('have.value', minOrder)
