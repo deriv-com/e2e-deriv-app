@@ -49,32 +49,34 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   if (skipPassKeys == true && size == 'small') {
     cy.c_skipPasskeysV2({ withoutContent: true })
   }
-  cy.log(path)
-  if (path.includes('region')) {
-    //Wait for relevent elements to appear (based on page)
-    cy.log('Home page Selected')
-    cy.findByRole(
-      'button',
-      { name: 'whatsapp icon' },
-      { timeout: 30000 }
-    ).should('be.visible') //For the home page, this seems to be the best indicator that a page has fully loaded. It may change in the future.
-  }
+  cy.then(() => {
+    cy.log(path)
+    if (path.includes('region')) {
+      //Wait for relevent elements to appear (based on page)
+      cy.log('Home page Selected')
+      cy.findByRole(
+        'button',
+        { name: 'whatsapp icon' },
+        { timeout: 30000 }
+      ).should('be.visible') //For the home page, this seems to be the best indicator that a page has fully loaded. It may change in the future.
+    }
 
-  if (path.includes('help-centre')) {
-    //Wait for relevent elements to appear (based on page)
-    cy.log('Help Centre Selected')
-    cy.findByRole('heading', {
-      name: 'Didn’t find your answer? We can help.',
-    }).should('be.visible', { timeout: 30000 })
-  }
+    if (path.includes('help-centre')) {
+      //Wait for relevent elements to appear (based on page)
+      cy.log('Help Centre Selected')
+      cy.findByRole('heading', {
+        name: 'Didn’t find your answer? We can help.',
+      }).should('be.visible', { timeout: 30000 })
+    }
 
-  if (path.includes('traders-hub') || path === '/') {
-    //Wait for relevent elements to appear (based on page)
-    if (size == 'small')
-      cy.findAllByText("Trader's Hub").should('have.length', '1')
-    else cy.findAllByText("Trader's Hub").should('have.length', '2')
-    cy.log('Trader Hub Selected')
-  }
+    if (path.includes('traders-hub') || path === '/') {
+      //Wait for relevent elements to appear (based on page)
+      if (size == 'small')
+        cy.findAllByText("Trader's Hub").should('have.length', '1')
+      else cy.findAllByText("Trader's Hub").should('have.length', '2')
+      cy.log('Trader Hub Selected')
+    }
+  })
 })
 
 Cypress.Commands.add('c_login', (options = {}) => {
