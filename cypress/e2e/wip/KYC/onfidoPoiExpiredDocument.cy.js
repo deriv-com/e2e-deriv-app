@@ -46,17 +46,17 @@ describe('QATEST-4760 Onfido Expired document.', () => {
       .clear()
       .type('2021-09-20')
     cy.get('input[value="Save client details"]').last().click()
-    cy.get('select[name="client_aml_risk_classification"]')
-      .select('High')
-      .type('{enter}')
     /* cashier locks in BO */
     cy.contains('Withdrawal Locked').should('not.be.visible')
     cy.contains('Cashier Locked').should('not.be.visible')
-    /* Check cashier lock on FE */
+    /* Check no cashier lock on FE */
     cy.c_visitResponsive('/cashier/deposit', 'small')
-    cy.findByText('Cashier is locked').should('not.be.visible')
-    cy.findByText(
-      'The identification documents you submitted have expired. Please submit valid identity documents to unlock Cashier.'
-    ).should('be.visible')
+    cy.findByText('Deposit via bank wire, credit card, and e-wallet').should(
+      'be.visible'
+    )
+    /* Check on POI page */
+    cy.c_visitResponsive('/account/proof-of-identity', 'small')
+    cy.contains('Your document has expired.').should('be.visible')
+    cy.c_closeNotificationHeader()
   })
 })
