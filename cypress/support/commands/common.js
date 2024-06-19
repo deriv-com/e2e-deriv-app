@@ -746,9 +746,7 @@ Cypress.Commands.add('c_login_setToken', () => {
 
       Cypress.env('oAuthToken', token) //Set token here
     },
-    // Cypress.env('loginEmail'),
     Cypress.env('credentials').test.masterUser.ID,
-    // Cypress.env('loginPassword')
     Cypress.env('credentials').test.masterUser.PSWD
   )
 })
