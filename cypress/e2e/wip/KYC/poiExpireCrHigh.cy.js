@@ -59,7 +59,6 @@ describe('QATEST-160111 Cashier lock when POI expire CR - High.', () => {
       .clear()
       .type('2021-09-20')
     cy.get('input[value="Save client details"]').last().click()
-
     cy.get('select[name="client_aml_risk_classification"]')
       .select('High')
       .type('{enter}')
