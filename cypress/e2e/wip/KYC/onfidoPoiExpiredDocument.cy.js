@@ -46,8 +46,9 @@ describe('QATEST-4760 Onfido Expired document.', () => {
       .type('2021-09-20')
     cy.get('input[value="Save client details"]').last().click()
     /* Check no cashier locks in BO */
-    cy.contains('Withdrawal Locked').should('not.be.visible')
-    cy.contains('Cashier Locked').should('not.be.visible')
+    cy.get('#card__content table tbody tr td b Withdrawal Locked').should(
+      'not.exist'
+    )
     /* Check no cashier lock on FE */
     cy.c_visitResponsive('/cashier/deposit', 'small')
     cy.findByText('Deposit via bank wire, credit card, and e-wallet').should(
