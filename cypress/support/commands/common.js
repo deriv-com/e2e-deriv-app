@@ -49,7 +49,7 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   if (skipPassKeys == true && size == 'small') {
     cy.c_skipPasskeysV2({ withoutContent: true })
   }
-
+  cy.log(path)
   if (path.includes('region')) {
     //Wait for relevent elements to appear (based on page)
     cy.log('Home page Selected')
