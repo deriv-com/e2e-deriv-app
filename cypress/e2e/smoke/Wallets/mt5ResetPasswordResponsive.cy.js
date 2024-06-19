@@ -38,7 +38,10 @@ function changeMT5Password() {
             cy.c_emailVerification(
               'New%20DMT5%20password%20request.html',
               'QA script',
-              { baseUrl: Cypress.env('configServer') + '/emails' }
+              {
+                baseUrl: Cypress.env('configServer') + '/emails',
+                isMT5ResetPassword: true,
+              }
             )
             cy.then(() => {
               cy.c_visitResponsive(Cypress.env('verificationUrl'), 'large')
