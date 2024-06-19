@@ -53,7 +53,6 @@ describe('QATEST-160111 Cashier lock when POI expire CR - High.', () => {
     cy.get('select[name="client_authentication"]')
       .select('Authenticated with scans')
       .type('{enter}')
-
     cy.get(
       '#documents_wrapper table tbody tr td input[name^="expiration_date_"]'
     )
