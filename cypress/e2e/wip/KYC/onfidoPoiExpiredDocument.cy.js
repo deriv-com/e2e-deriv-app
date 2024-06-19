@@ -22,7 +22,6 @@ describe('QATEST-4760 Onfido Expired document.', () => {
     cy.findByText('Take a selfie').should('be.visible')
     cy.get('.onfido-sdk-ui-Camera-btn').click()
     cy.findByText('Confirm').click()
-    //cy.findByText('Account verification required').should('be.visible')
     cy.c_closeNotificationHeader()
     cy.c_waitUntilElementIsFound({
       cyLocator: () => cy.findByText('Your proof of identity is verified'),
@@ -46,7 +45,7 @@ describe('QATEST-4760 Onfido Expired document.', () => {
       .clear()
       .type('2021-09-20')
     cy.get('input[value="Save client details"]').last().click()
-    /* cashier locks in BO */
+    /* Check no cashier locks in BO */
     cy.contains('Withdrawal Locked').should('not.be.visible')
     cy.contains('Cashier Locked').should('not.be.visible')
     /* Check no cashier lock on FE */
