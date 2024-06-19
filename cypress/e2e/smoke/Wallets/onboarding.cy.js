@@ -107,7 +107,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
   it('User onboarding for desktop', () => {
     cy.c_visitResponsive('/', 'large')
     const walletAdded = allWalletAdded()
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
     setupTest('large')
     desktopSteps.forEach((step, index) => {
       if (index === 3 && walletAdded) return
@@ -122,7 +122,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
   })
   it('User onboarding from USD wallet cashier', () => {
     cy.c_visitResponsive('/', 'large')
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
     const walletAdded = allWalletAdded()
     cy.findByText('Deposit').click()
     cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
@@ -157,7 +157,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
   })
   it('User onboarding from BTC wallet cashier', () => {
     cy.c_visitResponsive('/', 'large')
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccount('BTC')
     const walletAdded = allWalletAdded()
     cy.findByText('Deposit').click()
@@ -175,7 +175,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
   })
   it('User onboarding from BTC wallet traders hub', () => {
     cy.c_visitResponsive('/', 'large')
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccount('BTC')
     const walletAdded = allWalletAdded()
     setupTest('large')
@@ -192,7 +192,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
   })
   it('User onboarding from BTC wallet compare account', () => {
     cy.c_visitResponsive('/', 'large')
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
     const walletAdded = allWalletAdded()
     cy.c_switchWalletsAccount('BTC')
     cy.findByText('Compare accounts').click()
@@ -227,7 +227,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
   it('User onboarding from USD wallet cashier in responsive', () => {
     cy.c_visitResponsive('/', 'small')
     cy.c_skipPasskeysV2()
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
     const walletAdded = allWalletAdded()
     cy.findByText('Deposit').parent().should('be.visible').click()
     cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
@@ -260,7 +260,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
   })
   it('User onboarding from BTC wallet cashier in responsive', () => {
     cy.c_visitResponsive('/', 'small')
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccountResponsive('BTC')
     const walletAdded = allWalletAdded()
     setupTest()
