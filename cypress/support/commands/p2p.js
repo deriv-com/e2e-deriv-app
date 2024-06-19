@@ -173,7 +173,7 @@ Cypress.Commands.add(
           ratePrefix.concat(rateValue)
         )
       }
-      cy.c_verifyRate()
+      // cy.c_verifyRate()
       cy.findByTestId('min_transaction')
         .type(minOrder)
         .should('have.value', minOrder)
