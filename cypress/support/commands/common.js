@@ -203,9 +203,13 @@ Cypress.Commands.add('c_mt5login', () => {
   cy.c_visitResponsive(Cypress.env('mt5BaseUrl') + '/terminal', 'large')
   cy.findByRole('button', { name: 'Accept' }).click()
   cy.findByPlaceholderText('Enter Login').click()
-  cy.findByPlaceholderText('Enter Login').type(Cypress.env('mt5Login'))
+  cy.findByPlaceholderText('Enter Login').type(
+    Cypress.env('credentials').test.mt5User.ID
+  )
   cy.findByPlaceholderText('Enter Password').click()
-  cy.findByPlaceholderText('Enter Password').type(Cypress.env('mt5Password'))
+  cy.findByPlaceholderText('Enter Password').type(
+    Cypress.env('credentials').test.mt5User.PSWD
+  )
   cy.findByRole('button', { name: 'Connect to account' }).click()
 })
 
@@ -670,8 +674,8 @@ Cypress.Commands.add(
   'c_uiLogin',
   (
     size = 'large',
-    username = Cypress.env('loginEmailProd'),
-    password = Cypress.env('loginPasswordProd')
+    username = Cypress.env('credentials').production.masterUser.ID,
+    password = Cypress.env('credentials').production.masterUser.PSWD
   ) => {
     cy.c_visitResponsive('/', size)
     cy.findByRole('button', { name: 'Log in' }).click()
@@ -742,8 +746,10 @@ Cypress.Commands.add('c_login_setToken', () => {
 
       Cypress.env('oAuthToken', token) //Set token here
     },
-    Cypress.env('loginEmail'),
-    Cypress.env('loginPassword')
+    // Cypress.env('loginEmail'),
+    Cypress.env('credentials').test.masterUser.ID,
+    // Cypress.env('loginPassword')
+    Cypress.env('credentials').test.masterUser.PSWD
   )
 })
 Cypress.Commands.add(

@@ -25,14 +25,14 @@ function verifyDerivMT5Creation(accountType) {
     cy.get('div').contains(expectedText).should('be.visible')
     cy.findByPlaceholderText('Deriv MT5 password')
       .click()
-      .type(Cypress.env('mt5Password'))
+      .type(Cypress.env('credentials').test.mt5User.PSWD)
     cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
   } else {
     expectedText = 'Enter your Deriv MT5 password' // Adjust this text based on your actual requirement
     cy.get('div').contains(expectedText).should('be.visible')
     cy.findByPlaceholderText('Deriv MT5 password')
       .click()
-      .type(Cypress.env('mt5Password'))
+      .type(Cypress.env('credentials').test.mt5User.PSWD)
     cy.findByRole('button', { name: 'Add account' }).click()
   }
 }

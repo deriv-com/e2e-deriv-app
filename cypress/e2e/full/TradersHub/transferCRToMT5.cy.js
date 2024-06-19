@@ -5,9 +5,12 @@ function createMT5Account() {
   cy.findByText('St. Vincent & Grenadines').click()
   cy.findByRole('button', { name: 'Next' }).click()
   cy.findByText('Create a Deriv MT5 password').should('be.visible')
-  cy.findByTestId('dt_mt5_password').type(Cypress.env('mt5Password'), {
-    log: false,
-  })
+  cy.findByTestId('dt_mt5_password').type(
+    Cypress.env('credentials').test.mt5User.PSWD,
+    {
+      log: false,
+    }
+  )
   cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
 }
