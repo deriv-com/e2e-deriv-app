@@ -29,13 +29,15 @@ To set up and run the E2E tests, follow these steps:
     ```bash
     npm install cypress --save-dev
 5. Write e2e tests under `cypress/e2e/`
-6. **To run the available test using Cypress APP UI**
+
+6. **To run the available test(s) using Cypress APP UI**
     ```sh
     npx cypress open
     ```
-7. **To run the available test in terminal**
+7. **To run the available test(s) in terminal**
     ```sh
     npx cypress run
+    ```
 
 ## Cypress Configuration
 
@@ -60,7 +62,7 @@ E2E_CONFIG_SERVER=[Your Server]<br>
 E2E_CONFIG_APPID=[Your AppId]<br>
 E2E_STD_CONFIG_SERVER=[Your Server]<br>
 E2E_STD_CONFIG_APPID=[Your AppId]<br>
-E2E_PROD_SERVER=[Production server]<br>
+E2E_PROD_SERVER=[Production Server]<br>
 E2E_PROD_APPID=[Production AppId]<br>
 E2E_OAUTH_URL=<empty><br>
 E2E_OAUTH_TOKEN=<br>
