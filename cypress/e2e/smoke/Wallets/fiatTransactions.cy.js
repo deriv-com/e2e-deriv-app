@@ -101,7 +101,7 @@ describe('QATEST-141444 Fiat to Cryptpo wallet transfer and QATEST-98808 - View 
     fiat_transfer('ETH Wallet')
     fiat_transfer('LTC Wallet')
   })
-  it.only('should be able to view transactions of fiat account in responsive', () => {
+  it('should be able to view transactions of fiat account in responsive', () => {
     cy.log('View Transactions of Fiat account')
     cy.c_visitResponsive('/', 'small')
     cy.c_skipPasskeysV2()
