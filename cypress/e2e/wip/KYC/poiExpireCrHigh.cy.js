@@ -1,5 +1,5 @@
 const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
-describe('QATEST-160111 Cashier lock when POI expire CR - High', () => {
+describe('QATEST-160111 Cashier lock when POI expire CR - High.', () => {
   beforeEach(() => {
     cy.c_createRealAccount('aq')
     cy.c_login()
