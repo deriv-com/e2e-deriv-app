@@ -55,7 +55,9 @@ export const cashierPageLocators = {
       toAmountField: () => cy.findByTestId('dt_converter_to_amount_input'),
       remainingTransferText: (value) => {
         if (!value) {
-          return cy.findByText(/^You have \d+ transfers remaining for today\.$/)
+          return cy.findByText(
+            /^You have \d+ transfer[s]? remaining for today\.$/
+          )
         } else {
           return cy.findByText(
             `You have ${value} transfers remaining for today.`
