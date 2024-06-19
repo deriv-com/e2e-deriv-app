@@ -1,7 +1,7 @@
 const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
 describe('QATEST-4880 Types of cashier lock when POI expired - MF account', () => {
   beforeEach(() => {
-    cy.c_createRealAccount('aq')
+    cy.c_createRealAccount('es')
     cy.c_login()
     cy.findByTestId('dt_traders_hub').should('be.visible')
     cy.c_navigateToPoiResponsive('Spain')
