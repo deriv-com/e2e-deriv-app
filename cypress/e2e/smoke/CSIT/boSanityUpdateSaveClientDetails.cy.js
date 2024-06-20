@@ -14,8 +14,7 @@ describe('QATEST-115357 - BO General Sanity - Update/Save client details', () =>
 
   it('should login, set self exclusion and verify its applied ', () => {
     /* Visits BO */
-    cy.visit(BO_URL)
-    cy.findByText('Please login.').click()
+    cy.cy_visitBackOffice()
     cy.findByText('Client Management').click()
     cy.findByPlaceholderText('email@domain.com')
       .should('exist')
