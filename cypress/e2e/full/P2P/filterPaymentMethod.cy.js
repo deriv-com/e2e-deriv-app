@@ -34,11 +34,11 @@ function verifyAllPaymentMethod(orderTab, PM1, PM2) {
 }
 
 function addOrderWithPM() {
-  cy.c_addSellOrderDetails('Other', '10', '0.1', '1', '2')
+  cy.c_addSellOrderDetails('Other', '10', '0.1', '1', '2', 'fixed')
   cy.findByRole('button', { name: 'Create new ad' })
     .should('be.enabled')
     .click()
-  cy.c_addSellOrderDetails('Skrill', '20', '0.2', '10.1', '10.2')
+  cy.c_addSellOrderDetails('Skrill', '20', '0.2', '10.1', '10.2', 'fixed')
   cy.findByRole('button', { name: 'Create new ad' })
     .should('be.enabled')
     .click()

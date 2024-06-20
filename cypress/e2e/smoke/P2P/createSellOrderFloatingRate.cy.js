@@ -68,7 +68,8 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
         maxOrder,
         fiatCurrency,
         pm1,
-        'sell'
+        'sell',
+        'float'
       )
     })
     cy.c_waitForPayment()
