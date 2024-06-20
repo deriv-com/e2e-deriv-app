@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 function clickAddDerivxButton() {
   cy.get('.wallets-available-dxtrade__icon')
     .parent('.wallets-trading-account-card')
@@ -86,6 +85,16 @@ function changeDerivxPassword() {
     .type(Cypress.env('mt5Password'))
   cy.findByRole('button', { name: 'Create' }).click()
 }
+function verifyChangePasswordSuccess() {
+  cy.findByTestId('dt_modal_step_wrapper').should('be.visible') // Success message modal
+  cy.findByText('Manage Deriv X password').should('be.visible')
+  cy.findByText('Success').should('be.visible')
+  cy.findByText(
+    'You have a new Deriv X password to log in to your Deriv X accounts on the web and mobile apps.'
+  ).should('be.visible')
+  cy.findByText('Done').parent().click()
+  cy.get('.modal_step_wrapper').should('not.be.visible')
+}
 describe('QATEST-121523 - Forget DerivX password', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })
@@ -106,8 +115,10 @@ describe('QATEST-121523 - Forget DerivX password', () => {
           cy.log(`Derivx account doesn't exist`)
           addDerivXaccount('available', 'Real')
           changeDerivxPassword()
+          verifyChangePasswordSuccess()
         } else {
           changeDerivxPassword()
+          verifyChangePasswordSuccess()
         }
       })
   })
