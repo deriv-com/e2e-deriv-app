@@ -50,7 +50,7 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
         rateLimitCheck: true,
       }
   })
-  it.only('Should be able to create a Buy type advert', () => {
+  it('Should be able to create a Buy type advert', () => {
     cy.c_navigateToP2P()
     getProfileData('buyer', 'buyerBalanceBeforeBuying')
     cy.c_clickMyAdTab()

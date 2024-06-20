@@ -1359,7 +1359,8 @@ Cypress.Commands.add('c_waitForPayment', () => {
 //   // Add verification for the page
 // })
 
-Cypress.Commands.add('c_confirmSellOrder', (nicknameAndAmount, orderType) => {
+Cypress.Commands.add('c_confirmOrder', (nicknameAndAmount, orderType) => {
+  // Cypress.Commands.add('c_confirmSellOrder', (nicknameAndAmount, orderType) => {
   cy.findByText('Confirm payment').should('be.visible').click()
   cy.findByText(
     "Don't risk your funds with cash transactions. Use bank transfers or e-wallets instead."

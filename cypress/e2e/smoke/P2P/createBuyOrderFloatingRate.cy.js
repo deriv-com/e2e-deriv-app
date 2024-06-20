@@ -34,7 +34,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
         rateLimitCheck: true,
       }
   })
-  it.only('Should be able to create sell type advert and verify all fields and messages for floating rate.', () => {
+  it('Should be able to create sell type advert and verify all fields and messages for floating rate.', () => {
     cy.c_navigateToP2P()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
@@ -80,8 +80,6 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
           nicknameAndAmount.amount,
           nicknameAndAmount.seller
         )
-        cy.log(`amount is ${nicknameAndAmount.amount}`)
-
         cy.c_uploadPOT('cypress/fixtures/P2P/orderCompletion.png')
         cy.findByText('Waiting for the seller to confirm').should('be.visible')
         cy.findByTestId('testid').should('be.visible').click()
@@ -101,7 +99,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       maxRetries: 5,
     })
     //TODO
-    cy.c_confirmSellOrder(nicknameAndAmount, 'buy')
+    cy.c_confirmOrder(nicknameAndAmount, 'buy')
     // cy.c_confirmSellOrder(nicknameAndAmount)
     //TODO check if code is running properly with this change
     cy.c_giveRating('buyer')
