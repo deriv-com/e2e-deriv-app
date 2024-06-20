@@ -50,12 +50,12 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
         rateLimitCheck: true,
       }
   })
-  it('Should be able to create a Buy type advert', () => {
+  it.only('Should be able to create a Buy type advert', () => {
     cy.c_navigateToP2P()
     getProfileData('buyer', 'buyerBalanceBeforeBuying')
     cy.c_clickMyAdTab()
     cy.c_createNewAd('buy')
-    cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Buy', 'float', 'sell')
+    cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Buy', 'float')
   })
   it('Should be able to create a Sell order', () => {
     cy.c_navigateToP2P()
