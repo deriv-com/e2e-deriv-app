@@ -15,7 +15,6 @@ function isValidDateFormat(dateString) {
     return dateOnly
   }
 }
-
 describe('UPM-1183 - Verify Login history page on desktop', () => {
   before(() => {
     cy.c_createDemoAccount(countryCode)
