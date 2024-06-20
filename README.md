@@ -8,7 +8,8 @@ The project structure includes the following files and directories:
 
 - `cypress.config.js`: Cypress configuration file.
 - `package.json`: Lists project dependencies, including Cypress.
-- `cypress/support/e2e.js`: Support file for common configurations and custom commands.
+- `cypress/support/e2e.js`: Support file for common configurations.
+- `cypress/support/commands/`: Directory containing common custom commands inside common.js file and other custom commands in their respective module files
 - `cypress/e2e/`: Directory containing E2E test files for different features.
 
 ## Getting Started
@@ -16,7 +17,6 @@ The project structure includes the following files and directories:
 To set up and run the E2E tests, follow these steps:
 
 1. Clone this repository:
-
    ```bash
    git clone git@github.com:deriv-com/e2e-deriv-app.git
 2. Navigate to the project directory:
@@ -30,13 +30,14 @@ To set up and run the E2E tests, follow these steps:
     npm install cypress --save-dev
 5. Write e2e tests under `cypress/e2e/`
 
-6. **To run the available test using Cypress APP UI**
+6. **To run the available test(s) using Cypress APP UI**
     ```sh
     npx cypress open
     ```
-7. **To run the available test in terminal**
+7. **To run the available test(s) in terminal**
     ```sh
     npx cypress run
+    ```
 
 ## Cypress Configuration
 
@@ -53,16 +54,23 @@ Make sure to adapt these settings according to your project's needs.
 Create a .env file within the e2e-deriv-app folder and save the following environment variables (where you see [abcd], add your own credentials; where empty, leave empty):<br>
 E2E_DERIV_LOGIN=[Your Deriv Login]<br>
 E2E_DERIV_PASSWORD=[Your Deriv Password]<br>
+E2E_DERIV_LOGIN_PROD=[Your Deriv Prod Login]<br>
+E2E_DERIV_PASSWORD_PROD=[Your Deriv Prod Password]<br>
 E2E_MT5_LOGIN=[Your MT5 Login]<br>
 E2E_MT5_PASSWORD=[Your MT5 Password]<br>
 E2E_CONFIG_SERVER=[Your Server]<br>
 E2E_CONFIG_APPID=[Your AppId]<br>
 E2E_STD_CONFIG_SERVER=[Your Server]<br>
 E2E_STD_CONFIG_APPID=[Your AppId]<br>
+E2E_PROD_SERVER=[Production Server]<br>
+E2E_PROD_APPID=[Production AppId]<br>
 E2E_OAUTH_URL=<empty><br>
 E2E_OAUTH_TOKEN=<br>
 E2E_HMAC_KEY=[Your Challenge Key]<br>
 E2E_MT5_BASEURL=https://mt5-demo-web.deriv.com<br>
+E2E_QA_ACCOUNT_PASSWORD=[Test Account Password]<br>
+E2E_QABOX_LOGIN=[QA Box Login ID]<br>
+E2E_QABOX_PASSWORD=[QA Box Password]<br>
 
 ## Contributing
 

@@ -15,7 +15,7 @@ describe.skip('QATEST-6211: Verify DIEL Signup flow - MF + CR', () => {
       const isMobile = size == 'small' ? true : false
       const signUpEmail = `sanity${generateEpoch()}dielmfcr@deriv.com`
       cy.c_setEndpoint(signUpEmail, size)
-      Cypress.env('citizenship', Cypress.env('dielCountry'))
+      Cypress.env('citizenship', country)
       cy.c_demoAccountSignup(country, signUpEmail, size)
       if (isMobile) cy.findByTestId('dt_dc_mobile_dialog_close_btn').click()
       else cy.findByTestId('dt_modal_close_icon').click()
