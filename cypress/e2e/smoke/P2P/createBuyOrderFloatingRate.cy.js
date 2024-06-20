@@ -119,7 +119,8 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
         nicknameAndAmount.sellerBalanceBeforeSelling,
         nicknameAndAmount.sellerBalanceAfterSelling,
         maxOrder,
-        'buyer'
+        'buyer',
+        'buy'
       )
     })
   })
@@ -135,7 +136,8 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
         nicknameAndAmount.buyerBalanceBeforeBuying,
         nicknameAndAmount.buyerBalanceAfterBuying,
         maxOrder,
-        'seller'
+        'seller',
+        'buy'
       )
     })
     cy.findByText('Orders').should('be.visible').click()

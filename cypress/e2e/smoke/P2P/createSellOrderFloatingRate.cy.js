@@ -71,6 +71,7 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
         'sell'
       )
     })
+    cy.c_waitForPayment()
   })
   it("Buyer should be able to click on I've Paid and provide the POT attachment", () => {
     cy.c_navigateToP2P()
@@ -120,7 +121,8 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
         nicknameAndAmount.sellerBalanceBeforeSelling,
         nicknameAndAmount.sellerBalanceAfterSelling,
         minOrder,
-        'buyer'
+        'seller',
+        'sell'
       )
     })
   })
@@ -132,7 +134,8 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
         nicknameAndAmount.buyerBalanceBeforeBuying,
         nicknameAndAmount.buyerBalanceAfterBuying,
         minOrder,
-        'seller'
+        'buyer',
+        'sell'
       )
     })
     cy.findByText('Orders').should('be.visible').click()

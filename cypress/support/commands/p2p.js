@@ -1201,33 +1201,78 @@ Cypress.Commands.add('c_navigateToP2P', () => {
 })
 
 //TODO should define one for buy order and one for sell order
+// Cypress.Commands.add(
+//   'c_confirmBalance',
+//   (balanceBefore, balanceAfter, buyingAmount, advertiserType) => {
+//     let calculatedBalanceAfter
+//     if (advertiserType === 'buyer') {
+//       calculatedBalanceAfter = (
+//         parseFloat(balanceBefore) - parseFloat(buyingAmount)
+//       ).toFixed(2)
+//     } else if (advertiserType === 'seller') {
+//       calculatedBalanceAfter = (
+//         parseFloat(balanceBefore) + parseFloat(buyingAmount)
+//       ).toFixed(2)
+//     } else {
+//       throw new Error('Invalid transaction type')
+//     }
+//     if (balanceAfter !== calculatedBalanceAfter) {
+//       throw new Error(
+//         `Balance is not correct: Balance Before Buying = ${balanceBefore}, Balance After Buying = ${balanceAfter}, Buying amount = ${buyingAmount}`
+//       )
+//     } else {
+//       cy.log(
+//         `Balance is correct: Balance Before Buying = ${balanceBefore}, Balance After Buying = ${balanceAfter}, Buying amount = ${buyingAmount}`
+//       )
+//     }
+//   }
+// )
+//TODO should define one for buy order and one for sell order
+
 Cypress.Commands.add(
   'c_confirmBalance',
-  (balanceBefore, balanceAfter, buyingAmount, advertiserType) => {
+  (balanceBefore, balanceAfter, amount, advertiserType, orderType) => {
     let calculatedBalanceAfter
-    if (advertiserType === 'buyer') {
-      calculatedBalanceAfter = (
-        parseFloat(balanceBefore) - parseFloat(buyingAmount)
-      ).toFixed(2)
-    } else if (advertiserType === 'seller') {
-      calculatedBalanceAfter = (
-        parseFloat(balanceBefore) + parseFloat(buyingAmount)
-      ).toFixed(2)
+
+    if (orderType === 'buy') {
+      if (advertiserType === 'buyer') {
+        calculatedBalanceAfter = (
+          parseFloat(balanceBefore) - parseFloat(amount)
+        ).toFixed(2)
+      } else if (advertiserType === 'seller') {
+        calculatedBalanceAfter = (
+          parseFloat(balanceBefore) + parseFloat(amount)
+        ).toFixed(2)
+      } else {
+        throw new Error('Invalid advertiser type for buy order')
+      }
+    } else if (orderType === 'sell') {
+      if (advertiserType === 'buyer') {
+        calculatedBalanceAfter = (
+          parseFloat(balanceBefore) + parseFloat(amount)
+        ).toFixed(2)
+      } else if (advertiserType === 'seller') {
+        calculatedBalanceAfter = (
+          parseFloat(balanceBefore) - parseFloat(amount)
+        ).toFixed(2)
+      } else {
+        throw new Error('Invalid advertiser type for sell order')
+      }
     } else {
-      throw new Error('Invalid transaction type')
+      throw new Error('Invalid order type')
     }
+
     if (balanceAfter !== calculatedBalanceAfter) {
       throw new Error(
-        `Balance is not correct: Balance Before Buying = ${balanceBefore}, Balance After Buying = ${balanceAfter}, Buying amount = ${buyingAmount}`
+        `Balance is not correct: Balance Before = ${balanceBefore}, Balance After = ${balanceAfter}, Amount = ${amount}`
       )
     } else {
       cy.log(
-        `Balance is correct: Balance Before Buying = ${balanceBefore}, Balance After Buying = ${balanceAfter}, Buying amount = ${buyingAmount}`
+        `Balance is correct: Balance Before = ${balanceBefore}, Balance After = ${balanceAfter}, Amount = ${amount}`
       )
     }
   }
 )
-//TODO should define one for buy order and one for sell order
 
 Cypress.Commands.add(
   'c_createBuyOrder',
@@ -1381,13 +1426,20 @@ Cypress.Commands.add('c_uploadPOT', (filePath) => {
   })
 })
 
-Cypress.Commands.add('c_waitForPayment', (nicknameAndAmount) => {
+Cypress.Commands.add('c_waitForPayment', () => {
   cy.findByText('Wait for payment').should('be.visible')
   cy.findByText(
     "Don't risk your funds with cash transactions. Use bank transfers or e-wallets instead."
   ).should('be.visible')
   // Add verification for the page
 })
+// Cypress.Commands.add('c_waitForPayment', (nicknameAndAmount) => {
+//   cy.findByText('Wait for payment').should('be.visible')
+//   cy.findByText(
+//     "Don't risk your funds with cash transactions. Use bank transfers or e-wallets instead."
+//   ).should('be.visible')
+//   // Add verification for the page
+// })
 
 Cypress.Commands.add('c_confirmSellOrder', (nicknameAndAmount, orderType) => {
   cy.findByText('Confirm payment').should('be.visible').click()
@@ -1405,8 +1457,8 @@ Cypress.Commands.add('c_confirmSellOrder', (nicknameAndAmount, orderType) => {
 
     const emailVerificationId =
       orderType === 'buy'
-        ? Cypress.env('credentials').test.p2pFloatingSellAd1.ID
-        : Cypress.env('credentials').test.p2pFloatingSellAd2.ID
+        ? Cypress.env('credentials').test.p2pFloatingSellOrder1.ID
+        : Cypress.env('credentials').test.p2pFloatingSellOrder2.ID
 
     cy.c_emailVerification(
       'track_p2p_order_confirm_verify.html',
