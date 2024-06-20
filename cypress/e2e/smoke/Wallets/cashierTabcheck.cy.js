@@ -21,7 +21,7 @@ describe('QATEST-156095 -  Cashier tab should not be displayed in the menu', () 
     cy.c_visitResponsive('/', 'large')
     checkForCashierMenu()
   })
-  it.only('Responsive - Cashier tab should not be displayed in the menu for wallet accounts ', () => {
+  it('Responsive - Cashier tab should not be displayed in the menu for wallet accounts ', () => {
     cy.c_visitResponsive('/', 'small')
     checkForCashierMenuMobile()
     cy.findByText('Financial').should('be.visible')
