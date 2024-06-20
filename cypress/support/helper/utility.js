@@ -47,3 +47,20 @@ export const generateCPFNumber = () => {
   const getRandomDigit = () => Math.floor(Math.random() * 10)
   return `0${getRandomDigit()}${getRandomDigit()}.${getRandomDigit()}${getRandomDigit()}${getRandomDigit()}.${getRandomDigit()}${getRandomDigit()}${getRandomDigit()}-${getRandomDigit()}${getRandomDigit()}`
 }
+
+/**
+ * @description Used to generate a random 5-character name without vowels
+ * @returns {string} Randomly generated 5-character string
+ * @example
+ * const randomName = generateRandomName();
+ * console.log(randomName); // e.g., 'wfBcD'
+ */
+export function generateFakeProfileName() {
+  const characters = 'BCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz'
+  let name = ''
+  const charactersLength = characters.length
+  for (let i = 0; i < 5; i++) {
+    name += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return name
+}
