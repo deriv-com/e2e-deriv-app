@@ -336,11 +336,11 @@ Cypress.Commands.add(
         )
       })
     })
+    transferScreen.sharedLocators.fromAmountField().clear()
     transferScreen.sharedLocators
       .toAmountField()
       .clear()
-      .type(1)
-      .clear()
+      .type(0)
       .type(randomToAmount)
     cy.then(() => {
       transferScreen.sharedLocators
