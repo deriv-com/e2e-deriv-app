@@ -225,12 +225,9 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
           })
       }
     })
-
     transferScreen.sharedLocators.transferButton().should('be.enabled').click()
   })
-  if (size == 'small') {
-    cy.c_verifyTransferDetails(transferAmount, fromAccount, toAccount)
-  }
+  cy.c_verifyTransferDetails(transferAmount, fromAccount, toAccount)
 })
 
 Cypress.Commands.add(

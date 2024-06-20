@@ -983,3 +983,7 @@ Cypress.Commands.add(
     }
   }
 )
+
+Cypress.Commands.add('c_checkTotalAssetSummary', () => {
+  cy.get('.asset-summary', { timeout: 15000 }).should('be.visible')
+})
