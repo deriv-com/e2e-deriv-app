@@ -98,17 +98,17 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       isLanguageTest: true,
       maxRetries: 5,
     })
-    //TODO
     cy.c_confirmOrder(nicknameAndAmount, 'buy')
-    // cy.c_confirmSellOrder(nicknameAndAmount)
-    //TODO check if code is running properly with this change
     cy.c_giveRating('buyer')
     cy.findByText('Completed').should('be.visible')
+    cy.wait(2000)
     cy.findByTestId('dt_mobile_full_page_return_icon')
       .should('be.visible')
       .click()
+    cy.wait(2000)
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
+
     cy.c_getProfileBalance().then((balance) => {
       nicknameAndAmount.sellerBalanceAfterSelling = balance
     })

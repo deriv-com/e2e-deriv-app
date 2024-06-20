@@ -1360,12 +1360,10 @@ Cypress.Commands.add('c_waitForPayment', () => {
 // })
 
 Cypress.Commands.add('c_confirmOrder', (nicknameAndAmount, orderType) => {
-  // Cypress.Commands.add('c_confirmSellOrder', (nicknameAndAmount, orderType) => {
   cy.findByText('Confirm payment').should('be.visible').click()
   cy.findByText(
     "Don't risk your funds with cash transactions. Use bank transfers or e-wallets instead."
   ).should('be.visible')
-
   cy.then(() => {
     cy.findByRole('button', { name: "I've received payment" })
       .should('be.enabled')
@@ -1376,7 +1374,7 @@ Cypress.Commands.add('c_confirmOrder', (nicknameAndAmount, orderType) => {
 
     const emailVerificationId =
       orderType === 'buy'
-        ? Cypress.env('credentials').test.p2pFloatingSellOrder1.ID
+        ? Cypress.env('credentials').test.p2pFloatingSellAd1.ID
         : Cypress.env('credentials').test.p2pFloatingSellOrder2.ID
 
     cy.c_emailVerification(
