@@ -336,7 +336,7 @@ Cypress.Commands.add(
         )
       })
     })
-    transferScreen.sharedLocators.fromAmountField().clear()
+    transferScreen.sharedLocators.fromAmountField(sameCurrency).clear()
     transferScreen.sharedLocators
       .toAmountField()
       .clear()
