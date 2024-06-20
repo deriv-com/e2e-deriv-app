@@ -139,7 +139,7 @@ Cypress.Commands.add('c_getAdTypeAndRateType', () => {
 Cypress.Commands.add(
   'c_inputAdDetails',
   (rateValue, minOrder, maxOrder, adType, rateType, options = {}) => {
-    const { paymentMethod = pm1 } = options
+    const { paymentMethod = 'PayPal' } = options
     cy.findByText(`${adType} USD`).click()
     cy.findByTestId('offer_amount')
       .next('span.dc-text')
@@ -171,12 +171,12 @@ Cypress.Commands.add(
         if (adType == 'buy') {
           cy.findByTestId('float_rate_type').should(
             'have.value',
-            '-'.concat(rateValue)
+            '+'.concat(rateValue)
           )
         } else if (adType == 'sell') {
           cy.findByTestId('float_rate_type').should(
             'have.value',
-            '+'.concat(rateValue)
+            '-'.concat(rateValue)
           )
         }
       }
@@ -243,8 +243,11 @@ Cypress.Commands.add(
     cy.findByText('Active').should('be.visible')
     cy.findByText(`${adType} ${fiatCurrency}`).should('be.visible')
     if (rateType === 'float') {
-      const ratePrefix = adType === 'Buy' ? '-' : '+'
-      cy.findByText(`${ratePrefix}${rateValue}%`).should('be.visible')
+      if (adType == 'buy') {
+        cy.findByText(`-${rateValue}%`).should('be.visible')
+      } else if (adType == 'sell') {
+        cy.findByText(`+${rateValue}%`).should('be.visible')
+      }
     } else if (rateType === 'fixed') {
       cy.findByText(`${rateValue} ${localCurrency}`).should('be.visible')
     }
