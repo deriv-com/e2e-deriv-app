@@ -339,7 +339,8 @@ Cypress.Commands.add(
     transferScreen.sharedLocators
       .toAmountField()
       .clear()
-      .wait(300)
+      .type(1)
+      .clear()
       .type(randomToAmount)
     cy.then(() => {
       transferScreen.sharedLocators
