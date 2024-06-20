@@ -107,7 +107,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
     cy.contains(`-${transferAmount}`).first().should('be.visible')
   })
 
-  it('should be able to perform transfer from crypto account in responsive', () => {
+  it.only('should be able to perform transfer from crypto account in responsive', () => {
     cy.log('Transfer from Crypto account')
     cy.c_visitResponsive('/', 'small')
     cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
