@@ -23,9 +23,12 @@ describe('QATEST-5704 - Create a new Swap free demo accounts ', () => {
         'You can use this password for all your Deriv MT5 accounts.'
       ).should('be.visible')
 
-      cy.findByTestId('dt_mt5_password').type(Cypress.env('mt5Password'), {
-        log: false,
-      })
+      cy.findByTestId('dt_mt5_password').type(
+        Cypress.env('credentials').test.mt5User.PSWD,
+        {
+          log: false,
+        }
+      )
       cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
       cy.findByRole('heading', { name: 'Success!' }).should('be.visible')
       cy.get('.dc-modal-body').should(
