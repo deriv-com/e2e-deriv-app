@@ -304,7 +304,7 @@ Cypress.Commands.add(
     const randomToAmount =
       toAccount.type != 'Cryptocurrencies'
         ? (Math.random() * 0.0001).toFixed(2)
-        : (Math.random() * 0.0001).toFixed(8)
+        : (Math.random() * 0.0001).toFixed(7)
     transferScreen.sharedLocators
       .fromAmountField(sameCurrency)
       .clear()
@@ -334,11 +334,7 @@ Cypress.Commands.add(
       })
     })
     transferScreen.sharedLocators.fromAmountField(sameCurrency).clear()
-    transferScreen.sharedLocators
-      .toAmountField()
-      .clear()
-      .type(0)
-      .type(randomToAmount)
+    transferScreen.sharedLocators.toAmountField().type(randomToAmount)
     cy.then(() => {
       transferScreen.sharedLocators
         .fromAmountField(sameCurrency)
