@@ -1,6 +1,4 @@
-import '@testing-library/cypress/add-commands'
-
-let floatRate = 1.25
+let floatRate = 0.01
 let minOrder = 5
 let maxOrder = 10
 
@@ -16,7 +14,7 @@ describe('QATEST-2488 - Edit Advert Details - Float Rate', () => {
     cy.c_clickMyAdTab()
     cy.c_createNewAd('buy')
     cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Buy', 'float')
-    cy.c_editAdAndVerify(minOrder, maxOrder)
+    cy.c_editAdAndVerify('buy', minOrder, maxOrder)
   })
   it('Should be able to edit sell type advert and verify all fields and messages for floating rate.', () => {
     cy.c_navigateToP2P()
@@ -25,6 +23,6 @@ describe('QATEST-2488 - Edit Advert Details - Float Rate', () => {
     cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Sell', 'float', {
       paymentMethod: 'Skrill',
     })
-    cy.c_editAdAndVerify(minOrder, maxOrder)
+    cy.c_editAdAndVerify('sell', minOrder, maxOrder)
   })
 })

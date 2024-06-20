@@ -10,6 +10,8 @@ const pm1 = 'Other'
 const pm2 = 'Bank Transfer'
 const pm3 = 'Skrill'
 let paymentID = generateAccountNumberString(12)
+let paymentIDForSecondPaymentType = generateAccountNumberString(12)
+let secondPaymentMethod = 'WeChat Pay'
 
 Cypress.Commands.add('c_createNewAd', (adType) => {
   cy.c_loadingCheck()
@@ -168,10 +170,17 @@ Cypress.Commands.add(
           .type(rateValue)
           .should('have.value', rateValue)
       } else if (rateType == 'float') {
-        cy.findByTestId('float_rate_type').should(
-          'have.value',
-          '+'.concat(rateValue)
-        )
+        if (adType == 'buy') {
+          cy.findByTestId('float_rate_type').should(
+            'have.value',
+            '+'.concat(rateValue)
+          )
+        } else if (adType == 'sell') {
+          cy.findByTestId('float_rate_type').should(
+            'have.value',
+            '-'.concat(rateValue)
+          )
+        }
       }
       cy.findByTestId('min_transaction')
         .type(minOrder)
@@ -236,7 +245,11 @@ Cypress.Commands.add(
     cy.findByText('Active').should('be.visible')
     cy.findByText(`${adType} ${fiatCurrency}`).should('be.visible')
     if (rateType === 'float') {
-      cy.findByText(`+${rateValue}%`).should('be.visible')
+      if (adType == 'buy') {
+        cy.findByText(`-${rateValue}%`).should('be.visible')
+      } else if (adType == 'sell') {
+        cy.findByText(`+${rateValue}%`).should('be.visible')
+      }
     } else if (rateType === 'fixed') {
       cy.findByText(`${rateValue} ${localCurrency}`).should('be.visible')
     }
@@ -1149,7 +1162,7 @@ Cypress.Commands.add(
   }
 )
 
-Cypress.Commands.add('c_editAdAndVerify', (minOrder, maxOrder) => {
+Cypress.Commands.add('c_editAdAndVerify', (adType, minOrder, maxOrder) => {
   cy.findByTestId('dt_dropdown_container').should('be.visible').click()
   cy.findByText('Edit').parent().click()
   cy.findByTestId('offer_amount').should('be.disabled')
@@ -1162,17 +1175,20 @@ Cypress.Commands.add('c_editAdAndVerify', (minOrder, maxOrder) => {
   cy.findByText(
     'If you choose to cancel, the edited details will be lost.'
   ).should('be.visible')
-  // cy.findByRole('button', { name: 'Don\'t cancel' }).should('be.enabled')
-  // cy.findByTestId('dt_modal_footer').findByRole('button', { name: 'Cancel' }).should('be.enabled').click()
-  // cy.c_loadingCheck()
-  // cy.findByRole('button', { name: 'Create new ad' }).should('be.visible')
-  // cy.findByTestId('dt_dropdown_container').should('be.visible').click()
-  // cy.findByText('Edit').parent().click()
-  // cy.findByTestId('offer_amount').should('be.disabled')
-  // cy.findByTestId('min_transaction')
-  //   .clear()
-  //   .type(minOrder + 1)
-  // cy.findByTestId('max_transaction').clear().type(maxOrder)
+  cy.findByRole('button', { name: "Don't cancel" }).should('be.enabled')
+  cy.findByTestId('dt_modal_footer')
+    .findByRole('button', { name: 'Cancel' })
+    .should('be.enabled')
+    .click()
+  cy.c_loadingCheck()
+  cy.findByRole('button', { name: 'Create new ad' }).should('be.visible')
+  cy.findByTestId('dt_dropdown_container').should('be.visible').click()
+  cy.findByText('Edit').parent().click()
+  cy.findByTestId('offer_amount').should('be.disabled')
+  cy.findByTestId('min_transaction')
+    .clear()
+    .type(minOrder + 1)
+  cy.findByTestId('max_transaction').clear().type(maxOrder)
   cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
   cy.findByText('Edit payment details').should('be.visible')
   cy.findByRole('button', { name: 'Previous' }).should('be.enabled').click()
@@ -1181,10 +1197,25 @@ Cypress.Commands.add('c_editAdAndVerify', (minOrder, maxOrder) => {
   cy.findByText('Edit payment details').should('be.visible')
   cy.findByTestId('dt_dropdown_display').click()
   cy.get('#1800').should('be.visible').click()
-  // cy.findByTestId('dt_ic_cashier_ewallet')
-  //     .closest('div')
-  //     .find('svg.buy-ad-payment-methods-list__icon')
-  //     .click()
+  if (adType == 'buy') {
+    cy.get('.dc-input__trailing-icon')
+      .first()
+      .trigger('touchstart')
+      .trigger('touchend')
+    cy.findByPlaceholderText('Add').should('be.visible')
+  } else if (adType == 'sell') {
+    cy.findByTestId('dt_payment_method_card_add_icon')
+      .should('be.visible')
+      .click()
+    cy.c_addPaymentMethod(paymentIDForSecondPaymentType, secondPaymentMethod)
+    cy.findByText(paymentIDForSecondPaymentType)
+      .should('exist')
+      .parent()
+      .prev()
+      .find('.dc-checkbox')
+      .and('exist')
+      .click()
+  }
   cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
   cy.findByText('Edit ad conditions').should('be.visible')
   cy.findByRole('button', { name: 'Previous' }).should('be.enabled').click()
@@ -1205,6 +1236,12 @@ Cypress.Commands.add('c_editAdAndVerify', (minOrder, maxOrder) => {
   cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
   cy.findByText('Edit payment details').should('be.visible')
   cy.findByTestId('dt_dropdown_display').should('have.text', '30 minutes')
+  if (adType == 'buy') {
+    cy.findByPlaceholderText('Add').should('be.visible')
+  } else if (adType == 'sell') {
+    cy.findByText(paymentIDForSecondPaymentType).should('be.visible')
+    cy.findByText(secondPaymentMethod).should('be.visible')
+  }
   cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
   cy.findByText('Edit ad conditions').should('be.visible')
   cy.findByText('30 days').should(($el) => {
