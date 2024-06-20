@@ -334,6 +334,106 @@ Cypress.Commands.add(
       })
     })
     transferScreen.sharedLocators.fromAmountField(sameCurrency).clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
+    transferScreen.sharedLocators
+      .toAmountField()
+      .type((Math.random() * 0.0001).toFixed(7))
+      .clear()
     transferScreen.sharedLocators.toAmountField().type(randomToAmount)
     cy.then(() => {
       transferScreen.sharedLocators
