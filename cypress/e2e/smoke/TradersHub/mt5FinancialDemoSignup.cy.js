@@ -24,9 +24,12 @@ describe('QATEST-5699: Create a Financial Demo CFD account', () => {
       cy.findByRole('button', { name: 'Create Deriv MT5 password' }).should(
         'be.disabled'
       )
-      cy.findByTestId('dt_mt5_password').type(Cypress.env('mt5Password'), {
-        log: false,
-      })
+      cy.findByTestId('dt_mt5_password').type(
+        Cypress.env('credentials').test.mt5User.PSWD,
+        {
+          log: false,
+        }
+      )
       cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
       cy.get('.dc-modal-body').should(
         'contain.text',

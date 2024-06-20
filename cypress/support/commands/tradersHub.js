@@ -1,6 +1,6 @@
-import { derivApp } from '../locators'
 import {
   BVI,
+  CFD,
   clickText,
   Labuan,
   languages,
@@ -8,8 +8,8 @@ import {
   termsAndConditions,
   translations,
   Vanuatu,
-  CFD,
 } from '../../fixtures/tradersHub/allLinks'
+import { derivApp } from '../locators'
 
 Cypress.Commands.add('c_checkTradersHubHomePage', (isMobile = false) => {
   if (isMobile) {
@@ -134,7 +134,7 @@ Cypress.Commands.add('c_enterPassword', (options = {}) => {
     const lang = langData[language]
     cy.findByLabelText(lang.demoAccountSignUp.pwdTxtBox).should('be.visible')
     cy.findByLabelText(lang.demoAccountSignUp.pwdTxtBox).type(
-      Cypress.env('user_password'),
+      Cypress.env('credentials').test.masterUser.PSWD,
       {
         log: false,
       }
@@ -751,7 +751,7 @@ Cypress.Commands.add('c_createNewMt5Account', (Account, options = {}) => {
         .and('be.disabled')
       cy.findByTestId('dt_mt5_password')
         .should('be.visible')
-        .type(Cypress.env('mt5Password'))
+        .type(Cypress.env('credentials').test.mt5User.PSWD)
       cy.findByRole('button', { name: 'Create Deriv MT5 password' })
         .should('be.visible')
         .and('be.enabled')
@@ -769,7 +769,7 @@ Cypress.Commands.add('c_createNewMt5Account', (Account, options = {}) => {
         .and('be.disabled')
       cy.findByTestId('dt_mt5_password')
         .should('be.visible')
-        .type(Cypress.env('mt5Password'))
+        .type(Cypress.env('credentials').test.mt5User.PSWD)
       cy.findByRole('button', { name: 'Add account' })
         .should('be.visible')
         .and('be.enabled')

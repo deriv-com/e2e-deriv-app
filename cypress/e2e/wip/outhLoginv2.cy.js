@@ -27,8 +27,8 @@ describe('API Request with CSRF Token', () => {
           'Origin': 'https://oauth.deriv.com',
         },
         body: new URLSearchParams({
-          email: Cypress.env('loginEmail'),
-          password: Cypress.env('loginPassword'),
+          email: Cypress.env('credentials').test.masterUser.ID,
+          password: Cypress.env('credentials').test.masterUser.PSWD,
           login: 'Log in',
           csrf_token: csrfToken,
         }),
