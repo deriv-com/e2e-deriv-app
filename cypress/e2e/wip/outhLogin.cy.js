@@ -34,8 +34,8 @@ describe('API Request with CSRF Token', () => {
         form: false, // indicates the body should be form-urlencoded
         followRedirect: false,
         body: {
-          email: Cypress.env('loginEmail'),
-          password: Cypress.env('loginPassword'),
+          email: Cypress.env('credentials').test.masterUser.ID,
+          password: Cypress.env('credentials').test.masterUser.PSWD,
           login: 'Log in',
           csrf_token: csrfToken,
         },
@@ -47,7 +47,6 @@ describe('API Request with CSRF Token', () => {
         },
       }).then((response) => {
         cy.log(response.headers['location'])
-        //cy.log(response.status);
         // Check if the login was successful
         expect(response.status).to.eq(302)
         // Additional assertions can be made here based on the response

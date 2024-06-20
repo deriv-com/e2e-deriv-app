@@ -22,9 +22,12 @@ describe('QATEST-5724: CFDs - Create a demo Financial account using existing MT5
         'You can use this password for all your Deriv MT5 accounts.'
       ).should('be.visible')
 
-      cy.findByTestId('dt_mt5_password').type(Cypress.env('mt5Password'), {
-        log: false,
-      })
+      cy.findByTestId('dt_mt5_password').type(
+        Cypress.env('credentials').test.mt5User.PSWD,
+        {
+          log: false,
+        }
+      )
       cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
       cy.findByRole('heading', { name: 'Success!' }).should('be.visible')
       cy.get('.dc-modal-body').should(
@@ -43,9 +46,12 @@ describe('QATEST-5724: CFDs - Create a demo Financial account using existing MT5
       ).should('be.visible')
       cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
       cy.findByRole('button', { name: 'Forgot password?' }).should('be.visible')
-      cy.findByTestId('dt_mt5_password').type(Cypress.env('mt5Password'), {
-        log: false,
-      })
+      cy.findByTestId('dt_mt5_password').type(
+        Cypress.env('credentials').test.mt5User.PSWD,
+        {
+          log: false,
+        }
+      )
       cy.findByRole('button', { name: 'Add account' }).click()
       cy.get('.dc-modal-body').should(
         'contain.text',
