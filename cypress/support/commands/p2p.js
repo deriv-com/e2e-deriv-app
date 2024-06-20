@@ -138,7 +138,8 @@ Cypress.Commands.add('c_getAdTypeAndRateType', () => {
 
 Cypress.Commands.add(
   'c_inputAdDetails',
-  (rateValue, minOrder, maxOrder, adType, rateType) => {
+  (rateValue, minOrder, maxOrder, adType, rateType, options = {}) => {
+    const { paymentMethod = pm1 } = options
     cy.findByText(`${adType} USD`).click()
     cy.findByTestId('offer_amount')
       .next('span.dc-text')
@@ -167,10 +168,17 @@ Cypress.Commands.add(
           .type(rateValue)
           .should('have.value', rateValue)
       } else if (rateType == 'float') {
-        cy.findByTestId('float_rate_type')
-          .clear()
-          .type(rateValue)
-          .should('have.value', rateValue)
+        if (adType == 'buy') {
+          cy.findByTestId('float_rate_type').should(
+            'have.value',
+            '-'.concat(rateValue)
+          )
+        } else if (adType == 'sell') {
+          cy.findByTestId('float_rate_type').should(
+            'have.value',
+            '+'.concat(rateValue)
+          )
+        }
       }
       cy.findByTestId('min_transaction')
         .type(minOrder)
@@ -194,7 +202,7 @@ Cypress.Commands.add(
         cy.findByTestId('dt_payment_method_card_add_icon')
           .should('be.visible')
           .click()
-        cy.c_addPaymentMethod(paymentIDForCopyAdSell, 'PayPal')
+        cy.c_addPaymentMethod(paymentIDForCopyAdSell, paymentMethod)
         cy.findByText(paymentIDForCopyAdSell)
           .should('exist')
           .parent()
@@ -230,19 +238,13 @@ Cypress.Commands.add(
     rateValue,
     minOrder,
     maxOrder,
-    rateType,
-    orderType
+    rateType
   ) => {
     cy.findByText('Active').should('be.visible')
     cy.findByText(`${adType} ${fiatCurrency}`).should('be.visible')
-    //TODO
     if (rateType === 'float') {
-      const ratePrefix = '+' // Always set ratePrefix to '+'
+      const ratePrefix = adType === 'Buy' ? '-' : '+'
       cy.findByText(`${ratePrefix}${rateValue}%`).should('be.visible')
-      //TODO
-      // if (rateType === 'float') {
-      //   const ratePrefix = orderType === 'buy' ? '+' : '-'
-      //   cy.findByText(`${ratePrefix}${rateValue}%`).should('be.visible')
     } else if (rateType === 'fixed') {
       cy.findByText(`${rateValue} ${localCurrency}`).should('be.visible')
     }
@@ -251,33 +253,6 @@ Cypress.Commands.add(
     ).should('be.visible')
   }
 )
-// Cypress.Commands.add(
-//   'c_verifyAdOnMyAdsScreen',
-//   (
-//     adType,
-//     fiatCurrency,
-//     localCurrency,
-//     rateValue,
-//     minOrder,
-//     maxOrder,
-//     rateType,
-//     orderType
-//   ) => {
-//     cy.findByText('Active').should('be.visible')
-//     cy.findByText(`${adType} ${fiatCurrency}`).should('be.visible')
-//     //TODO
-//     if (rateType === 'float') {
-//       cy.findByText(`-${rateValue}%`).should('be.visible')
-//       // cy.findByText(`+${rateValue}%`).should('be.visible')
-//     //TODO
-//     } else if (rateType === 'fixed') {
-//       cy.findByText(`${rateValue} ${localCurrency}`).should('be.visible')
-//     }
-//     cy.findByText(
-//       `${minOrder.toFixed(2)} - ${maxOrder.toFixed(2)} ${fiatCurrency}`
-//     ).should('be.visible')
-//   }
-// )
 
 Cypress.Commands.add('c_getExistingAdDetailsForValidation', (adType) => {
   cy.get('.my-ads-table__row .dc-dropdown-container')
