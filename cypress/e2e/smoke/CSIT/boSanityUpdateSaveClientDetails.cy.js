@@ -1,7 +1,5 @@
 import { generateRandomName } from '../../../support/helper/loginUtility'
 
-const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
-
 const firstName = generateRandomName(5)
 const lastName = generateRandomName(7)
 
@@ -14,7 +12,7 @@ describe('QATEST-115357 - BO General Sanity - Update/Save client details', () =>
 
   it('should login, set self exclusion and verify its applied ', () => {
     /* Visits BO */
-    cy.cy_visitBackOffice()
+    cy.c_visitBackOffice()
     cy.findByText('Client Management').click()
     cy.findByPlaceholderText('email@domain.com')
       .should('exist')

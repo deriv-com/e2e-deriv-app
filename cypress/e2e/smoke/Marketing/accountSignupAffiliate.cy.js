@@ -3,7 +3,6 @@ import { generateEpoch } from '../../../support/helper/utility'
 describe('QATEST-122929 - Creating account with affiliate token', () => {
   const size = ['desktop', 'small']
   let countryIDV = Cypress.env('countries').ID
-  const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
   const tracking_Link_URL = `https://${Cypress.env('trackingLink')}${Cypress.env('trackingLinkToken')}`
 
   size.forEach((size) => {
@@ -23,8 +22,7 @@ describe('QATEST-122929 - Creating account with affiliate token', () => {
 
       /* Visit BO */
       cy.c_visitResponsive('/', 'large')
-      cy.visit(BO_URL)
-      cy.findByText('Please login.').click()
+      cy.c_visitBackOffice()
       cy.findByText('Client Management').click()
       cy.findByPlaceholderText('email@domain.com')
         .should('exist')
