@@ -141,7 +141,7 @@ Cypress.Commands.add('c_getAdTypeAndRateType', () => {
 Cypress.Commands.add(
   'c_inputAdDetails',
   (rateValue, minOrder, maxOrder, adType, rateType, options = {}) => {
-    const { paymentMethod = pm1 } = options
+    const { paymentMethod = PayPal } = options
     cy.findByText(`${adType} USD`).click()
     cy.findByTestId('offer_amount')
       .next('span.dc-text')

@@ -55,7 +55,9 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
     getProfileData('buyer', 'buyerBalanceBeforeBuying')
     cy.c_clickMyAdTab()
     cy.c_createNewAd('buy')
-    cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Buy', 'float')
+    cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Buy', 'float', {
+      paymentMethod: 'Bank Transfer',
+    })
   })
   it('Should be able to create a Sell order', () => {
     cy.c_navigateToP2P()
