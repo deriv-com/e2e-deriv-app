@@ -55,8 +55,8 @@ export function getLoginToken(callback) {
         body: {
           app_id: Cypress.env('configAppId'),
           type: 'system',
-          email: Cypress.env('loginEmail'),
-          password: Cypress.env('loginPassword'),
+          email: Cypress.env('credentials').test.masterUser,
+          password: Cypress.env('credentials').test.masterUser.PSWD,
         },
       }).then((response) => {
         const token = response.body.tokens[0].token
@@ -163,80 +163,6 @@ export function getOAuthUrl(callback, loginEmail, loginPassword) {
   })
   // Note: Ensure that `extractCsrfToken` and `extractOauthToken` are defined and compatible with Cypress's execution.
   // If they perform synchronous operations, you might need to wrap their logic in Cypress commands or use `.then()`.
-}
-
-/**
- * @description Used to get the wallet OAuth Url for logging in to the application
- * @param {CallableFunction} callback function @values ()=>{}
- * @example getWalletOAuthUrl((params)=>{
- * ...something here
- * })
- */
-export function getWalletOAuthUrl(callback) {
-  let loginEmail
-  let loginPassword
-  /* User production credentials if base url is production
-  Else use test credentials */
-  if (Cypress.config().baseUrl == Cypress.env('prodURL')) {
-    loginEmail = Cypress.env('loginEmailProd')
-    loginPassword = Cypress.env('loginPasswordProd')
-  } else {
-    loginEmail = Cypress.env('walletloginEmail')
-    loginPassword = Cypress.env('walletloginPassword')
-  }
-
-  // Step 1: Perform a GET on the OAuth Url in order to generate a CSRF token.
-  cy.request({
-    method: 'GET',
-    url:
-      'https://' +
-      Cypress.env('configServer') +
-      '/oauth2/authorize?app_id=' +
-      Cypress.env('configAppId') +
-      '&l=en&brand=deriv&date_first_contact=',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Origin': 'https://oauth.deriv.com',
-    },
-  }).then((response) => {
-    // Step 2: Extract CSRF token and set-cookie value from the response
-    // This will depend on how the token is presented in the response.
-    // For example, it might be in a cookie, a header, or in the HTML body.
-    const csrfToken = extractCsrfToken(response)
-    cy.log('csrfToken>>' + csrfToken)
-    const cookie = response.headers['set-cookie']
-    cy.log('Cookie Test:' + response.headers['set-cookie'])
-
-    // Step 3: Make a POST request with the CSRF token and cookie.
-    cy.request({
-      method: 'POST',
-      url:
-        'https://' +
-        Cypress.env('configServer') +
-        '/oauth2/authorize?app_id=' +
-        Cypress.env('configAppId') +
-        '&l=en&brand=deriv&date_first_contact=',
-      form: false,
-      followRedirect: false, //This ensures we get a 302 status.
-      body: {
-        email: loginEmail,
-        password: loginPassword,
-        login: 'Log in',
-        csrf_token: csrfToken,
-      },
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Origin': 'https://oauth.deriv.com',
-        'Cookie': cookie,
-        'csrf_token': csrfToken,
-      },
-    }).then((response) => {
-      const oAuthUrl = response.headers['location']
-      cy.log('oAuthUrl: ' + oAuthUrl)
-      callback(oAuthUrl)
-      expect(response.status).to.eq(302) //302 means success on this occasion!
-    })
-  })
 }
 
 /**

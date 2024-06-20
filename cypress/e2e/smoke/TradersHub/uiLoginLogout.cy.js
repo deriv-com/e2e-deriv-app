@@ -1,7 +1,7 @@
 import { derivApp } from '../../../support/locators'
 
-const username = Cypress.env('loginEmailProd')
-const password = Cypress.env('loginPasswordProd')
+const username = Cypress.env('credentials').production.masterUser.ID
+const password = Cypress.env('credentials').production.masterUser.PSWD
 const size = ['small', 'desktop']
 
 describe('QATEST-103970: Verify user can successfully login and logout', () => {
