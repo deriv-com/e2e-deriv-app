@@ -36,6 +36,7 @@ screenSizes.forEach((screenSize) => {
         cy.findByText('CFDs').should('be.visible')
         cy.c_loadingCheck()
       }
+      cy.findByText('Swap-Free').should('be.visible')
       cy.c_closeNotificationHeader()
       cy.c_verifyActiveCurrencyAccount(fromAccount, { closeModalAtEnd: false })
       cy.c_getCurrencyBalance(fromAccount, { modalAlreadyOpened: true })
