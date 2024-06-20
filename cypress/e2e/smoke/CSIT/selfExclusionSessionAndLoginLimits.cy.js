@@ -15,7 +15,7 @@ describe('QATEST-116798 Self Exclusion Session and login limits', () => {
   })
 
   size.forEach((size) => {
-    it(`Should login, set self exclusion, verify it's applied, check from BO side, remove it from BO and verify restrictions are removed from FE side on {size=='small'?'mobile:'desktop'}`, () => {
+    it(`Should login, set self exclusion, verify it's applied, check from BO side, remove it from BO and verify restrictions are removed from FE side on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       /* Sets self exclusion on FE */
       cy.c_visitResponsive('/account/self-exclusion', size)
 
