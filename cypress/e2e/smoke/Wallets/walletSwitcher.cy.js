@@ -26,8 +26,8 @@ function clickProgressBarItem(i) {
         .as('textContent')
     })
 }
-function getTotalNumberOfWallets(parm1, parm2) {
-  return cy.get(parm1).find(parm2).its('length')
+function getTotalNumberOfWallets(element1, element2) {
+  return cy.get(element1).find(element2).its('length')
 }
 
 function fiatWalletcheck() {
@@ -62,7 +62,7 @@ function fiatWalletcheck() {
         })
     })
 }
-function handleDemoWallet() {
+function demoWalletCheck() {
   cy.log('it is demo wallet')
   cy.findByLabelText('reset-balance').should('be.visible')
   cy.findByLabelText('account-transfer').should('be.visible')
@@ -78,16 +78,22 @@ function handleDemoWallet() {
         })
     })
 }
+function switchBetweenDemoandReal() {
+  cy.findByTestId('dt_themed_scrollbars')
+    .find('label span')
+    .should('be.visible')
+    .click()
+}
 
 describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })
     cy.wait(10000)
   })
-  it.only('Check demo and Real wallet swticher', () => {
+  it('Check demo and Real wallet swticher', () => {
     cy.c_visitResponsive('/', 'large')
-    //User should always login to Real fiat wallet dashboard.
-    fiatWalletcheck()
+    fiatWalletcheck() //User should always login to Real fiat wallet dashboard.
+    //Clik on all availbale wallets in wallet swticher
     cy.get('[data-testid="dt_wallets_textfield_icon_right"]').click()
     getTotalNumberOfWallets('[role=listbox]', '[role=option]').then(
       (listItems) => {
@@ -99,6 +105,7 @@ describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
             .invoke('text')
             .then((text) => {
               let walletsTextValue = text.trim()
+              cy.log('indu wallettext value is ' + walletsTextValue)
               cy.get('.wallets-list-card-dropdown__item-content', {
                 timeout: 10000,
               })
@@ -106,25 +113,32 @@ describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
                 .eq(i)
                 .click({ force: true })
                 .then(() => {
-                  //cy.wait(1000)
-                  cy.get('[data-testid="dt_desktop_accounts_list"]').within(() => {
-                    cy.get('button').contains('Transfer').should('be.visible')
+                  return new Promise((resolve) => {
+                    setTimeout(resolve, 1000)
                   })
+                })
+                .then(() => {
                   cy.get(
                     '.wallets-textfield__field.wallets-textfield__field--listcard'
                   ).should('have.value', walletsTextValue)
-                  cy.get('.wallets-balance__container', { timeout: 20000 }).should('be.visible').find('span').invoke('text').should('contain', walletsTextValue.split(' ')[0])
+                  cy.get('.wallets-balance__container', { timeout: 20000 })
+                    .should('be.visible')
+                    .find('span')
+                    .invoke('text')
+                    .should('contain', walletsTextValue.split(' ')[0])
+                  cy.get('[data-testid="dt_desktop_accounts_list"]').within(
+                    () => {
+                      cy.get('button').contains('Transfer').should('be.visible')
+                    }
+                  )
+                  cy.get('.wallets-dropdown').click({ force: true })
                 })
-              cy.get('.wallets-dropdown').click({ force: true })
             })
         }
       }
     )
     //Switch to Demo wallet
-    cy.findByTestId('dt_themed_scrollbars')
-      .find('label span')
-      .should('be.visible')
-      .click()
+    switchBetweenDemoandReal()
     cy.findByText('USD Demo Wallet').should('be.visible')
     cy.findByLabelText('reset-balance').should('be.visible')
     cy.findAllByText('Options')
@@ -141,10 +155,7 @@ describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
       'be.visible'
     )
     //Navigate back to real  wallet to make sure user land on fiat wallet dashboard
-    cy.findByTestId('dt_themed_scrollbars')
-      .find('label span')
-      .should('be.visible')
-      .click()
+    switchBetweenDemoandReal()
     fiatWalletcheck()
   })
   it('Responsive - Check demo and Real wallet switcher', () => {
@@ -164,7 +175,7 @@ describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
             .should('be.visible', { timeout: 15000 })
             .click()
           if (textContent == 'USD Demo Wallet') {
-            handleDemoWallet()
+            demoWalletCheck()
           } else {
             cy.log('no demo wallet')
             cy.get('.wallets-cfd-list__cfd-empty-state').within(() => {
