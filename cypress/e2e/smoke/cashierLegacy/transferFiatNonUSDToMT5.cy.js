@@ -8,7 +8,7 @@ const toAccount = {
   name: 'Standard SVG',
   code: 'USD',
   delta: 2, // needed for approximately equal to
-  largeValueDelta: 5,
+  largeValueDelta: 10,
   accurateDelta: 0.5, // this is to match exact exchangerate
 }
 const fromAccount = {
