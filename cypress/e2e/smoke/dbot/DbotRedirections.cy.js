@@ -13,9 +13,9 @@ describe('QATEST-136582: Redirection to other pages from dbot', () => {
       cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
       if (isMobile) cy.c_skipPasskeysV2()
       cy.c_openDbotThub()
+      cy.c_rateLimit()
       if (isMobile) cy.findByTestId('close-icon', { timeout: 7000 }).click()
       cy.c_skipTour()
-      //Wait for page to completely load
       if (isMobile) {
         derivApp.commonPage.mobileLocators.header.hamburgerMenuButton().click()
         cy.findByRole('heading', { name: 'Cashier' }).click()
@@ -37,7 +37,6 @@ describe('QATEST-136582: Redirection to other pages from dbot', () => {
       cy.c_openDbotThub()
       if (isMobile) cy.findByTestId('close-icon', { timeout: 7000 }).click()
       cy.c_skipTour()
-      //Wait for page to completely load
       if (isMobile) {
         derivApp.commonPage.mobileLocators.header.hamburgerMenuButton().click()
       }
