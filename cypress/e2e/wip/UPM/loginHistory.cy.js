@@ -15,12 +15,12 @@ function isValidDateFormat(dateString) {
   }
 }
 
-describe('UPM-1183 - Verify Login history page on desktop', () => {
+describe('UPM-1183 - Verify Login history page', () => {
   beforeEach(() => {
     cy.c_createRealAccount(countryCode)
     cy.c_login()
   })
-  it('Should validate Login history page is showing proper date info', () => {
+  it('Should validate Login history page on desktop is showing proper date info', () => {
     cy.c_visitResponsive('/', 'large')
     cy.get('.traders-hub-header__setting').click()
     cy.get('#dc_login-history_link').click()
@@ -42,7 +42,7 @@ describe('UPM-1183 - Verify Login history page on desktop', () => {
     /* Ensure 'Invalid date' is not displayed like in UPM-1162 */
     cy.findByText('Invalid date').should('not.exist')
   })
-  it('Should validate Login history page is showing proper date info', () => {
+  it('Should validate Login history page on responsive is showing proper date info', () => {
     cy.c_visitResponsive('/', 'small')
     cy.c_skipPasskeysV2()
     cy.get('.traders-hub-header__setting').click()
