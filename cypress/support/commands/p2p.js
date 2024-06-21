@@ -1027,6 +1027,7 @@ Cypress.Commands.add(
       .should('be.visible')
       .type(sellerNickname)
       .should('have.value', sellerNickname)
+    cy.wait(2000) // verify only one sell-usd button in the page
     cy.get('.buy-sell-row__advertiser')
       .next('.buy-sell-row__information')
       .find('button[type="submit"]')
