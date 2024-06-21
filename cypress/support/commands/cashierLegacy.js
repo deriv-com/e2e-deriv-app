@@ -336,10 +336,17 @@ Cypress.Commands.add(
       })
     })
     transferScreen.sharedLocators.fromAmountField(sameCurrency).clear()
-    transferScreen.sharedLocators
-      .toAmountField()
-      .type((Math.random() * 0.0001).toFixed(7))
-      .clear()
+    if (toAccount.type != 'Cryptocurrencies') {
+      transferScreen.sharedLocators
+        .toAmountField()
+        .type(Math.floor(Math.random() * (3000 + 1)).toFixed(2))
+        .clear()
+    } else {
+      transferScreen.sharedLocators
+        .toAmountField()
+        .type((Math.random() * 0.0001).toFixed(7))
+        .clear()
+    }
     transferScreen.sharedLocators.toAmountField().type(randomToAmount)
     cy.then(() => {
       transferScreen.sharedLocators
