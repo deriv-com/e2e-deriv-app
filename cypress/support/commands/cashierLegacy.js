@@ -103,6 +103,7 @@ Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
       .within(() => {
         cy.findByText(toAccount.name).click({ force: true })
       })
+    cy.wait(500) // Have to wait so that the conversion rate works fine for following steps
     if (withExtraVerifications == true) {
       if (sameCurrency == true) {
         transferScreen.sharedLocators.fromAmountField(sameCurrency).type(1)
