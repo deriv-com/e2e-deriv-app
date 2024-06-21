@@ -19,7 +19,7 @@ function sendWithdrawEmail() {
 }
 
 function verifyEmailandPerformWithdraw(size) {
-  if (size === 'mobile') {
+  if (size === 'small') {
     cy.c_switchWalletsAccountResponsive('BTC')
   } else {
     cy.c_switchWalletsAccount('BTC')
