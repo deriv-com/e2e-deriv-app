@@ -114,7 +114,7 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
       isLanguageTest: true,
       maxRetries: 5,
     })
-    cy.c_confirmSellOrder(nicknameAndAmount, 'sell')
+    cy.c_confirmOrder(nicknameAndAmount, 'sell')
     cy.c_giveRating('buyer')
     cy.findByText('Completed').should('be.visible')
     cy.c_navigateToP2P()

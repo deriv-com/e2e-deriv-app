@@ -1313,13 +1313,10 @@ Cypress.Commands.add('c_confirmOrder', (nicknameAndAmount, orderType) => {
       cy.c_visitResponsive(Cypress.env('verificationUrl'), 'small')
     })
     cy.log(`nicknameAndAmount.amount is ${nicknameAndAmount.amount}`)
-    //TODO New section , check for buy as well
     const transactionText =
       orderType === 'buy'
         ? `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.seller} in your bank account or e-wallet, hit the button below to complete the order.`
-        : // : `If you’ve received 1.64 NZD from ${nicknameAndAmount.buyer} in your bank account or e-wallet, hit the button below to complete the order.`
-          `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.buyer} in your bank account or e-wallet, hit the button below to complete the order.`
-    //TODO NEW section , check for buy as well
+        : `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.buyer} in your bank account or e-wallet, hit the button below to complete the order.`
     cy.findByText('One last step before we close this order').should(
       'be.visible'
     )

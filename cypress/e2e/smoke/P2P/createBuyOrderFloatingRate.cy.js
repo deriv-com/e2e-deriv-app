@@ -47,7 +47,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
     cy.c_clickMyAdTab()
     cy.c_createNewAd('sell')
     cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Sell', 'float', {
-      paymentMethod: 'Bank Transfer',
+      paymentMethod: 'Other',
     })
   })
   it('Should be able to place an order for advert and verify all fields and messages for floating rate.', () => {
