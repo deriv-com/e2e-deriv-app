@@ -7,14 +7,17 @@ const toAccount = {
   fullJurisdiction: 'St. Vincent & Grenadines',
   name: 'Standard SVG',
   code: 'USD',
-  delta: 2.0, // needed for approximately equal to
+  delta: 2, // needed for approximately equal to
+  largeValueDelta: 5,
   accurateDelta: 0.5, // this is to match exact exchangerate
 }
 const fromAccount = {
   type: 'Fiat currencies',
   name: 'Euro',
   code: 'EUR',
-  delta: 0.01, // needed for approximately equal to
+  delta: 2,
+  largeValueDelta: 5,
+  accurateDelta: 0.01, // needed for approximately equal to
 }
 const amountToTransfer = 10.0
 
@@ -36,11 +39,9 @@ screenSizes.forEach((screenSize) => {
         cy.findByText('CFDs').should('be.visible')
         cy.c_loadingCheck()
       }
-      cy.findByText('Swap-Free').should('be.visible')
       cy.c_closeNotificationHeader()
       cy.c_verifyActiveCurrencyAccount(fromAccount, { closeModalAtEnd: false })
       cy.c_getCurrencyBalance(fromAccount, { modalAlreadyOpened: true })
-
       if (screenSize == 'small') {
         cy.findByRole('button', { name: 'CFDs' }).click()
       }

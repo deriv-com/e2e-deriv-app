@@ -4,14 +4,17 @@ const toCurrency = {
   type: 'Cryptocurrencies',
   name: 'Bitcoin',
   code: 'BTC',
-  delta: 0.001, // needed for approximately equal to
+  delta: 0.0001, // needed for approximately equal to
+  largeValueDelta: 0.001,
   accurateDelta: 0.0000001, // this for BTc to match exact exchangerate
 }
 const fromCurrency = {
   type: 'Fiat currencies',
   name: 'US Dollar',
   code: 'USD',
-  delta: 0.5, // needed for approximately equal to
+  delta: 1, // needed for approximately equal to
+  largeValueDelta: 5,
+  accuratedelta: 0.5, // needed for approximately equal to
 }
 const amountToTransfer = 10.0
 

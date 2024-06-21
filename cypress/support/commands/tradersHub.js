@@ -584,7 +584,7 @@ Cypress.Commands.add('c_checkMt5AccountExists', (Account) => {
       false
     )
     const transferBtnAccount = doc.querySelector(
-      `[data-testid="dt_trading-app-card_real_${Account.subType.toLowerCase()}_${Account.jurisdiction.toLowerCase()}_svg"] .trading-app-card__actions [name="transfer-btn"]`
+      `[data-testid="dt_trading-app-card_real_${Account.subType.toLowerCase()}_${Account.jurisdiction.toLowerCase()}"]`
     )
     if (transferBtnAccount && transferBtnAccount != null) {
       cy.log(
@@ -655,7 +655,7 @@ Cypress.Commands.add('c_getMt5AccountBalance', (Account) => {
     `Getting the balance for ${Account.type} ${Account.subType} ${Account.jurisdiction} account.`
   )
   cy.findByTestId(
-    `dt_trading-app-card_real_${Account.subType.toLowerCase()}_${Account.jurisdiction.toLowerCase()}_svg`
+    `dt_trading-app-card_real_${Account.subType.toLowerCase()}_${Account.jurisdiction.toLowerCase()}`
   )
     .findByTestId('dt_account-balance')
     .then((balance) => {

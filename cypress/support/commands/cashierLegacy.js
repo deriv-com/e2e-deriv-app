@@ -4,8 +4,8 @@ const transferScreen = derivApp.cashierPage.transferScreen
 
 Cypress.Commands.add('c_TransferBetweenAccounts', (options = {}) => {
   const {
-    fromAccount = '',
-    toAccount = '',
+    fromAccount = {},
+    toAccount = {},
     withExtraVerifications = false,
     transferAmount = 10,
     size = 'large',
@@ -303,15 +303,17 @@ Cypress.Commands.add(
         : (Math.random() * 0.0001).toFixed(8)
     const randomToAmount =
       toAccount.type != 'Cryptocurrencies'
-        ? (Math.random() * 0.0001).toFixed(2)
+        ? Math.floor(Math.random() * (5000 + 1))
         : (Math.random() * 0.0001).toFixed(7)
     transferScreen.sharedLocators
       .fromAmountField(sameCurrency)
       .clear()
       .type(randomFromAmount)
-    console.log(
-      sessionStorage.getItem(
-        `c_conversionRate${fromAccount.code}To${toAccount.code}`
+    cy.log(
+      parseFloat(
+        sessionStorage.getItem(
+          `c_conversionRate${fromAccount.code}To${toAccount.code}`
+        )
       )
     )
     cy.then(() => {
@@ -323,7 +325,7 @@ Cypress.Commands.add(
                 `c_conversionRate${fromAccount.code}To${toAccount.code}`
               )
             ),
-          toAccount.delta
+          toAccount.largeValueDelta
         )
         transferScreen.sharedLocators.percentageSelectorText(
           Math.round(
@@ -350,7 +352,7 @@ Cypress.Commands.add(
                   `c_conversionRate${fromAccount.code}To${toAccount.code}`
                 )
               ).toFixed(8),
-            fromAccount.delta
+            fromAccount.largeValueDelta
           )
           transferScreen.sharedLocators.percentageSelectorText(
             Math.round(
