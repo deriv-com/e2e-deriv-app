@@ -1,11 +1,12 @@
-function sendWithdrawEmail() {
-  if (Cypress.config('viewportWidth') < 900) {
+function sendWithdrawEmail(size) {
+  if (size === 'small') {
     cy.c_switchWalletsAccountResponsive('BTC')
+    cy.get('[aria-label="withdrawal"]').should('be.visible').click()
   } else {
     cy.c_switchWalletsAccount('BTC')
+    cy.findByText('Withdraw').should('be.visible').click()
   }
 
-  cy.findByText('Withdraw').should('be.visible').click()
   cy.findByText('Confirm your identity to make a withdrawal.').should(
     'be.visible'
   )
@@ -21,11 +22,12 @@ function sendWithdrawEmail() {
 function verifyEmailandPerformWithdraw(size) {
   if (size === 'small') {
     cy.c_switchWalletsAccountResponsive('BTC')
+    cy.get('[aria-label="withdrawal"]').should('be.visible').click()
   } else {
     cy.c_switchWalletsAccount('BTC')
+    cy.findByText('Withdraw').should('be.visible').click()
   }
 
-  cy.findByText('Withdraw').should('be.visible').click()
   cy.c_emailVerification(
     'request_payment_withdraw.html',
     Cypress.env('credentials').test.walletloginEmail.ID
@@ -89,12 +91,12 @@ describe('WALL-2830 - Crypto withdrawal send email', () => {
 
   size.forEach((size) => {
     it(`should be able to send withdrawal verification link on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
-      cy.c_login({ user: 'walletloginEmail', size })
+      cy.c_login({ user: 'walletloginEmail' })
 
       cy.log('Send Crypto Withdrawal Verification')
       cy.c_visitResponsive('/', size)
       cy.contains('Wallet', { timeout: 10000 }).should('exist')
-      sendWithdrawEmail()
+      sendWithdrawEmail(size)
     })
   })
 })
@@ -105,7 +107,7 @@ describe('QATEST-98698 - Crypto withdrawal content access from email', () => {
 
   size.forEach((size) => {
     it(`should be able to access crypto withdrawal content and perform withdrawal on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
-      cy.c_login({ user: 'walletloginEmail', size })
+      cy.c_login({ user: 'walletloginEmail' })
 
       cy.log('Access Crypto Withdrawal Content Through Email Link')
       cy.c_visitResponsive('/', size)
