@@ -336,17 +336,39 @@ Cypress.Commands.add(
       })
     })
     transferScreen.sharedLocators.fromAmountField(sameCurrency).clear()
-    if (toAccount.type != 'Cryptocurrencies') {
-      transferScreen.sharedLocators
-        .toAmountField()
-        .type(Math.floor(Math.random() * (3000 + 1)).toFixed(2))
-        .clear()
-    } else {
-      transferScreen.sharedLocators
-        .toAmountField()
-        .type((Math.random() * 0.0001).toFixed(7))
-        .clear()
-    }
+    // if (toAccount.type != 'Cryptocurrencies') {
+    //   transferScreen.sharedLocators
+    //     .toAmountField()
+    //     .type(Math.floor(Math.random() * (3000 + 1)).toFixed(2))
+    //     .clear()
+    // } else {
+    //   transferScreen.sharedLocators
+    //     .toAmountField()
+    //     .type((Math.random() * 0.0001).toFixed(7))
+    //     .clear()
+    // }
+    cy.c_verifyFromAmountField(fromAccount, sameCurrency)
+    transferScreen.sharedLocators.toAmountField().type('test Validation')
+    transferScreen.sharedLocators
+      .toAmountField()
+      .parent()
+      .next()
+      .within(() => {
+        transferScreen.sharedLocators.validNumberError().should('be.visible')
+      })
+    transferScreen.sharedLocators.toAmountField().clear().type('999999999')
+    transferScreen.sharedLocators
+      .fromAmountField(sameCurrency)
+      .parent()
+      .next()
+      .within(() => {
+        transferScreen.sharedLocators
+          .rangeError(
+            fromAccount.code,
+            fromAccountBalance.withoutCurrencyInString
+          )
+          .should('be.visible')
+      })
     transferScreen.sharedLocators.toAmountField().type(randomToAmount)
     cy.then(() => {
       transferScreen.sharedLocators
@@ -371,28 +393,6 @@ Cypress.Commands.add(
           )
         })
     })
-    cy.c_verifyFromAmountField(fromAccount, sameCurrency)
-    transferScreen.sharedLocators.toAmountField().type('test Validation')
-    transferScreen.sharedLocators
-      .toAmountField()
-      .parent()
-      .next()
-      .within(() => {
-        transferScreen.sharedLocators.validNumberError().should('be.visible')
-      })
-    transferScreen.sharedLocators.toAmountField().clear().type('999999999')
-    transferScreen.sharedLocators
-      .fromAmountField(sameCurrency)
-      .parent()
-      .next()
-      .within(() => {
-        transferScreen.sharedLocators
-          .rangeError(
-            fromAccount.code,
-            fromAccountBalance.withoutCurrencyInString
-          )
-          .should('be.visible')
-      })
   }
 )
 Cypress.Commands.add('c_verifyFromAmountField', (fromAccount, sameCurrency) => {
