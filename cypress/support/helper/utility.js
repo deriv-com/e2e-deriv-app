@@ -50,7 +50,7 @@ export const generateCPFNumber = () => {
 
 /**
  * @description Used to validate if a date string is in "YYYY-MM-DD format"
- * 
+ *
  * @returns {string}  Expected date in "YYYY-MM-DD" format
  */
 export function isValidDateFormat(dateString) {
