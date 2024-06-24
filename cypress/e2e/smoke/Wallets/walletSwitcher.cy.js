@@ -31,6 +31,9 @@ function getTotalNumberOfWallets(element1, element2) {
 }
 
 function fiatWalletcheck() {
+  cy.findByTestId('dt_themed_scrollbars')
+    .find('label span')
+    .should('be.visible')
   cy.findAllByTestId('dt_wallets_textfield_box')
     .should('be.visible')
     .find('input')
@@ -88,13 +91,12 @@ function switchBetweenDemoandReal() {
 describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })
-    cy.wait(10000)
   })
   it('Check demo and Real wallet swticher', () => {
     cy.c_visitResponsive('/', 'large')
     fiatWalletcheck() //User should always login to Real fiat wallet dashboard.
     //Clik on all availbale wallets in wallet swticher
-    cy.get('[data-testid="dt_wallets_textfield_icon_right"]').click()
+    cy.findAllByTestId('dt_wallets_textfield_icon_right').click()
     getTotalNumberOfWallets('[role=listbox]', '[role=option]').then(
       (listItems) => {
         for (let i = 1; i < listItems; i++) {
@@ -105,7 +107,6 @@ describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
             .invoke('text')
             .then((text) => {
               let walletsTextValue = text.trim()
-              cy.log('indu wallettext value is ' + walletsTextValue)
               cy.get('.wallets-list-card-dropdown__item-content', {
                 timeout: 10000,
               })
@@ -121,6 +122,7 @@ describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
                   cy.get(
                     '.wallets-textfield__field.wallets-textfield__field--listcard'
                   ).should('have.value', walletsTextValue)
+                  cy.log('the wallet text value is' + walletsTextValue)
                   cy.get('.wallets-balance__container', { timeout: 20000 })
                     .should('be.visible')
                     .find('span')
