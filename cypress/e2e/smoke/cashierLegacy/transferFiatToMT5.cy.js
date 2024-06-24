@@ -2,18 +2,18 @@ import { derivApp } from '../../../support/locators'
 
 const toAccount = {
   type: 'Deriv MT5',
-  subType: 'Derived',
+  subType: 'Standard',
   jurisdiction: 'SVG',
   fullJurisdiction: 'St. Vincent & Grenadines',
-  name: 'Derived SVG',
+  name: 'Standard SVG',
   code: 'USD',
   delta: 1.0, // needed for approximately equal to
   accurateDelta: 0.5, // this is to match exact exchangerate
 }
 const fromAccount = {
   type: 'Fiat currencies',
-  name: 'Euro',
-  code: 'EUR',
+  name: 'US Dollar',
+  code: 'USD',
   delta: 0.01, // needed for approximately equal to
 }
 const amountToTransfer = 10.0
@@ -21,18 +21,20 @@ const amountToTransfer = 10.0
 const screenSizes = ['desktop', 'small']
 
 screenSizes.forEach((screenSize) => {
-  describe(`QATEST-34982 - Transfer: Perform Transfer from Fiat non-USD to MT5 in screen size: ${screenSize}`, () => {
+  describe(`QATEST-20050 - Transfer: Perform Transfer from Fiat USD to MT5 in screen size: ${screenSize}`, () => {
     beforeEach(() => {
       cy.clearAllSessionStorage()
-      cy.c_login({ user: 'cashierLegacyNonUSD', rateLimitCheck: true })
+      cy.c_login({ user: 'cashierLegacyUSD', rateLimitCheck: true })
       cy.c_visitResponsive('appstore/traders-hub', screenSize, {
         rateLimitCheck: true,
+        skipPassKeys: true,
       })
       if (screenSize == 'small') {
         cy.findByRole('button', { name: 'CFDs' }).should('be.visible')
       } else {
         cy.findByText('CFDs').should('be.visible')
       }
+      cy.c_loadingCheck()
       cy.c_closeNotificationHeader()
       cy.c_verifyActiveCurrencyAccount(fromAccount, { closeModalAtEnd: false })
       cy.c_getCurrencyBalance(fromAccount, { modalAlreadyOpened: true })
@@ -72,16 +74,21 @@ screenSizes.forEach((screenSize) => {
         withExtraVerifications: true,
         transferAmount: amountToTransfer,
         size: screenSize,
+        sameCurrency: true,
       })
       if (screenSize == 'small') {
         derivApp.commonPage.mobileLocators.header.hamburgerMenuButton().click()
         derivApp.commonPage.mobileLocators.sideMenu.sidePanel().within(() => {
           derivApp.commonPage.mobileLocators.sideMenu.tradersHubButton().click()
         })
+        cy.c_rateLimit()
+        cy.findByRole('button', { name: 'CFDs' }).should('be.visible')
       } else {
         derivApp.commonPage.desktopLocators.header.tradersHubButton().click()
+        cy.c_rateLimit()
         cy.findByText('CFDs').should('be.visible')
       }
+      cy.c_checkTotalAssetSummary()
       cy.get('.currency-switcher-container').within(() => {
         cy.findByTestId('dt_balance_text_container').should('be.visible')
       })
