@@ -1,10 +1,10 @@
 import { derivApp } from '../../../support/locators'
 
-const derivAppProdUrl = new RegExp(
-  `${Cypress._.escapeRegExp(Cypress.env('prodURL'))}\\?chart_type=[a-z]+\\&interval=[0-9]+[a-z]\\&symbol=[0-9a-zA-Z]+\\&trade_type=[a-z]+`
+const dTraderProdUrl = new RegExp(
+  `${Cypress._.escapeRegExp(Cypress.env('prodURL'))}dtrader\\?chart_type=[a-z]+\\&interval=[0-9]+[a-z]\\&symbol=[0-9a-zA-Z]+\\&trade_type=[a-z]+`
 )
-const derivAppStagingUrl = new RegExp(
-  `${Cypress._.escapeRegExp(Cypress.env('stagingUrl'))}\\?chart_type=[a-z]+\\&interval=[0-9]+[a-z]\\&symbol=[0-9a-zA-Z]+\\&trade_type=[a-z]+`
+const dTraderStagingUrl = new RegExp(
+  `${Cypress._.escapeRegExp(Cypress.env('stagingUrl'))}dtrader\\?chart_type=[a-z]+\\&interval=[0-9]+[a-z]\\&symbol=[0-9a-zA-Z]+\\&trade_type=[a-z]+`
 )
 const bBotStagingUrl = Cypress.env('binaryBotUrl').staging
 const bBotProdUrl = Cypress.env('binaryBotUrl').prod
@@ -30,8 +30,8 @@ describe('QATEST-5948: Verify platforms navigations on Options and Multipliers',
         .click({ force: true })
       cy.get('flt-glass-pane', { timeout: 15000 }).should('be.visible')
       if (Cypress.config().baseUrl.includes('staging'))
-        cy.url().should('match', derivAppStagingUrl)
-      else cy.url().should('match', derivAppProdUrl)
+        cy.url().should('match', dTraderStagingUrl)
+      else cy.url().should('match', dTraderProdUrl)
       cy.findByTestId('dt_acc_info').should('exist')
       if (!isMobile)
         cy.findByRole('button', { name: 'Deposit' }).should('be.visible')

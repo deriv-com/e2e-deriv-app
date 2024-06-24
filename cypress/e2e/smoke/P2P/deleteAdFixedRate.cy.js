@@ -2,15 +2,6 @@ let fixedRate = 1.25
 let minOrder = 5
 let maxOrder = 10
 
-function verifyAdOnMyAdsScreen(fiatCurrency, localCurrency) {
-  cy.findByText('Active').should('be.visible')
-  cy.findByText(`Buy ${fiatCurrency}`).should('be.visible')
-  cy.findByText(`${fixedRate} ${localCurrency}`)
-  cy.findByText(
-    `${minOrder.toFixed(2)} - ${maxOrder.toFixed(2)} ${fiatCurrency}`
-  )
-}
-
 describe('QATEST-2482 - Delete Advert - Fixed Rate', () => {
   beforeEach(() => {
     cy.clearAllLocalStorage()
@@ -25,44 +16,7 @@ describe('QATEST-2482 - Delete Advert - Fixed Rate', () => {
     cy.c_checkForExistingAds().then((adExists) => {
       if (adExists == false) {
         cy.c_createNewAd('buy')
-        cy.findByText('Buy USD').click()
-        cy.findByTestId('offer_amount')
-          .next('span.dc-text')
-          .invoke('text')
-          .then((fiatCurrency) => {
-            sessionStorage.setItem('c_fiatCurrency', fiatCurrency.trim())
-          })
-        cy.findByTestId('fixed_rate_type')
-          .next('span.dc-text')
-          .invoke('text')
-          .then((localCurrency) => {
-            sessionStorage.setItem('c_localCurrency', localCurrency.trim())
-          })
-        cy.then(() => {
-          cy.findByTestId('offer_amount').type('10').should('have.value', '10')
-          cy.findByTestId('fixed_rate_type')
-            .type(fixedRate)
-            .should('have.value', fixedRate)
-          cy.findByTestId('min_transaction')
-            .type(minOrder)
-            .should('have.value', minOrder)
-          cy.findByTestId('max_transaction')
-            .type(maxOrder)
-            .should('have.value', maxOrder)
-          cy.findByTestId('default_advert_description')
-            .type('Description Block')
-            .should('have.value', 'Description Block')
-          cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
-          cy.findByText('Set payment details').should('be.visible')
-          cy.findByTestId('dt_dropdown_display').click()
-          cy.get('#900').should('be.visible').click()
-          cy.c_PaymentMethod()
-          cy.c_verifyPostAd()
-          verifyAdOnMyAdsScreen(
-            sessionStorage.getItem('c_fiatCurrency'),
-            sessionStorage.getItem('c_localCurrency')
-          )
-        })
+        cy.c_inputAdDetails(fixedRate, minOrder, maxOrder, 'Buy', 'fixed')
       }
       cy.c_removeExistingAds()
     })

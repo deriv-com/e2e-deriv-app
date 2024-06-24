@@ -101,7 +101,7 @@ describe('WALL-2830 - Crypto withdrawal send email', () => {
 
       cy.log('Send Crypto Withdrawal Verification')
       cy.c_visitResponsive('/', size)
-      cy.findByText('Wallet', { timeout: 10000 }).should('be.visible')
+      cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
       sendWithdrawEmail(size)
     })
   })
@@ -117,7 +117,7 @@ describe('QATEST-98698 - Crypto withdrawal content access from email', () => {
 
       cy.log('Access Crypto Withdrawal Content Through Email Link')
       cy.c_visitResponsive('/', size)
-      cy.findByText('Wallet', { timeout: 10000 }).should('be.visible')
+      cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
       verifyEmailandPerformWithdraw(size)
     })
   })

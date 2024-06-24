@@ -103,6 +103,8 @@ Cypress.Commands.add('c_setupTradeAccount', (wallet) => {
         cy.findByTestId('dt_themed_scrollbars')
           .findByText("Trader's Hub")
           .should('be.visible')
+      } else {
+        cy.fail('Trading account already added')
       }
     })
 })

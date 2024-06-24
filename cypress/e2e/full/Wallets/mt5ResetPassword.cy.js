@@ -6,7 +6,7 @@ function changeMT5Password() {
         .should(() => {})
         .then((el) => {
           if (el.length) {
-            cy.log('no MT5 account exist')
+            cy.fail('no MT5 account exist')
           } else {
             cy.log('changing MT5 password')
             cy.findAllByText('Derived')
@@ -51,7 +51,7 @@ function changeMT5Password() {
             }).should('be.visible')
             cy.findByPlaceholderText('Deriv MT5 password')
               .click()
-              .type(Cypress.env('mt5Password'))
+              .type(Cypress.env('credentials').test.mt5User.PSWD)
             cy.findByRole('button', { name: 'Create' }).click()
           }
         })
