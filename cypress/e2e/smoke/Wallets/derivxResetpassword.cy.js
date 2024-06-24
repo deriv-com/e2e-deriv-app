@@ -129,6 +129,7 @@ describe('QATEST-121523 - Forget DerivX password', () => {
     cy.findByText('CFDs', { exact: true }).should('be.visible')
     cy.c_skipPasskeysV2()
     cy.findByText('Deriv X', { timeout: 10000 }).should('exist')
+    cy.c_skipPasskeysV2() // passkey could appear after page is fully loeaded
     cy.findByText(
       'CFDs on financial and derived instruments via a customisable platform.'
     )
