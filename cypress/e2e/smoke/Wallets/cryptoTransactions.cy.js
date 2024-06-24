@@ -64,6 +64,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
   //Prerequisites: Crypto wallet account in any qa box with 1.00000000 BTC balance and USD, ETH and LTC wallets
   let transferAmount = '0.00003000'
   beforeEach(() => {
+    Cypress.prevAppId = 0
     cy.c_login({ user: 'walletloginEmail' })
   })
 
@@ -114,8 +115,10 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
   it('should be able to perform transfer from crypto account in responsive', () => {
     cy.log('Transfer from Crypto account')
     cy.c_visitResponsive('/', 'small')
+    cy.findAllByText("Trader's Hub").should('have.length', '1')
     cy.contains('Wallet', { timeout: 10000 }).should('exist')
     cy.c_skipPasskeysV2()
+    cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
     cy.c_switchWalletsAccountResponsive('BTC')
     cy.contains('Transfer').parent().click()
     crypto_transfer('USD Wallet', transferAmount)
