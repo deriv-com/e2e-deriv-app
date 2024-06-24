@@ -1,39 +1,19 @@
-import { getOAuthUrl } from '../helper/loginUtility'
+import { getOAuthUrl, setLoginUser } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
 Cypress.prevUser = ''
 const expectedCookieValue = '{%22clients_country%22:%22br%22}'
 
-const setLoginUser = (user = 'masterUser', options = {}) => {
-  const { backEndProd = false } = options
-  if (
-    Cypress.config().baseUrl == Cypress.env('prodURL') ||
-    backEndProd == true
-  ) {
-    return {
-      loginEmail: Cypress.env('credentials').production[`${user}`].ID,
-      loginPassword: Cypress.env('credentials').production[`${user}`].PSWD,
-    }
-  } else {
-    return {
-      loginEmail: Cypress.env('credentials').test[`${user}`].ID,
-      loginPassword: Cypress.env('credentials').test[`${user}`].PSWD,
-    }
-  }
-}
-
 Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   const { rateLimitCheck = false } = options
-  //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
-  cy.log(path)
+  //Custom command that allows us to use baseUrl + path and detect whether this is a responsive run or not.
   if (size === undefined) size = Cypress.env('viewPortSize')
-
   if (size == 'small') cy.viewport('iphone-xr')
   else if (size == 'medium') cy.viewport('ipad-2')
   else cy.viewport('macbook-16')
 
   cy.visit(path)
-  cy.log('rateLimitCheck flag is set to: ', rateLimitCheck)
+  cy.log(`rateLimitCheck flag is set to: ${rateLimitCheck}`)
   if (rateLimitCheck == true) {
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
@@ -83,6 +63,9 @@ Cypress.Commands.add('c_login', (options = {}) => {
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
   })
+  if (!(loginEmail && loginPassword)) {
+    throw new Error(`User/Password is not on file`)
+  }
   cy.c_visitResponsive('/endpoint', 'large', { rateLimitCheck: rateLimitCheck })
 
   if (app == 'doughflow') {
