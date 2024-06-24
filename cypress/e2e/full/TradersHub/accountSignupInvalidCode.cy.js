@@ -47,6 +47,15 @@ describe('QATEST-5547: Verify signup with invalid verification code', () => {
         cy.findByRole('button', {
           name: 'Create new account',
         }).should('be.enabled')
+        cy.c_visitResponsive('/', size)
+        cy.c_uiLogin(
+          size,
+          signUpEmail,
+          Cypress.env('credentials').test.masterUser.PSWD
+        )
+        cy.findByText(
+          `Your email and/or password is incorrect. Perhaps you signed up with a social account?`
+        ).should('be.visible')
       })
     })
   })
