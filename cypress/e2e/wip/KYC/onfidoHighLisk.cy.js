@@ -60,31 +60,28 @@ describe('QATEST-4785 High risk onfido supported country.', () => {
       */
     cy.c_visitResponsive('/', 'small')
     cy.c_closeNotificationHeader()
-    cy.get('#dc_cfd_toggle_item').should('be.visible').click()
+    cy.findByRole('button', { name: 'CFDs' }).click()
     cy.findByTestId('dt_trading-app-card_real_standard')
       .contains('button', 'Get')
       .click()
-    cy.contains(
-      'p.dc-text.cfd-jurisdiction-card--synthetic__h2-header',
-      'British Virgin Islands'
-    ).click()
+    cy.findByText('British Virgin Islands').should('be.visible').click()
     cy.get('.dc-checkbox__box').click()
     cy.findByTestId('dt_modal_footer').contains('button', 'Next').click()
     cy.get('input[type=file]').selectFile(
       'cypress/fixtures/kyc/testDocument.jpg',
       { force: true }
     )
-    cy.findByTestId('dt_cfd_financial_stp_modal_body')
-      .contains('button', 'Continue')
-      .click()
+    cy.findByRole('button', { name: 'Continue' }).click()
     cy.get('#dt_components_select-native_select-tag').select('Colombia')
     cy.get('.dc-checkbox__box').click()
     cy.findByTestId('dt_cfd_financial_stp_modal_body')
       .contains('button', 'Next')
       .click()
-    cy.findByTestId('dt_mt5_password').type('Abcd@1234')
+    cy.findByTestId('dt_mt5_password').type(
+      Cypress.env('credentials').test.mt5User.PSWD
+    )
     cy.contains('button', 'Create Deriv MT5 password').click()
-    cy.contains('p', 'Please complete your financial assessment.').should(
+    cy.findByText('Please complete your financial assessment.').should(
       'be.visible'
     )
   })
