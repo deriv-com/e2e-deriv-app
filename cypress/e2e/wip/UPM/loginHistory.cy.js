@@ -22,7 +22,7 @@ Cypress.Commands.add('c_validateDateFormat', () => {
     })
 })
 
-describe('UPM-1183 - Verify Login history page', () => {
+describe('QATEST-164747 - Verify Login history page', () => {
   beforeEach(() => {
     cy.c_createRealAccount(countryCode)
     cy.c_login()
