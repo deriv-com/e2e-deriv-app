@@ -22,6 +22,11 @@ export const generateAccountNumberString = (length) => {
   return result
 }
 
+/**
+ * Used to calculate and return coversion fee for internal account transfers having different currencies
+ * @param {number} amountTransferred
+ * @returns {number} conversion fee
+ */
 export const calculateTransferFee = (amountTransferred) => {
   const percentFeeRate = 0.02 // 2% transfer fee
   const minimumFee = 0.01 // Minimum fee in USD

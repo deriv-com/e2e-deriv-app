@@ -583,7 +583,7 @@ Cypress.Commands.add('c_checkMt5AccountExists', (Account) => {
       false
     )
     const transferBtnAccount = doc.querySelector(
-      `[data-testid="dt_trading-app-card_real_${Account.subType.toLowerCase()}_${Account.jurisdiction.toLowerCase()}"] .trading-app-card__actions [name="transfer-btn"]`
+      `[data-testid="dt_trading-app-card_real_${Account.subType.toLowerCase()}_${Account.jurisdiction.toLowerCase()}"]`
     )
     if (transferBtnAccount && transferBtnAccount != null) {
       cy.log(
@@ -735,49 +735,59 @@ Cypress.Commands.add('c_createNewMt5Account', (Account, options = {}) => {
       `Add your Deriv MT5 ${Account.subType} account under Deriv (SVG) LLC (company no. 273 LLC 2020).`
     )
   cy.findByRole('button', { name: 'Next' }).click()
-  const isNewPassword = Cypress.$(':contains("Create a Deriv MT5 password")')
-  const isAlreadyCreatedPassword = Cypress.$(
-    ':contains("Enter your Deriv MT5 password")'
-  )
-  cy.get('.dc-modal').within(() => {
-    if (isNewPassword) {
-      cy.findByText('Create a Deriv MT5 password').should('be.visible')
-      cy.findByText(
-        'You can use this password for all your Deriv MT5 accounts.'
-      ).should('be.visible')
-      cy.findByRole('button', { name: 'Create Deriv MT5 password' })
-        .should('be.visible')
-        .and('be.disabled')
-      cy.findByTestId('dt_mt5_password')
-        .should('be.visible')
-        .type(Cypress.env('credentials').test.mt5User.PSWD)
-      cy.findByRole('button', { name: 'Create Deriv MT5 password' })
-        .should('be.visible')
-        .and('be.enabled')
-        .click()
-    } else if (isAlreadyCreatedPassword) {
-      cy.findByText('Enter your Deriv MT5 password').should('be.visible')
-      cy.findByText(
-        `Enter your Deriv MT5 password to add a MT5 ${Account.type} ${Account.jurisdiction} account`
-      ).should('be.visible')
-      cy.findByRole('button', { name: 'Forgot password?' })
-        .should('be.visible')
-        .and('be.enabled')
-      cy.findByRole('button', { name: 'Add account' })
-        .should('be.visible')
-        .and('be.disabled')
-      cy.findByTestId('dt_mt5_password')
-        .should('be.visible')
-        .type(Cypress.env('credentials').test.mt5User.PSWD)
-      cy.findByRole('button', { name: 'Add account' })
-        .should('be.visible')
-        .and('be.enabled')
-        .click()
+  cy.findByTestId('dt_mt5_password').should('be.visible')
+  cy.get('.dc-modal').then((modal) => {
+    if (modal.find('span:contains(Create a Deriv MT5 password)').length > 0) {
+      sessionStorage.setItem('c_mt5Password', 'new')
+    } else if (modal.find('span:contains(Enter your Deriv MT5 password)')) {
+      sessionStorage.setItem('c_mt5Password', 'exists')
     }
+  })
+  cy.get('.dc-modal').within(() => {
+    cy.then(() => {
+      let isNewPassword =
+        sessionStorage.getItem('c_mt5Password') == 'new' ? true : false
+      if (isNewPassword) {
+        sessionStorage.removeItem('c_mt5Password')
+        cy.findByText('Create a Deriv MT5 password').should('be.visible')
+        cy.findByText(
+          'You can use this password for all your Deriv MT5 accounts.'
+        ).should('be.visible')
+        cy.findByRole('button', { name: 'Create Deriv MT5 password' })
+          .should('be.visible')
+          .and('be.disabled')
+        cy.findByTestId('dt_mt5_password')
+          .should('be.visible')
+          .type(Cypress.env('credentials').test.mt5User.PSWD)
+        cy.findByRole('button', { name: 'Create Deriv MT5 password' })
+          .should('be.visible')
+          .and('be.enabled')
+          .click()
+      } else if (isNewPassword == false) {
+        sessionStorage.removeItem('c_mt5Password')
+        cy.findByText('Enter your Deriv MT5 password').should('be.visible')
+        cy.findByText(
+          `Enter your Deriv MT5 password to add a MT5 ${Account.type} ${Account.jurisdiction} account`
+        ).should('be.visible')
+        cy.findByRole('button', { name: 'Forgot password?' })
+          .should('be.visible')
+          .and('be.enabled')
+        cy.findByRole('button', { name: 'Add account' })
+          .should('be.visible')
+          .and('be.disabled')
+        cy.findByTestId('dt_mt5_password')
+          .should('be.visible')
+          .type(Cypress.env('credentials').test.mt5User.PSWD)
+        cy.findByRole('button', { name: 'Add account' })
+          .should('be.visible')
+          .and('be.enabled')
+          .click()
+      }
+    })
   })
   cy.findByRole('heading', { name: 'Success!' }).should('be.visible')
   cy.findByText(
-    `Congratulations, you have successfully created your real ${Account.type} ${Account.subType} ${Account.jurisdiction} account. To start trading, transfer funds from your Deriv account into this account.`
+    `Your ${Account.type} ${Account.subType} account is ready. Enable trading with your first transfer.`
   )
   cy.findByRole('button', { name: 'Transfer now' })
     .should('be.visible')
@@ -972,3 +982,7 @@ Cypress.Commands.add(
     }
   }
 )
+
+Cypress.Commands.add('c_checkTotalAssetSummary', () => {
+  cy.get('.asset-summary', { timeout: 15000 }).should('be.visible')
+})

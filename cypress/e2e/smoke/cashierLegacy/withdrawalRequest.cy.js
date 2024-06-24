@@ -203,6 +203,14 @@ describe('QATEST-20010 Withdrawal Request: Fiat - Different language', () => {
   it(`should verify withdrawal request page with different languages for mobile screen size`, () => {
     cy.get('@languageDetails').then((languageDetails) => {
       cy.c_visitResponsive(
+        `appstore/traders-hub?lang=${languageDetails.english.urlCode}`,
+        'small',
+        {
+          rateLimitCheck: true,
+          skipPassKeys: true,
+        }
+      )
+      cy.c_visitResponsive(
         `cashier/withdrawal/?lang=${languageDetails.english.urlCode}`,
         'small',
         { rateLimitCheck: true }

@@ -5,7 +5,7 @@ Cypress.prevUser = ''
 const expectedCookieValue = '{%22clients_country%22:%22br%22}'
 
 Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
-  const { rateLimitCheck = false } = options
+  const { rateLimitCheck = false, skipPassKeys = false } = options
   //Custom command that allows us to use baseUrl + path and detect whether this is a responsive run or not.
   if (size === undefined) size = Cypress.env('viewPortSize')
   if (size == 'small') cy.viewport('iphone-xr')
@@ -26,6 +26,10 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
     })
   }
 
+  if (skipPassKeys == true && size == 'small') {
+    cy.c_skipPasskeysV2({ withoutContent: true })
+  }
+  cy.log(path)
   if (path.includes('region')) {
     //Wait for relevent elements to appear (based on page)
     cy.log('Home page Selected')
@@ -611,6 +615,7 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
         })
       cy.findAllByRole('button', { name: 'Close' })
         .first()
+        .scrollIntoView()
         .should('be.visible')
         .click()
         .and('not.exist')
@@ -625,15 +630,19 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
 })
 
 Cypress.Commands.add('c_skipPasskeysV2', (options = {}) => {
-  const { language = 'english', retryCount = 0, maxRetries = 3 } = options
-  cy.fixture('common/common.json').then((langData) => {
-    const lang = langData[language]
-    cy.findByText(lang.passkeysModal.title)
+  const {
+    language = 'english',
+    retryCount = 0,
+    maxRetries = 3,
+    withoutContent = false,
+  } = options
+  if (withoutContent == true) {
+    cy.get('.effortless-login-modal')
       .should(() => {})
       .then(($el) => {
         if ($el.length) {
-          cy.findByText(lang.passkeysModal.maybeLaterBtn).click()
           cy.log('Skipped Passkeys prompt !!!')
+          cy.get('.effortless-login-modal__header').click()
         } else if (retryCount < maxRetries) {
           cy.wait(300)
           cy.log(
@@ -642,7 +651,25 @@ Cypress.Commands.add('c_skipPasskeysV2', (options = {}) => {
           cy.c_skipPasskeysV2({ ...options, retryCount: retryCount + 1 })
         }
       })
-  })
+  } else {
+    cy.fixture('common/common.json').then((langData) => {
+      const lang = langData[language]
+      cy.findByText(lang.passkeysModal.title)
+        .should(() => {})
+        .then(($el) => {
+          if ($el.length) {
+            cy.findByText(lang.passkeysModal.maybeLaterBtn).click()
+            cy.log('Skipped Passkeys prompt !!!')
+          } else if (retryCount < maxRetries) {
+            cy.wait(300)
+            cy.log(
+              `Passkeys prompt did not appear, Retrying... Attempt ${retryCount + 1}`
+            )
+            cy.c_skipPasskeysV2({ ...options, retryCount: retryCount + 1 })
+          }
+        })
+    })
+  }
 })
 
 Cypress.Commands.add(
