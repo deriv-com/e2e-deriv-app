@@ -124,7 +124,7 @@ describe('QATEST-121523 - Forget DerivX password', () => {
         }
       })
   })
-  it.only('should be able to change derivx password in responsive', () => {
+  it('should be able to change derivx password in responsive', () => {
     cy.c_visitResponsive('/', 'small')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
     cy.c_skipPasskeysV2()
