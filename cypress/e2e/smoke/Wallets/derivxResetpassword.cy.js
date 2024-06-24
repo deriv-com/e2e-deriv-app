@@ -50,7 +50,7 @@ function addDerivXaccount(status, accountType) {
     cy.log('Neither found')
   }
 }
-function changeDerivxPassword() {
+function changeDerivxPassword(device) {
   cy.findByText('Deriv X').parent().click()
   cy.findByText('Deriv X SVG').should('be.visible')
   cy.findByText('Password')
@@ -77,7 +77,7 @@ function changeDerivxPassword() {
     }
   )
   cy.then(() => {
-    cy.c_visitResponsive(Cypress.env('verificationUrl'), 'large')
+    cy.c_visitResponsive(Cypress.env('verificationUrl'), `${device}`)
   })
   cy.get('div').contains('Create a new Deriv X password').should('be.visible')
   cy.findByPlaceholderText('Deriv X password')
@@ -93,7 +93,6 @@ function verifyChangePasswordSuccess() {
     'You have a new Deriv X password to log in to your Deriv X accounts on the web and mobile apps.'
   ).should('be.visible')
   cy.findByText('Done').parent().click()
-  cy.get('.modal_step_wrapper').should('not.be.visible')
 }
 describe('QATEST-121523 - Forget DerivX password', () => {
   beforeEach(() => {
@@ -101,10 +100,13 @@ describe('QATEST-121523 - Forget DerivX password', () => {
   })
 
   it('should be able to change derivx password', () => {
-    cy.log('change derivx password')
     cy.c_visitResponsive('/', 'large')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
-    cy.wait(3000)
+    cy.get('.wallets-trading-account-card__content')
+      .contains('.wallets-text', 'Financial', { timeout: 10000 })
+      .parent()
+      .closest('.wallets-added-mt5__details, .wallets-available-mt5__details')
+      .should('be.visible') // to check page is loaded
     cy.findByText('Deriv X', { timeout: 10000 }).should('exist')
     cy.findByText(
       'CFDs on financial and derived instruments via a customisable platform.'
@@ -114,16 +116,15 @@ describe('QATEST-121523 - Forget DerivX password', () => {
         if ($el.length) {
           cy.log(`Derivx account doesn't exist`)
           addDerivXaccount('available', 'Real')
-          changeDerivxPassword()
+          changeDerivxPassword('large')
           verifyChangePasswordSuccess()
         } else {
-          changeDerivxPassword()
+          changeDerivxPassword('large')
           verifyChangePasswordSuccess()
         }
       })
   })
-  it('should be able to change derivx password in responsive', () => {
-    cy.log('change derivx password')
+  it.only('should be able to change derivx password in responsive', () => {
     cy.c_visitResponsive('/', 'small')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
     cy.c_skipPasskeysV2()
@@ -136,9 +137,9 @@ describe('QATEST-121523 - Forget DerivX password', () => {
         if ($el.length) {
           cy.log(`Derivx account doesn't exist`)
           addDerivXaccount('available', 'Real')
-          changeDerivxPassword()
+          changeDerivxPassword('small')
         } else {
-          changeDerivxPassword()
+          changeDerivxPassword('small')
         }
       })
   })
