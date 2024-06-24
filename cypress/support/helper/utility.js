@@ -47,3 +47,18 @@ export const generateCPFNumber = () => {
   const getRandomDigit = () => Math.floor(Math.random() * 10)
   return `0${getRandomDigit()}${getRandomDigit()}.${getRandomDigit()}${getRandomDigit()}${getRandomDigit()}.${getRandomDigit()}${getRandomDigit()}${getRandomDigit()}-${getRandomDigit()}${getRandomDigit()}`
 }
+
+/**
+ * @description Used to validate if a date string is in "YYYY-MM-DD format"
+ * 
+ * @returns {string}  Expected date in "YYYY-MM-DD" format
+ */
+export function isValidDateFormat(dateString) {
+  // YYYY-mm-dd format regex pattern
+  const dateFormatRegex = /^(\d{4}-\d{2}-\d{2})/
+  const match = dateString.match(dateFormatRegex)
+  if (match) {
+    const dateOnly = match[1]
+    return dateOnly
+  }
+}
