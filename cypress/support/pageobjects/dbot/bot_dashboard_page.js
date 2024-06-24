@@ -20,6 +20,14 @@ class BotDashboard {
       .first()
   }
 
+  get openStrategyButtonMobile() {
+    return cy.findAllByTestId('dt_mobile_bot_list_action-open')
+  }
+
+  get moreActionButton() {
+    return cy.get('.bot-list__item__actions button').first().click()
+  }
+
   get deleteModalConfirm() {
     return cy.get('button span').contains('Yes, delete')
   }
@@ -52,7 +60,6 @@ class BotDashboard {
     this.fileInput.selectFile(FILEPATH + `${strategyFileName}.xml`, {
       force: true,
     })
-    this.openStrategyButton.click()
   }
 
   /**

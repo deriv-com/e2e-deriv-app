@@ -19,6 +19,7 @@ describe('QATEST-99419: Import and run custom strategy', () => {
 
   it('Run Timely Balance Strategy', () => {
     botDashboard.importStrategy('TimelyBalance')
+    cy.findAllByTestId('dt_desktop_bot_list_action-open').click()
     cy.get('.bot-dashboard.bot').should('be.visible') //TODO:Update once BOT-1469 done
     cy.c_skipTour()
 

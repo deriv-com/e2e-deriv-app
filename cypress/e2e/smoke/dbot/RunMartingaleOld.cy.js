@@ -17,6 +17,7 @@ describe('QATEST-99420: Import and run custom strategy', () => {
 
   it('Run Martingale Old Strategy', () => {
     botDashboard.importStrategy('MartingaleOld')
+    cy.findAllByTestId('dt_desktop_bot_list_action-open').click()
     cy.c_skipTour()
 
     //Enter Expected profit, expected Loss, and Trade Amount
