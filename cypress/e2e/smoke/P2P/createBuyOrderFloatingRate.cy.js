@@ -97,7 +97,6 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
     cy.findByText('Orders').should('be.visible').click()
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
-      isLanguageTest: true,
       maxRetries: 5,
     })
     cy.c_confirmOrder(nicknameAndAmount, 'buy')

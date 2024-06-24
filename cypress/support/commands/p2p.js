@@ -593,7 +593,6 @@ Cypress.Commands.add('c_verifyDynamicMsg', () => {
 Cypress.Commands.add('c_navigateToDerivP2P', () => {
   cy.c_rateLimit({
     waitTimeAfterError: 15000,
-    isLanguageTest: true,
     maxRetries: 5,
   })
   cy.c_skipPasskey()
@@ -974,7 +973,6 @@ Cypress.Commands.add('c_navigateToP2P', () => {
   cy.c_navigateToDerivP2P()
   cy.c_rateLimit({
     waitTimeAfterError: 15000,
-    isLanguageTest: true,
     maxRetries: 5,
   })
   cy.c_skipPasskey()
@@ -1160,7 +1158,6 @@ Cypress.Commands.add('c_uploadPOT', (filePath) => {
     .click()
   cy.c_rateLimit({
     waitTimeAfterError: 15000,
-    isLanguageTest: true,
     maxRetries: 5,
   })
 })

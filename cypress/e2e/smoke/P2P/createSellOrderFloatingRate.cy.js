@@ -81,7 +81,6 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
     cy.findByText('Orders').should('be.visible').click()
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
-      isLanguageTest: true,
       maxRetries: 5,
     })
     cy.then(() => {
@@ -111,7 +110,6 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
     cy.findByText('Orders').should('be.visible').click()
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
-      isLanguageTest: true,
       maxRetries: 5,
     })
     cy.c_confirmOrder(nicknameAndAmount, 'sell')
