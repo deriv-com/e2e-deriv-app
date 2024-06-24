@@ -11,14 +11,14 @@ function verifyDerivxCreation(accountType) {
     cy.get('div').contains(expectedText).should('be.visible')
     cy.findByPlaceholderText('Deriv X password')
       .click()
-      .type(Cypress.env('mt5Password'))
+      .type(Cypress.env('credentials').test.mt5User.PSWD)
     cy.findByRole('button', { name: 'Create Deriv X password' }).click()
   } else {
     expectedText = 'Enter your Deriv X password' // Adjust this text based on your actual requirement
     cy.get('div').contains(expectedText).should('be.visible')
     cy.findByPlaceholderText('Deriv X password')
       .click()
-      .type(Cypress.env('mt5Password'))
+      .type(Cypress.env('credentials').test.mt5User.PSWD)
     cy.findByRole('button', { name: 'Add account' }).click()
   }
 }
@@ -88,6 +88,7 @@ describe('QATEST-98821 - Add demo derivx account and QATEST-98824 add real deriv
     cy.log('add derivx account')
     cy.c_login({ user: 'walletloginEmailMobile' })
     cy.c_visitResponsive('/', 'small')
+    cy.c_skipPasskeysV2()
     existingAccountCheck('.wallets-card__details-bottom').then((status) => {
       addDerivXaccount(status, 'Real')
     })

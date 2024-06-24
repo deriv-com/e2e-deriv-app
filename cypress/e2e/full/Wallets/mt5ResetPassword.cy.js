@@ -38,7 +38,10 @@ function changeMT5Password() {
             cy.c_emailVerification(
               'New%20DMT5%20password%20request.html',
               'QA script',
-              { baseUrl: Cypress.env('configServer') + '/emails' }
+              {
+                baseUrl: Cypress.env('configServer') + '/emails',
+                isMT5ResetPassword: true,
+              }
             )
             cy.then(() => {
               cy.c_visitResponsive(Cypress.env('verificationUrl'), 'large')
@@ -48,7 +51,7 @@ function changeMT5Password() {
             }).should('be.visible')
             cy.findByPlaceholderText('Deriv MT5 password')
               .click()
-              .type(Cypress.env('mt5Password'))
+              .type(Cypress.env('credentials').test.mt5User.PSWD)
             cy.findByRole('button', { name: 'Create' }).click()
           }
         })
@@ -58,11 +61,10 @@ describe('QATEST-99774 - MT5 reset password', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })
   })
-  it('should be able to change mt5 password in responsive', () => {
+  it('should be able to change mt5 password', () => {
     cy.log('change mt5 password')
-    cy.c_visitResponsive('/', 'small')
+    cy.c_visitResponsive('/', 'large')
     cy.findByText('CFDs', { exact: true }).should('be.visible')
-    cy.c_skipPasskeysV2()
     changeMT5Password()
   })
 })
