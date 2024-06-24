@@ -26,7 +26,9 @@ describe('QATEST-109419: Run custom strategy Even Odd', () => {
       botDashboard.importStrategy('EvenOdd')
       if (isMobile) {
         botDashboard.moreActionButton.click({ force: true })
-        cy.findAllByTestId('dt_mobile_bot_list_action-open').click()
+        cy.findAllByTestId('dt_mobile_bot_list_action-open').click({
+          force: true,
+        })
       } else {
         cy.findAllByTestId('dt_desktop_bot_list_action-open').click()
       }
@@ -45,10 +47,18 @@ describe('QATEST-109419: Run custom strategy Even Odd', () => {
           cy.c_checkRunPanel(true)
         })
       })
-    })
 
-    after(() => {
-      botDashboard.deleteStrategy()
+      //delete the uploaded strategy
+      if (isMobile) {
+        botDashboard.drawerToggleMobile.click({ force: true })
+        botDashboard.goToDashboard()
+        botDashboard.moreActionButton.click({ force: true })
+        botDashboard.deleteStrategyButtonMobile.click()
+      } else {
+        botDashboard.goToDashboard()
+        botDashboard.deleteStrategyButtonDekstop.click()
+      }
+      botDashboard.deleteModalConfirm.click({ force: true })
     })
   })
 })
