@@ -45,11 +45,19 @@ export const cashierPageLocators = {
       },
       percentageSelectorText: (percentage, balance) =>
         cy.findByText(`${percentage}% of available balance (${balance})`),
-      fromAmountField: () => cy.findByTestId('dt_converter_from_amount_input'),
+      fromAmountField: (sameCurrency) => {
+        if (sameCurrency == false) {
+          return cy.findByTestId('dt_converter_from_amount_input')
+        } else if (sameCurrency == true) {
+          return cy.findByTestId('dt_account_transfer_form_input')
+        }
+      },
       toAmountField: () => cy.findByTestId('dt_converter_to_amount_input'),
       remainingTransferText: (value) => {
         if (!value) {
-          return cy.findByText(/^You have \d+ transfers remaining for today\.$/)
+          return cy.findByText(
+            /^You have \d+ transfer[s]? remaining for today\.$/
+          )
         } else {
           return cy.findByText(
             `You have ${value} transfers remaining for today.`

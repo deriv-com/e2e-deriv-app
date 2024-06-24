@@ -1,4 +1,3 @@
-const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
 describe('QATEST-160111 Cashier lock when POI expire CR - High.', () => {
   beforeEach(() => {
     cy.c_createRealAccount('aq')
@@ -32,8 +31,7 @@ describe('QATEST-160111 Cashier lock when POI expire CR - High.', () => {
     )
     /* Visit BO */
     cy.c_visitResponsive('/', 'large')
-    cy.visit(BO_URL)
-    cy.findByText('Please login.').click()
+    cy.c_visitBackOffice()
     cy.findByText('Client Management').click()
     cy.findByPlaceholderText('email@domain.com')
       .should('exist')
