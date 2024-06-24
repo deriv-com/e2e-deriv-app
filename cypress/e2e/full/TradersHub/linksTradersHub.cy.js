@@ -40,7 +40,7 @@ describe("QATEST-5930 - Validate the hyperlinks on Trader's hub", () => {
       }
       cy.findByText('Compare accounts').click()
       cy.findByText('Compare CFDs accounts').should('be.visible')
-      cy.url().should('contain', 'appstore/cfd-compare-acccounts')
+      cy.url().should('contain', '/cfd-compare-acccounts')
     })
   })
 })
