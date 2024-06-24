@@ -25,14 +25,14 @@ function verifyDerivMT5Creation(accountType) {
     cy.get('div').contains(expectedText).should('be.visible')
     cy.findByPlaceholderText('Deriv MT5 password')
       .click()
-      .type(Cypress.env('mt5Password'))
+      .type(Cypress.env('credentials').test.mt5User.PSWD)
     cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
   } else {
     expectedText = 'Enter your Deriv MT5 password' // Adjust this text based on your actual requirement
     cy.get('div').contains(expectedText).should('be.visible')
     cy.findByPlaceholderText('Deriv MT5 password')
       .click()
-      .type(Cypress.env('mt5Password'))
+      .type(Cypress.env('credentials').test.mt5User.PSWD)
     cy.findByRole('button', { name: 'Add account' }).click()
   }
 }
@@ -112,7 +112,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
           'exist'
         )
       } else {
-        cy.log('Neither found')
+        cy.fail('MT5 account already exist')
       }
     })
     existingAccountCheck('Financial').then((status) => {
@@ -130,6 +130,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
         )
       } else {
         cy.log('Neither found')
+        cy.fail('MT5 account already exist')
       }
     })
     // this part is commented due to this bug [https://app.clickup.com/t/20696747/WALL-3302]
@@ -180,7 +181,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
           'exist'
         )
       } else {
-        cy.log('Neither found')
+        cy.log('MT5 account already exist')
       }
     })
     cy.log('create demo mt5 svg financial account')
@@ -197,6 +198,7 @@ describe('QATEST-98638 - Add Real SVG MT5 account and QATEST-98818 Add demo SVG 
         )
       } else {
         cy.log('Neither found')
+        cy.fail('MT5 account already exist')
       }
     })
     // this part is commented due to this bug [https://app.clickup.com/t/20696747/WALL-3302]

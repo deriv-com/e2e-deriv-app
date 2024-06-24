@@ -4,14 +4,17 @@ const toCurrency = {
   type: 'Cryptocurrencies',
   name: 'Bitcoin',
   code: 'BTC',
-  delta: 0.001, // needed for approximately equal to
+  delta: 0.0001, // needed for approximately equal to
+  largeValueDelta: 0.001,
   accurateDelta: 0.0000001, // this for BTc to match exact exchangerate
 }
 const fromCurrency = {
   type: 'Fiat currencies',
   name: 'US Dollar',
   code: 'USD',
-  delta: 0.5, // needed for approximately equal to
+  delta: 1, // needed for approximately equal to
+  largeValueDelta: 5,
+  accuratedelta: 0.5, // needed for approximately equal to
 }
 const amountToTransfer = 10.0
 
@@ -24,14 +27,14 @@ screenSizes.forEach((screenSize) => {
       cy.c_login({ user: 'cashierLegacy', rateLimitCheck: true })
       cy.c_visitResponsive('appstore/traders-hub', screenSize, {
         rateLimitCheck: true,
+        skipPassKeys: true,
       })
       if (screenSize == 'small') {
-        cy.findByRole('button', { name: 'Options & Multipliers' }).should(
-          'be.visible'
-        )
+        cy.findByRole('button', { name: 'Options' }).should('be.visible')
       } else {
-        cy.findByText('Options & Multipliers').should('be.visible')
+        cy.findByText('Options').should('be.visible')
       }
+      cy.c_loadingCheck()
       cy.c_closeNotificationHeader()
       cy.c_verifyActiveCurrencyAccount(fromCurrency, { closeModalAtEnd: false })
       cy.c_checkCurrencyAccountExists(toCurrency, {
@@ -84,13 +87,14 @@ screenSizes.forEach((screenSize) => {
         derivApp.commonPage.mobileLocators.sideMenu.sidePanel().within(() => {
           derivApp.commonPage.mobileLocators.sideMenu.tradersHubButton().click()
         })
-        cy.findByRole('button', { name: 'Options & Multipliers' }).should(
-          'be.visible'
-        )
+        cy.c_rateLimit()
+        cy.findByRole('button', { name: 'Options' }).should('be.visible')
       } else {
         derivApp.commonPage.desktopLocators.header.tradersHubButton().click()
-        cy.findByText('Options & Multipliers').should('be.visible')
+        cy.c_rateLimit()
+        cy.findByText('Options').should('be.visible')
       }
+      cy.c_checkTotalAssetSummary()
       cy.get('.currency-switcher-container').within(() => {
         cy.findByTestId('dt_balance_text_container').should('be.visible')
       })

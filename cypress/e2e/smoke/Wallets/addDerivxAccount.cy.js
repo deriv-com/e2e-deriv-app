@@ -11,14 +11,14 @@ function verifyDerivxCreation(accountType) {
     cy.get('div').contains(expectedText).should('be.visible')
     cy.findByPlaceholderText('Deriv X password')
       .click()
-      .type(Cypress.env('mt5Password'))
+      .type(Cypress.env('credentials').test.mt5User.PSWD)
     cy.findByRole('button', { name: 'Create Deriv X password' }).click()
   } else {
     expectedText = 'Enter your Deriv X password' // Adjust this text based on your actual requirement
     cy.get('div').contains(expectedText).should('be.visible')
     cy.findByPlaceholderText('Deriv X password')
       .click()
-      .type(Cypress.env('mt5Password'))
+      .type(Cypress.env('credentials').test.mt5User.PSWD)
     cy.findByRole('button', { name: 'Add account' }).click()
   }
 }
@@ -68,7 +68,7 @@ function addDerivXaccount(status, accountType) {
         cy.contains('.wallets-text', 'Deriv X').should('exist')
       })
   } else {
-    cy.log('Neither found')
+    cy.fail('DerivX account already exist')
   }
 }
 

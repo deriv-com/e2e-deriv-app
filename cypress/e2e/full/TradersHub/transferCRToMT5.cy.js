@@ -5,9 +5,12 @@ function createMT5Account() {
   cy.findByText('St. Vincent & Grenadines').click()
   cy.findByRole('button', { name: 'Next' }).click()
   cy.findByText('Create a Deriv MT5 password').should('be.visible')
-  cy.findByTestId('dt_mt5_password').type(Cypress.env('mt5Password'), {
-    log: false,
-  })
+  cy.findByTestId('dt_mt5_password').type(
+    Cypress.env('credentials').test.mt5User.PSWD,
+    {
+      log: false,
+    }
+  )
   cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
   cy.findByRole('button', { name: 'Maybe later' }).should('be.visible').click()
 }
@@ -54,6 +57,7 @@ describe('QATEST-6064 Validate the transfer from CR to MT5 when CR account is ha
   })
   it('Should validate the transfer functionality from CR to MT5 account when CR account is having balance in desktop ', () => {
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
+    cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
     //Only create new mt5 account if it doesn't exist
     cy.findByTestId('dt_traders_hub')
       .findByText('Deriv MT5')
