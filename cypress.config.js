@@ -25,7 +25,7 @@ let newAppId = null
 
 module.exports = defineConfig({
   e2e: {
-    projectId: '6rs1zi',
+    projectId: 'rjvf4u',
     baseUrl: 'https://staging-app.deriv.com/',
     defaultCommandTimeout: 15000,
     supportFile: 'cypress/support/e2e.js',
