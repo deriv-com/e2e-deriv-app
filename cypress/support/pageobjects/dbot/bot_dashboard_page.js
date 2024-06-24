@@ -71,7 +71,7 @@ class BotDashboard {
    */
   deleteStrategy = () => {
     this.goToDashboard()
-    this.deleteStrategyButton.click()
+    this.deleteStrategyButtonDekstop.click()
     this.deleteModalConfirm.click({ force: true })
   }
 
