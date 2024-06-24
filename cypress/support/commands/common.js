@@ -778,3 +778,10 @@ Cypress.Commands.add(
     })
   }
 )
+
+Cypress.Commands.add('c_visitBackOffice', () => {
+  cy.visit(
+    `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
+  )
+  cy.findByText('Please login.').click()
+})
