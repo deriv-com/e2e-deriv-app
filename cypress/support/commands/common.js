@@ -482,7 +482,10 @@ Cypress.Commands.add('c_loadingCheck', () => {
 Cypress.Commands.add('c_authorizeCall', () => {
   try {
     const oAuthNewToken = Cypress.env('oAuthToken')
-    cy.task('authorizeCallTask', oAuthNewToken)
+    cy.task('authorizeCallTask', oAuthNewToken).then((response) => {
+      const email = response
+      Cypress.env('actualEmail', email)
+    })
   } catch (e) {
     console.error('An error occurred during the account creation process:', e)
   }
@@ -499,6 +502,35 @@ Cypress.Commands.add('c_getBalance', () => {
     })
   } catch (e) {
     console.error('An error occurred during the account creation process:', e)
+  }
+})
+
+/**
+ * Method to perform Price Proposal Call
+ */
+Cypress.Commands.add('c_getPriceProposal', () => {
+  try {
+    cy.task('createPriceProposalTask').then((response) => {
+      const priceProposalResp = response
+      Cypress.env('priceProposalResponse', priceProposalResp)
+    })
+  } catch (e) {
+    console.error('An error occurred while creating price proposal: ', e)
+  }
+})
+
+/**
+ * Method to perform Buy Contract Call
+ */
+Cypress.Commands.add('c_buyContract', () => {
+  try {
+    const priceProposalID = Cypress.env('priceProposalResponse')
+    cy.task('createBuyContractTask', priceProposalID).then((response) => {
+      const buyContractResp = response
+      Cypress.env('balanceAfterBuy', buyContractResp)
+    })
+  } catch (e) {
+    console.error('An error occurred during buy contract process: ', e)
   }
 })
 

@@ -8,8 +8,9 @@ require('dotenv').config()
  */
 const authorizeCall = async (api, authToken) => {
   try {
-    await api.account(authToken) // API authentication
-    return null
+    const emailToVerify = await api.account(authToken) // API authentication
+
+    return emailToVerify.email
   } catch (e) {
     console.error('Operation failed', e)
     throw e
