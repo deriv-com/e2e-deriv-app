@@ -1,7 +1,9 @@
 function sendWithdrawEmail(size) {
   if (size === 'small') {
     cy.c_switchWalletsAccountResponsive('BTC')
-    cy.get('[aria-label="withdrawal"]').should('be.visible').click()
+    cy.findByRole('button', { name: /withdrawal/i })
+      .should('be.visible')
+      .click()
   } else {
     cy.c_switchWalletsAccount('BTC')
     cy.findByText('Withdraw').should('be.visible').click()
@@ -22,7 +24,9 @@ function sendWithdrawEmail(size) {
 function verifyEmailandPerformWithdraw(size) {
   if (size === 'small') {
     cy.c_switchWalletsAccountResponsive('BTC')
-    cy.get('[aria-label="withdrawal"]').should('be.visible').click()
+    cy.findByRole('button', { name: /withdrawal/i })
+      .should('be.visible')
+      .click()
   } else {
     cy.c_switchWalletsAccount('BTC')
     cy.findByText('Withdraw').should('be.visible').click()
