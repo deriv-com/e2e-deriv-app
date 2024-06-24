@@ -1,6 +1,6 @@
 let balanceAmount = 10000
 
-describe('To make a Buy API call', () => {
+describe('QAA-1558 - To make a Buy API call', () => {
   it('Buy API Call', () => {
     cy.c_login()
     cy.task('wsConnect')
