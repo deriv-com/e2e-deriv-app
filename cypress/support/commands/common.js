@@ -289,7 +289,7 @@ Cypress.Commands.add('c_transferLimit', (transferMessage) => {
           if ($resetElement.length) {
             cy.wrap($resetElement).click()
           }
-          cy.contains('Wallet', { timeout: 10000 }).should('exist')
+          cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
         })
       } else {
         cy.findByText('Your transfer is successful!', {
