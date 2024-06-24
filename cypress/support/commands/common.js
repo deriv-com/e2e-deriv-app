@@ -4,9 +4,11 @@ Cypress.prevAppId = 0
 Cypress.prevUser = ''
 const expectedCookieValue = '{%22clients_country%22:%22br%22}'
 
+/**
+ * Custom command that allows us to use baseUrl + path and detect whether this is a responsive run or not.
+ */
 Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   const { rateLimitCheck = false, skipPassKeys = false } = options
-  //Custom command that allows us to use baseUrl + path and detect whether this is a responsive run or not.
   if (size === undefined) size = Cypress.env('viewPortSize')
   if (size == 'small') cy.viewport('iphone-xr')
   else if (size == 'medium') cy.viewport('ipad-2')
@@ -29,9 +31,9 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   if (skipPassKeys == true && size == 'small') {
     cy.c_skipPasskeysV2({ withoutContent: true })
   }
-  cy.log(path)
+
+  //Wait for relevent elements to appear (based on page)
   if (path.includes('region')) {
-    //Wait for relevent elements to appear (based on page)
     cy.log('Home page Selected')
     cy.findByRole(
       'button',
@@ -41,7 +43,6 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   }
 
   if (path.includes('help-centre')) {
-    //Wait for relevent elements to appear (based on page)
     cy.log('Help Centre Selected')
     cy.findByRole('heading', {
       name: 'Didn’t find your answer? We can help.',
@@ -49,7 +50,6 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   }
 
   if (path.includes('traders-hub') || path === '/') {
-    //Wait for relevent elements to appear (based on page)
     if (size == 'small')
       cy.findAllByText("Trader's Hub").should('have.length', '1')
     else cy.findAllByText("Trader's Hub").should('have.length', '2')
