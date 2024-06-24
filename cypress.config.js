@@ -12,12 +12,8 @@ const {
 const {
   registerNewApplicationId,
 } = require('./cypress/support/helper/applicationRegister')
-const { 
-  createPriceProposalID 
-} = require('./cypress/support/helper/proposal');
-const { 
-  createBuyContract 
-} = require('./cypress/support/helper/buy');
+const { createPriceProposalID } = require('./cypress/support/helper/proposal')
+const { createBuyContract } = require('./cypress/support/helper/buy')
 
 const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI')
 const WebSocket = require('ws')
@@ -171,21 +167,19 @@ module.exports = defineConfig({
               throw e
             }
           },
-          async createPriceProposalTask(){ 
+          async createPriceProposalTask() {
             try {
-              const price_proposal_id = await 
-              createPriceProposalID(api);
-              return price_proposal_id;
+              const price_proposal_id = await createPriceProposalID(api)
+              return price_proposal_id
             } catch (e) {
               console.error('Operation failed', e)
               throw e
             }
           },
-          async createBuyContractTask(priceProposalID){ 
+          async createBuyContractTask(priceProposalID) {
             try {
-              const buy_id = await createBuyContract(
-                api, priceProposalID);
-              return buy_id;
+              const buy_id = await createBuyContract(api, priceProposalID)
+              return buy_id
             } catch (e) {
               console.error('Operation failed', e)
               throw e
@@ -424,10 +418,10 @@ module.exports = defineConfig({
     passkeyAppId: process.env.E2E_PASSKEY_APP_ID,
     trackingLink: process.env.E2E_TRACKING_LINK,
     trackingLinkToken: process.env.E2E_TRACKING_LINK_TOKEN,
-    actualEmail : process.env.E2E_LOGIN_EMAIL,
-    priceProposalResponse : process.env.E2E_PRICE_PROPOSAL_RESPONSE,
-    priceProposalID : process.env.E2E_PRICE_PROPOSAL_ID,
-    balanceAfterBuy : process.env.E2E_BUY_RESPONSE,
+    actualEmail: process.env.E2E_LOGIN_EMAIL,
+    priceProposalResponse: process.env.E2E_PRICE_PROPOSAL_RESPONSE,
+    priceProposalID: process.env.E2E_PRICE_PROPOSAL_ID,
+    balanceAfterBuy: process.env.E2E_BUY_RESPONSE,
     countries: {
       ZA: 'South Africa',
       CO: 'Colombia',
