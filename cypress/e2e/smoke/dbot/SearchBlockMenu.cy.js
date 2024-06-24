@@ -9,7 +9,7 @@ describe('QATEST-4249: Bot Builder - Search block menu', () => {
     cy.findByPlaceholderText('Search')
       .type('Trading')
       .should('have.value', 'Trading')
-    cy.contains('Results for "Trading"')
+    cy.findByText('Results for "Trading"')
 
     cy.findByPlaceholderText('Search')
       .clear()
