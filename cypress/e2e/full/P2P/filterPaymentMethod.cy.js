@@ -34,11 +34,25 @@ function verifyAllPaymentMethod(orderTab, PM1, PM2) {
 }
 
 function addOrderWithPM() {
-  cy.c_addSellOrderDetails('Other', '10', '0.1', '1', '2', 'fixed')
+  cy.c_addSellOrderDetails({
+    paymentMethod: 'Others',
+    amount: '10',
+    rate: '0.1',
+    min: '1',
+    max: '2',
+    rateType: 'fixed',
+  })
   cy.findByRole('button', { name: 'Create new ad' })
     .should('be.enabled')
     .click()
-  cy.c_addSellOrderDetails('Skrill', '20', '0.2', '10.1', '10.2', 'fixed')
+  cy.c_addSellOrderDetails({
+    paymentMethod: 'Skrill',
+    amount: '20',
+    rate: '0.2',
+    min: '10.1',
+    max: '10.2',
+    rateType: 'fixed',
+  })
   cy.findByRole('button', { name: 'Create new ad' })
     .should('be.enabled')
     .click()
