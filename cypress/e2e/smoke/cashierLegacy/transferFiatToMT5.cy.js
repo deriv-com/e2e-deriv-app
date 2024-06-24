@@ -31,11 +31,10 @@ screenSizes.forEach((screenSize) => {
       })
       if (screenSize == 'small') {
         cy.findByRole('button', { name: 'CFDs' }).should('be.visible')
-        cy.c_loadingCheck()
       } else {
         cy.findByText('CFDs').should('be.visible')
-        cy.c_loadingCheck()
       }
+      cy.c_loadingCheck()
       cy.c_closeNotificationHeader()
       cy.c_verifyActiveCurrencyAccount(fromAccount, { closeModalAtEnd: false })
       cy.c_getCurrencyBalance(fromAccount, { modalAlreadyOpened: true })
