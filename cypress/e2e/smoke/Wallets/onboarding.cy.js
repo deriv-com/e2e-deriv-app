@@ -153,7 +153,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
   })
   it('User onboarding from USD wallet compare account', () => {
     cy.c_visitResponsive('/', 'large')
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
     const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
     cy.findByText('Compare accounts').click()
     cy.findByText('Compare CFDs accounts').should('be.visible')
@@ -280,7 +280,7 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
   it('User onboarding from BTC wallet tradershub in responsive', () => {
     cy.c_visitResponsive('/', 'small')
     cy.c_skipPasskeysV2()
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
     const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
     setupTest()
     mobileSteps.forEach((step, index) => {
