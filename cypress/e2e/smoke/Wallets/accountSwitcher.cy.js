@@ -1,21 +1,10 @@
 function goToAcctSwitcherFromTradepage(deviceType) {
   const derivAppProdUrl = `${Cypress.env('prodURL')}dtrader?chart_type=`
   const derivAppStagingUrl = `${Cypress.env('stagingUrl')}dtrader?chart_type=`
-  if (deviceType == 'Desktop') {
-    cy.findAllByText('Options')
-      .eq(1)
-      .should('be.visible')
-      .then(() => {
-        cy.findAllByText('SVG').eq(2).should('be.visible')
-      })
-  } else {
-    cy.findByTestId('dt_tab_panels')
-      .findAllByText('Options', { exact: true })
-      .should('be.visible')
-      .then(() => {
-        cy.findByText('SVG').should('be.visible')
-      })
-  }
+  cy.get('.wallets-trading-account-card__content')
+    .contains('.wallets-text', CFDtype)
+    .parent()
+    .closest('.wallets-added-mt5__details, .wallets-available-mt5__details') // to check page is loaded completely
   cy.findByText('Deriv Trader').click() //Navigate to Trade page
   if (Cypress.config().baseUrl.includes('staging'))
     cy.url().should('include', derivAppStagingUrl)
