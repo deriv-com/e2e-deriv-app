@@ -13,10 +13,10 @@ function sendWithdrawEmail(size) {
   if (cy.findByRole('button', { name: 'Send email' }).should('be.visible')) {
     cy.findByRole('button', { name: 'Send email' }).click()
   }
-  cy.contains("We've sent you an email.")
+  cy.findByText("We've sent you an email.").should('be.visible')
 
   cy.findByRole('button', { name: "Didn't receive the email?" }).click()
-  cy.contains(/Resend email/)
+  cy.findByText(/Resend email/).should('be.visible')
 }
 
 function verifyEmailandPerformWithdraw(size) {
@@ -41,11 +41,11 @@ function verifyEmailandPerformWithdraw(size) {
       size
     )
 
-    cy.contains('Transaction status')
-    cy.contains('Your Bitcoin cryptocurrency wallet address').click().type(
+    cy.findByText('Transaction status').should('be.visible')
+    cy.findByText('Your Bitcoin cryptocurrency wallet address').click().type(
       '1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71' //Example bitcoin wallet address
     )
-    cy.contains('Amount (BTC)').click().type('0.005')
+    cy.findByText('Amount (BTC)').click().type('0.005')
 
     cy.get('.wallets-textfield__message-container')
       .eq(1)
@@ -76,11 +76,13 @@ function verifyEmailandPerformWithdraw(size) {
       if (cy.get('.wallets-button__loader')) {
         return
       } else {
-        cy.contains('0.005000000 BTC', { exact: true })
-        cy.contains('Your withdrawal is currently in process')
+        cy.findByText('0.005000000 BTC', { exact: true }).should('be.visible')
+        cy.findByText('Your withdrawal is currently in process').should(
+          'be.visible'
+        )
 
         cy.findByRole('button', { name: 'Close' }).click()
-        cy.contains('Please help us verify')
+        cy.findByText('Please help us verify').should('be.visible')
       }
     })
   })
@@ -95,7 +97,7 @@ describe('WALL-2830 - Crypto withdrawal send email', () => {
 
       cy.log('Send Crypto Withdrawal Verification')
       cy.c_visitResponsive('/', size)
-      cy.contains('Wallet', { timeout: 10000 }).should('exist')
+      cy.findByText('Wallet', { timeout: 10000 }).should('be.visible')
       sendWithdrawEmail(size)
     })
   })
@@ -111,7 +113,7 @@ describe('QATEST-98698 - Crypto withdrawal content access from email', () => {
 
       cy.log('Access Crypto Withdrawal Content Through Email Link')
       cy.c_visitResponsive('/', size)
-      cy.contains('Wallet', { timeout: 10000 }).should('exist')
+      cy.findByText('Wallet', { timeout: 10000 }).should('be.visible')
       verifyEmailandPerformWithdraw(size)
     })
   })
