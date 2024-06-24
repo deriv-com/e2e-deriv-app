@@ -201,7 +201,7 @@ Cypress.Commands.add(
         cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
         cy.findByText('Set payment details').should('be.visible')
         cy.findByTestId('dt_dropdown_display').click()
-        cy.get('#900').should('be.visible').click()
+        cy.findByText('15 minutes').should('be.visible').click({ force: true })
         if (adType == 'Sell') {
           cy.findByTestId('dt_payment_method_card_add_icon')
             .should('be.visible')
@@ -1116,7 +1116,7 @@ Cypress.Commands.add(
       .find('button[type="submit"]')
       .should('be.visible')
       .click()
-    cy.wait(3000)
+    // cy.wait(3000)
     cy.get('body', { timeout: 30000 }).then((body) => {
       if (body.text().includes('You may choose up to 3.')) {
         cy.get('.dc-checkbox__box', { timeout: 30000 })
@@ -1167,15 +1167,7 @@ Cypress.Commands.add('c_waitForPayment', () => {
   cy.findByText(
     "Don't risk your funds with cash transactions. Use bank transfers or e-wallets instead."
   ).should('be.visible')
-  // Add verification for the page
 })
-// Cypress.Commands.add('c_waitForPayment', (nicknameAndAmount) => {
-//   cy.findByText('Wait for payment').should('be.visible')
-//   cy.findByText(
-//     "Don't risk your funds with cash transactions. Use bank transfers or e-wallets instead."
-//   ).should('be.visible')
-//   // Add verification for the page
-// })
 
 Cypress.Commands.add('c_confirmOrder', (nicknameAndAmount, orderType) => {
   cy.findByText('Confirm payment').should('be.visible').click()
@@ -1309,7 +1301,7 @@ Cypress.Commands.add(
     cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
     cy.findByText('Edit payment details').should('be.visible')
     cy.findByTestId('dt_dropdown_display').click()
-    cy.get('#1800').should('be.visible').click()
+    cy.findByText('30 minutes').should('be.visible').click({ force: true })
     if (adType == 'buy') {
       cy.get('.dc-input__trailing-icon')
         .first()
