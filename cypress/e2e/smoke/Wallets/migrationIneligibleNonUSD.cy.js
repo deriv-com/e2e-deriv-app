@@ -9,6 +9,7 @@ describe('QATEST-154136 -  Client with Non-USD curency', () => {
   })
   it('Responsive - Client with Non-USD curency should not see  Wallets - Enable now banner', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.c_skipPasskeysV2()
     cy.c_checkForBanner()
     cy.findByText('US Dollar').should('not.exist')
   })
