@@ -428,7 +428,6 @@ Cypress.Commands.add(
   }
 )
 
-
 Cypress.Commands.add('c_loadingCheck', () => {
   cy.findByTestId('dt_initial_loader').should('not.exist')
 })

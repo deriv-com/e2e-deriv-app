@@ -1,14 +1,10 @@
 Cypress.Commands.add('c_emailContentVerification',
     (requestType, accountEmail, options = {}) => {                   
 const {
-retryCount = 0,
-maxRetries = 3,
 baseUrl = Cypress.env('configServer') + '/events',
 } = options
 cy.log(accountEmail)
 cy.log(`Visit ${baseUrl}`)
-const userID = Cypress.env('qaBoxLoginEmail')
-const userPSWD = Cypress.env('qaBoxLoginPassword')
 cy.visit(
   `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
     'qaBoxLoginPassword'
@@ -44,31 +40,3 @@ cy.origin(
   }
 )
     })
-// cy.on('fail', (err) => {
-//       rotateCreds()
-//       throw err
-//     })
-//     cy.then(() => {
-//       //Rotating credentials
-//       rotateCreds()
-//       //Retry finding email after 1 second interval
-//       if (retryCount < maxRetries) {
-//         cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
-//         cy.wait(1000)
-//         cy.c_emailContentVerification(requestType, accountEmail, {
-//           ...options,
-//           retryCount: retryCount + 1,
-//         })
-//       }
-//       if (retryCount > maxRetries) {
-//         throw new Error(
-//           `Content extraction failed after ${maxRetries} attempts.`
-//         )
-//       }
-//     })
-//     const rotateCreds = () => {
-//       Cypress.env('qaBoxLoginEmail', userID)
-//       Cypress.env('qaBoxLoginPassword', userPSWD)
-//     }
-//   }
-
