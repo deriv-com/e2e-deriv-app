@@ -1,12 +1,10 @@
-import '@testing-library/cypress/add-commands'
-
-let floatRate = 1.25
+let floatRate = 0.01
 let minOrder = 1
 let maxOrder = 10
 let nicknameAndAmount = {
   sellerBalanceBeforeSelling: '',
   sellerBalanceAfterSelling: '',
-  buyerBalanceBeforeBuying: '9750',
+  buyerBalanceBeforeBuying: '',
   buyerBalanceAfterBuying: '',
   buyer: '',
   seller: '',

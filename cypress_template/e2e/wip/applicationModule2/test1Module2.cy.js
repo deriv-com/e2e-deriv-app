@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import { derivApp } from '../../../support/locators/index'
 
 describe(`QATEST-00000 - Verify Traders Hub page in screensize: small`, () => {

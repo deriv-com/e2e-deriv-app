@@ -9,4 +9,3 @@ cypress/downloads
 *.md
 .prettierignore
 .prettierrc
-*.config.js

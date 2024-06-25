@@ -1,7 +1,6 @@
-import '@testing-library/cypress/add-commands'
-import RunPanel from '../../../support/pageobjects/dbot/run_panel'
 import BotBuilder from '../../../support/pageobjects/dbot/bot_builder_page'
 import QuickStrategy from '../../../support/pageobjects/dbot/quick_strategy'
+import RunPanel from '../../../support/pageobjects/dbot/run_panel'
 
 describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
   const size = ['small', 'desktop']
@@ -36,7 +35,7 @@ describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
         'have.value',
         'Volatility 100 (1s) Index'
       )
-      cy.findByTestId('qs_autocomplete_tradetype').click()
+      cy.findByTestId('dt_qs_tradetype').click()
       quickStrategy.chooseTradeType(isMobile)
       quickStrategy.fillUpContractSize()
       quickStrategy.fillUpLossProfitTreshold()

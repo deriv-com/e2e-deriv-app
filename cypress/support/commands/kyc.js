@@ -1,7 +1,5 @@
 import { generateCPFNumber, generateRandomName } from '../helper/utility'
 
-const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
-
 Cypress.Commands.add('c_navigateToPoi', (country) => {
   cy.get('a[href="/account/personal-details"]').click()
   cy.findByRole('link', { name: 'Proof of identity' }).click()
@@ -53,8 +51,7 @@ Cypress.Commands.add('c_onfidoSecondRun', (country) => {
 
 Cypress.Commands.add('c_resetData', () => {
   cy.c_visitResponsive('/', 'large')
-  cy.visit(BO_URL)
-  cy.findByText('Please login.').click()
+  cy.c_visitBackOffice()
   cy.findByText('Client Management').click()
   cy.findByPlaceholderText('email@domain.com')
     .should('exist')

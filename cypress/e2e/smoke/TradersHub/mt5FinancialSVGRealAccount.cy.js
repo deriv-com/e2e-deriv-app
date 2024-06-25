@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-6000: Create a Financial SVG account', () => {
   const size = ['small', 'desktop']
   let countryCode = 'co'
@@ -12,6 +10,7 @@ describe('QATEST-6000: Create a Financial SVG account', () => {
     it(`Verify I can signup for a real Financial SVG CFD account on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
       cy.c_visitResponsive('appstore/traders-hub', size)
+      cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
       if (isMobile) cy.c_skipPasskeysV2()
       cy.c_checkTradersHubHomePage(isMobile)
       if (isMobile) cy.findByRole('button', { name: 'CFDs' }).click()
@@ -27,9 +26,12 @@ describe('QATEST-6000: Create a Financial SVG account', () => {
       cy.findByRole('button', { name: 'Create Deriv MT5 password' }).should(
         'be.disabled'
       )
-      cy.findByTestId('dt_mt5_password').type(Cypress.env('mt5Password'), {
-        log: false,
-      })
+      cy.findByTestId('dt_mt5_password').type(
+        Cypress.env('credentials').test.mt5User.PSWD,
+        {
+          log: false,
+        }
+      )
       cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
       cy.get('.dc-modal-body').should(
         'contain.text',

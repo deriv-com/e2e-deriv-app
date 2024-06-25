@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 let fixedRate = 1.25
 let minOrder = 6
 let maxOrder = 10
@@ -18,7 +16,9 @@ describe('QATEST-145618 - Copy Ad - Fixed Rate - Buy Ad', () => {
     cy.c_checkForExistingAds().then((adExists) => {
       if (adExists == false) {
         cy.c_createNewAd('buy')
-        cy.c_inputAdDetails(fixedRate, minOrder, maxOrder, 'Buy', 'fixed')
+        cy.c_inputAdDetails(fixedRate, minOrder, maxOrder, 'Buy', 'fixed', {
+          paymentMethod: 'Alipay',
+        })
       }
       cy.c_getExistingAdDetailsForValidation('Buy')
       cy.then(() => {

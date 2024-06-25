@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import { generateEpoch } from '../../../support/helper/utility'
 
 describe('QATEST-5569: Verify MF Signup flow', () => {
@@ -42,6 +41,7 @@ describe('QATEST-5569: Verify MF Signup flow', () => {
         'have.text',
         '0.00EUR'
       )
+      if (isMobile) cy.c_skipPasskeysV2()
       cy.c_manageAccountsetting(country, {
         isMobile: isMobile,
       })

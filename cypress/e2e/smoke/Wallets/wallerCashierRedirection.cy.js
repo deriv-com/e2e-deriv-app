@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-139905 - user should be redirected to correct wallet cashier by clicking in wallet in responsive view', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })
@@ -25,9 +23,8 @@ describe('QATEST-139905 - user should be redirected to correct wallet cashier by
   it('should be redirected to correct wallet cashier from wallet card', () => {
     cy.log('check BTC wallet')
     cy.c_visitResponsive('/', 'small')
-    cy.c
-    cy.contains('Deposit', { timeout: 10000 }).should('exist')
     cy.c_skipPasskeysV2()
+    cy.contains('Deposit', { timeout: 10000 }).should('exist')
     checkWalletName('BTC')
     checkWalletName('ETH')
   })

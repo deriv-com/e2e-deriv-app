@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 const createDemoAccounts = (isMobile = false) => {
   //Demo Mt5 account
   if (isMobile) cy.findByRole('button', { name: 'CFDs' }).click()
@@ -13,9 +11,12 @@ const createDemoAccounts = (isMobile = false) => {
   cy.findByRole('button', { name: 'Create Deriv MT5 password' }).should(
     'be.disabled'
   )
-  cy.findByTestId('dt_mt5_password').type(Cypress.env('mt5Password'), {
-    log: false,
-  })
+  cy.findByTestId('dt_mt5_password').type(
+    Cypress.env('credentials').test.mt5User.PSWD,
+    {
+      log: false,
+    }
+  )
   cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
   cy.get('.dc-modal-body').should(
     'contain.text',
@@ -31,9 +32,12 @@ const createDemoAccounts = (isMobile = false) => {
   cy.findByRole('button', { name: 'Create Deriv X password' }).should(
     'be.disabled'
   )
-  cy.findByTestId('dt_dxtrade_password').type(Cypress.env('mt5Password'), {
-    log: false,
-  })
+  cy.findByTestId('dt_dxtrade_password').type(
+    Cypress.env('credentials').test.mt5User.PSWD,
+    {
+      log: false,
+    }
+  )
   cy.findByRole('button', { name: 'Create Deriv X password' }).click()
   cy.get('.dc-modal-body').should('contain.text', 'Congratulations')
   cy.findByRole('button', { name: 'Continue' }).click()
@@ -49,9 +53,12 @@ const createRealAccounts = (isMobile = false) => {
   cy.findByRole('button', { name: 'Next' }).click()
   cy.findByText('Enter your Deriv MT5 password').should('be.visible')
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
-  cy.findByTestId('dt_mt5_password').type(Cypress.env('mt5Password'), {
-    log: false,
-  })
+  cy.findByTestId('dt_mt5_password').type(
+    Cypress.env('credentials').test.mt5User.PSWD,
+    {
+      log: false,
+    }
+  )
   cy.findByRole('button', { name: 'Add account' }).click()
   cy.get('.dc-modal-body').should(
     'contain.text',
@@ -65,9 +72,12 @@ const createRealAccounts = (isMobile = false) => {
     .click()
   cy.findByText('Enter your Deriv X password').should('be.visible')
   cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
-  cy.findByTestId('dt_dxtrade_password').type(Cypress.env('mt5Password'), {
-    log: false,
-  })
+  cy.findByTestId('dt_dxtrade_password').type(
+    Cypress.env('credentials').test.mt5User.PSWD,
+    {
+      log: false,
+    }
+  )
   cy.findByRole('button', { name: 'Add account' }).click()
   cy.get('.dc-modal-body').should('contain.text', 'Congratulations')
   cy.findByRole('button', { name: 'Maybe later' }).click()

@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-5724: CFDs - Create a demo Financial account using existing MT5 account password', () => {
   const size = ['small', 'desktop']
   let countryCode = 'co'
@@ -12,6 +10,7 @@ describe('QATEST-5724: CFDs - Create a demo Financial account using existing MT5
     it(`Verify I can add a demo financial account using exisiting MT5 derieved account password on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
       cy.c_visitResponsive('appstore/traders-hub', size)
+      cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
       if (isMobile) cy.c_skipPasskeysV2()
       cy.c_checkTradersHubHomePage(isMobile)
       cy.c_switchToDemo()
@@ -24,9 +23,12 @@ describe('QATEST-5724: CFDs - Create a demo Financial account using existing MT5
         'You can use this password for all your Deriv MT5 accounts.'
       ).should('be.visible')
 
-      cy.findByTestId('dt_mt5_password').type(Cypress.env('mt5Password'), {
-        log: false,
-      })
+      cy.findByTestId('dt_mt5_password').type(
+        Cypress.env('credentials').test.mt5User.PSWD,
+        {
+          log: false,
+        }
+      )
       cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
       cy.findByRole('heading', { name: 'Success!' }).should('be.visible')
       cy.get('.dc-modal-body').should(
@@ -45,9 +47,12 @@ describe('QATEST-5724: CFDs - Create a demo Financial account using existing MT5
       ).should('be.visible')
       cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
       cy.findByRole('button', { name: 'Forgot password?' }).should('be.visible')
-      cy.findByTestId('dt_mt5_password').type(Cypress.env('mt5Password'), {
-        log: false,
-      })
+      cy.findByTestId('dt_mt5_password').type(
+        Cypress.env('credentials').test.mt5User.PSWD,
+        {
+          log: false,
+        }
+      )
       cy.findByRole('button', { name: 'Add account' }).click()
       cy.get('.dc-modal-body').should(
         'contain.text',

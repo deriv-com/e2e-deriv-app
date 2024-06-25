@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-715 - Load crypto deposit page', () => {
   beforeEach(() => {
     cy.c_login({ user: 'allcrypto' })

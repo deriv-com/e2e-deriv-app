@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 const verifySortFunctionality = (adType) => {
   cy.c_getExchangeRatesFromScreen(adType, { sortArray: true }).then(
     (initialRatesArray) => {
