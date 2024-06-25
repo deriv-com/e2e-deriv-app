@@ -505,7 +505,6 @@ Cypress.Commands.add(
     options = {}
   ) => {
     const { language = 'english' } = options
-    cy.log(Cypress.config('baseUrl'))
     cy.log(language)
     cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
       const lang = langData[language]
