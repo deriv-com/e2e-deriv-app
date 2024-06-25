@@ -23,9 +23,9 @@ describe('QATEST-24427,5533,5827 - Cypress test for ROW account sign up', () => 
       cy.findByText('Add a Deriv account').should('not.exist')
       cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
       if (isMobile) cy.c_skipPasskeysV2()
-      cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
+      cy.findByTestId('dt_dropdown_display').click()
       if (isMobile) cy.c_skipPasskeysV2()
-      cy.c_switchToReal()
+      cy.get('#real').click()
       cy.findByText('Add a Deriv account').should('be.visible')
       cy.c_generateRandomName().then((firstName) => {
         cy.c_personalDetails(
