@@ -64,47 +64,28 @@ Cypress.Commands.add('c_completeTradersHubTour', (options = {}) => {
 
 Cypress.Commands.add('c_enterValidEmail', (signUpMail, options = {}) => {
   const { language = 'english' } = options
-  {
-    cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
-      const lang = langData[language]
-      cy.visit(`${Cypress.env('derivComProdURL')}${lang.urlCode}/`, {
-        onBeforeLoad(win) {
-          win.localStorage.setItem(
-            'config.server_url',
-            Cypress.env('configServer')
-          )
-          win.localStorage.setItem('config.app_id', Cypress.env('configAppId'))
-        },
-      })
-      cy.visit(`${Cypress.env('derivComProdURL')}${lang.urlCode}/signup/`, {
-        onBeforeLoad(win) {
-          win.localStorage.setItem(
-            'config.server_url',
-            Cypress.env('configServer')
-          )
-          win.localStorage.setItem('config.app_id', Cypress.env('configAppId'))
-        },
-      })
-      //Wait for the signup page to load completely
-      cy.findByRole(
-        'button',
-        { name: 'whatsapp icon' },
-        { timeout: 30000 }
-      ).should('be.visible')
-      cy.findByPlaceholderText(lang.signUpForm.emailTxtBox)
-        .as('email')
-        .should('be.visible')
-      cy.get('@email').type(signUpMail)
-      cy.findByRole('checkbox').click()
-      cy.get('.error').should('not.exist')
-      cy.findByRole('button', {
-        name: lang.signUpForm.createDemoAccTxt,
-      }).click()
-      cy.findByRole('heading', { name: lang.signUpForm.checkMailTxt }).should(
-        'be.visible'
-      )
-    })
-  }
+  cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
+    const lang = langData[language]
+    cy.visit(`${Cypress.env('derivComProdURL')}${lang.urlCode}/signup/`)
+    //Wait for the signup page to load completely
+    cy.findByRole(
+      'button',
+      { name: 'whatsapp icon' },
+      { timeout: 30000 }
+    ).should('be.visible')
+    cy.findByPlaceholderText(lang.signUpForm.emailTxtBox)
+      .as('email')
+      .should('be.visible')
+    cy.get('@email').type(signUpMail)
+    cy.findByRole('checkbox').click()
+    cy.get('.error').should('not.exist')
+    cy.findByRole('button', {
+      name: lang.signUpForm.createDemoAccTxt,
+    }).click()
+    cy.findByRole('heading', { name: lang.signUpForm.checkMailTxt }).should(
+      'be.visible'
+    )
+  })
 })
 
 //Below functions are used in sign up forms
@@ -468,7 +449,6 @@ Cypress.Commands.add(
   'c_demoAccountSignup',
   (country, accountEmail, size = 'desktop', options = {}) => {
     const { language = 'english' } = options
-    const countriesToCheck = [Cypress.env('countries').ES, 'España']
     cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
       const lang = langData[language]
       cy.c_emailVerification('account_opening_new.html', accountEmail)
@@ -498,24 +478,28 @@ Cypress.Commands.add(
 
 Cypress.Commands.add(
   'c_setEndpoint',
-  (
-    signUpMail,
-    size = 'desktop',
-    mainURL = Cypress.config('baseUrl'),
-    options = {}
-  ) => {
+  (signUpMail, size = 'desktop', options = {}) => {
     const { language = 'english' } = options
-    cy.log(Cypress.config('baseUrl'))
     cy.log(language)
     cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
       const lang = langData[language]
+      cy.visit(`${Cypress.env('derivComProdURL')}${lang.urlCode}/`, {
+        onBeforeLoad(win) {
+          win.localStorage.setItem(
+            'config.server_url',
+            Cypress.env('configServer')
+          )
+          win.localStorage.setItem('config.app_id', Cypress.env('configAppId'))
+        },
+      })
+      cy.findByRole(
+        'button',
+        { name: 'whatsapp icon' },
+        { timeout: 30000 }
+      ).should('be.visible')
+      cy.c_visitResponsive(`/endpoint?lang=${lang.urlCode}`, size)
       localStorage.setItem('config.server_url', Cypress.env('stdConfigServer'))
       localStorage.setItem('config.app_id', Cypress.env('stdConfigAppId'))
-      if (language != 'english') {
-        cy.c_visitResponsive(`${mainURL}endpoint?lang=${lang.urlCode}`, size)
-      } else {
-        cy.c_visitResponsive(`${mainURL}endpoint`, size)
-      }
       cy.findByRole('button', { name: lang.signUpForm.signUpBtn }).should(
         'not.be.disabled'
       )

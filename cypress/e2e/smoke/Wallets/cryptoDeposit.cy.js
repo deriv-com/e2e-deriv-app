@@ -1,5 +1,5 @@
 function performCryptoDeposit(platform) {
-  cy.contains('Wallet', { timeout: 10000 }).should('exist')
+  cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
   if (`${platform}` == `mobile`) {
     cy.contains('Deposit', { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccountResponsive('BTC')
@@ -19,7 +19,7 @@ function performCryptoDeposit(platform) {
 }
 
 function performCryptoDepositFiatonRamp(platform) {
-  cy.contains('Wallet', { timeout: 10000 }).should('exist')
+  cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
   if (`${platform}` == `mobile`) {
     cy.contains('Deposit', { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccountResponsive('BTC')
@@ -56,11 +56,13 @@ describe('QATEST-98781 - Crypto deposit and fiat onramp', () => {
   })
   it('should be able to view crypto deposit details in responsive', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.c_skipPasskeysV2()
     performCryptoDeposit('mobile')
   })
 
   it('should be able to deposit into crypto account through fiat onramp in responsive', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.c_skipPasskeysV2()
     performCryptoDepositFiatonRamp('mobile')
   })
 })

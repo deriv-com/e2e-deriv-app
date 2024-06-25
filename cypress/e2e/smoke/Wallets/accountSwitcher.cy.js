@@ -1,20 +1,16 @@
 function goToAcctSwitcherFromTradepage(deviceType) {
   const derivAppProdUrl = `${Cypress.env('prodURL')}dtrader?chart_type=`
   const derivAppStagingUrl = `${Cypress.env('stagingUrl')}dtrader?chart_type=`
-  if (deviceType == 'Desktop') {
-    cy.findAllByText('Options')
-      .eq(1)
-      .should('be.visible')
-      .then(() => {
-        cy.findAllByText('SVG').eq(2).should('be.visible')
-      })
+  cy.c_skipPasskeysV2() // to check page is loaded completely
+  if (deviceType == 'Mobile') {
+    cy.c_skipPasskeysV2()
+    cy.findAllByText('Options').eq(1).click()
+    cy.c_skipPasskeysV2()
   } else {
-    cy.findByTestId('dt_tab_panels')
-      .findAllByText('Options', { exact: true })
-      .should('be.visible')
-      .then(() => {
-        cy.findByText('SVG').should('be.visible')
-      })
+    cy.get('.wallets-trading-account-card__content')
+      .contains('.wallets-text', 'Financial', { timeout: 3000 })
+      .parent()
+      .closest('.wallets-added-mt5__details, .wallets-available-mt5__details')
   }
   cy.findByText('Deriv Trader').click() //Navigate to Trade page
   if (Cypress.config().baseUrl.includes('staging'))
@@ -64,6 +60,7 @@ describe('QATEST-129858 -  Validate account switcher ', () => {
 
   it('Responsive - Navigate to account switcher from Trade page &  Manage account settings page', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.c_skipPasskeysV2()
     cy.findByText('Options').click()
     goToAcctSwitcherFromTradepage('Mobile')
     cy.get('#dt_positions_toggle').should('be.visible')

@@ -1,3 +1,4 @@
+// This test needs fresh account each time
 function clickAddMt5Button(mt5AccountType) {
   cy.get('span.wallets-text').contains(mt5AccountType).click()
 }

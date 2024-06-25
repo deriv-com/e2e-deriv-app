@@ -64,6 +64,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
   //Prerequisites: Crypto wallet account in any qa box with 1.00000000 BTC balance and USD, ETH and LTC wallets
   let transferAmount = '0.00003000'
   beforeEach(() => {
+    Cypress.prevAppId = 0
     cy.c_login({ user: 'walletloginEmail' })
   })
 
@@ -72,9 +73,9 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
     { scrollBehavior: false },
     () => {
       cy.log('Transfer from Crypto account')
+      cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
       cy.c_visitResponsive('/', 'large')
-      cy.contains('Wallet', { timeout: 10000 }).should('exist')
-      cy.c_setupTradeAccount('BTC')
+      cy.c_setupTradeAccount('BTC', false)
       cy.c_switchWalletsAccount('BTC')
       cy.contains('Transfer').click()
       crypto_transfer('USD Wallet', transferAmount)
@@ -87,7 +88,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
   it('should be able to view transactions of crypto account', () => {
     cy.log('View Transactions of Crypto account')
     cy.c_visitResponsive('/', 'large')
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccount('BTC')
     cy.contains('Transfer').click()
     cy.findByText('Transactions').first().click()
@@ -114,8 +115,10 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
   it('should be able to perform transfer from crypto account in responsive', () => {
     cy.log('Transfer from Crypto account')
     cy.c_visitResponsive('/', 'small')
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.findAllByText("Trader's Hub").should('have.length', '1')
+    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
     cy.c_skipPasskeysV2()
+    cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
     cy.c_switchWalletsAccountResponsive('BTC')
     cy.contains('Transfer').parent().click()
     crypto_transfer('USD Wallet', transferAmount)
@@ -127,7 +130,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
   it('should be able to view transactions of crypto account in responsive', () => {
     cy.log('View Transactions of Crypto account')
     cy.c_visitResponsive('/', 'small')
-    cy.contains('Wallet', { timeout: 10000 }).should('exist')
+    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
     cy.c_skipPasskeysV2()
     cy.c_switchWalletsAccountResponsive('BTC')
     cy.contains('Transfer').parent().click()

@@ -1,3 +1,4 @@
+// This test needs fresh account each time
 describe('QATEST-142456 - Add Trading account', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })

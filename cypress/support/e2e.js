@@ -7,6 +7,11 @@ import './commands/index'
 // Expose jsQR globally
 Cypress.jsQR = jsQR
 
+beforeEach(() => {
+  //Disable logging xhr and fetch requests
+  cy.intercept({ resourceType: /xhr|fetch/ }, { log: false })
+})
+
 before(() => {
   if (Cypress.env('runFromPR') != 'true') return
 
