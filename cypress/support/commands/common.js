@@ -1,39 +1,21 @@
-import { getOAuthUrl } from '../helper/loginUtility'
+import { getOAuthUrl, setLoginUser } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
 Cypress.prevUser = ''
 const expectedCookieValue = '{%22clients_country%22:%22br%22}'
 
-const setLoginUser = (user = 'masterUser', options = {}) => {
-  const { backEndProd = false } = options
-  if (
-    Cypress.config().baseUrl == Cypress.env('prodURL') ||
-    backEndProd == true
-  ) {
-    return {
-      loginEmail: Cypress.env('credentials').production[`${user}`].ID,
-      loginPassword: Cypress.env('credentials').production[`${user}`].PSWD,
-    }
-  } else {
-    return {
-      loginEmail: Cypress.env('credentials').test[`${user}`].ID,
-      loginPassword: Cypress.env('credentials').test[`${user}`].PSWD,
-    }
-  }
-}
-
+/**
+ * Custom command that allows us to use baseUrl + path and detect whether this is a responsive run or not.
+ */
 Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
-  const { rateLimitCheck = false } = options
-  //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
-  cy.log(path)
+  const { rateLimitCheck = false, skipPassKeys = false } = options
   if (size === undefined) size = Cypress.env('viewPortSize')
-
   if (size == 'small') cy.viewport('iphone-xr')
   else if (size == 'medium') cy.viewport('ipad-2')
   else cy.viewport('macbook-16')
 
   cy.visit(path)
-  cy.log('rateLimitCheck flag is set to: ', rateLimitCheck)
+  cy.log(`rateLimitCheck flag is set to: ${rateLimitCheck}`)
   if (rateLimitCheck == true) {
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
@@ -46,8 +28,12 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
     })
   }
 
+  if (skipPassKeys == true && size == 'small') {
+    cy.c_skipPasskeysV2({ withoutContent: true })
+  }
+
+  //Wait for relevent elements to appear (based on page)
   if (path.includes('region')) {
-    //Wait for relevent elements to appear (based on page)
     cy.log('Home page Selected')
     cy.findByRole(
       'button',
@@ -57,7 +43,6 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   }
 
   if (path.includes('help-centre')) {
-    //Wait for relevent elements to appear (based on page)
     cy.log('Help Centre Selected')
     cy.findByRole('heading', {
       name: 'Didn’t find your answer? We can help.',
@@ -65,7 +50,6 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   }
 
   if (path.includes('traders-hub') || path === '/') {
-    //Wait for relevent elements to appear (based on page)
     if (size == 'small')
       cy.findAllByText("Trader's Hub").should('have.length', '1')
     else cy.findAllByText("Trader's Hub").should('have.length', '2')
@@ -83,6 +67,9 @@ Cypress.Commands.add('c_login', (options = {}) => {
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
   })
+  if (!(loginEmail && loginPassword)) {
+    throw new Error(`User/Password is not on file`)
+  }
   cy.c_visitResponsive('/endpoint', 'large', { rateLimitCheck: rateLimitCheck })
 
   if (app == 'doughflow') {
@@ -285,7 +272,7 @@ Cypress.Commands.add('c_transferLimit', (transferMessage) => {
           if ($resetElement.length) {
             cy.wrap($resetElement).click()
           }
-          cy.contains('Wallet', { timeout: 10000 }).should('exist')
+          cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
         })
       } else {
         cy.findByText('Your transfer is successful!', {
@@ -628,6 +615,7 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
         })
       cy.findAllByRole('button', { name: 'Close' })
         .first()
+        .scrollIntoView()
         .should('be.visible')
         .click()
         .and('not.exist')
@@ -642,15 +630,19 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
 })
 
 Cypress.Commands.add('c_skipPasskeysV2', (options = {}) => {
-  const { language = 'english', retryCount = 0, maxRetries = 3 } = options
-  cy.fixture('common/common.json').then((langData) => {
-    const lang = langData[language]
-    cy.findByText(lang.passkeysModal.title)
+  const {
+    language = 'english',
+    retryCount = 0,
+    maxRetries = 3,
+    withoutContent = false,
+  } = options
+  if (withoutContent == true) {
+    cy.get('.effortless-login-modal')
       .should(() => {})
       .then(($el) => {
         if ($el.length) {
-          cy.findByText(lang.passkeysModal.maybeLaterBtn).click()
           cy.log('Skipped Passkeys prompt !!!')
+          cy.get('.effortless-login-modal__header').click()
         } else if (retryCount < maxRetries) {
           cy.wait(300)
           cy.log(
@@ -659,7 +651,25 @@ Cypress.Commands.add('c_skipPasskeysV2', (options = {}) => {
           cy.c_skipPasskeysV2({ ...options, retryCount: retryCount + 1 })
         }
       })
-  })
+  } else {
+    cy.fixture('common/common.json').then((langData) => {
+      const lang = langData[language]
+      cy.findByText(lang.passkeysModal.title)
+        .should(() => {})
+        .then(($el) => {
+          if ($el.length) {
+            cy.findByText(lang.passkeysModal.maybeLaterBtn).click()
+            cy.log('Skipped Passkeys prompt !!!')
+          } else if (retryCount < maxRetries) {
+            cy.wait(300)
+            cy.log(
+              `Passkeys prompt did not appear, Retrying... Attempt ${retryCount + 1}`
+            )
+            cy.c_skipPasskeysV2({ ...options, retryCount: retryCount + 1 })
+          }
+        })
+    })
+  }
 })
 
 Cypress.Commands.add(
@@ -778,3 +788,10 @@ Cypress.Commands.add(
     })
   }
 )
+
+Cypress.Commands.add('c_visitBackOffice', () => {
+  cy.visit(
+    `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
+  )
+  cy.findByText('Please login.').click()
+})

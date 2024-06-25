@@ -37,6 +37,7 @@ describe('QATEST-154139 -  Client with only VRTC', () => {
   })
   it('Responsive - Client with only VRTC should not see  Wallets - Enable now banner', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.c_skipPasskeysV2()
     cy.c_checkForBanner()
     cy.findByText('demo', { exact: true }).should('be.visible')
     cy.c_closeNotificationHeader()

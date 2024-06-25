@@ -30,6 +30,8 @@ describe('QATEST-5554: Verify DIEL Signup flow - CR', () => {
       cy.c_completeFatcaDeclarationAgreement()
       cy.c_addAccount({ isMobile: isMobile })
       cy.c_closeNotificationHeader()
+      cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
+      if (isMobile) cy.c_skipPasskeysV2()
       cy.c_checkTradersHubHomePage(isMobile)
       cy.findByText('Regulation:').should('not.exist')
       cy.findByText('Non-EU').should('not.exist')

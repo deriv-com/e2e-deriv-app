@@ -154,10 +154,14 @@ export function getOAuthUrl(callback, loginEmail, loginPassword) {
           })
         })
       } else {
-        cy.log('Already Authorized')
         const oAuthUrl = response.headers['location']
         cy.log('oAuthUrl: ' + oAuthUrl)
-        callback(oAuthUrl)
+        if (oAuthUrl) {
+          cy.log('User Authorized')
+          callback(oAuthUrl)
+        } else {
+          throw new Error('Authorization failed. Verify the credentials')
+        }
       }
     })
   })
@@ -176,4 +180,39 @@ function extractCsrfToken(response) {
   const found = response.body.match(regex)
 
   return found[1]
+}
+
+/**
+ * @description Used to generate a random 8-character long name
+ * @returns {string} Randomly generated 8-character string
+ * @example
+ * const randomName = generateRandomName();
+ * console.log(randomName); // e.g., 'a1B2c3D4'
+ */
+export function generateRandomName() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+  let result = ''
+  const charactersLength = characters.length
+  for (let i = 0; i < 8; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return result
+}
+
+export const setLoginUser = (user = 'masterUser', options = {}) => {
+  const { backEndProd = false } = options
+  if (
+    Cypress.config().baseUrl == Cypress.env('prodURL') ||
+    backEndProd == true
+  ) {
+    return {
+      loginEmail: Cypress.env('credentials').production[`${user}`].ID,
+      loginPassword: Cypress.env('credentials').production[`${user}`].PSWD,
+    }
+  } else {
+    return {
+      loginEmail: Cypress.env('credentials').test[`${user}`].ID,
+      loginPassword: Cypress.env('credentials').test[`${user}`].PSWD,
+    }
+  }
 }
