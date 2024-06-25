@@ -1,4 +1,4 @@
-describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
+describe('QATEST-160111 Cashier lock when POI expire CR - High.', () => {
   beforeEach(() => {
     cy.c_createRealAccount('aq')
     cy.c_login()
@@ -6,8 +6,8 @@ describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
     cy.c_navigateToPoiResponsive('Antarctica')
   })
 
-  it('Should have no cashier lock when POI expire for CR low risk.', () => {
-    /* Submit POA */
+  it('Should have cashier lock when POI expire for CR high risk.', () => {
+    /* Submit POI */
     cy.findByText('Passport').should('be.visible').click()
     cy.findByLabelText('Passport number*').type('232344')
     cy.get('.dc-datepicker__native').type('2025-09-20')
@@ -40,6 +40,10 @@ describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
     cy.findByRole('button', { name: /View \/ Edit/i }).click()
     cy.get('.link').eq(1).should('be.visible').click()
     cy.get('#documents_wrapper table tbody tr td input[type="checkbox"]')
+      .last()
+      .should('exist')
+      .check()
+    cy.get('#documents_wrapper table tbody tr td input[type="checkbox"]')
       .first()
       .should('exist')
       .check()
@@ -53,17 +57,17 @@ describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
       .clear()
       .type('2021-09-20')
     cy.get('input[value="Save client details"]').last().click()
-    /* No cashier lock in BO */
-    cy.get('#card__content table tbody tr td b Withdrawal Locked').should(
-      'not.exist'
-    )
     cy.get('select[name="client_aml_risk_classification"]')
-      .select('Low')
-      .should('be.visible')
-    /* Check no cashier lock on FE */
+      .select('High')
+      .type('{enter}')
+    /* cashier locks in BO */
+    cy.contains('Withdrawal Locked').should('be.visible')
+    cy.contains('Cashier Locked').should('be.visible')
+    /* Check cashier lock on FE */
     cy.c_visitResponsive('/cashier/deposit', 'small')
-    cy.findByText('Deposit via bank wire, credit card, and e-wallet').should(
-      'be.visible'
-    )
+    cy.findByText('Cashier is locked').should('be.visible')
+    cy.findByText(
+      'The identification documents you submitted have expired. Please submit valid identity documents to unlock Cashier.'
+    ).should('be.visible')
   })
 })
