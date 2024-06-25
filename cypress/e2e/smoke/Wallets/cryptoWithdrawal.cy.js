@@ -24,12 +24,8 @@ function sendWithdrawEmail(size) {
 function verifyEmailandPerformWithdraw(size) {
   if (size === 'small') {
     cy.c_switchWalletsAccountResponsive('BTC')
-    cy.findByRole('button', { name: /withdrawal/i })
-      .should('be.visible')
-      .click()
   } else {
     cy.c_switchWalletsAccount('BTC')
-    cy.findByText('Withdraw').should('be.visible').click()
   }
 
   cy.c_emailVerification(
@@ -92,34 +88,25 @@ function verifyEmailandPerformWithdraw(size) {
   })
 }
 
-describe('WALL-2830 - Crypto withdrawal send email', () => {
-  const size = ['small', 'desktop']
+describe('QATEST-98698 - Crypto withdraw success', () => {
+  const size = ['desktop', 'small']
+
+  beforeEach(() => {
+    cy.c_login({ user: 'walletloginEmail' })
+  })
 
   size.forEach((size) => {
     it(`should be able to send withdrawal verification link on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
-      cy.c_login({
-        user: `walletloginEmail${size === 'small' ? 'Mobile' : ''}`,
-      })
-
       cy.log('Send Crypto Withdrawal Verification')
+
       cy.c_visitResponsive('/', size)
       cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
       sendWithdrawEmail(size)
     })
-  })
-})
 
-describe('QATEST-98698 - Crypto withdrawal content access from email', () => {
-  //Prerequisites: Crypto wallet account in qa29 with BTC balance
-  const size = ['small', 'desktop']
-
-  size.forEach((size) => {
-    it(`should be able to access crypto withdrawal content and perform withdrawal on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
-      cy.c_login({
-        user: `walletloginEmail${size === 'small' ? 'Mobile' : ''}`,
-      })
-
+    it(`should be able to access crypto withdrawal page and perform withdrawal on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       cy.log('Access Crypto Withdrawal Content Through Email Link')
+
       cy.c_visitResponsive('/', size)
       cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
       verifyEmailandPerformWithdraw(size)
