@@ -128,11 +128,9 @@ describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
                     .find('span')
                     .invoke('text')
                     .should('contain', walletsTextValue.split(' ')[0])
-                  cy.get('[data-testid="dt_desktop_accounts_list"]').within(
-                    () => {
-                      cy.get('button').contains('Transfer').should('be.visible')
-                    }
-                  )
+                  cy.findByTestId('dt_desktop_accounts_list')
+                    .findByRole('button', { name: 'Transfer' })
+                    .should('be.visible')
                   cy.get('.wallets-dropdown').click({ force: true })
                 })
             })
