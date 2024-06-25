@@ -1219,7 +1219,15 @@ Cypress.Commands.add(
 
 Cypress.Commands.add(
   'c_addSellOrderDetails',
-  (paymentMethod, amount, rate, min, max, rateType) => {
+  (options) => {
+  const {
+  paymentMethod = '',
+  amount = '',
+  rate='',
+  min='',
+  max='',
+  rateType=''
+  }=options
     cy.get(':nth-child(2) > .dc-radio-group__circle').click()
     cy.findByTestId('offer_amount').click().type(amount)
     cy.findByTestId('fixed_rate_type').type(rate)
