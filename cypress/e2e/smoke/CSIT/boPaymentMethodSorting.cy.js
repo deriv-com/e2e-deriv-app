@@ -35,23 +35,47 @@ function verifyFilteringByCategory1() {
   cy.findByRole('cell', { name: 'Category3' }).should('not.exist')
 }
 
+function basicSearch() {
+  cy.get('input[name="show_all"]').check()
+  cy.findByRole('button', { name: 'Search' }).click()
+}
+
+function prepareTestData() {
+  basicSearch()
+  cy.get('.card__content').then(($el) => {
+    if ($el.text().includes('Category1')) {
+      cy.log('PM1 category exists')
+    } else {
+      checkAndCreatePM1()
+      cy.log('Added PM1 category')
+    }
+  })
+  basicSearch()
+  cy.get('.card__content').then(($el) => {
+    if ($el.text().includes('Category2')) {
+      cy.log('PM2 category exists')
+    } else {
+      checkAndCreatePM2()
+      cy.log('Added PM2 category')
+    }
+  })
+  basicSearch()
+  cy.get('.card__content').then(($el) => {
+    if ($el.text().includes('Category3')) {
+      cy.log('PM3 category exists')
+    } else {
+      checkAndCreatePM3()
+      cy.log('Added PM3 category')
+    }
+  })
+}
+
 describe('P2PS-2560 - Sorting using category in BO Doughflow payment methods management page', () => {
   it('Should check sorting of Payment Methods in BO', () => {
     cy.c_visitResponsive('/', 'large')
     cy.c_visitBackOffice()
     cy.visit(PMpage)
-    cy.get('input[name="show_all"]').check()
-    cy.findByRole('button', { name: 'Search' })
-      .click()
-      .should(() => {})
-      .then(($el) => {
-        if ($el.length) {
-          checkAndCreatePM1()
-          cy.log('Added PM1 category')
-        } else cy.log('PM1 category exists')
-      })
-    //checkAndCreatePM2 ()
-    //checkAndCreatePM3 ()
+    prepareTestData()
     verifyFilteringByCategory1()
   })
 })
