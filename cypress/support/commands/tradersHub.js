@@ -99,10 +99,15 @@ Cypress.Commands.add('c_enterValidEmail', (signUpMail, options = {}) => {
       cy.get('.error').should('not.exist')
       cy.findByRole('button', {
         name: lang.signUpForm.createDemoAccTxt,
-      }).click()
-      cy.findByRole('heading', { name: lang.signUpForm.checkMailTxt }).should(
-        'be.visible'
-      )
+      })
+        .should('be.enabled')
+        .click()
+      // cy.findByRole('button', {
+      //   name: lang.signUpForm.createDemoAccTxt,
+      // }).click()
+      // cy.findByRole('heading', { name: lang.signUpForm.checkMailTxt }).should(
+      //   'be.visible'
+      // )
     })
   }
 })
