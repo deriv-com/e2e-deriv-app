@@ -34,6 +34,7 @@ describe('QATEST-5797, QATEST-5820: Add siblings accounts', () => {
       cy.c_visitResponsive('/', size)
       //Wait for page to completely load
       cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
+      if (isMobile) cy.c_skipPasskeysV2()
       cy.c_switchToReal()
       cy.findByText('Add a Deriv account').should('be.visible')
       cy.c_generateRandomName().then((firstName) => {
