@@ -1,8 +1,7 @@
 import { generateEpoch } from '../../../support/helper/utility'
 
 describe('QATEST-24427,5533,5827 - Cypress test for ROW account sign up', () => {
-  // const size = ['small', 'desktop']
-  const size = ['small']
+  const size = ['small', 'desktop']
   let countryIDV = Cypress.env('countries').KE
   let nationalIDNumIDV = Cypress.env('nationalIDNum').KE
   let taxIDNumIDV = Cypress.env('taxIDNum').KE
@@ -12,7 +11,7 @@ describe('QATEST-24427,5533,5827 - Cypress test for ROW account sign up', () => 
   let currency = Cypress.env('accountCurrency').USD
 
   size.forEach((size) => {
-    it.only(`New account sign up ROW - Onfido supported country on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
+    it(`New account sign up ROW - Onfido supported country on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
       const signUpEmail = `sanity${generateEpoch()}onfido@deriv.com`
       cy.c_setEndpoint(signUpEmail, size)
@@ -25,6 +24,7 @@ describe('QATEST-24427,5533,5827 - Cypress test for ROW account sign up', () => 
       cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
       if (isMobile) cy.c_skipPasskeysV2()
       cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
+      if (isMobile) cy.c_skipPasskeysV2()
       cy.c_switchToReal()
       cy.findByText('Add a Deriv account').should('be.visible')
       cy.c_generateRandomName().then((firstName) => {
