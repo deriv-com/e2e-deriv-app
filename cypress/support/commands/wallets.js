@@ -104,7 +104,7 @@ Cypress.Commands.add('c_setupTradeAccount', (wallet, action = 'Fail') => {
           .findByText("Trader's Hub")
           .should('be.visible')
       } else {
-        if (`${action}` == 'Fail') {
+        if (action == 'Fail') {
           cy.fail('Trading account already added')
         } else {
           cy.log('Trading account already added')
