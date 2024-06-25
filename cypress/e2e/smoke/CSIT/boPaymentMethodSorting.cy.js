@@ -1,18 +1,6 @@
-const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
 const PMpage = `https://${Cypress.env('configServer')}/d/backoffice/doughflow_method_manage.cgi?broker=CR`
 
-function checkAndCreatePM1(PM1) {
-  cy.get('input[name="show_all"]').check()
-  cy.findByRole('button', { name: 'Search' })
-    .click()
-    .then((PM1) => {
-      cy.get('input[name="payment_processor"]').type('DebitCard')
-    })
-  cy.get('input[name="payment_method"]').type('DebitCard')
-  cy.get('input[name="payment_category"]').type('Category1')
-  cy.findByRole('button', { name: 'Save' }).click()
-  cy.contains('Definition for processor=')
-
+function checkAndCreatePM1() {
   cy.get('input[name="payment_processor"]').type('DebitCard')
   cy.get('input[name="payment_method"]').type('DebitCard')
   cy.get('input[name="payment_category"]').type('Category1')
@@ -50,10 +38,18 @@ function verifyFilteringByCategory1() {
 describe('P2PS-2560 - Sorting using category in BO Doughflow payment methods management page', () => {
   it('Should check sorting of Payment Methods in BO', () => {
     cy.c_visitResponsive('/', 'large')
-    cy.visit(BO_URL) // temp step for BO
-    cy.findByText('Please login.').click() // temp step for BO
+    cy.c_visitBackOffice()
     cy.visit(PMpage)
-    //checkAndCreatePM1 ()
+    cy.get('input[name="show_all"]').check()
+    cy.findByRole('button', { name: 'Search' })
+      .click()
+      .should(() => {})
+      .then(($el) => {
+        if ($el.length) {
+          checkAndCreatePM1()
+          cy.log('Added PM1 category')
+        } else cy.log('PM1 category exists')
+      })
     //checkAndCreatePM2 ()
     //checkAndCreatePM3 ()
     verifyFilteringByCategory1()
