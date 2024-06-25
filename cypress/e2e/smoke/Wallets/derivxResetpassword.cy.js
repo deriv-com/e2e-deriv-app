@@ -10,13 +10,13 @@ function verifyDerivxCreation(accountType) {
     cy.get('div').contains('Create a Deriv X password').should('be.visible')
     cy.findByPlaceholderText('Deriv X password')
       .click()
-      .type(Cypress.env('mt5Password'))
+      .type(Cypress.env('cfdPassword'))
     cy.findByRole('button', { name: 'Create Deriv X password' }).click()
   } else {
     cy.get('div').contains('Enter your Deriv X password').should('be.visible')
     cy.findByPlaceholderText('Deriv X password')
       .click()
-      .type(Cypress.env('mt5Password'))
+      .type(Cypress.env('cfdPassword'))
     cy.findByRole('button', { name: 'Add account' }).click()
   }
 }
@@ -82,7 +82,7 @@ function changeDerivxPassword(device) {
   cy.get('div').contains('Create a new Deriv X password').should('be.visible')
   cy.findByPlaceholderText('Deriv X password')
     .click()
-    .type(Cypress.env('mt5Password'))
+    .type(Cypress.env('cfdPassword'))
   cy.findByRole('button', { name: 'Create' }).click()
 }
 function verifyChangePasswordSuccess() {

@@ -366,6 +366,7 @@ module.exports = defineConfig({
     qaBoxLoginPassword: process.env.E2E_QABOX_PASSWORD,
     qaBOEndpoint: process.env.BO_ENDPOINT,
     mt5BaseUrl: process.env.E2E_MT5_BASEURL,
+    cfdPassword: process.env.E2E_MT5_PASSWORD,
     configServer: process.env.E2E_CONFIG_SERVER,
     configAppId: process.env.E2E_CONFIG_APPID,
     doughflowConfigServer: process.env.E2E_DOUGHFLOW_CONFIG_SERVER,
