@@ -97,7 +97,9 @@ describe('WALL-2830 - Crypto withdrawal send email', () => {
 
   size.forEach((size) => {
     it(`should be able to send withdrawal verification link on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
-      cy.c_login({ user: 'walletloginEmail' })
+      cy.c_login({
+        user: `walletloginEmail${size === 'small' ? 'Mobile' : ''}`,
+      })
 
       cy.log('Send Crypto Withdrawal Verification')
       cy.c_visitResponsive('/', size)
@@ -113,7 +115,9 @@ describe('QATEST-98698 - Crypto withdrawal content access from email', () => {
 
   size.forEach((size) => {
     it(`should be able to access crypto withdrawal content and perform withdrawal on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
-      cy.c_login({ user: 'walletloginEmail' })
+      cy.c_login({
+        user: `walletloginEmail${size === 'small' ? 'Mobile' : ''}`,
+      })
 
       cy.log('Access Crypto Withdrawal Content Through Email Link')
       cy.c_visitResponsive('/', size)
