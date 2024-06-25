@@ -45,30 +45,25 @@ function verifyEmailandPerformWithdraw(size) {
     cy.findByText('Your Bitcoin cryptocurrency wallet address').click().type(
       '1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71' //Example bitcoin wallet address
     )
+
+    // try entering a value which is too big to prompt the amount range message to ppear on page
     cy.findByText('Amount (BTC)').click().type('0.005')
 
-    cy.get('.wallets-textfield__message-container')
-      .eq(1)
-      .invoke('text')
-      .then(($text) => {
-        cy.log($text)
-        if ($text != '') {
-          cy.get('.wallets-textfield__message-container')
-            .invoke('text')
-            .then((text) => {
-              var fullText = text
-              var pattern = /[0-9]+/g
-              var number = fullText.match(pattern)
-              console.log(number)
-              cy.findByTestId('dt_withdrawal_crypto_amount_input')
-                .click()
-                .clear()
-              cy.findByTestId('dt_withdrawal_crypto_amount_input')
-                .click()
-                .type('0.' + number[1])
-            })
-        }
-      })
+    // find the amount range message and use the lower bound as the amount
+    cy.contains('The current allowed withdraw amount is').then(($el) => {
+      const text = $el.text()
+      cy.log(text)
+      if (text != '') {
+        var fullText = text
+        var pattern = /[0-9]+/g
+        var number = fullText.match(pattern)
+        console.log(number)
+        cy.findByTestId('dt_withdrawal_crypto_amount_input')
+          .click()
+          .clear()
+          .type('0.' + number[1])
+      }
+    })
 
     cy.get('form').findByRole('button', { name: 'Withdraw' }).click()
 
@@ -101,6 +96,7 @@ describe('QATEST-98698 - Crypto withdraw success', () => {
 
       cy.c_visitResponsive('/', size)
       cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+
       sendWithdrawEmail(size)
     })
 
@@ -109,6 +105,7 @@ describe('QATEST-98698 - Crypto withdraw success', () => {
 
       cy.c_visitResponsive('/', size)
       cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+
       verifyEmailandPerformWithdraw(size)
     })
   })
