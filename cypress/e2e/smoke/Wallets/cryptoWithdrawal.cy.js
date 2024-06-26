@@ -47,7 +47,7 @@ function verifyEmailandPerformWithdraw(size) {
     )
 
     // try entering a value which is too big to prompt the amount range message to ppear on page
-    cy.findByText('Amount (BTC)').click().type('0.005')
+    cy.findByText('Amount (BTC)').click().type('0')
 
     // find the amount range message and use the lower bound as the amount
     cy.contains('The current allowed withdraw amount is').then(($el) => {
