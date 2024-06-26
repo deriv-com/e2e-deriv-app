@@ -67,14 +67,15 @@ export const generateCPFNumber = () => {
  * const fakeName = generateRandomName({ fakeProfile: true });  // Generate a fake profile name (no vowels)
  * console.log(fakeName); // e.g., "BcDfGhJk"
  */
-const VOWELS = new Set('aeiouAEIOU')
-const ALL_CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-const CONSONANTS = ALL_CHARACTERS.split('')
-  .filter((char) => !VOWELS.has(char))
+const vowels = new Set('aeiouAEIOU')
+const allChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+const consonants = allChars
+  .split('')
+  .filter((char) => !vowels.has(char))
   .join('')
 
 export function generateRandomName({ fakeProfile = false, length = 8 } = {}) {
-  const characters = fakeProfile ? CONSONANTS : ALL_CHARACTERS
+  const characters = fakeProfile ? consonants : allChars
   return Array.from(
     { length },
     () => characters[Math.floor(Math.random() * characters.length)]
