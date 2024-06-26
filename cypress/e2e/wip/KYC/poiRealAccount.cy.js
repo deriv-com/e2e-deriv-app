@@ -44,7 +44,7 @@ describe('QATEST-149355 POI through real account creation', () => {
     cy.findAllByTestId('dti_list_item').eq(0).click()
     cy.get('.dc-checkbox__box').click({ multiple: true })
     cy.findByRole('button', { name: /Add account/i }).click()
-    // Close the popup
+    // Close the success popup
     cy.findByRole('button', { name: /Maybe later/i }).click()
 
     // Go to POI and Make assertions
