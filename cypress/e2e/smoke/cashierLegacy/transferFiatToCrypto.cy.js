@@ -1,59 +1,68 @@
 import { derivApp } from '../../../support/locators'
 
 const toAccount = {
-  type: 'Deriv MT5',
-  subType: 'Derived',
-  jurisdiction: 'SVG',
-  fullJurisdiction: 'St. Vincent & Grenadines',
-  name: 'Derived SVG',
-  code: 'USD',
-  delta: 1.0, // needed for approximately equal to
-  accurateDelta: 0.5, // this is to match exact exchangerate
+  type: 'Cryptocurrencies',
+  name: 'Bitcoin',
+  code: 'BTC',
+  delta: 0.0001, // needed for approximately equal to
+  largeValueDelta: 0.001,
+  accurateDelta: 0.0000001, // this for BTc to match exact exchangerate
 }
 const fromAccount = {
   type: 'Fiat currencies',
-  name: 'Euro',
-  code: 'EUR',
-  delta: 0.01, // needed for approximately equal to
+  name: 'US Dollar',
+  code: 'USD',
+  delta: 1, // needed for approximately equal to
+  largeValueDelta: 5,
+  accuratedelta: 0.5, // needed for approximately equal to
 }
 const amountToTransfer = 10.0
 
-const screenSizes = ['desktop', 'small']
+const screenSizes = ['large', 'small']
 
 screenSizes.forEach((screenSize) => {
-  describe(`QATEST-34982 - Transfer: Perform Transfer from Fiat non-USD to MT5 in screen size: ${screenSize}`, () => {
+  describe(`QATEST-20036 - Transfer: Enter USD amount when Transfer Fiat to Crypto in screen size: ${screenSize}`, () => {
     beforeEach(() => {
       cy.clearAllSessionStorage()
-      cy.c_login({ user: 'cashierLegacyNonUSD', rateLimitCheck: true })
+      cy.c_login({ user: 'cashierLegacy', rateLimitCheck: true })
       cy.c_visitResponsive('appstore/traders-hub', screenSize, {
         rateLimitCheck: true,
+        skipPassKeys: true,
       })
       if (screenSize == 'small') {
-        cy.findByRole('button', { name: 'CFDs' }).should('be.visible')
+        cy.findByRole('button', { name: 'Options' }).should('be.visible')
       } else {
-        cy.findByText('CFDs').should('be.visible')
+        cy.findByText('Options').should('be.visible')
       }
+      cy.c_loadingCheck()
       cy.c_closeNotificationHeader()
       cy.c_verifyActiveCurrencyAccount(fromAccount, { closeModalAtEnd: false })
-      cy.c_getCurrencyBalance(fromAccount, { modalAlreadyOpened: true })
-
-      if (screenSize == 'small') {
-        cy.findByRole('button', { name: 'CFDs' }).click()
-      }
-      cy.c_checkMt5AccountExists(toAccount)
+      cy.c_checkCurrencyAccountExists(toAccount, {
+        modalAlreadyOpened: true,
+        closeModalAtEnd: false,
+      })
       cy.then(() => {
         if (
-          sessionStorage.getItem(
-            `c_is${toAccount.subType}${toAccount.jurisdiction}AccountCreated`
-          ) == 'false'
+          sessionStorage.getItem(`c_is${toAccount.code}AccountCreated`) ==
+          'false'
         ) {
-          cy.c_createNewMt5Account(toAccount, { size: screenSize })
+          cy.c_createNewCurrencyAccount(toAccount, { size: screenSize })
+        } else if (
+          sessionStorage.getItem(`c_is${toAccount.code}AccountCreated`) ==
+          'true'
+        ) {
+          cy.c_closeModal()
         }
       })
-      cy.c_closeNotificationHeader()
-      cy.c_getMt5AccountBalance(toAccount)
+      cy.c_getCurrencyBalance(fromAccount, { closeModalAtEnd: false })
+      cy.c_getCurrencyBalance(toAccount, {
+        modalAlreadyOpened: true,
+        closeModalAtEnd: false,
+      })
+      cy.c_selectCurrency(fromAccount, { modalAlreadyOpened: true })
+      cy.c_getCurrentCurrencyBalance()
     })
-    it(`should transfer amount from Non USD Fiat to MT5 account.`, () => {
+    it(`should transfer amount from Fiat to Crypto account.`, () => {
       cy.c_visitResponsive('/cashier/account-transfer/', screenSize, {
         rateLimitCheck: true,
       })
@@ -78,19 +87,23 @@ screenSizes.forEach((screenSize) => {
         derivApp.commonPage.mobileLocators.sideMenu.sidePanel().within(() => {
           derivApp.commonPage.mobileLocators.sideMenu.tradersHubButton().click()
         })
+        cy.c_rateLimit()
+        cy.findByRole('button', { name: 'Options' }).should('be.visible')
       } else {
         derivApp.commonPage.desktopLocators.header.tradersHubButton().click()
-        cy.findByText('CFDs').should('be.visible')
+        cy.c_rateLimit()
+        cy.findByText('Options').should('be.visible')
       }
+      cy.c_checkTotalAssetSummary()
       cy.get('.currency-switcher-container').within(() => {
         cy.findByTestId('dt_balance_text_container').should('be.visible')
       })
-      cy.c_getCurrencyBalance(fromAccount, { closeModalAtEnd: true })
+      cy.c_getCurrencyBalance(fromAccount, { closeModalAtEnd: false })
+      cy.c_getCurrencyBalance(toAccount, {
+        modalAlreadyOpened: true,
+        closeModalAtEnd: false,
+      })
       cy.c_getCurrentCurrencyBalance()
-      if (screenSize == 'small') {
-        cy.findByRole('button', { name: 'CFDs' }).should('be.visible').click()
-      }
-      cy.c_getMt5AccountBalance(toAccount)
 
       cy.then(() => {
         const currentCurrencyBalance = parseFloat(
@@ -98,34 +111,16 @@ screenSizes.forEach((screenSize) => {
             .getItem(`c_currentCurrencyBalance`)
             .replace(/[^\d.]/g, '')
         )
-        const currentBalanceFromAccount =
-          fromAccount.type == 'Deriv MT5'
-            ? parseFloat(
-                sessionStorage
-                  .getItem(
-                    `c_balance${fromAccount.subType}${fromAccount.jurisdiction}`
-                  )
-                  .replace(/[^\d.]/g, '')
-              )
-            : parseFloat(
-                sessionStorage
-                  .getItem(`c_balance${fromAccount.code}`)
-                  .replace(/[^\d.]/g, '')
-              )
-        const currentBalanceToAccount =
-          toAccount.type == 'Deriv MT5'
-            ? parseFloat(
-                sessionStorage
-                  .getItem(
-                    `c_balance${toAccount.subType}${toAccount.jurisdiction}`
-                  )
-                  .replace(/[^\d.]/g, '')
-              )
-            : parseFloat(
-                sessionStorage
-                  .getItem(`c_balance${toAccount.code}`)
-                  .replace(/[^\d.]/g, '')
-              )
+        const currentBalanceFromAccount = parseFloat(
+          sessionStorage
+            .getItem(`c_balance${fromAccount.code}`)
+            .replace(/[^\d.]/g, '')
+        )
+        const currentBalanceToAccount = parseFloat(
+          sessionStorage
+            .getItem(`c_balance${toAccount.code}`)
+            .replace(/[^\d.]/g, '')
+        )
         const estimatedFromAccountBalance = parseFloat(
           sessionStorage.getItem('c_expectedFromAccountBalance')
         )

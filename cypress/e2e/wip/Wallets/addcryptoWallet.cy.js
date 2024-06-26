@@ -1,3 +1,4 @@
+// This test needs fresh account each time
 function addcryptowallet(platform) {
   cy.get('.wallets-add-more__carousel-wrapper')
     .find('button')
@@ -83,6 +84,7 @@ describe('QATEST-98773 - Add crypto wallet account', () => {
   })
   it('should be able to add more wallets in Responsive', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.c_skipPasskeysV2()
     addcryptowallet('mobile')
   })
 })

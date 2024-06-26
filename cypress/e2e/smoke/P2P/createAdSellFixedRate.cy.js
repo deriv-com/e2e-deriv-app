@@ -57,7 +57,7 @@ describe('QATEST-2425 - Create a Sell type Advert - Fixed Rate', () => {
       cy.findByTestId('dt_payment_method_card_add_icon')
         .should('be.visible')
         .click()
-      cy.c_addPaymentMethod(paymentID, paymentName)
+      cy.c_addPaymentMethod(paymentID, paymentName, 'fixed')
       cy.findByText(paymentID)
         .should('exist')
         .parent()

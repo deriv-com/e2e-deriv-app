@@ -46,7 +46,9 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
     })
     cy.c_clickMyAdTab()
     cy.c_createNewAd('sell')
-    cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Sell', 'float')
+    cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Sell', 'float', {
+      paymentMethod: 'Skrill',
+    })
   })
   it('Should be able to place an order for advert and verify all fields and messages for floating rate.', () => {
     cy.c_navigateToP2P()
@@ -95,10 +97,9 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
     cy.findByText('Orders').should('be.visible').click()
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
-      isLanguageTest: true,
       maxRetries: 5,
     })
-    cy.c_confirmSellOrder(nicknameAndAmount)
+    cy.c_confirmOrder(nicknameAndAmount, 'buy')
     cy.c_giveRating('buyer')
     cy.findByText('Completed').should('be.visible')
     cy.findByTestId('dt_mobile_full_page_return_icon')
@@ -106,6 +107,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       .click()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
+
     cy.c_getProfileBalance().then((balance) => {
       nicknameAndAmount.sellerBalanceAfterSelling = balance
     })
@@ -114,7 +116,8 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
         nicknameAndAmount.sellerBalanceBeforeSelling,
         nicknameAndAmount.sellerBalanceAfterSelling,
         maxOrder,
-        'buyer'
+        'buyer',
+        'buy'
       )
     })
   })
@@ -130,7 +133,8 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
         nicknameAndAmount.buyerBalanceBeforeBuying,
         nicknameAndAmount.buyerBalanceAfterBuying,
         maxOrder,
-        'seller'
+        'seller',
+        'buy'
       )
     })
     cy.findByText('Orders').should('be.visible').click()

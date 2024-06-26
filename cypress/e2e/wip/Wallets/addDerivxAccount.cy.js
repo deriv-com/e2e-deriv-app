@@ -1,3 +1,4 @@
+// This test needs fresh account each time
 function clickAddDerivxButton() {
   cy.get('.wallets-available-dxtrade__icon')
     .parent('.wallets-trading-account-card')
@@ -88,6 +89,7 @@ describe('QATEST-98821 - Add demo derivx account and QATEST-98824 add real deriv
     cy.log('add derivx account')
     cy.c_login({ user: 'walletloginEmailMobile' })
     cy.c_visitResponsive('/', 'small')
+    cy.c_skipPasskeysV2()
     existingAccountCheck('.wallets-card__details-bottom').then((status) => {
       addDerivXaccount(status, 'Real')
     })
