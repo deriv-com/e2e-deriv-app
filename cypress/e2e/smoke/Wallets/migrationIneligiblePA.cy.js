@@ -20,6 +20,8 @@ describe('QATEST-154043 - Client with USD more than 3 months & Payment agent', (
   })
   it('Client with USD more than 3 months & PA should not see  Wallets - Enable now banner - Responsive', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
+    cy.c_skipPasskeysV2()
     cy.c_checkForBanner()
     cy.findByText('US Dollar').should('be.visible')
     cy.get('#dt_mobile_drawer_toggle').should('be.visible').click()
@@ -42,6 +44,7 @@ describe('QATEST-154263 - Client with USD more than 3 months & used PA in recent
   })
   it('Responsive - Should not see  Wallets - Enable now banner', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
     cy.c_skipPasskeysV2()
     cy.c_checkForBanner('Deriv Trader', 'Deriv GO')
   })
