@@ -94,7 +94,7 @@ describe('QATEST-141444 Fiat to Cryptpo wallet transfer and QATEST-98808 - View 
   it('should be able to perform transfer from fiat account in responsive', () => {
     cy.log('Transfer from Fiat account')
     cy.c_visitResponsive('/', 'small')
-    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+    cy.c_WaitUntilPageIsLoaded()
     cy.c_skipPasskeysV2()
     cy.findByText('Transfer').parent().click()
     fiat_transfer('Options')
@@ -105,8 +105,8 @@ describe('QATEST-141444 Fiat to Cryptpo wallet transfer and QATEST-98808 - View 
   it('should be able to view transactions of fiat account in responsive', () => {
     cy.log('View Transactions of Fiat account')
     cy.c_visitResponsive('/', 'small')
+    cy.c_WaitUntilPageIsLoaded()
     cy.c_skipPasskeysV2()
-    cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
     cy.findByText('Transfer').parent().click()
     cy.findByText('Transactions').first().click()
     cy.findByTestId('dt_wallets_textfield_icon_right')

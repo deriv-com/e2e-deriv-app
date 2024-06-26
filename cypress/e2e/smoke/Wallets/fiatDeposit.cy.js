@@ -18,7 +18,7 @@ describe('QATEST-98805 - Fiat deposit iframe access', () => {
   it('should be able to access doughflow iframe in responsive', () => {
     cy.log('Access Fiat Deposit Iframe')
     cy.c_visitResponsive('/', 'small')
-    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+    cy.c_WaitUntilPageIsLoaded()
     cy.c_skipPasskeysV2()
     cy.findAllByText('Financial', { timeout: 10000 }).should('exist')
     cy.findByText('Deposit')
