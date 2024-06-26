@@ -1,9 +1,9 @@
-describe('Verify account_closure are triggered as transactional email', () => {
+describe('QATEST-162618 - Verify account_closure are triggered as transactional email', () => {
   beforeEach(() => {
     cy.c_createRealAccount()
     cy.c_login()
   })
-  it(`QATEST-162618 - Verify account_closure are triggered as transactional emails on Mobile`, () => {
+  it(`Verify account_closure are triggered as transactional emails on Mobile`, () => {
     cy.c_visitResponsive('account/closing-account')
     cy.findByRole('button', { name: 'Close my account' }).click()
     cy.findByText('I’m closing my account for other reasons.').click()
