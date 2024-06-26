@@ -14,7 +14,7 @@ const cryptoAccount = {
 const screenSizes = ['large', 'small']
 
 screenSizes.forEach((screenSize) => {
-  describe(`QATEST-20036 - Transfer: Enter USD amount when Transfer Fiat to Crypto in screen size: ${screenSize}`, () => {
+  describe(`QATEST-165256 - PA: Crypto Deposit screen should load fine for Payment Agent in screen size: ${screenSize}`, () => {
     beforeEach(() => {
       cy.clearAllSessionStorage()
       cy.c_login({ user: 'cashierLegacyPA' })
