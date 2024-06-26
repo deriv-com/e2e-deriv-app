@@ -1,5 +1,3 @@
-import { generateRandomName } from '../../../support/helper/utility'
-
 describe('QATEST-23015 - IDV POI Name Mismatch - Mobile view', () => {
   beforeEach(() => {
     cy.c_createRealAccount('ke')
@@ -11,8 +9,6 @@ describe('QATEST-23015 - IDV POI Name Mismatch - Mobile view', () => {
   it('Should return Name mismatch', () => {
     cy.get('select[name="document_type"]').select('National ID Number')
     cy.findByLabelText('Enter your document number').type('00000000')
-    cy.findByTestId('first_name').clear().type('Test Name')
-    cy.findByTestId('last_name').clear().type(`${generateRandomName()}`)
     cy.findByTestId('date_of_birth').type('2000-09-20')
 
     cy.findByRole('button', { name: 'Verify' }).should('be.disabled')
