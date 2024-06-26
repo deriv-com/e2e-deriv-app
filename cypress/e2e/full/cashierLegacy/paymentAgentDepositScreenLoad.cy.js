@@ -29,7 +29,7 @@ screenSizes.forEach((screenSize) => {
       cy.c_loadingCheck()
       cy.c_closeNotificationHeader()
     })
-    it(`should transfer amount from Fiat to Crypto account.`, () => {
+    it(`should verify deposit screen for crypto is loaded properly.`, () => {
       cy.c_verifyActiveCurrencyAccount(fiatAccount, { closeModalAtEnd: false })
       cy.c_checkCurrencyAccountExists(cryptoAccount, {
         modalAlreadyOpened: true,
