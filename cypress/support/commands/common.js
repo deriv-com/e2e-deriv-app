@@ -795,3 +795,9 @@ Cypress.Commands.add('c_visitBackOffice', () => {
   )
   cy.findByText('Please login.').click()
 })
+/* Command to go back to BO  while it has not logged you out*/
+Cypress.Commands.add('c_visitBackOfficeNoLogin', () => {
+  cy.visit(
+    `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
+  )
+})
