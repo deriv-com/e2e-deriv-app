@@ -57,11 +57,10 @@ screenSizes.forEach((screenSize) => {
           derivApp.commonPage.mobileLocators.sideMenu.cashierButton().click()
           derivApp.commonPage.mobileLocators.sideMenu.depositButton().click()
         })
-        cy.c_loadingCheck()
       } else {
         derivApp.commonPage.desktopLocators.header.cashierButton().click()
-        cy.c_loadingCheck()
       }
+      cy.c_loadingCheck()
       cy.findByText('Deposit via payment agents').should('be.visible')
       cy.findByText('Deposit cryptocurrencies')
         .should('be.visible')
