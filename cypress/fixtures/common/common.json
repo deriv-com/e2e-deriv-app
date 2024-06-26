@@ -14,5 +14,18 @@
             "title": "Inicio de sesión sin esfuerzo con claves de acceso",
             "maybeLaterBtn": "Quizás más tarde"
         }
+    },
+    "defaultVRDetails": {
+      "new_account_virtual": 1,
+      "type": "trading"
+    },
+    "defaultCRDetails": {
+        "new_account_real": 1,
+        "non_pep_declaration": 1,
+        "account_opening_reason": "Speculative"
+
+    },
+    "defaultMFDetails": {
+
     }
 }

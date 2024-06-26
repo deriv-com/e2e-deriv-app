@@ -1,4 +1,5 @@
 require('dotenv').config()
+const data = require('../../fixtures/common/common.json')
 
 const {
   emailGenerator,
@@ -23,8 +24,7 @@ const createAccountVirtual = async (
   try {
     if (!password) throw new Error(`Password not on file`)
     const response = await api.basic.newAccountVirtual({
-      new_account_virtual: 1,
-      type: 'trading',
+      ...data.defaultVRDetails,
       client_password: password,
       residence: country_code,
       verification_code: process.env.E2E_EMAIL_VERIFICATION_CODE,
@@ -49,15 +49,13 @@ const createAccountReal = async (api, country_code, currency) => {
     await api.account(oauthToken) // API authentication
 
     const clientDetails = {
-      new_account_real: 1,
-      non_pep_declaration: 1,
-      account_opening_reason: 'Speculative',
+      ...data.defaultCRDetails,
       currency: currency,
+      place_of_birth: country_code,
+      residence: country_code,
       first_name: 'Auto Gen',
       last_name: nameGenerator(),
       date_of_birth: '2000-09-20',
-      place_of_birth: country_code,
-      residence: country_code,
       phone: `+${numbersGenerator()}`,
       address_line_1: '20 Broadway Av',
       address_city: 'Cyber',
