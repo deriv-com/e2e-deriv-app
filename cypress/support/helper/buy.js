@@ -6,11 +6,11 @@ require('dotenv').config()
  * @param {*} priceProposalId
  * @returns Balance After The Contract Is Brought
  */
-const createBuyContract = async (api, priceProposalId) => {
+const createBuyContract = async (api, priceProposalId, priceProposalAmount) => {
   try {
     const buyContract = await api.basic.buy({
       buy: priceProposalId,
-      price: 100,
+      price: priceProposalAmount,
     })
     console.log(
       'The balance after buy contract is  : ',

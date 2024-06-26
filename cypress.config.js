@@ -169,7 +169,17 @@ module.exports = defineConfig({
           },
           async createPriceProposalTask() {
             try {
-              const price_proposal_id = await createPriceProposalID(api)
+              const price_proposal_id = await createPriceProposalID(
+                api,
+                process.env.E2E_PRICE_AMOUNT,
+                process.env.E2E_PRICE_PROPOSAL_BARRIER,
+                process.env.E2E_PRICE_PROPOSAL_BASIS,
+                process.env.E2E_PRICE_PROPOSAL_CONTRACT_TYPE,
+                process.env.E2E_PRICE_PROPOSAL_CURRENCY,
+                process.env.E2E_PRICE_PROPOSAL_DURATION,
+                process.env.E2E_PRICE_PROPOSAL_DURATION_UNIT,
+                process.env.E2E_PRICE_PROPOSAL_SYMBOL
+              )
               return price_proposal_id
             } catch (e) {
               console.error('Operation failed', e)
@@ -178,7 +188,11 @@ module.exports = defineConfig({
           },
           async createBuyContractTask(priceProposalID) {
             try {
-              const buy_id = await createBuyContract(api, priceProposalID)
+              const buy_id = await createBuyContract(
+                api,
+                priceProposalID,
+                process.env.E2E_PRICE_AMOUNT
+              )
               return buy_id
             } catch (e) {
               console.error('Operation failed', e)
@@ -418,10 +432,19 @@ module.exports = defineConfig({
     passkeyAppId: process.env.E2E_PASSKEY_APP_ID,
     trackingLink: process.env.E2E_TRACKING_LINK,
     trackingLinkToken: process.env.E2E_TRACKING_LINK_TOKEN,
-    actualEmail: process.env.E2E_LOGIN_EMAIL,
+    loginEmail: process.env.E2E_LOGIN_EMAIL,
     priceProposalResponse: process.env.E2E_PRICE_PROPOSAL_RESPONSE,
     priceProposalID: process.env.E2E_PRICE_PROPOSAL_ID,
     balanceAfterBuy: process.env.E2E_BUY_RESPONSE,
+    priceProposalCurrency: process.env.E2E_PRICE_PROPOSAL_CURRENCY,
+    priceProposalAmount: process.env.E2E_PRICE_AMOUNT,
+    priceProposalBarrier: process.env.E2E_PRICE_PROPOSAL_BARRIER,
+    priceProposalBasis: process.env.E2E_PRICE_PROPOSAL_BASIS,
+    priceProposalContractType: process.env.E2E_PRICE_PROPOSAL_CONTRACT_TYPE,
+    priceProposalDuration: process.env.E2E_PRICE_PROPOSAL_DURATION,
+    priceProposalDurationUnit: process.env.E2E_PRICE_PROPOSAL_DURATION_UNIT,
+    priceProposalSymbol: process.env.E2E_PRICE_PROPOSAL_SYMBOL,
+    newlyCreatedEmail: process.env.E2E_CREATED_NEW_EMAIL,
     countries: {
       ZA: 'South Africa',
       CO: 'Colombia',
