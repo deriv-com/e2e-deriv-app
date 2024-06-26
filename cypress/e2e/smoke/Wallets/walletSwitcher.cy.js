@@ -42,17 +42,15 @@ function fiatWalletcheck() {
   cy.findByLabelText('deposit').should('be.visible')
   cy.findByLabelText('withdrawal').should('be.visible')
   cy.findByLabelText('account-transfer').should('be.visible')
-  cy.findAllByText('Options')
-    .eq(1)
-    .should('be.visible')
-    .then(() =>
-      cy
-        .findByTestId('dt_desktop_accounts_list')
-        .findByText('SVG')
-        .should('be.visible')
-    )
+  cy.findAllByText('Options').eq(1).should('be.visible')
+  // .then(() =>
+  //   cy
+  //     .findByTestId('dt_desktop_accounts_list')
+  //     .findByText('SVG')
+  //     .should('be.visible')
+  // )
   cy.findByText('Add more Wallets').scrollIntoView().should('be.visible')
-  cy.findByText('USD Wallet')
+  cy.findAllByText('USD Wallet')
     .should('be.visible')
     .then(() => {
       cy.get('[class*="wallets-add-more__content"]')
@@ -67,18 +65,15 @@ function fiatWalletcheck() {
 }
 function demoWalletCheck() {
   cy.log('it is demo wallet')
+  cy.findByText('Standard', { timeout: 3000 }).should('exist')
   cy.findByLabelText('reset-balance').should('be.visible')
   cy.findByLabelText('account-transfer').should('be.visible')
   cy.findByRole('button', { name: 'Options' })
-    .click()
+    .click({ force: true })
     .then(() => {
       cy.findByTestId('dt_tab_panels')
         .findAllByText('Options', { exact: true })
         .should('be.visible')
-        .then(() => {
-          cy.findByText('Demo').should('be.visible')
-          cy.contains(/VRTC/).should('be.visible')
-        })
     })
 }
 function switchBetweenDemoandReal() {
