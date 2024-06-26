@@ -60,6 +60,7 @@ describe('QATEST-129858 -  Validate account switcher ', () => {
 
   it('Responsive - Navigate to account switcher from Trade page &  Manage account settings page', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
     cy.c_skipPasskeysV2()
     cy.findByText('Options').click()
     goToAcctSwitcherFromTradepage('Mobile')

@@ -56,12 +56,14 @@ describe('QATEST-98781 - Crypto deposit and fiat onramp', () => {
   })
   it('should be able to view crypto deposit details in responsive', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
     cy.c_skipPasskeysV2()
     performCryptoDeposit('mobile')
   })
 
   it('should be able to deposit into crypto account through fiat onramp in responsive', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
     cy.c_skipPasskeysV2()
     performCryptoDepositFiatonRamp('mobile')
   })

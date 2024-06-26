@@ -95,6 +95,7 @@ describe('QATEST-141444 Fiat to Cryptpo wallet transfer and QATEST-98808 - View 
     cy.log('Transfer from Fiat account')
     cy.c_visitResponsive('/', 'small')
     cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+    cy.c_skipPasskeysV2()
     cy.findByText('Transfer').parent().click()
     fiat_transfer('Options')
     fiat_transfer('BTC Wallet')
