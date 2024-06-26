@@ -3,7 +3,6 @@ describe('QATEST-4785 High risk onfido supported country.', () => {
   beforeEach(() => {
     cy.c_createRealAccount('co')
     cy.c_login()
-    cy.findByTestId('dt_traders_hub').should('be.visible')
     cy.c_navigateToPoiResponsive('Colombia')
   })
 
@@ -44,6 +43,9 @@ describe('QATEST-4785 High risk onfido supported country.', () => {
     cy.get('select[name="client_aml_risk_classification"]')
       .select('High')
       .type('{enter}')
+    cy.get('input[name="tax_identification_number"]')
+      .type('2353553')
+      .type('{enter}')
     /* No cashier lock in BO */
     cy.get('#card__content table tbody tr td b Withdrawal Locked').should(
       'not.exist'
@@ -59,6 +61,9 @@ describe('QATEST-4785 High risk onfido supported country.', () => {
       Should ask for FA 
       */
     cy.c_visitResponsive('/', 'small')
+    cy.findByText('Proof of address required', { timeout: 30000 }).should(
+      'exist'
+    )
     cy.c_closeNotificationHeader()
     cy.findByRole('button', { name: 'CFDs' }).click()
     cy.findByTestId('dt_trading-app-card_real_standard')
@@ -72,8 +77,12 @@ describe('QATEST-4785 High risk onfido supported country.', () => {
       { force: true }
     )
     cy.findByRole('button', { name: 'Continue' }).click()
+    cy.get('#dt_components_select-native_select-tag').eq(0).select('Colombia')
+    cy.get('#dt_components_select-native_select-tag').eq(1).select('Colombia')
+
     cy.get('#dt_components_select-native_select-tag').select('Colombia')
-    cy.get('.dc-checkbox__box').click()
+    //cy.get('#dt_components_select-native_select-tag').last().select('Colombia')
+
     cy.findByTestId('dt_cfd_financial_stp_modal_body')
       .contains('button', 'Next')
       .click()
