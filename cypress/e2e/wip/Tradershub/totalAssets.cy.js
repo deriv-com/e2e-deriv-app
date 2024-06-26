@@ -20,7 +20,7 @@ const createDemoAccounts = (isMobile = false) => {
   cy.findByRole('button', { name: 'Create Deriv MT5 password' }).click()
   cy.get('.dc-modal-body').should(
     'contain.text',
-    'Success!Your demo Standard account is ready'
+    'Success!Your demo Deriv MT5 Standard account is ready'
   )
   cy.findByRole('button', { name: 'Continue' }).click()
 
