@@ -56,7 +56,7 @@ describe('QATEST-109419: Run custom strategy Even Odd', () => {
         botDashboard.deleteStrategyButtonMobile.click()
       } else {
         botDashboard.goToDashboard()
-        botDashboard.deleteStrategyButtonDekstop.click()
+        botDashboard.deleteStrategyButtonDesktop.click()
       }
       botDashboard.deleteModalConfirm.click({ force: true })
     })

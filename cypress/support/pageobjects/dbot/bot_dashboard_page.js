@@ -8,7 +8,7 @@ class BotDashboard {
     return cy.get('.tab__dashboard__table input[type=file]')
   }
 
-  get deleteStrategyButtonDekstop() {
+  get deleteStrategyButtonDesktop() {
     return cy.findAllByTestId('dt_desktop_bot_list_action-delete')
   }
 
@@ -24,7 +24,7 @@ class BotDashboard {
     return cy.findAllByTestId('dt_mobile_bot_list_action-open')
   }
 
-  get openStrategyButtonDekstop() {
+  get openStrategyButtonDesktop() {
     return cy.findAllByTestId('dt_desktop_bot_list_action-open')
   }
 
@@ -71,7 +71,7 @@ class BotDashboard {
    */
   deleteStrategy = () => {
     this.goToDashboard()
-    this.deleteStrategyButtonDekstop.click()
+    this.deleteStrategyButtonDesktop.click()
     this.deleteModalConfirm.click({ force: true })
   }
 
