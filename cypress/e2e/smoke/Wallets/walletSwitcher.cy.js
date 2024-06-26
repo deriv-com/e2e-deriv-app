@@ -43,12 +43,6 @@ function fiatWalletcheck() {
   cy.findByLabelText('withdrawal').should('be.visible')
   cy.findByLabelText('account-transfer').should('be.visible')
   cy.findAllByText('Options').eq(1).should('be.visible')
-  // .then(() =>
-  //   cy
-  //     .findByTestId('dt_desktop_accounts_list')
-  //     .findByText('SVG')
-  //     .should('be.visible')
-  // )
   cy.findByText('Add more Wallets').scrollIntoView().should('be.visible')
   cy.findAllByText('USD Wallet')
     .should('be.visible')

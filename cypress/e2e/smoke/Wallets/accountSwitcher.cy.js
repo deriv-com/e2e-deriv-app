@@ -58,7 +58,7 @@ describe('QATEST-129858 -  Validate account switcher ', () => {
     validateAccountSwitcher('.account-switcher-wallet__looking-for-cfds')
   })
 
-  it.only('Responsive - Navigate to account switcher from Trade page &  Manage account settings page', () => {
+  it('Responsive - Navigate to account switcher from Trade page &  Manage account settings page', () => {
     cy.c_visitResponsive('/', 'small')
     cy.c_WaitUntilPageIsLoaded()
     cy.c_skipPasskeysV2()
