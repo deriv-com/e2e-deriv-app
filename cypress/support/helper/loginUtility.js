@@ -154,10 +154,14 @@ export function getOAuthUrl(callback, loginEmail, loginPassword) {
           })
         })
       } else {
-        cy.log('Already Authorized')
         const oAuthUrl = response.headers['location']
         cy.log('oAuthUrl: ' + oAuthUrl)
-        callback(oAuthUrl)
+        if (oAuthUrl) {
+          cy.log('User Authorized')
+          callback(oAuthUrl)
+        } else {
+          throw new Error('Authorization failed. Verify the credentials')
+        }
       }
     })
   })
@@ -193,4 +197,22 @@ export function generateRandomName() {
     result += characters.charAt(Math.floor(Math.random() * charactersLength))
   }
   return result
+}
+
+export const setLoginUser = (user = 'masterUser', options = {}) => {
+  const { backEndProd = false } = options
+  if (
+    Cypress.config().baseUrl == Cypress.env('prodURL') ||
+    backEndProd == true
+  ) {
+    return {
+      loginEmail: Cypress.env('credentials').production[`${user}`].ID,
+      loginPassword: Cypress.env('credentials').production[`${user}`].PSWD,
+    }
+  } else {
+    return {
+      loginEmail: Cypress.env('credentials').test[`${user}`].ID,
+      loginPassword: Cypress.env('credentials').test[`${user}`].PSWD,
+    }
+  }
 }

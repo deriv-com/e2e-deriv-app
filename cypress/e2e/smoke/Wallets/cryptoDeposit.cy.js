@@ -1,5 +1,5 @@
 function performCryptoDeposit(platform) {
-  cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+  cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
   if (`${platform}` == `mobile`) {
     cy.contains('Deposit', { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccountResponsive('BTC')
@@ -19,7 +19,7 @@ function performCryptoDeposit(platform) {
 }
 
 function performCryptoDepositFiatonRamp(platform) {
-  cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+  cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
   if (`${platform}` == `mobile`) {
     cy.contains('Deposit', { timeout: 10000 }).should('exist')
     cy.c_switchWalletsAccountResponsive('BTC')

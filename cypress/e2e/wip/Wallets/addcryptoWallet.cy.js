@@ -1,3 +1,4 @@
+// This test needs fresh account each time
 function addcryptowallet(platform) {
   cy.get('.wallets-add-more__carousel-wrapper')
     .find('button')

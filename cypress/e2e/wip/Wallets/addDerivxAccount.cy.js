@@ -1,3 +1,4 @@
+// This test needs fresh account each time
 function clickAddDerivxButton() {
   cy.get('.wallets-available-dxtrade__icon')
     .parent('.wallets-trading-account-card')
