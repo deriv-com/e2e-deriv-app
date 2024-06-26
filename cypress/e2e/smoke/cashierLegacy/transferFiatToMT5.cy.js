@@ -55,7 +55,7 @@ screenSizes.forEach((screenSize) => {
       cy.c_closeNotificationHeader()
       cy.c_getMt5AccountBalance(toAccount)
     })
-    it(`should transfer amount from Non USD Fiat to MT5 account.`, () => {
+    it(`should transfer amount from USD Fiat to MT5 account.`, () => {
       cy.c_visitResponsive('/cashier/account-transfer/', screenSize, {
         rateLimitCheck: true,
       })
