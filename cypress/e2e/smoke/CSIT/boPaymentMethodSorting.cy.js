@@ -27,7 +27,6 @@ function checkAndCreatePM3() {
 function verifyFilteringByCategory1() {
   cy.get('input[name="show_all"]').check()
   cy.get('[name="methods_sort_option"]').select('Category')
-  //cy.get('option').contains('Category').click()
   cy.get('input[name="filter_by"]').type('Category1')
   cy.findByRole('button', { name: 'Search' }).click()
   cy.findByRole('cell', { name: 'Category1' }).should('be.visible')
