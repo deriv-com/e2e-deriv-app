@@ -47,18 +47,8 @@ describe('QATEST-109419: Run custom strategy Even Odd', () => {
           cy.c_checkRunPanel(true)
         })
       })
-
       //delete the uploaded strategy
-      if (isMobile) {
-        botDashboard.drawerToggleMobile.click({ force: true })
-        botDashboard.goToDashboard()
-        botDashboard.moreActionButton.click({ force: true })
-        botDashboard.deleteStrategyButtonMobile.click()
-      } else {
-        botDashboard.goToDashboard()
-        botDashboard.deleteStrategyButtonDesktop.click()
-      }
-      botDashboard.deleteModalConfirm.click({ force: true })
+      cy.c_deleteStrategy(isMobile)
     })
   })
 })

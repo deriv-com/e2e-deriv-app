@@ -54,6 +54,6 @@ describe('QATEST-99419: Import and run custom strategy', () => {
   })
 
   after(() => {
-    botDashboard.deleteStrategy()
+    cy.c_deleteStrategy()
   })
 })

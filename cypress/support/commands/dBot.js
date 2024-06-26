@@ -60,3 +60,17 @@ Cypress.Commands.add('c_openDbotThub', () => {
     .click({ force: true })
   cy.c_loadingCheck()
 })
+
+Cypress.Commands.add('c_deleteStrategy', (isMobile) => {
+  if (isMobile) {
+    cy.get('.dc-drawer__toggle').click({ force: true })
+    cy.findAllByText('Dashboard', { timeout: 7000 }).click()
+    cy.get('.bot-list__item__actions', { timeout: 7000 }).click()
+    // cy.get('.bot-list__item__responsive').should('have.class' , 'bot-list__item__responsive--active')
+    cy.findByTestId('dt_mobile_bot_list_action-delete').click()
+  } else {
+    cy.findAllByText('Dashboard', { timeout: 7000 }).click()
+    cy.findByTestId('dt_desktop_bot_list_action-delete').click()
+  }
+  cy.findByText('Yes, delete').click({ force: true })
+})
