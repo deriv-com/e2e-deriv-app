@@ -1217,40 +1217,37 @@ Cypress.Commands.add(
   }
 )
 
-Cypress.Commands.add(
-  'c_addSellOrderDetails',
-  (options) => {
+Cypress.Commands.add('c_addSellOrderDetails', (options) => {
   const {
-  paymentMethod = '',
-  amount = '',
-  rate='',
-  min='',
-  max='',
-  rateType=''
-  }=options
-    cy.get(':nth-child(2) > .dc-radio-group__circle').click()
-    cy.findByTestId('offer_amount').click().type(amount)
-    cy.findByTestId('fixed_rate_type').type(rate)
-    cy.findByTestId('min_transaction').click().type(min)
-    cy.findByTestId('max_transaction').click().type(max)
-    cy.findByTestId('contact_info').click().type('Test')
-    cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
-    cy.get('body', { timeout: 10000 }).then((body) => {
-      if (body.find(paymentMethod, { timeout: 10000 }).length > 0) {
-        cy.contains(paymentMethod).click()
-      } else {
-        cy.findByTestId('dt_payment_method_card_add_icon')
-          .should('be.visible')
-          .click()
-        cy.get('input[name="payment_method"]').click()
-        cy.c_addPaymentMethod(paymentID, paymentMethod, rateType)
-        cy.contains(paymentMethod).click()
-      }
-    })
-    cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
-    cy.c_verifyPostAd()
-  }
-)
+    paymentMethod = '',
+    amount = '',
+    rate = '',
+    min = '',
+    max = '',
+    rateType = '',
+  } = options
+  cy.get(':nth-child(2) > .dc-radio-group__circle').click()
+  cy.findByTestId('offer_amount').click().type(amount)
+  cy.findByTestId('fixed_rate_type').type(rate)
+  cy.findByTestId('min_transaction').click().type(min)
+  cy.findByTestId('max_transaction').click().type(max)
+  cy.findByTestId('contact_info').click().type('Test')
+  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+  cy.get('body', { timeout: 10000 }).then((body) => {
+    if (body.find(paymentMethod, { timeout: 10000 }).length > 0) {
+      cy.contains(paymentMethod).click()
+    } else {
+      cy.findByTestId('dt_payment_method_card_add_icon')
+        .should('be.visible')
+        .click()
+      cy.get('input[name="payment_method"]').click()
+      cy.c_addPaymentMethod(paymentID, paymentMethod, rateType)
+      cy.contains(paymentMethod).click()
+    }
+  })
+  cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+  cy.c_verifyPostAd()
+})
 
 Cypress.Commands.add(
   'c_editAdAndVerify',
