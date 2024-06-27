@@ -87,7 +87,7 @@ Cypress.Commands.add('c_checkForBanner', () => {
   cy.findByText('Enjoy seamless transactions').should('not.exist')
 })
 
-Cypress.Commands.add('c_setupTradeAccount', (wallet) => {
+Cypress.Commands.add('c_setupTradeAccount', (wallet, requireNew = true) => {
   cy.c_switchWalletsAccount(wallet)
   cy.findByRole('button', { name: 'Get' })
     .should(() => {})
@@ -103,6 +103,12 @@ Cypress.Commands.add('c_setupTradeAccount', (wallet) => {
         cy.findByTestId('dt_themed_scrollbars')
           .findByText("Trader's Hub")
           .should('be.visible')
+      } else {
+        if (requireNew) {
+          cy.fail('Trading account already added')
+        } else {
+          cy.log('Trading account already added')
+        }
       }
     })
 })

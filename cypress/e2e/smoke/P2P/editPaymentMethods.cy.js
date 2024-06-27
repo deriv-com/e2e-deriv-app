@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import { generateAccountNumberString } from '../../../support/helper/utility'
 
 let paymentName = 'Bank Transfer'
@@ -51,7 +50,7 @@ describe('QATEST-2831 - My Profile page - Edit Payment Method', () => {
       .should('be.visible')
       .and('contain.text', 'Add')
       .click()
-    cy.c_addPaymentMethod(paymentID, paymentName)
+    cy.c_addPaymentMethod(paymentID, paymentName, 'fixed')
     cy.findByText(paymentID)
       .should('exist')
       .parent()

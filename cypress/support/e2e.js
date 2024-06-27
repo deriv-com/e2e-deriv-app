@@ -1,10 +1,16 @@
-import './commands/index'
-import 'cypress-mailisk'
+import '@testing-library/cypress/add-commands'
 import 'cypress-iframe'
+import 'cypress-mailisk'
 import 'cypress-xpath'
 import jsQR from 'jsqr'
+import './commands/index'
 // Expose jsQR globally
 Cypress.jsQR = jsQR
+
+beforeEach(() => {
+  //Disable logging xhr and fetch requests
+  cy.intercept({ resourceType: /xhr|fetch/ }, { log: false })
+})
 
 before(() => {
   if (Cypress.env('runFromPR') != 'true') return

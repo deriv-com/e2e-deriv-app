@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 function verifyOnePaymentMethod(orderTab, PM1, NonSelectedPM) {
   cy.findByRole('button', { name: orderTab }).click()
   const buttonText = orderTab === 'Sell' ? 'Sell USD' : 'Buy USD'
@@ -36,11 +34,25 @@ function verifyAllPaymentMethod(orderTab, PM1, PM2) {
 }
 
 function addOrderWithPM() {
-  cy.c_addSellOrderDetails('Other', '10', '0.1', '1', '2')
+  cy.c_addSellOrderDetails({
+    paymentMethod: 'Others',
+    amount: '10',
+    rate: '0.1',
+    min: '1',
+    max: '2',
+    rateType: 'fixed',
+  })
   cy.findByRole('button', { name: 'Create new ad' })
     .should('be.enabled')
     .click()
-  cy.c_addSellOrderDetails('Skrill', '20', '0.2', '10.1', '10.2')
+  cy.c_addSellOrderDetails({
+    paymentMethod: 'Skrill',
+    amount: '20',
+    rate: '0.2',
+    min: '10.1',
+    max: '10.2',
+    rateType: 'fixed',
+  })
   cy.findByRole('button', { name: 'Create new ad' })
     .should('be.enabled')
     .click()
@@ -54,13 +66,13 @@ function addOrderWithPM() {
     .click()
 }
 
-describe('QATEST-2853 - Ad details', () => {
+describe('QATEST-121392 - Filter for Payment Methods and Matching Ads', () => {
   beforeEach(() => {
     cy.clearAllLocalStorage()
     cy.c_login({ user: 'p2pFilterPaymentMethodBase' })
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
-  it('Filter for Payment Methods - Buy/Sell Ad', () => {
+  it('Should filter for Payment Methods in Buy and Sell ad screen.', () => {
     cy.c_navigateToP2P()
     cy.c_clickMyAdTab()
     cy.c_createNewAd('sell')

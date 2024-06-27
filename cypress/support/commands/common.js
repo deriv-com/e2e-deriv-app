@@ -1,39 +1,21 @@
-import { getOAuthUrl, getWalletOAuthUrl } from '../helper/loginUtility'
+import { getOAuthUrl, setLoginUser } from '../helper/loginUtility'
 
 Cypress.prevAppId = 0
 Cypress.prevUser = ''
 const expectedCookieValue = '{%22clients_country%22:%22br%22}'
 
-const setLoginUser = (user = 'masterUser', options = {}) => {
-  const { backEndProd = false } = options
-  if (
-    Cypress.config().baseUrl == Cypress.env('prodURL') ||
-    backEndProd == true
-  ) {
-    return {
-      loginEmail: Cypress.env('credentials').production[`${user}`].ID,
-      loginPassword: Cypress.env('credentials').production[`${user}`].PSWD,
-    }
-  } else {
-    return {
-      loginEmail: Cypress.env('credentials').test[`${user}`].ID,
-      loginPassword: Cypress.env('credentials').test[`${user}`].PSWD,
-    }
-  }
-}
-
+/**
+ * Custom command that allows us to use baseUrl + path and detect whether this is a responsive run or not.
+ */
 Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
-  const { rateLimitCheck = false } = options
-  //Custom command that allows us to use baseUrl + path and detect with this is a responsive run or not.
-  cy.log(path)
+  const { rateLimitCheck = false, skipPassKeys = false } = options
   if (size === undefined) size = Cypress.env('viewPortSize')
-
   if (size == 'small') cy.viewport('iphone-xr')
   else if (size == 'medium') cy.viewport('ipad-2')
   else cy.viewport('macbook-16')
 
   cy.visit(path)
-  cy.log('rateLimitCheck flag is set to: ', rateLimitCheck)
+  cy.log(`rateLimitCheck flag is set to: ${rateLimitCheck}`)
   if (rateLimitCheck == true) {
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
@@ -46,8 +28,12 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
     })
   }
 
+  if (skipPassKeys == true && size == 'small') {
+    cy.c_skipPasskeysV2({ withoutContent: true })
+  }
+
+  //Wait for relevent elements to appear (based on page)
   if (path.includes('region')) {
-    //Wait for relevent elements to appear (based on page)
     cy.log('Home page Selected')
     cy.findByRole(
       'button',
@@ -57,15 +43,16 @@ Cypress.Commands.add('c_visitResponsive', (path, size, options = {}) => {
   }
 
   if (path.includes('help-centre')) {
-    //Wait for relevent elements to appear (based on page)
     cy.log('Help Centre Selected')
     cy.findByRole('heading', {
       name: 'Didn’t find your answer? We can help.',
     }).should('be.visible', { timeout: 30000 })
   }
 
-  if (path.includes('traders-hub')) {
-    //Wait for relevent elements to appear (based on page)
+  if (path.includes('traders-hub') || path === '/') {
+    if (size == 'small')
+      cy.findAllByText("Trader's Hub").should('have.length', '1')
+    else cy.findAllByText("Trader's Hub").should('have.length', '2')
     cy.log('Trader Hub Selected')
   }
 })
@@ -80,6 +67,9 @@ Cypress.Commands.add('c_login', (options = {}) => {
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
   })
+  if (!(loginEmail && loginPassword)) {
+    throw new Error(`User/Password is not on file`)
+  }
   cy.c_visitResponsive('/endpoint', 'large', { rateLimitCheck: rateLimitCheck })
 
   if (app == 'doughflow') {
@@ -177,8 +167,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
         ) {
           cy.findByRole('banner').should('be.visible')
         } else {
-          //To redirect to trader's hub page
-          cy.findAllByText("Trader's Hub").last().should('be.visible')
+          cy.findAllByText("Trader's Hub").should('have.length', '2')
         }
       })
     } else {
@@ -191,8 +180,7 @@ Cypress.Commands.add('c_doOAuthLogin', (app, options = {}) => {
       ) {
         cy.findByRole('banner').should('be.visible')
       } else {
-        //when deriv charts popup is not available and if we need to redirect to trader's hub page
-        cy.findAllByText("Trader's Hub").last().should('be.visible')
+        cy.findAllByText("Trader's Hub").should('have.length', '2')
       }
     }
   })
@@ -202,9 +190,13 @@ Cypress.Commands.add('c_mt5login', () => {
   cy.c_visitResponsive(Cypress.env('mt5BaseUrl') + '/terminal', 'large')
   cy.findByRole('button', { name: 'Accept' }).click()
   cy.findByPlaceholderText('Enter Login').click()
-  cy.findByPlaceholderText('Enter Login').type(Cypress.env('mt5Login'))
+  cy.findByPlaceholderText('Enter Login').type(
+    Cypress.env('credentials').test.mt5User.ID
+  )
   cy.findByPlaceholderText('Enter Password').click()
-  cy.findByPlaceholderText('Enter Password').type(Cypress.env('mt5Password'))
+  cy.findByPlaceholderText('Enter Password').type(
+    Cypress.env('credentials').test.mt5User.PSWD
+  )
   cy.findByRole('button', { name: 'Connect to account' }).click()
 })
 
@@ -280,7 +272,7 @@ Cypress.Commands.add('c_transferLimit', (transferMessage) => {
           if ($resetElement.length) {
             cy.wrap($resetElement).click()
           }
-          cy.contains('Wallet', { timeout: 10000 }).should('exist')
+          cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
         })
       } else {
         cy.findByText('Your transfer is successful!', {
@@ -320,6 +312,8 @@ Cypress.Commands.add(
       retryCount = 0,
       maxRetries = 3,
       baseUrl = Cypress.env('configServer') + '/events',
+      isMT5ResetPassword = false,
+      isViaAPI = false,
     } = options
     cy.log(`Visit ${baseUrl}`)
     const userID = Cypress.env('qaBoxLoginEmail')
@@ -335,8 +329,11 @@ Cypress.Commands.add(
         'qaBoxLoginPassword',
         { log: false }
       )}@${baseUrl}`,
-      { args: [requestType, accountEmail] },
-      ([requestType, accountEmail]) => {
+      {
+        args: [requestType, accountEmail, isMT5ResetPassword, isViaAPI],
+      },
+      ([requestType, accountEmail, isMT5ResetPassword, isViaAPI]) => {
+        let verification_code
         cy.document().then((doc) => {
           const allRelatedEmails = Array.from(
             doc.querySelectorAll(`a[href*="${requestType}"]`)
@@ -344,9 +341,10 @@ Cypress.Commands.add(
           if (allRelatedEmails.length) {
             const verificationEmail = allRelatedEmails.pop()
             cy.wrap(verificationEmail).click()
-            cy.get('p')
-              .filter(`:contains('${accountEmail}')`)
-              .last()
+            ;(() =>
+              isMT5ResetPassword
+                ? cy.get('p')
+                : cy.get('p').filter(`:contains('${accountEmail}')`).last())()
               .should('be.visible')
               .parent()
               .children()
@@ -357,7 +355,9 @@ Cypress.Commands.add(
                   Cypress.env('verificationUrl', href)
                   const code = href.match(/code=([A-Za-z0-9]{8})/)
                   verification_code = code[1]
-                  Cypress.env('walletsWithdrawalCode', verification_code)
+                  isViaAPI
+                    ? cy.task('setVerificationCode', verification_code)
+                    : Cypress.env('walletsWithdrawalCode', verification_code)
                   cy.log('Verification link found')
                 } else {
                   cy.log('Verification link not found')
@@ -369,10 +369,13 @@ Cypress.Commands.add(
         })
       }
     )
+    cy.on('fail', (err) => {
+      rotateCreds()
+      throw err
+    })
     cy.then(() => {
       //Rotating credentials
-      Cypress.env('qaBoxLoginEmail', userID)
-      Cypress.env('qaBoxLoginPassword', userPSWD)
+      rotateCreds()
       //Retry finding email after 1 second interval
       if (retryCount < maxRetries && !Cypress.env('verificationUrl')) {
         cy.log(`Retrying... Attempt number: ${retryCount + 1}`)
@@ -388,51 +391,10 @@ Cypress.Commands.add(
         )
       }
     })
-  }
-)
-
-Cypress.Commands.add(
-  'c_emailVerificationV2',
-  (requestType, accountEmail, options = {}) => {
-    const { baseUrl = Cypress.env('configServer') + '/events' } = options
-    cy.log(`Visit ${baseUrl}`)
-    cy.visit(
-      `https://${Cypress.env('qaBoxLoginEmail')}:${Cypress.env(
-        'qaBoxLoginPassword'
-      )}@${baseUrl}`,
-      { log: false }
-    )
-    cy.document().then((doc) => {
-      let verification_code
-      const allRelatedEmails = Array.from(
-        doc.querySelectorAll(`a[href*="${requestType}"]`)
-      )
-      if (allRelatedEmails.length) {
-        const verificationEmail = allRelatedEmails.pop()
-        cy.wrap(verificationEmail).click()
-        cy.get('p')
-          .filter(`:contains('${accountEmail}')`)
-          .last()
-          .should('be.visible')
-          .parent()
-          .children()
-          .contains('a', Cypress.config('baseUrl'))
-          .invoke('attr', 'href')
-          .then((href) => {
-            if (href) {
-              Cypress.env('verificationUrl', href)
-              const code = href.match(/code=([A-Za-z0-9]{8})/)
-              verification_code = code[1]
-              cy.task('setVerificationCode', verification_code)
-              cy.log('Verification link found')
-            } else {
-              cy.log('Verification link not found')
-            }
-          })
-      } else {
-        cy.log('email not found')
-      }
-    })
+    const rotateCreds = () => {
+      Cypress.env('qaBoxLoginEmail', userID)
+      Cypress.env('qaBoxLoginPassword', userPSWD)
+    }
   }
 )
 
@@ -523,7 +485,9 @@ Cypress.Commands.add(
     try {
       cy.task('wsConnect')
       cy.task('verifyEmailTask').then((accountEmail) => {
-        cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
+        cy.c_emailVerification('account_opening_new.html', accountEmail, {
+          isViaAPI: true,
+        })
         cy.task('createRealAccountTask', {
           country_code: country_code,
           currency: currency,
@@ -552,7 +516,9 @@ Cypress.Commands.add(
     try {
       cy.task('wsConnect')
       cy.task('verifyEmailTask').then((accountEmail) => {
-        cy.c_emailVerificationV2('account_opening_new.html', accountEmail)
+        cy.c_emailVerification('account_opening_new.html', accountEmail, {
+          isViaAPI: true,
+        })
         cy.task('createVirtualAccountTask', {
           country_code: country_code,
           currency: currency,
@@ -649,6 +615,7 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
         })
       cy.findAllByRole('button', { name: 'Close' })
         .first()
+        .scrollIntoView()
         .should('be.visible')
         .click()
         .and('not.exist')
@@ -663,15 +630,19 @@ Cypress.Commands.add('c_closeNotificationHeader', () => {
 })
 
 Cypress.Commands.add('c_skipPasskeysV2', (options = {}) => {
-  const { language = 'english', retryCount = 0, maxRetries = 3 } = options
-  cy.fixture('common/common.json').then((langData) => {
-    const lang = langData[language]
-    cy.findByText(lang.passkeysModal.title)
+  const {
+    language = 'english',
+    retryCount = 0,
+    maxRetries = 3,
+    withoutContent = false,
+  } = options
+  if (withoutContent == true) {
+    cy.get('.effortless-login-modal')
       .should(() => {})
       .then(($el) => {
         if ($el.length) {
-          cy.findByText(lang.passkeysModal.maybeLaterBtn).click()
           cy.log('Skipped Passkeys prompt !!!')
+          cy.get('.effortless-login-modal__header').click()
         } else if (retryCount < maxRetries) {
           cy.wait(300)
           cy.log(
@@ -680,7 +651,25 @@ Cypress.Commands.add('c_skipPasskeysV2', (options = {}) => {
           cy.c_skipPasskeysV2({ ...options, retryCount: retryCount + 1 })
         }
       })
-  })
+  } else {
+    cy.fixture('common/common.json').then((langData) => {
+      const lang = langData[language]
+      cy.findByText(lang.passkeysModal.title)
+        .should(() => {})
+        .then(($el) => {
+          if ($el.length) {
+            cy.findByText(lang.passkeysModal.maybeLaterBtn).click()
+            cy.log('Skipped Passkeys prompt !!!')
+          } else if (retryCount < maxRetries) {
+            cy.wait(300)
+            cy.log(
+              `Passkeys prompt did not appear, Retrying... Attempt ${retryCount + 1}`
+            )
+            cy.c_skipPasskeysV2({ ...options, retryCount: retryCount + 1 })
+          }
+        })
+    })
+  }
 })
 
 Cypress.Commands.add(
@@ -695,8 +684,8 @@ Cypress.Commands.add(
   'c_uiLogin',
   (
     size = 'large',
-    username = Cypress.env('loginEmailProd'),
-    password = Cypress.env('loginPasswordProd')
+    username = Cypress.env('credentials').production.masterUser.ID,
+    password = Cypress.env('credentials').production.masterUser.PSWD
   ) => {
     cy.c_visitResponsive('/', size)
     cy.findByRole('button', { name: 'Log in' }).click()
@@ -767,7 +756,43 @@ Cypress.Commands.add('c_login_setToken', () => {
 
       Cypress.env('oAuthToken', token) //Set token here
     },
-    Cypress.env('loginEmail'),
-    Cypress.env('loginPassword')
+    Cypress.env('credentials').test.masterUser.ID,
+    Cypress.env('credentials').test.masterUser.PSWD
   )
+})
+Cypress.Commands.add(
+  'getCurrentExchangeRate',
+  (fromCurrency, toCurrency, amount) => {
+    cy.request({
+      method: 'GET',
+      url: 'https://api.coinbase.com/v2/exchange-rates',
+      qs: {
+        currency: fromCurrency,
+      },
+    }).then((response) => {
+      expect(response.status).to.eq(200)
+      const currentExchangeRate_fullList = JSON.stringify(response.body)
+      const regexp = new RegExp(`${toCurrency}":"([^"]+)"`)
+      const getOnlyRelatedCurrencyExchangeRate =
+        currentExchangeRate_fullList.match(regexp)[1]
+      const getFinalExchangeRate =
+        getOnlyRelatedCurrencyExchangeRate.substr(0, 8) +
+        getOnlyRelatedCurrencyExchangeRate.substr(11)
+      const calculatedFinalExhangeRate =
+        parseFloat(getFinalExchangeRate) * amount
+      const calculatedFinalExhangeRate_roundOff =
+        calculatedFinalExhangeRate.toFixed(2)
+      cy.wrap(calculatedFinalExhangeRate_roundOff).as(
+        'calculatedFinalExhangeRate_roundOff'
+      )
+    })
+  }
+)
+
+Cypress.Commands.add('c_visitBackOffice', () => {
+  cy.viewport('macbook-16')
+  cy.visit(
+    `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
+  )
+  cy.findByText('Please login.').click()
 })

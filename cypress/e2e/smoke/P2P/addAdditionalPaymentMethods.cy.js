@@ -1,4 +1,3 @@
-import '@testing-library/cypress/add-commands'
 import { generateAccountNumberString } from '../../../support/helper/utility'
 
 let paymentName = 'Alipay'
@@ -20,9 +19,9 @@ describe('QATEST-2811 - My profile page - User with existing payment method add 
     cy.findByText('Payment methods').should('be.visible').click()
     cy.findByText('Payment methods').should('be.visible')
     cy.findByRole('button').should('exist').and('contain.text', 'Add').click()
-    cy.c_addPaymentMethod(paymentID, paymentName)
+    cy.c_addPaymentMethod(paymentID, paymentName, 'fixed')
     cy.findByRole('button').should('exist').and('contain.text', 'Add').click()
-    cy.c_addPaymentMethod(additionalPaymentID, additionalPaymentName)
+    cy.c_addPaymentMethod(additionalPaymentID, additionalPaymentName, 'fixed')
     cy.c_deletePaymentMethod(paymentID, paymentName)
     cy.c_deletePaymentMethod(additionalPaymentID, additionalPaymentName)
   })

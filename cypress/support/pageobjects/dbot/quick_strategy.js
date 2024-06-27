@@ -17,10 +17,6 @@ class QuickStrategy {
     return cy.xpath('//button[@class="dc-btn dc-btn--secondary"]')
   }
 
-  get quickStrategyMarketDropdown() {
-    return cy.xpath('//input[@data-testid="qs_autocomplete_symbol"]')
-  }
-
   get quickStrategyProfit() {
     return cy.xpath('//input[@name="profit"]')
   }
@@ -31,6 +27,10 @@ class QuickStrategy {
 
   get quickStrategySize() {
     return cy.xpath('//input[@name="size"]')
+  }
+
+  get quickStrategyMarketDropdown() {
+    return cy.findByTestId('dt_qs_symbol').should('be.visible')
   }
 
   runBotQuickStrategy = () => {
@@ -50,9 +50,10 @@ class QuickStrategy {
     this.quickStrategyTab.should('be.visible').click()
   }
 
-  chooseTradeType = () => {
+  chooseTradeType = (isMobile = false) => {
+    const index = isMobile ? 1 : 3
     cy.findAllByTestId('dt_themed_scrollbars')
-      .eq(3)
+      .eq(index)
       .should('be.visible')
       .within(() => {
         cy.findByText('Matches/Differs').click()
@@ -66,7 +67,7 @@ class QuickStrategy {
 
   fillUpLossProfitTreshold = () => {
     this.quickStrategyLoss.type('4')
-    this.quickStrategyProfit.type('5')
+    this.quickStrategyProfit.type('9')
   }
 }
 

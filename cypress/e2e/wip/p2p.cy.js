@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 describe('QATEST-9999 - <Clickup description here>', () => {
   beforeEach(() => {
     cy.c_login()

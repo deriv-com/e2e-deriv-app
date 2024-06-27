@@ -1,5 +1,3 @@
-import '@testing-library/cypress/add-commands'
-
 Cypress.Commands.add('c_checkRateChanged', (options = {}) => {
   const { retryCount = 1, maxRetries = 3, retryWaitTime = 1000 } = options
 

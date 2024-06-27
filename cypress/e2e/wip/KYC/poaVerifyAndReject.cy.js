@@ -1,7 +1,5 @@
-import '@testing-library/cypress/add-commands'
 import { getCurrentDate } from '../../../support/helper/utility'
 
-const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
 const CURRENT_DATE = getCurrentDate()
 
 describe('QATEST-4835 POA Verified/Rejected', () => {
@@ -31,8 +29,7 @@ describe('QATEST-4835 POA Verified/Rejected', () => {
 
     /* Visit BO */
     cy.c_visitResponsive('/', 'large')
-    cy.visit(BO_URL)
-    cy.findByText('Please login.').click()
+    cy.c_visitBackOffice()
     cy.findByText('Client Management').click()
     cy.findByPlaceholderText('email@domain.com')
       .should('exist')
@@ -78,8 +75,7 @@ describe('QATEST-4835 POA Verified/Rejected', () => {
 
     /* Visit BO */
     cy.c_visitResponsive('/', 'large')
-    cy.visit(BO_URL)
-    cy.findByText('Please login.').click()
+    cy.c_visitBackOffice()
     cy.findByText('Client Management').click()
     cy.findByPlaceholderText('email@domain.com')
       .should('exist')
