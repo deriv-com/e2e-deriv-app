@@ -1,0 +1,15 @@
+{
+    "priceProposal": {
+        "priceProposalCurrency": "USD",
+        "priceProposalAmount": "100",
+        "priceProposalBarrier": "+0.1",
+        "priceProposalBasis": "payout",
+        "priceProposalContractType": "CALL",
+        "priceProposalDuration": "60",
+        "priceProposalDurationUnit": "s",
+        "priceProposalSymbol": "R_100"
+    },
+    "buyContract":{
+        "buyAmount": "100"
+    }
+}

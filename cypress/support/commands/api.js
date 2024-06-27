@@ -42,10 +42,24 @@ Cypress.Commands.add('c_registerNewApplicationID', () => {
 /**
  * Method to perform Price Proposal Call
  */
-Cypress.Commands.add('c_getPriceProposal', () => {
+Cypress.Commands.add('c_getPriceProposal', (options = {}) => {
   try {
-    cy.task('createPriceProposalTask').then((response) => {
-      Cypress.env('priceProposalResponse', response)
+    const { apiCall = 'priceProposal' } = options
+    cy.fixture('api/apiFixture.json').then((priceData) => {
+      const price = priceData[apiCall]
+      cy.task(
+        'createPriceProposalTask',
+        price.priceProposal.priceProposalCurrency,
+        price.priceProposal.priceProposalAmount,
+        price.priceProposal.priceProposalBarrier,
+        price.priceProposal.priceProposalBasis,
+        price.priceProposal.priceProposalContractType,
+        price.priceProposal.priceProposalDuration,
+        price.priceProposal.priceProposalDurationUnit,
+        price.priceProposal.priceProposalSymbol
+      ).then((response) => {
+        Cypress.env('priceProposalResponse', response)
+      })
     })
   } catch (e) {
     console.error('An error occurred while creating price proposal: ', e)
@@ -55,11 +69,20 @@ Cypress.Commands.add('c_getPriceProposal', () => {
 /**
  * Method to perform Buy Contract Call
  */
-Cypress.Commands.add('c_buyContract', () => {
+Cypress.Commands.add('c_buyContract', (options = {}) => {
   try {
+    const { apiCall = 'buyContract' } = options
     const priceProposalID = Cypress.env('priceProposalResponse')
-    cy.task('createBuyContractTask', priceProposalID).then((response) => {
-      Cypress.env('balanceAfterBuy', response)
+    cy.fixture('api/apiFixture.json').then((buyData) => {
+      const buy = buyData[apiCall]
+
+      cy.task(
+        'createBuyContractTask',
+        priceProposalID,
+        buy.buyContract.buyAmount
+      ).then((response) => {
+        Cypress.env('balanceAfterBuy', response)
+      })
     })
   } catch (e) {
     console.error('An error occurred during buy contract process: ', e)

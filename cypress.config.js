@@ -167,18 +167,27 @@ module.exports = defineConfig({
               throw e
             }
           },
-          async createPriceProposalTask() {
+          async createPriceProposalTask(
+            priceProposalCurrency,
+            priceProposalAmount,
+            priceProposalBarrier,
+            priceProposalBasis,
+            priceProposalContractType,
+            priceProposalDuration,
+            priceProposalDurationUnit,
+            priceProposalSymbol
+          ) {
             try {
               const price_proposal_id = await createPriceProposalID(
                 api,
-                process.env.E2E_PRICE_AMOUNT,
-                process.env.E2E_PRICE_PROPOSAL_BARRIER,
-                process.env.E2E_PRICE_PROPOSAL_BASIS,
-                process.env.E2E_PRICE_PROPOSAL_CONTRACT_TYPE,
-                process.env.E2E_PRICE_PROPOSAL_CURRENCY,
-                process.env.E2E_PRICE_PROPOSAL_DURATION,
-                process.env.E2E_PRICE_PROPOSAL_DURATION_UNIT,
-                process.env.E2E_PRICE_PROPOSAL_SYMBOL
+                priceProposalAmount,
+                priceProposalBarrier,
+                priceProposalBasis,
+                priceProposalContractType,
+                priceProposalCurrency,
+                priceProposalDuration,
+                priceProposalDurationUnit,
+                priceProposalSymbol
               )
               return price_proposal_id
             } catch (e) {
@@ -186,12 +195,12 @@ module.exports = defineConfig({
               throw e
             }
           },
-          async createBuyContractTask(priceProposalID) {
+          async createBuyContractTask(priceProposalID, buyAmount) {
             try {
               const buy_id = await createBuyContract(
                 api,
                 priceProposalID,
-                process.env.E2E_PRICE_AMOUNT
+                buyAmount
               )
               return buy_id
             } catch (e) {
