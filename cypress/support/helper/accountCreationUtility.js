@@ -1,7 +1,11 @@
 require('dotenv').config()
 const data = require('../../fixtures/common/common.json')
-const { new_account_real, non_pep_declaration, account_opening_reason } =
-  data.defaultCRDetails
+const {
+  new_account_real,
+  non_pep_declaration,
+  account_opening_reason,
+  address_city,
+} = data.defaultCRDetails
 
 const {
   emailGenerator,
@@ -18,15 +22,16 @@ const verifyEmail = async (api) => {
   return randomEmail
 }
 
-const createAccountVirtual = async (
-  api,
-  country_code,
-  password = process.env.E2E_DERIV_PASSWORD
-) => {
+const createAccountVirtual = async (api, clientData = {}) => {
+  const {
+    country_code = data.defaultVRDetails.country_code,
+    password = process.env.E2E_DERIV_PASSWORD,
+  } = clientData
   try {
     if (!password) throw new Error(`Password not on file`)
     const response = await api.basic.newAccountVirtual({
-      ...data.defaultVRDetails,
+      new_account_virtual: data.defaultVRDetails.new_account_virtual,
+      type: data.defaultVRDetails.type,
       client_password: password,
       residence: country_code,
       verification_code: process.env.E2E_EMAIL_VERIFICATION_CODE,
@@ -46,8 +51,8 @@ const createAccountVirtual = async (
 
 const createAccountReal = async (api, clientData = {}) => {
   const {
-    country_code,
-    currency,
+    country_code = data.defaultCRDetails.country_code,
+    currency = data.defaultCRDetails.currency,
     first_name = data.defaultCRDetails.first_name,
     last_name = nameGenerator(),
     date_of_birth = data.defaultCRDetails.date_of_birth,
@@ -62,20 +67,20 @@ const createAccountReal = async (api, clientData = {}) => {
     await api.account(oauthToken) // API authentication
 
     const clientDetails = {
-      new_account_real: data.defaultCRDetails.new_account_real,
-      non_pep_declaration: data.defaultCRDetails.non_pep_declaration,
-      account_opening_reason: data.defaultCRDetails.account_opening_reason,
-      currency: currency,
-      place_of_birth: country_code,
-      residence: country_code,
-      first_name: first_name,
-      last_name: last_name,
-      date_of_birth: date_of_birth,
-      phone: phone,
-      address_line_1: address_line_1,
-      address_city: data.defaultCRDetails.address_city,
-      tax_residence: tax_residence,
-      tax_identification_number: tax_identification_number,
+      new_account_real,
+      non_pep_declaration,
+      account_opening_reason,
+      currency,
+      place_of_birth: residence,
+      residence,
+      first_name,
+      last_name,
+      date_of_birth,
+      phone,
+      address_line_1,
+      address_city: address_city,
+      tax_residence,
+      tax_identification_number,
     }
 
     const response = await api.basic.newAccountReal(clientDetails)

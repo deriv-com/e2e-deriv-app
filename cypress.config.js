@@ -100,11 +100,11 @@ module.exports = defineConfig({
               throw error
             }
           },
-          async createVirtualAccountTask({ country_code }) {
+          async createVirtualAccountTask({ clientData }) {
             try {
               const virtualAccountDetails = await createAccountVirtual(
                 api,
-                country_code
+                clientData
               )
               return virtualAccountDetails
             } catch (error) {

@@ -508,36 +508,32 @@ Cypress.Commands.add(
   }
 )
 
-Cypress.Commands.add(
-  'c_createDemoAccount',
-  (country_code = 'id', currency = 'USD') => {
-    cy.c_visitResponsive('/')
-    // Call Verify Email and then set the Verification code in env
-    try {
-      cy.task('wsConnect')
-      cy.task('verifyEmailTask').then((accountEmail) => {
-        cy.c_emailVerification('account_opening_new.html', accountEmail, {
-          isViaAPI: true,
-        })
-        cy.task('createVirtualAccountTask', {
-          country_code: country_code,
-          currency: currency,
-        }).then(() => {
-          // Updating Cypress environment variables with the new email
-          const currentCredentials = Cypress.env('credentials')
-          currentCredentials.test.masterUser.ID = accountEmail
-          Cypress.env('credentials', currentCredentials)
-          //Reset oAuthUrl otherwise it will use the previous URL
-          Cypress.env('oAuthUrl', '<empty>')
-        })
+Cypress.Commands.add('c_createDemoAccount', (clientData) => {
+  cy.c_visitResponsive('/')
+  // Call Verify Email and then set the Verification code in env
+  try {
+    cy.task('wsConnect')
+    cy.task('verifyEmailTask').then((accountEmail) => {
+      cy.c_emailVerification('account_opening_new.html', accountEmail, {
+        isViaAPI: true,
       })
-    } catch (e) {
-      console.error('An error occurred during the account creation process:', e)
-    } finally {
-      cy.task('wsDisconnect')
-    }
+      cy.task('createVirtualAccountTask', {
+        clientData,
+      }).then(() => {
+        // Updating Cypress environment variables with the new email
+        const currentCredentials = Cypress.env('credentials')
+        currentCredentials.test.masterUser.ID = accountEmail
+        Cypress.env('credentials', currentCredentials)
+        //Reset oAuthUrl otherwise it will use the previous URL
+        Cypress.env('oAuthUrl', '<empty>')
+      })
+    })
+  } catch (e) {
+    console.error('An error occurred during the account creation process:', e)
+  } finally {
+    cy.task('wsDisconnect')
   }
-)
+})
 
 Cypress.Commands.add('c_closeModal', () => {
   cy.log('Closing the modal')
