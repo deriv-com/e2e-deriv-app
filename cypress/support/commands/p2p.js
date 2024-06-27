@@ -1026,10 +1026,15 @@ Cypress.Commands.add(
     cy.c_verifyBuyOrderField(minOrder, maxOrder, fiatCurrency)
     cy.findAllByText('Rate (1 USD)')
       .eq(0)
+      .closest('.buy-sell-form__field-rate')
       .next('p')
       .invoke('text')
       .then((rateOfOneDollar) => {
         sessionStorage.setItem('c_rateOfOneDollar', rateOfOneDollar.trim())
+        cy.log(
+          'Here is the field value: ' +
+            sessionStorage.getItem('c_rateOfOneDollar')
+        )
       })
     cy.findByText('Payment methods')
       .next('div')
