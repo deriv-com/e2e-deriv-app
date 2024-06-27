@@ -60,8 +60,9 @@ const createAccountReal = async (api, country_code, currency) => {
       phone: `+${numbersGenerator()}`,
       address_line_1: '20 Broadway Av',
       address_city: 'Cyber',
-      //tax_residence: 'co',
-      //tax_identification_number: `${numbersGenerator()}`,
+      citizen: country_code,
+      tax_residence: 'aq',
+      tax_identification_number: `${numbersGenerator()}`,
     }
 
     const response = await api.basic.newAccountReal(clientDetails)

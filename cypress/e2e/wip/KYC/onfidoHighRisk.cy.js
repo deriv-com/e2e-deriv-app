@@ -43,9 +43,6 @@ describe('QATEST-4785 High risk onfido supported country.', () => {
     cy.get('select[name="client_aml_risk_classification"]')
       .select('High')
       .type('{enter}')
-    cy.get('input[name="tax_identification_number"]')
-      .type('2353553')
-      .type('{enter}')
     /* No cashier lock in BO */
     cy.get('#card__content table tbody tr td b Withdrawal Locked').should(
       'not.exist'
@@ -77,19 +74,11 @@ describe('QATEST-4785 High risk onfido supported country.', () => {
       { force: true }
     )
     cy.findByRole('button', { name: 'Continue' }).click()
-    cy.get('#dt_components_select-native_select-tag').eq(0).select('Colombia')
-    cy.get('#dt_components_select-native_select-tag').eq(1).select('Colombia')
-
-    cy.get('#dt_components_select-native_select-tag').select('Colombia')
-    //cy.get('#dt_components_select-native_select-tag').last().select('Colombia')
-
-    cy.findByTestId('dt_cfd_financial_stp_modal_body')
-      .contains('button', 'Next')
-      .click()
     cy.findByTestId('dt_mt5_password').type(
       Cypress.env('credentials').test.mt5User.PSWD
     )
     cy.contains('button', 'Create Deriv MT5 password').click()
+    /* assertion to check if FA is asked upon creating MT5 account */
     cy.findByText('Please complete your financial assessment.').should(
       'be.visible'
     )
