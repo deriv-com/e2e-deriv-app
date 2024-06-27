@@ -62,7 +62,7 @@ const createAccountReal = async (api, clientData = {}) => {
     tax_identification_number = `${numbersGenerator()}`,
   } = clientData
   try {
-    const resp = await createAccountVirtual(api, country_code)
+    const resp = await createAccountVirtual(api, { country_code: country_code })
     const { oauthToken } = resp
     await api.account(oauthToken) // API authentication
 
@@ -71,8 +71,8 @@ const createAccountReal = async (api, clientData = {}) => {
       non_pep_declaration,
       account_opening_reason,
       currency,
-      place_of_birth: residence,
-      residence,
+      place_of_birth: country_code,
+      residence: country_code,
       first_name,
       last_name,
       date_of_birth,

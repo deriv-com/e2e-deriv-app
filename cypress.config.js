@@ -87,12 +87,11 @@ module.exports = defineConfig({
 
             return null
           },
-          async createRealAccountTask({ country_code, currency }) {
+          async createRealAccountTask({ clientData }) {
             try {
               const realAccountDetails = await createAccountReal(
                 api,
-                country_code,
-                currency
+                clientData
               )
               return realAccountDetails
             } catch (error) {
