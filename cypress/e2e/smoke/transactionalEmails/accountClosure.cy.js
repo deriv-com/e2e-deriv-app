@@ -4,7 +4,7 @@ describe('QATEST-162618 - Verify account_closure are triggered as transactional 
     cy.c_login()
   })
   it(`Verify account_closure are triggered as transactional emails on Mobile`, () => {
-    cy.c_visitResponsive('account/closing-account')
+    cy.c_visitResponsive('account/closing-account', 'small')
     cy.findByRole('button', { name: 'Close my account' }).click()
     cy.findByText('I’m closing my account for other reasons.').click()
     cy.findByRole('button', { name: 'Continue' }).click()

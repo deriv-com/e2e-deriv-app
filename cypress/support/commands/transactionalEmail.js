@@ -28,11 +28,10 @@ Cypress.Commands.add(
             cy.wrap(verificationEmail).click()
             cy.get('p')
               .filter(`:contains('${accountEmail}')`)
+              .last()
               .should('be.visible')
-              .last()
-            cy.get('p[style="margin:0;"]')
+              .siblings()
               .should('contain', 'transactional_message_id: account_closure')
-              .last()
           } else {
             cy.log('email not found')
           }
