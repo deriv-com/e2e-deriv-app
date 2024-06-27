@@ -1031,10 +1031,6 @@ Cypress.Commands.add(
       .invoke('text')
       .then((rateOfOneDollar) => {
         sessionStorage.setItem('c_rateOfOneDollar', rateOfOneDollar.trim())
-        cy.log(
-          'Here is the field value: ' +
-            sessionStorage.getItem('c_rateOfOneDollar')
-        )
       })
     cy.findByText('Payment methods')
       .next('div')
