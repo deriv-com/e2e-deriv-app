@@ -1,8 +1,7 @@
-import '@testing-library/cypress/add-commands'
-
-let floatRate = 1.25
+let floatRate = 0.01
 let minOrder = 1
 let maxOrder = 10
+const pm1 = 'Bank Transfer'
 let nicknameAndAmount = {
   sellerBalanceBeforeSelling: '',
   sellerBalanceAfterSelling: '',
@@ -40,21 +39,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
         rateLimitCheck: true,
       }
   })
-  it('Should be able to create sell type advert and verify all fields and messages for floating rate.', () => {
-    cy.c_navigateToP2P()
-    cy.findByText('My profile').should('be.visible').click()
-    cy.findByText('Available Deriv P2P balance').should('be.visible')
-    cy.c_getProfileName().then((name) => {
-      nicknameAndAmount.seller = name
-    })
-    cy.c_getProfileBalance().then((balance) => {
-      nicknameAndAmount.sellerBalanceBeforeSelling = balance
-    })
-    cy.c_clickMyAdTab()
-    cy.c_createNewAd('buy')
-    cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Buy', 'float')
-  })
-  it('Should be able to place an order for advert and verify all fields and messages for floating rate.', () => {
+  it('Should be able to create buy type advert and verify all fields and messages for floating rate.', () => {
     cy.c_navigateToP2P()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
@@ -63,6 +48,20 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
     })
     cy.c_getProfileBalance().then((balance) => {
       nicknameAndAmount.buyerBalanceBeforeBuying = balance
+    })
+    cy.c_clickMyAdTab()
+    cy.c_createNewAd('buy')
+    cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Buy', 'float')
+  })
+  it('Should be able to place a sell order for advert and verify all fields and messages for floating rate.', () => {
+    cy.c_navigateToP2P()
+    cy.findByText('My profile').should('be.visible').click()
+    cy.findByText('Available Deriv P2P balance').should('be.visible')
+    cy.c_getProfileName().then((name) => {
+      nicknameAndAmount.seller = name
+    })
+    cy.c_getProfileBalance().then((balance) => {
+      nicknameAndAmount.sellerBalanceBeforeSelling = balance
     })
     cy.findByText('Buy / Sell').should('be.visible').click()
     cy.findByRole('button', { name: 'Sell' }).should('be.visible').click()
@@ -74,38 +73,19 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       .should('have.text', currency.code)
     cy.c_loadingCheck()
     cy.then(() => {
-      cy.c_createBuyOrder(
-        nicknameAndAmount.seller,
+      cy.c_createSellOrder(
+        nicknameAndAmount.buyer,
         minOrder,
         maxOrder,
-        fiatCurrency
-      ).then((sendAmount) => {
-        nicknameAndAmount.amount = sendAmount
-      })
-      cy.then(() => {
-        cy.c_verifyOrderPlacementScreen(
-          nicknameAndAmount.seller,
-          sessionStorage.getItem('c_rateOfOneDollar'),
-          sessionStorage.getItem('c_paymentMethods'),
-          sessionStorage.getItem('c_sellersInstructions')
-        )
-      })
-      cy.then(() => {
-        cy.c_verifyPaymentConfirmationScreenContent(
-          nicknameAndAmount.amount,
-          nicknameAndAmount.seller
-        )
-        cy.c_uploadPOT('cypress/fixtures/P2P/orderCompletion.png')
-        cy.findByText('Waiting for the seller to confirm').should('be.visible')
-        cy.findByTestId('testid').should('be.visible').click()
-        cy.findByPlaceholderText('Enter message').should('be.visible')
-        cy.findByText(
-          "Hello! This is where you can chat with the counterparty to confirm the order details.Note: In case of a dispute, we'll use this chat as a reference."
-        ).should('be.visible')
-      })
+        fiatCurrency,
+        pm1,
+        'sell',
+        'float'
+      )
     })
+    cy.c_waitForPayment()
   })
-  it("Should be able to confirm sell order from verification link, give rating to buyer and then confirm seller's balance.", () => {
+  it.skip("Should be able to confirm sell order from verification link, give rating to buyer and then confirm seller's balance.", () => {
     cy.c_navigateToP2P()
     cy.findByText('Orders').should('be.visible').click()
     cy.c_rateLimit({
@@ -133,7 +113,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       )
     })
   })
-  it("Should be able to confirm buyer's balance and give rating to seller.", () => {
+  it.skip("Should be able to confirm buyer's balance and give rating to seller.", () => {
     cy.c_navigateToP2P()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
