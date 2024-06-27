@@ -130,3 +130,10 @@ Cypress.Commands.add('c_setupTradeAccountResponsive', (wallet) => {
       }
     })
 })
+Cypress.Commands.add('c_WaitUntilWalletsPageIsLoaded', () => {
+  cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+  cy.get('.wallets-trading-account-card__content')
+    .contains('.wallets-text', 'Financial', { timeout: 3000 })
+    .parent()
+    .closest('.wallets-added-mt5__details, .wallets-available-mt5__details')
+})
