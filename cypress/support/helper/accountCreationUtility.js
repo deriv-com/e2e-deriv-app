@@ -111,6 +111,7 @@ const createAccountReal = async (api, clientData = {}) => {
       currency,
       place_of_birth: country_code,
       residence: country_code,
+      citizen: country_code,
       first_name,
       last_name,
       date_of_birth,
@@ -155,12 +156,13 @@ const createAccountMF = async (api, clientData = {}) => {
     await api.account(oauthToken) // API authentication
 
     const clientDetailsPayload = {
-      new_account_real,
+      new_account_maltainvest,
       non_pep_declaration,
       account_opening_reason,
       currency,
       place_of_birth: country_code,
       residence: country_code,
+      citizen: country_code,
       first_name,
       last_name,
       date_of_birth,
@@ -169,7 +171,6 @@ const createAccountMF = async (api, clientData = {}) => {
       address_city,
       tax_residence,
       tax_identification_number,
-      new_account_maltainvest,
       accept_risk,
       salutation,
       education_level,
@@ -201,7 +202,7 @@ const createAccountMF = async (api, clientData = {}) => {
       residence: residence,
     }
   } catch (e) {
-    console.error('Operation failed', e)
+    console.error('Operation failed', e.error.details)
     throw e
   }
 }
