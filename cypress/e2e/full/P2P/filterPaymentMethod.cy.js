@@ -35,7 +35,7 @@ function verifyAllPaymentMethod(orderTab, PM1, PM2) {
 
 function addOrderWithPM() {
   cy.c_addSellOrderDetails({
-    paymentMethod: 'Others',
+    paymentMethod: 'Other',
     amount: '10',
     rate: '0.1',
     min: '1',
