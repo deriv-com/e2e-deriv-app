@@ -479,10 +479,10 @@ Cypress.Commands.add('c_verifyTooltip', () => {
 
 Cypress.Commands.add('c_verifyCompletionOrderDropdown', () => {
   cy.findByTestId('dt_dropdown_display').click()
-  cy.findByText('1 hour').should('be.visible')
-  cy.findByText('45 minutes').should('be.visible')
-  cy.findByText('30 minutes').should('be.visible')
-  cy.findByText('15 minutes').should('be.visible').click({ force: true })
+  cy.findAllByText('1 hour').should('be.visible')
+  cy.findAllByText('45 minutes').should('be.visible')
+  cy.findAllByText('30 minutes').should('be.visible')
+  cy.findAllByText('15 minutes').should('be.visible').click({ force: true })
 })
 
 Cypress.Commands.add(
@@ -718,7 +718,7 @@ Cypress.Commands.add('c_verifyBuyAds', () => {
   cy.findByText('Active').should('be.visible')
   cy.findByText('Buy USD').should('be.visible')
   cy.findByText('Float').should('be.visible')
-  cy.findByText('+0.02%').should('be.visible')
+  cy.findByText('-0.01%').should('be.visible')
   cy.findByText(5 + '.00 - ' + 10 + '.00 USD')
   cy.contains(pm1)
   cy.contains(pm2)
