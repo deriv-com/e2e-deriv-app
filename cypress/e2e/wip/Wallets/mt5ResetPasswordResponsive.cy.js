@@ -65,7 +65,7 @@ describe('QATEST-99774 - MT5 reset password', () => {
   it('should be able to change mt5 password in responsive', () => {
     cy.log('change mt5 password')
     cy.c_visitResponsive('/', 'small')
-    cy.c_WaitUntilPageIsLoaded()
+    cy.c_WaitUntilWalletsPageIsLoaded()
     cy.c_skipPasskeysV2()
     cy.findByText('CFDs', { exact: true }).should('be.visible')
     cy.c_skipPasskeysV2()

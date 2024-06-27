@@ -89,7 +89,7 @@ describe('QATEST-98821 - Add demo derivx account and QATEST-98824 add real deriv
     cy.log('add derivx account')
     cy.c_login({ user: 'walletloginEmailMobile' })
     cy.c_visitResponsive('/', 'small')
-    cy.c_WaitUntilPageIsLoaded()
+    cy.c_WaitUntilWalletsPageIsLoaded()
     cy.c_skipPasskeysV2()
     existingAccountCheck('.wallets-card__details-bottom').then((status) => {
       addDerivXaccount(status, 'Real')

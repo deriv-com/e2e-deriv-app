@@ -672,7 +672,7 @@ Cypress.Commands.add('c_skipPasskeysV2', (options = {}) => {
   }
 })
 
-Cypress.Commands.add('c_WaitUntilPageIsLoaded', () => {
+Cypress.Commands.add('c_WaitUntilWalletsPageIsLoaded', () => {
   cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
   cy.get('.wallets-trading-account-card__content')
     .contains('.wallets-text', 'Financial', { timeout: 3000 })

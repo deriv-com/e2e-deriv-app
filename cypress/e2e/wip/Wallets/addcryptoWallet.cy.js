@@ -84,7 +84,7 @@ describe('QATEST-98773 - Add crypto wallet account', () => {
   })
   it('should be able to add more wallets in Responsive', () => {
     cy.c_visitResponsive('/', 'small')
-    cy.c_WaitUntilPageIsLoaded()
+    cy.c_WaitUntilWalletsPageIsLoaded()
     cy.c_skipPasskeysV2()
     addcryptowallet('mobile')
   })
