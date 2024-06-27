@@ -1026,6 +1026,7 @@ Cypress.Commands.add(
     cy.c_verifyBuyOrderField(minOrder, maxOrder, fiatCurrency)
     cy.findAllByText('Rate (1 USD)')
       .eq(0)
+      .closest('.buy-sell-form__field-rate')
       .next('p')
       .invoke('text')
       .then((rateOfOneDollar) => {
