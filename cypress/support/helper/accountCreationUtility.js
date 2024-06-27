@@ -1,5 +1,7 @@
 require('dotenv').config()
 const data = require('../../fixtures/common/common.json')
+const { new_account_real, non_pep_declaration, account_opening_reason } =
+  data.defaultCRDetails
 
 const {
   emailGenerator,
@@ -42,25 +44,38 @@ const createAccountVirtual = async (
   }
 }
 
-const createAccountReal = async (api, country_code, currency) => {
+const createAccountReal = async (api, clientData = {}) => {
+  const {
+    country_code,
+    currency,
+    first_name = data.defaultCRDetails.first_name,
+    last_name = nameGenerator(),
+    date_of_birth = data.defaultCRDetails.date_of_birth,
+    phone = `+${numbersGenerator()}`,
+    address_line_1 = data.defaultCRDetails.address_line_1,
+    tax_residence = data.defaultCRDetails.tax_residence,
+    tax_identification_number = `${numbersGenerator()}`,
+  } = clientData
   try {
     const resp = await createAccountVirtual(api, country_code)
     const { oauthToken } = resp
     await api.account(oauthToken) // API authentication
 
     const clientDetails = {
-      ...data.defaultCRDetails,
+      new_account_real: data.defaultCRDetails.new_account_real,
+      non_pep_declaration: data.defaultCRDetails.non_pep_declaration,
+      account_opening_reason: data.defaultCRDetails.account_opening_reason,
       currency: currency,
       place_of_birth: country_code,
       residence: country_code,
-      first_name: 'Auto Gen',
-      last_name: nameGenerator(),
-      date_of_birth: '2000-09-20',
-      phone: `+${numbersGenerator()}`,
-      address_line_1: '20 Broadway Av',
-      address_city: 'Cyber',
-      tax_residence: 'aq',
-      tax_identification_number: `${numbersGenerator()}`,
+      first_name: first_name,
+      last_name: last_name,
+      date_of_birth: date_of_birth,
+      phone: phone,
+      address_line_1: address_line_1,
+      address_city: data.defaultCRDetails.address_city,
+      tax_residence: tax_residence,
+      tax_identification_number: tax_identification_number,
     }
 
     const response = await api.basic.newAccountReal(clientDetails)

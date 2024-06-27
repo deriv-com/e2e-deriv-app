@@ -22,7 +22,12 @@
     "defaultCRDetails": {
         "new_account_real": 1,
         "non_pep_declaration": 1,
-        "account_opening_reason": "Speculative"
+        "account_opening_reason": "Speculative",
+        "first_name": "Auto Gen",
+        "date_of_birth": "2000-09-25",
+        "address_line_1": "20 Broadway Av",
+        "address_city": "Cyber",
+        "tax_residence": "aq"
 
     },
     "defaultMFDetails": {
