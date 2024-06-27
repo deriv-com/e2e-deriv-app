@@ -449,7 +449,6 @@ Cypress.Commands.add(
   'c_demoAccountSignup',
   (country, accountEmail, size = 'desktop', options = {}) => {
     const { language = 'english' } = options
-    const countriesToCheck = [Cypress.env('countries').ES, 'España']
     cy.fixture('tradersHub/signupLanguageContent.json').then((langData) => {
       const lang = langData[language]
       cy.c_emailVerification('account_opening_new.html', accountEmail)
