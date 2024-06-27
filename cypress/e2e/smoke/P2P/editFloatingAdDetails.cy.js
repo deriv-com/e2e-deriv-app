@@ -14,7 +14,7 @@ describe('QATEST-2488 - Edit Advert Details - Float Rate', () => {
     cy.c_clickMyAdTab()
     cy.c_createNewAd('buy')
     cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Buy', 'float')
-    cy.c_editAdAndVerify('buy', minOrder, maxOrder)
+    cy.c_editAdAndVerify('buy', minOrder, maxOrder, 'float')
   })
   it('Should be able to edit sell type advert and verify all fields and messages for floating rate.', () => {
     cy.c_navigateToP2P()
@@ -23,6 +23,6 @@ describe('QATEST-2488 - Edit Advert Details - Float Rate', () => {
     cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Sell', 'float', {
       paymentMethod: 'Skrill',
     })
-    cy.c_editAdAndVerify('sell', minOrder, maxOrder)
+    cy.c_editAdAndVerify('sell', minOrder, maxOrder, 'float')
   })
 })
