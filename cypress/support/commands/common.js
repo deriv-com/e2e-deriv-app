@@ -789,7 +789,8 @@ Cypress.Commands.add(
   }
 )
 
-Cypress.Commands.add('c_visitBackOffice', (login = true) => {
+Cypress.Commands.add('c_visitBackOffice', (options = {}) => {
+  const { login = true } = options
   cy.viewport('macbook-16')
   cy.visit(
     `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
