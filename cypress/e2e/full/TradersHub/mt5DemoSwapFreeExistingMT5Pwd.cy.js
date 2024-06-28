@@ -1,4 +1,4 @@
-describe('QATEST-5724: CFDs - Create a demo Financial account using existing MT5 account password', () => {
+describe('QATEST-5729: CFDs - Create a Swap-free demo account using existing MT5 account password', () => {
   const size = ['small', 'desktop']
   let countryCode = 'co'
 
@@ -7,7 +7,7 @@ describe('QATEST-5724: CFDs - Create a demo Financial account using existing MT5
     cy.c_login()
   })
   size.forEach((size) => {
-    it(`Verify I can add a demo financial account using exisiting MT5 derived account password on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
+    it(`Verify I can add a demo Swap-free account using exisiting MT5 derived account password on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
       cy.c_visitResponsive('appstore/traders-hub', size)
       cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
@@ -43,15 +43,15 @@ describe('QATEST-5724: CFDs - Create a demo Financial account using existing MT5
         .should('have.text', 'Standard')
       cy.findByText('10,000.00 USD').should('be.visible')
       cy.findByRole('button', { name: 'Top up' }).should('exist')
-      cy.findByTestId('dt_trading-app-card_demo_financial')
+      cy.findByTestId('dt_trading-app-card_demo_swap-free')
         .findByTestId('dt_platform-name')
-        .should('have.text', 'Financial')
-      cy.findByTestId('dt_trading-app-card_demo_financial')
+        .should('have.text', 'Swap-Free')
+      cy.findByTestId('dt_trading-app-card_demo_swap-free')
         .findByRole('button', { name: 'Get' })
         .click()
       cy.findByText('Enter your Deriv MT5 password').should('be.visible')
       cy.findByText(
-        'Enter your Deriv MT5 password to add a MT5 Demo Financial account.'
+        'Enter your Deriv MT5 password to add a MT5 Demo Swap-Free account.'
       ).should('be.visible')
       cy.findByRole('button', { name: 'Add account' }).should('be.disabled')
       cy.findByRole('button', { name: 'Forgot password?' }).should('be.visible')
@@ -80,19 +80,19 @@ describe('QATEST-5724: CFDs - Create a demo Financial account using existing MT5
       cy.findByRole('button', { name: 'Add account' }).click()
       cy.get('.dc-modal-body').should(
         'contain.text',
-        'Success!Your demo Deriv MT5 Financial account is ready.'
+        'Success!Your demo Deriv MT5 Swap-Free account is ready.'
       )
       cy.findByRole('button', { name: 'Continue' }).click()
-      cy.findByTestId('dt_trading-app-card_demo_financial_svg')
+      cy.findByTestId('dt_trading-app-card_demo_swap-free_svg')
         .findByTestId('dt_cfd-account-name')
-        .should('have.text', 'Financial')
+        .should('have.text', 'Swap-Free')
       cy.findAllByText('10,000.00 USD').eq(1).should('be.visible')
       cy.findAllByRole('button', { name: 'Top up' }).eq(1).should('exist')
-      cy.findByTestId('dt_trading-app-card_demo_financial_svg')
+      cy.findByTestId('dt_trading-app-card_demo_swap-free_svg')
         .findByRole('button', { name: 'Open' })
         .click({ force: true })
       cy.get('div.cfd-trade-modal-container')
-        .findByText('Financial')
+        .findByText('Swap-Free')
         .should('be.visible')
       cy.get('div.cfd-trade-modal-container')
         .findByText('Demo')
