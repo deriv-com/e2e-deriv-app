@@ -47,7 +47,7 @@ function demoTransfer(transferToAccount) {
 describe('QATEST-98798 - Transfer and QATEST-98801 View demo transaction', () => {
   //Prerequisites: Demo wallet account in any qa box with USD demo funds
   beforeEach(() => {
-    cy.c_login({ user: 'walletloginEmail' })
+    cy.c_login({ user: 'walletDemoAccount' })
   })
 
   let firstAccount = /MT5 Derived/
