@@ -63,6 +63,7 @@ Cypress.Commands.add('c_login', (options = {}) => {
     app = '',
     backEndProd = false,
     rateLimitCheck = false,
+    passkeys = false,
   } = options
   const { loginEmail, loginPassword } = setLoginUser(user, {
     backEndProd: backEndProd,
@@ -85,6 +86,9 @@ Cypress.Commands.add('c_login', (options = {}) => {
   ) {
     Cypress.env('configServer', Cypress.env('prodServer'))
     Cypress.env('configAppId', Cypress.env('stgAppId'))
+  } else if (passkeys == true) {
+    Cypress.env('configServer', Cypress.env('stdConfigServer'))
+    Cypress.env('configAppId', Cypress.env('updatedAppId'))
   } else {
     Cypress.env('configServer', Cypress.env('stdConfigServer'))
     Cypress.env('configAppId', Cypress.env('stdConfigAppId'))
@@ -462,7 +466,7 @@ Cypress.Commands.add('c_registerNewApplicationID', () => {
  */
 Cypress.Commands.add('c_logout', () => {
   cy.get('#dt_core_header_acc-info-container').click()
-  cy.findByText('Log out').should('be.visible')
+  cy.findAllByText('Log out').should('be.visible')
   cy.get('[data-testid="acc-switcher"]').within(() => {
     cy.contains('Log out').click()
   })
