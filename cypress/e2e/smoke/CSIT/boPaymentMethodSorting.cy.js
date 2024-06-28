@@ -69,7 +69,7 @@ function prepareTestData() {
   })
 }
 
-describe('P2PS-2560 - Sorting using category in BO Doughflow payment methods management page', () => {
+describe('QATEST-140205 - Sorting using category in BO Doughflow payment methods management page', () => {
   it('Should check sorting of Payment Methods in BO', () => {
     cy.c_visitResponsive('/', 'large')
     cy.c_visitBackOffice()
