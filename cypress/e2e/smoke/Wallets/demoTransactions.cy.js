@@ -7,6 +7,7 @@ function resetBalanceDemo(platform) {
     cy.c_switchWalletsAccount('USD Demo')
     cy.findByText('Reset balance').should('be.visible').click()
   }
+  cy.findByText('Transfer').should('be.visible')
   cy.get('[class="wallets-cashier-content"]')
     .findByRole('button', { name: 'Reset balance' })
     .click()
