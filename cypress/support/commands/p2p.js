@@ -1096,7 +1096,6 @@ Cypress.Commands.add(
       .find('button[type="submit"]')
       .should('be.visible')
       .click()
-    // cy.wait(3000)
     cy.get('body', { timeout: 30000 }).then((body) => {
       if (body.text().includes('You may choose up to 3.')) {
         cy.get('.dc-checkbox__box', { timeout: 30000 })
@@ -1111,9 +1110,10 @@ Cypress.Commands.add(
           .prev('svg')
           .should('be.visible')
           .click()
-        cy.get(
-          'input[name="choose_payment_method"][value="Bank Transfer"]'
-        ).should('be.visible')
+        cy.wait(2000) //TODO
+        cy.get('input[name="choose_payment_method"][value="Bank Transfer"]', {
+          timeout: 10000,
+        }).should('be.visible')
         cy.c_addPaymentMethod(paymentID, paymentMethod, rateType)
         cy.contains(paymentMethod).click()
         cy.get('.dc-checkbox__box', { timeout: 30000 })
