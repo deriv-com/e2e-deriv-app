@@ -10,7 +10,7 @@ describe('QATEST-146444: Verify Sign-up Flow in ES Language', () => {
 
   it('Verify I can sign-up using ES language', () => {
     const signUpEmail = `sanity${generateEpoch()}es@deriv.com`
-    cy.c_setEndpoint(signUpEmail, size, Cypress.config('baseUrl'), {
+    cy.c_setEndpoint(signUpEmail, size, {
       language: language,
     })
     cy.c_demoAccountSignup(country, signUpEmail, size, { language: language })
@@ -34,6 +34,7 @@ describe('QATEST-146444: Verify Sign-up Flow in ES Language', () => {
       'have.text',
       '0.00USD'
     )
+    cy.c_skipPasskeysV2({ withoutContent: true })
     cy.c_manageAccountsetting(country, { isMobile: true, language: language })
   })
 })

@@ -21,6 +21,7 @@ const createAccountVirtual = async (
   password = process.env.E2E_DERIV_PASSWORD
 ) => {
   try {
+    if (!password) throw new Error(`Password not on file`)
     const response = await api.basic.newAccountVirtual({
       new_account_virtual: 1,
       type: 'trading',
@@ -60,6 +61,7 @@ const createAccountReal = async (api, country_code, currency) => {
       phone: `+${numbersGenerator()}`,
       address_line_1: '20 Broadway Av',
       address_city: 'Cyber',
+      citizen: country_code,
       tax_residence: 'aq',
       tax_identification_number: `${numbersGenerator()}`,
     }
