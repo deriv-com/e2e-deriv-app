@@ -31,7 +31,6 @@ describe('QATEST-2538 Empty State/Buy Sell Page', () => {
         .find('.dc-dropdown__display-text')
         .should('have.text', sessionStorage.getItem('c_currencyCode'))
       cy.c_checkForNonEmptyStateAdScreen()
-      cy.c_checkForNonEmptyStateAdScreen()
     })
   })
 })
