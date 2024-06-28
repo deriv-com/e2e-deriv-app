@@ -1,8 +1,5 @@
 describe('QATEST-2538 Empty State/Buy Sell Page', () => {
   beforeEach(() => {
-    cy.clearAllLocalStorage()
-    cy.clearAllSessionStorage()
-    cy.clearAllCookies()
     cy.c_login({ user: 'p2pVerifyEmptyStateAdScreen' })
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
