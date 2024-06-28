@@ -32,6 +32,8 @@ const {
   country_code: defaultMFCountryCode,
   salutation,
   education_level,
+  account_turnover,
+  source_of_wealth,
   occupation,
   employment_status,
   employment_industry,
@@ -174,6 +176,8 @@ const createAccountMF = async (api, clientData = {}) => {
       accept_risk,
       salutation,
       education_level,
+      account_turnover,
+      source_of_wealth,
       occupation,
       employment_status,
       employment_industry,
@@ -194,7 +198,7 @@ const createAccountMF = async (api, clientData = {}) => {
 
     const response = await api.basic.newAccountMaltainvest(clientDetailsPayload)
     const {
-      new_account_real: { client_id },
+      new_account_maltainvest: { client_id },
       echo_req: { residence },
     } = response
     return {
@@ -202,7 +206,7 @@ const createAccountMF = async (api, clientData = {}) => {
       residence: residence,
     }
   } catch (e) {
-    console.error('Operation failed', e.error.details)
+    console.error('Operation failed', e)
     throw e
   }
 }
