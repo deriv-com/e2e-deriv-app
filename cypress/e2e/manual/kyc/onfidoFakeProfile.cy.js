@@ -94,7 +94,7 @@ describe('QATEST-4777 Onfido fake profile.', () => {
     ).should('not.exist')
     /* Check BO again, no Unwelcome Login ID status should be present */
     cy.c_visitResponsive('/', 'large')
-    cy.c_visitBackOfficeNoLogin()
+    cy.c_visitBackOffice(false)
     cy.findByText('Client Management').click()
     cy.findByPlaceholderText('email@domain.com')
       .should('exist')

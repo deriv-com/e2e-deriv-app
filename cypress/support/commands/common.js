@@ -789,16 +789,12 @@ Cypress.Commands.add(
   }
 )
 
-Cypress.Commands.add('c_visitBackOffice', () => {
+Cypress.Commands.add('c_visitBackOffice', (login = true) => {
   cy.viewport('macbook-16')
   cy.visit(
     `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
   )
-  cy.findByText('Please login.').click()
-})
-/* Command to go back to BO  while it has not logged you out*/
-Cypress.Commands.add('c_visitBackOfficeNoLogin', () => {
-  cy.visit(
-    `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
-  )
+  if (login) {
+    cy.findByText('Please login.').click()
+  }
 })
