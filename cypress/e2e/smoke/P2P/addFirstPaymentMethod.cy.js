@@ -23,6 +23,6 @@ describe('QATEST-2821 - My Profile page : User add their first payment method', 
     cy.findByRole('button', { name: 'Add payment methods' })
       .should('be.visible')
       .click()
-    cy.c_addPaymentMethod(paymentID, paymentName)
+    cy.c_addPaymentMethod(paymentID, paymentName, 'fixed')
   })
 })

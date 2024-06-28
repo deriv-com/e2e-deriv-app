@@ -20,7 +20,7 @@ describe('QATEST-2839 - My Profile page - Delete Payment Method', () => {
       .should('be.visible')
       .and('contain.text', 'Add')
       .click()
-    cy.c_addPaymentMethod(paymentID, paymentName)
+    cy.c_addPaymentMethod(paymentID, paymentName, 'fixed')
     cy.c_deletePaymentMethod(paymentID, paymentName)
   })
 })
