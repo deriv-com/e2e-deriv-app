@@ -1,10 +1,8 @@
-let currency = {
-  name: 'Indonesian Rupiah',
-  code: 'IDR',
-}
-
 describe('QATEST-2538 Empty State/Buy Sell Page', () => {
   beforeEach(() => {
+    cy.clearAllLocalStorage()
+    cy.clearAllSessionStorage()
+    cy.clearAllCookies()
     cy.c_login({ user: 'p2pVerifyEmptyStateAdScreen' })
     cy.c_visitResponsive('/appstore/traders-hub', 'small')
   })
@@ -15,10 +13,25 @@ describe('QATEST-2538 Empty State/Buy Sell Page', () => {
     cy.c_checkForEmptyAdScreenMessage('Sell', 'Buy')
     cy.findByTestId('dt_dropdown_container').should('be.visible').click()
     cy.findByText('Preferred currency').should('be.visible')
-    cy.findByText(currency.name).should('be.visible').click()
-    cy.findByTestId('dt_dropdown_container')
-      .find('.dc-dropdown__display-text')
-      .should('have.text', currency.code)
-    cy.c_checkForNonEmptyStateAdScreen()
+    cy.get('.dc-dropdown-list__item')
+      .eq(1)
+      .within(() => {
+        cy.get('.currency-dropdown__list-item-symbol')
+          .invoke('text')
+          .then((currencyCode) => {
+            const currency = currencyCode.trim()
+            sessionStorage.setItem('c_currencyCode', currency)
+            cy.findByText(sessionStorage.getItem('c_currencyCode'))
+              .should('be.visible')
+              .click()
+          })
+      })
+    cy.then(() => {
+      cy.findByTestId('dt_dropdown_container')
+        .find('.dc-dropdown__display-text')
+        .should('have.text', sessionStorage.getItem('c_currencyCode'))
+      cy.c_checkForNonEmptyStateAdScreen()
+      cy.c_checkForNonEmptyStateAdScreen()
+    })
   })
 })
