@@ -29,13 +29,13 @@ Cypress.Commands.add(
             const verificationEmail = allRelatedEmails.pop()
             cy.wrap(verificationEmail).click()
 
-            verifyEmailContent(accountEmail)
+            verifyEmailContent(accountEmail, transactionalMessageId)
           } else {
             cy.log('email not found')
           }
         })
 
-        function verifyEmailContent(accountEmail) {
+        function verifyEmailContent(accountEmail, transactionalMessageId) {
           cy.get('p')
             .filter(`:contains('${accountEmail}')`)
             .last()
