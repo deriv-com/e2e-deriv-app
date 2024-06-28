@@ -231,6 +231,14 @@ module.exports = defineConfig({
           ID: process.env.E2E_LOGIN_ID_P2P_FLOATINGRATE_SELLAD_2,
           PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
         },
+        p2pFloatingSellOrder1: {
+          ID: process.env.E2E_P2P_FLOATINGRATE_SELLORDER_1,
+          PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+        },
+        p2pFloatingSellOrder2: {
+          ID: process.env.E2E_P2P_FLOATINGRATE_SELLORDER_2,
+          PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+        },
         p2pVerifyEmptyStateAdScreen: {
           ID: process.env.E2E_LOGIN_ID_P2P_EMPTYSTATE,
           PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
@@ -251,12 +259,24 @@ module.exports = defineConfig({
           ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY,
           PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
         },
+        cashierLegacyPA: {
+          ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY_PA,
+          PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+        },
         cashierLegacyNonUSD: {
           ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY_NON_USD,
           PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
         },
         cashierLegacyUSD: {
           ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY_USD,
+          PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+        },
+        cashierLegacyNonCitizenship: {
+          ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY_NON_CITIZENSHIP,
+          PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+        },
+        cashierLegacyEurNonCitizenship: {
+          ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY_EUR_NON_CITIZENSHIP,
           PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
         },
         diel: {
