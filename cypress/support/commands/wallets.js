@@ -147,7 +147,7 @@ Cypress.Commands.add('c_buyAccumulatorContract', (trade, growthRate) => {
   cy.get('.contract-type-widget__display')
     .find('span')
     .should('have.text', trade)
-  cy.c_verifyTickChange(1000)
+  cy.c_verifyTickChange(2000)
   cy.get('.number-selector__selection').contains(growthRate).click()
   cy.get('.btn-purchase__text_wrapper').contains('Buy').click()
   cy.findByText('Recent positions').should('be.visible')
@@ -208,7 +208,7 @@ Cypress.Commands.add(
 
     //   })
 
-    cy.c_verifyTickChange(1000)
+    cy.c_verifyTickChange(2000)
     cy.get('.mobile-widget .mobile-widget__item').click() // click on growth percentage
     cy.get('.dc-radio-group__item').contains(growthRate).click()
 
