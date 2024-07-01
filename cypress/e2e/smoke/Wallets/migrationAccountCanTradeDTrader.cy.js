@@ -1,6 +1,6 @@
 describe('QATEST-160366 -  TH: Demo - Migrated account can trade - DTrader', () => {
   beforeEach(() => {
-    cy.c_login({ user: 'walletloginEmail' })
+    cy.c_login({ user: 'walletDemoAccount' })
   })
 
   it('real - migrated account should be to trade - DTrader', () => {
