@@ -20,21 +20,6 @@ const loginWithNewUser = (userAccount, isSellAdUserAccount) => {
   isSellAdUser = isSellAdUserAccount
 }
 
-function getProfileData(userType, balanceType) {
-  cy.findByText('My profile').should('be.visible').click()
-  cy.findByText('Available Deriv P2P balance').should('be.visible')
-
-  cy.c_getProfileName().then((name) => {
-    if (userType) {
-      nicknameAndAmount[userType] = name
-    }
-  })
-
-  cy.c_getProfileBalance().then((balance) => {
-    nicknameAndAmount[balanceType] = balance
-  })
-}
-
 describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ads ', () => {
   before(() => {
     cy.clearAllSessionStorage()
@@ -52,7 +37,14 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
   })
   it('Should be able to create a Buy type advert', () => {
     cy.c_navigateToP2P()
-    getProfileData('buyer', 'buyerBalanceBeforeBuying')
+    cy.findByText('My profile').should('be.visible').click()
+    cy.findByText('Available Deriv P2P balance').should('be.visible')
+    cy.c_getProfileName().then((name) => {
+      nicknameAndAmount.buyer = name
+    })
+    cy.c_getProfileBalance().then((balance) => {
+      nicknameAndAmount.buyerBalanceBeforeBuying = balance
+    })
     cy.c_clickMyAdTab()
     cy.c_createNewAd('buy')
     cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Buy', 'float', {
@@ -61,7 +53,14 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
   })
   it('Should be able to create a Sell order', () => {
     cy.c_navigateToP2P()
-    getProfileData('seller', 'sellerBalanceBeforeSelling')
+    cy.findByText('My profile').should('be.visible').click()
+    cy.findByText('Available Deriv P2P balance').should('be.visible')
+    cy.c_getProfileName().then((name) => {
+      nicknameAndAmount.seller = name
+    })
+    cy.c_getProfileBalance().then((balance) => {
+      nicknameAndAmount.sellerBalanceBeforeSelling = balance
+    })
     cy.wait(2000) // Give buffer before creating order
     cy.then(() => {
       cy.c_createSellOrder(
@@ -115,8 +114,13 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
     cy.c_confirmOrder(nicknameAndAmount, 'sell')
     cy.c_giveRating('buyer')
     cy.findByText('Completed').should('be.visible')
+    cy.findByTestId('dt_page_overlay_header_close').click()
     cy.c_navigateToP2P()
-    getProfileData(null, 'sellerBalanceAfterSelling')
+    cy.findByText('My profile').should('be.visible').click()
+    cy.findByText('Available Deriv P2P balance').should('be.visible')
+    cy.c_getProfileBalance().then((balance) => {
+      nicknameAndAmount.sellerBalanceAfterSelling = balance
+    })
     cy.then(() => {
       cy.c_confirmBalance(
         nicknameAndAmount.sellerBalanceBeforeSelling,
@@ -129,7 +133,11 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
   })
   it('Should be able to verify completed order for buyer', () => {
     cy.c_navigateToP2P()
-    getProfileData(null, 'buyerBalanceAfterBuying')
+    cy.findByText('My profile').should('be.visible').click()
+    cy.findByText('Available Deriv P2P balance').should('be.visible')
+    cy.c_getProfileBalance().then((balance) => {
+      nicknameAndAmount.buyerBalanceAfterBuying = balance
+    })
     cy.then(() => {
       cy.c_confirmBalance(
         nicknameAndAmount.buyerBalanceBeforeBuying,
