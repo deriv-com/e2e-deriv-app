@@ -14,7 +14,6 @@ describe('QATEST-160366 -  TH: Demo - Migrated account can trade - DTrader', () 
     'real - migrated account should be to trade - DTrader in responsive',
     { scrollBehavior: false },
     () => {
-      s
       cy.c_visitResponsive('/', 'small')
       cy.findByText('Standard').should('be.visible')
       cy.c_skipPasskeysV2()
