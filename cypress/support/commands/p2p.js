@@ -1096,8 +1096,8 @@ Cypress.Commands.add(
       .find('button[type="submit"]')
       .should('be.visible')
       .click()
-    // cy.wait(3000)
-    cy.get('body', { timeout: 30000 }).then((body) => {
+    cy.findByRole('button', { name: 'Confirm' }).should('be.disabled')
+    cy.get('body', { timeout: 50000 }).then((body) => {
       if (body.text().includes('You may choose up to 3.')) {
         cy.get('.dc-checkbox__box', { timeout: 30000 })
           .should('be.visible')
@@ -1106,14 +1106,12 @@ Cypress.Commands.add(
         cy.findByText(
           "To place an order, add one of the advertiser's preferred payment methods:"
         ).should('be.visible')
-        cy.get('span.dc-text')
-          .contains('Bank Transfer')
-          .prev('svg')
-          .should('be.visible')
+        cy.contains('.payment-method-card--add', 'Bank Transfer')
+          .findByTestId('dt_payment_method_card_add_icon')
           .click()
-        cy.get(
-          'input[name="choose_payment_method"][value="Bank Transfer"]'
-        ).should('be.visible')
+        cy.get('input[name="choose_payment_method"][value="Bank Transfer"]', {
+          timeout: 10000,
+        }).should('be.visible')
         cy.c_addPaymentMethod(paymentID, paymentMethod, rateType)
         cy.contains(paymentMethod).click()
         cy.get('.dc-checkbox__box', { timeout: 30000 })
