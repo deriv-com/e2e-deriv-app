@@ -1,4 +1,4 @@
-function validateAccountSwticher(isMobile, brokerCode) {
+function validateAccountSwitcher(isMobile, brokerCode) {
   if (isMobile) {
     cy.findByTestId('dt_span').findByRole('link').click()
     cy.findByTestId('dt_acc_info').click()
@@ -38,7 +38,7 @@ function validateAccountSwticher(isMobile, brokerCode) {
   }
   cy.findByRole('button', { name: 'Next' }).should('be.enabled')
 }
-describe('TRAH-3724 - Verify the account switcher dropdown functionality for adding a real account', () => {
+describe('QATEST-169258: Verify the account switcher dropdown functionality for adding a real account', () => {
   let firstAccountCreated = false
   let secondAccountCreated = false
   const createAccount = (countryCode, currencyCode) => {
@@ -60,7 +60,7 @@ describe('TRAH-3724 - Verify the account switcher dropdown functionality for add
       cy.findAllByTestId('dt_balance_text_container', {
         timeout: 20000,
       }).should('have.length', '2')
-      validateAccountSwticher(isMobile, 'CR')
+      validateAccountSwitcher(isMobile, 'CR')
     })
   })
   size.forEach((size) => {
@@ -74,7 +74,7 @@ describe('TRAH-3724 - Verify the account switcher dropdown functionality for add
       cy.log('the ismobile value is ' + size, isMobile)
       cy.c_visitResponsive('/', size)
       cy.findAllByTestId('dt_balance_text_container').should('be.visible')
-      validateAccountSwticher(isMobile, 'MF')
+      validateAccountSwitcher(isMobile, 'MF')
     })
   })
 })
