@@ -1,6 +1,5 @@
 describe('QATEST-4782 Onfido verified profile', () => {
   beforeEach(() => {
-    cy.c_visitResponsive('/')
     cy.c_createRealAccount('co')
     cy.c_login()
     cy.c_navigateToPoiResponsive('Colombia')

@@ -8,20 +8,20 @@ class BotDashboard {
     return cy.get('.tab__dashboard__table input[type=file]')
   }
 
-  get deleteStrategyButton() {
-    return cy
-      .get('div.bot-list__item__actions__action-item', { timeout: 5000 })
-      .last()
+  get drawerToggleMobile() {
+    return cy.get('.dc-drawer__toggle')
   }
 
-  get openStrategyButton() {
-    return cy
-      .get('div.bot-list__item__actions__action-item', { timeout: 5000 })
-      .first()
+  get openStrategyButtonMobile() {
+    return cy.findAllByTestId('dt_mobile_bot_list_action-open')
   }
 
-  get deleteModalConfirm() {
-    return cy.get('button span').contains('Yes, delete')
+  get openStrategyButtonDesktop() {
+    return cy.findAllByTestId('dt_desktop_bot_list_action-open')
+  }
+
+  get moreActionButton() {
+    return cy.get('.bot-list__item__actions button').first().click()
   }
 
   strategySaveStatus(strategyName) {
@@ -52,16 +52,6 @@ class BotDashboard {
     this.fileInput.selectFile(FILEPATH + `${strategyFileName}.xml`, {
       force: true,
     })
-    this.openStrategyButton.click()
-  }
-
-  /**
-   * Delete a strategy from dashboard
-   */
-  deleteStrategy = () => {
-    this.goToDashboard()
-    this.deleteStrategyButton.click()
-    this.deleteModalConfirm.click({ force: true })
   }
 
   goToDashboard = () => {
