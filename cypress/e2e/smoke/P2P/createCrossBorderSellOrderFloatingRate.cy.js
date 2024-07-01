@@ -24,15 +24,15 @@ const loginWithNewUser = (userAccount, isSellAdUserAccount) => {
   isSellAdUser = isSellAdUserAccount
 }
 
-describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Advertise floating-type sell ad, search for advertiser and place buy order with same currency, confirm order with 2FA and give rating recommendation for both buyer and seller', () => {
+describe('QATEST-2595 - Place a sell order on cross border ads - Float rate', () => {
   before(() => {
     cy.clearAllSessionStorage()
   })
   beforeEach(() => {
     if (isSellAdUser == true) {
-      loginWithNewUser('p2pFloatingSellAd1', false)
+      loginWithNewUser('p2pFloatingAdCrossBorder1', false)
     } else {
-      loginWithNewUser('p2pVerifyEmptyStateAdScreen', true)
+      loginWithNewUser('p2pFloatingAdCrossBorder2', true)
     }
     cy.c_visitResponsive('/appstore/traders-hub', 'small'),
       {
@@ -53,7 +53,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
     cy.c_createNewAd('buy')
     cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Buy', 'float')
   })
-  it('Should be able to place a sell order for advert and verify all fields and messages for floating rate.', () => {
+  it('Should be able to place a sell order for cross border advert for floating rate.', () => {
     cy.c_navigateToP2P()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
@@ -89,7 +89,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
     })
     cy.c_waitForPayment()
   })
-  it("Should should be able to click on I've Paid and provide the POT attachment", () => {
+  it("Should be able to click on I've Paid and provide the POT attachment.", () => {
     cy.c_navigateToP2P()
     cy.findByText('Orders').should('be.visible').click()
     cy.c_rateLimit({
@@ -117,7 +117,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
         })
     })
   })
-  it("Should should be able to see I've Received Button and confirm the payment", () => {
+  it("Should be able to see I've Received Button and confirm the payment.", () => {
     cy.c_navigateToP2P()
     cy.findByText('Orders').should('be.visible').click()
     cy.c_rateLimit({
@@ -127,11 +127,13 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
     cy.c_confirmOrder(
       nicknameAndAmount,
       'sell',
-      Cypress.env('credentials').test.p2pVerifyEmptyStateAdScreen.ID
+      Cypress.env('credentials').test.p2pFloatingAdCrossBorder2.ID
     )
     cy.c_giveRating('buyer')
     cy.findByText('Completed').should('be.visible')
-    cy.c_navigateToP2P()
+    cy.findByTestId('dt_mobile_full_page_return_icon')
+      .should('be.visible')
+      .click()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
     cy.c_getProfileBalance().then((balance) => {
@@ -147,7 +149,7 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       )
     })
   })
-  it('Should be able to verify completed order for buyer', () => {
+  it('Should be able to verify completed order for buyer.', () => {
     cy.c_navigateToP2P()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')

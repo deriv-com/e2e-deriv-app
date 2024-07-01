@@ -111,7 +111,11 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
       waitTimeAfterError: 15000,
       maxRetries: 5,
     })
-    cy.c_confirmOrder(nicknameAndAmount, 'sell')
+    cy.c_confirmOrder(
+      nicknameAndAmount,
+      'sell',
+      Cypress.env('credentials').test.p2pFloatingSellOrder2.ID
+    )
     cy.c_giveRating('buyer')
     cy.findByText('Completed').should('be.visible')
     cy.findByTestId('dt_page_overlay_header_close').click()
