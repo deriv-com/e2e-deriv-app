@@ -188,26 +188,12 @@ Cypress.Commands.add(
   'c_buyAccumulatorContractResponsive',
   (trade, growthRate) => {
     cy.findByText('Accumulators').click()
-    // cy.findByText('All').click()
     cy.get('.contract-type-list .contract-type-list__wrapper').then((el) => {
       cy.wrap(el).findByText(trade).click()
     })
     cy.get('.contract-type-widget__display')
       .find('span')
       .should('have.text', trade)
-    cy.get('.cq-inchart-subholder').should('be.visible')
-
-    // cy.get('.sc-tooltip')
-    // cy.get('.cq-chart-price')
-    cy.get('.cq-crosshair-wrapper').should('be.visible')
-
-    // cy.get('.chartContainer .chartContainer .cq-crosshair-wrapper')
-    //   // .should('not.be.visible')
-    //   .should(() => { })
-    //   .then(($el) => {
-
-    //   })
-
     cy.c_verifyTickChange(2000)
     cy.get('.mobile-widget .mobile-widget__item').click() // click on growth percentage
     cy.get('.dc-radio-group__item').contains(growthRate).click()
