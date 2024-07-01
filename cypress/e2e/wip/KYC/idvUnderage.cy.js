@@ -1,3 +1,5 @@
+import { generateRandomName } from '../../../support/helper/utility'
+
 describe('QATEST-23076 IDV Underage', () => {
   // Note you will need to add QA provider to qabox
   beforeEach(() => {
@@ -11,7 +13,9 @@ describe('QATEST-23076 IDV Underage', () => {
     cy.get('select[name="document_type"]').select('Passport')
     cy.findByLabelText('Enter your document number').type('12345678')
     cy.findByTestId('first_name').clear().type('Refuted')
-    cy.findByTestId('last_name').clear().type('Underage')
+    cy.findByTestId('last_name')
+      .clear()
+      .type(`Underage ${generateRandomName()}`)
     cy.findByTestId('date_of_birth').type('2004-09-20')
     cy.get('.dc-checkbox__box').click()
     cy.findByRole('button', { name: 'Verify' }).click()
