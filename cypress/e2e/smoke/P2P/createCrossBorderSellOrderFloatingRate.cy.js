@@ -63,6 +63,10 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
     cy.c_getProfileBalance().then((balance) => {
       nicknameAndAmount.sellerBalanceBeforeSelling = balance
     })
+    cy.c_rateLimit({
+      waitTimeAfterError: 15000,
+      maxRetries: 10,
+    })
     cy.findByText('Buy / Sell').should('be.visible').click()
     cy.findByRole('button', { name: 'Sell' }).should('be.visible').click()
     cy.findByTestId('dt_dropdown_container').should('be.visible').click()
@@ -85,20 +89,49 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
     })
     cy.c_waitForPayment()
   })
-  it.skip("Should be able to confirm sell order from verification link, give rating to buyer and then confirm seller's balance.", () => {
+  it("Should should be able to click on I've Paid and provide the POT attachment", () => {
     cy.c_navigateToP2P()
     cy.findByText('Orders').should('be.visible').click()
     cy.c_rateLimit({
       waitTimeAfterError: 15000,
-      isLanguageTest: true,
       maxRetries: 5,
     })
-    cy.c_confirmSellOrder(nicknameAndAmount)
+    cy.then(() => {
+      cy.findByText('Pay now').should('be.visible').click()
+      cy.findByRole('button', { name: "I've paid" }).should('not.be.disabled')
+      cy.findByText('Send')
+        .next('span')
+        .invoke('text')
+        .then((sendAmount) => {
+          nicknameAndAmount.amount = sendAmount.trim()
+        })
+        .then(() => {
+          cy.findByRole('button', { name: "I've paid" }).click()
+          cy.c_uploadPOT('cypress/fixtures/P2P/orderCompletion.png')
+          cy.findByText('Waiting for the seller to confirm').should(
+            'be.visible'
+          )
+          cy.findByText(
+            "Don't risk your funds with cash transactions. Use bank transfers or e-wallets instead."
+          ).should('be.visible')
+        })
+    })
+  })
+  it("Should should be able to see I've Received Button and confirm the payment", () => {
+    cy.c_navigateToP2P()
+    cy.findByText('Orders').should('be.visible').click()
+    cy.c_rateLimit({
+      waitTimeAfterError: 15000,
+      maxRetries: 5,
+    })
+    cy.c_confirmOrder(
+      nicknameAndAmount,
+      'sell',
+      Cypress.env('credentials').test.p2pVerifyEmptyStateAdScreen.ID
+    )
     cy.c_giveRating('buyer')
     cy.findByText('Completed').should('be.visible')
-    cy.findByTestId('dt_mobile_full_page_return_icon')
-      .should('be.visible')
-      .click()
+    cy.c_navigateToP2P()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
     cy.c_getProfileBalance().then((balance) => {
@@ -108,12 +141,13 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       cy.c_confirmBalance(
         nicknameAndAmount.sellerBalanceBeforeSelling,
         nicknameAndAmount.sellerBalanceAfterSelling,
-        maxOrder,
-        'buyer'
+        minOrder,
+        'seller',
+        'sell'
       )
     })
   })
-  it.skip("Should be able to confirm buyer's balance and give rating to seller.", () => {
+  it('Should be able to verify completed order for buyer', () => {
     cy.c_navigateToP2P()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
@@ -124,8 +158,9 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       cy.c_confirmBalance(
         nicknameAndAmount.buyerBalanceBeforeBuying,
         nicknameAndAmount.buyerBalanceAfterBuying,
-        maxOrder,
-        'seller'
+        minOrder,
+        'buyer',
+        'sell'
       )
     })
     cy.findByText('Orders').should('be.visible').click()
