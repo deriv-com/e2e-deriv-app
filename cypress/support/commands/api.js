@@ -42,24 +42,10 @@ Cypress.Commands.add('c_registerNewApplicationID', () => {
 /**
  * Method to perform Price Proposal Call
  */
-Cypress.Commands.add('c_getPriceProposal', (options = {}) => {
+Cypress.Commands.add('c_getPriceProposal', (priceData) => {
   try {
-    const { apiCall = 'priceProposal' } = options
-    cy.fixture('api/apiFixture.json').then((priceData) => {
-      const price = priceData[apiCall]
-      cy.task(
-        'createPriceProposalTask',
-        price.priceProposal.priceProposalCurrency,
-        price.priceProposal.priceProposalAmount,
-        price.priceProposal.priceProposalBarrier,
-        price.priceProposal.priceProposalBasis,
-        price.priceProposal.priceProposalContractType,
-        price.priceProposal.priceProposalDuration,
-        price.priceProposal.priceProposalDurationUnit,
-        price.priceProposal.priceProposalSymbol
-      ).then((response) => {
-        Cypress.env('priceProposalResponse', response)
-      })
+    cy.task('createPriceProposalTask', priceData).then((response) => {
+      Cypress.env('priceProposalResponse', response)
     })
   } catch (e) {
     console.error('An error occurred while creating price proposal: ', e)
@@ -69,21 +55,15 @@ Cypress.Commands.add('c_getPriceProposal', (options = {}) => {
 /**
  * Method to perform Buy Contract Call
  */
-Cypress.Commands.add('c_buyContract', (options = {}) => {
+Cypress.Commands.add('c_buyContract', (buyData) => {
   try {
-    const { apiCall = 'buyContract' } = options
     const priceProposalID = Cypress.env('priceProposalResponse')
-    cy.fixture('api/apiFixture.json').then((buyData) => {
-      const buy = buyData[apiCall]
 
-      cy.task(
-        'createBuyContractTask',
-        priceProposalID,
-        buy.buyContract.buyAmount
-      ).then((response) => {
+    cy.task('createBuyContractTask', priceProposalID, buyData).then(
+      (response) => {
         Cypress.env('balanceAfterBuy', response)
-      })
-    })
+      }
+    )
   } catch (e) {
     console.error('An error occurred during buy contract process: ', e)
   }
@@ -132,7 +112,7 @@ Cypress.Commands.add('c_login_setToken', () => {
 
       const urlParams = new URLSearchParams(Cypress.env('oAuthUrl'))
       const token = urlParams.get('token1')
-      cy.log('----------- token is : ------------ ', token)
+
       Cypress.env('oAuthToken', token) //Set token here
     },
     Cypress.env('credentials').test.masterUser.ID,

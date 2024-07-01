@@ -1,35 +1,40 @@
 require('dotenv').config()
 
+const priceData = require('../../fixtures/api/apiFixture.json')
+
+const {
+  proposal,
+  amount,
+  barrier,
+  basis,
+  contract_type,
+  currency,
+  duration,
+  duration_unit,
+  symbol,
+} = priceData.priceProposal
+
 /**
  * Method to Create Price Proposal
  * @param {*} api
  * @returns Price Proposal ID
  */
-const createPriceProposalID = async (
-  api,
-  priceProposalAmount,
-  priceProposalBarrier,
-  priceProposalBasis,
-  priceProposalContractType,
-  priceProposalCurrency,
-  priceProposalDuration,
-  priceProposalDurationUnit,
-  priceProposalSymbol
-) => {
+const createPriceProposalID = async (api) => {
   try {
-    const priceProposal = await api.basic.proposal({
-      proposal: 1,
-      amount: priceProposalAmount,
-      barrier: priceProposalBarrier,
-      basis: priceProposalBasis,
-      contract_type: priceProposalContractType,
-      currency: priceProposalCurrency,
-      duration: priceProposalDuration,
-      duration_unit: priceProposalDurationUnit,
-      symbol: priceProposalSymbol,
-    })
-    console.log('The Price Proposal Id is : ', priceProposal.proposal.id)
+    const priceProposalPayLoad = {
+      proposal,
+      amount,
+      barrier,
+      basis,
+      contract_type,
+      currency,
+      duration,
+      duration_unit,
+      symbol,
+    }
 
+    const priceProposal = await api.basic.proposal(priceProposalPayLoad)
+    console.log('The Price Proposal Id is : ', priceProposal.proposal.id)
     return priceProposal.proposal.id
   } catch (e) {
     console.error('Operation failed', e)

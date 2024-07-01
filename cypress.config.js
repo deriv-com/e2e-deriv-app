@@ -167,27 +167,11 @@ module.exports = defineConfig({
               throw e
             }
           },
-          async createPriceProposalTask(
-            priceProposalCurrency,
-            priceProposalAmount,
-            priceProposalBarrier,
-            priceProposalBasis,
-            priceProposalContractType,
-            priceProposalDuration,
-            priceProposalDurationUnit,
-            priceProposalSymbol
-          ) {
+          async createPriceProposalTask(proposalData) {
             try {
               const price_proposal_id = await createPriceProposalID(
                 api,
-                priceProposalAmount,
-                priceProposalBarrier,
-                priceProposalBasis,
-                priceProposalContractType,
-                priceProposalCurrency,
-                priceProposalDuration,
-                priceProposalDurationUnit,
-                priceProposalSymbol
+                proposalData
               )
               return price_proposal_id
             } catch (e) {
@@ -195,12 +179,12 @@ module.exports = defineConfig({
               throw e
             }
           },
-          async createBuyContractTask(priceProposalID, buyAmount) {
+          async createBuyContractTask(priceProposalID, buyData) {
             try {
               const buy_id = await createBuyContract(
                 api,
                 priceProposalID,
-                buyAmount
+                buyData
               )
               return buy_id
             } catch (e) {
