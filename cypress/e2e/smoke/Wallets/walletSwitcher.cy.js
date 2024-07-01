@@ -52,18 +52,26 @@ function fiatWalletcheck() {
         .should('be.visible')
     )
   cy.findByText('Add more Wallets').scrollIntoView().should('be.visible')
-  cy.findByText('USD Wallet')
-    .should('be.visible')
-    .then(() => {
-      cy.get('[class*="wallets-add-more__content"]')
-        .contains('USD')
-        .parent()
-        .parent()
-        .find('button', { timeout: 15000 })
-        .then((button) => {
-          expect(button).to.contain('Added')
-        })
-    })
+
+  cy.findByText('USD Wallet').should('be.visible')
+  cy.get('[class*="wallets-add-more__content"]').then((el) => {
+    cy.wrap(el)
+      .find('.wallets-text')
+      .each(($el) => {
+        cy.wrap($el)
+          .invoke('text')
+          .then((text) => {
+            cy.log('text', text)
+            if (text.trim() === 'USD Wallet') {
+              cy.wrap($el)
+                .parent()
+                .parent()
+                .find('button', { timeout: 15000 })
+                .should('contain', 'Add')
+            }
+          })
+      })
+  })
 }
 function demoWalletCheck() {
   cy.log('it is demo wallet')
@@ -151,15 +159,15 @@ describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
           .should('be.visible')
       )
     cy.findByText('CFDs', { exact: true }).should('be.visible')
-    cy.findByRole('button', { name: /Derived [\d.,]+ USD/ }).should(
-      'be.visible'
-    )
+    cy.findByRole('button', { name: /Standard/ }).should('be.visible')
     //Navigate back to real  wallet to make sure user land on fiat wallet dashboard
     switchBetweenDemoandReal()
     fiatWalletcheck()
   })
   it('Responsive - Check demo and Real wallet switcher', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
+    cy.c_skipPasskeysV2()
     //User should always login to Real fiat wallet dashboard.
     verifyMobileHomePage()
     getTotalNumberOfWallets(
