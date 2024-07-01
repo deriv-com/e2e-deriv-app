@@ -250,6 +250,10 @@ module.exports = defineConfig({
           ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY,
           PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
         },
+        cashierLegacyPA: {
+          ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY_PA,
+          PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+        },
         cashierLegacyNonUSD: {
           ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY_NON_USD,
           PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,

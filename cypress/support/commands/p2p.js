@@ -1319,7 +1319,7 @@ Cypress.Commands.add(
     cy.findByText('30 days').should('be.visible').click()
     cy.findByText('90%').should('be.visible').click()
     cy.findByPlaceholderText('All countries').click()
-    cy.findByText('Preferred countries').should('be.visible')
+    cy.findAllByText('Preferred countries').should('be.visible')
     cy.findByText('All countries').should('be.visible').click()
     cy.findByText('Andorra').should('be.visible').click()
     cy.findByRole('button', { name: 'Apply' }).should('be.enabled').click()
