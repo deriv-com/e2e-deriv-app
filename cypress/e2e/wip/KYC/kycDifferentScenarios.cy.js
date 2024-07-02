@@ -196,11 +196,23 @@ describe('QATEST-4745 Trigger KYC check in different scenarios.', () => {
   })
 
   it('Creation of MT5 regulated account, should submit both POI and POA', () => {
+    cy.c_visitResponsive('/', 'small')
+    /* check that to create MT5 regulated account, you have to submit POI and POA */
     cy.findByRole('button', { name: 'CFDs' }).click()
     cy.findByTestId('dt_trading-app-card_real_standard')
       .contains('button', 'Get')
       .click()
     cy.findByText('British Virgin Islands').should('be.visible').click()
     cy.get('.dc-checkbox__box').click()
+    cy.findByTestId('dt_modal_footer').contains('button', 'Next').click()
+    cy.get('input[type=file]').selectFile(
+      'cypress/fixtures/kyc/testDocument.jpg',
+      { force: true }
+    )
+    cy.findByRole('button', { name: 'Continue' }).click()
+    cy.findByTestId('dt_mt5_password').type(
+      Cypress.env('credentials').test.mt5User.PSWD
+    )
+    cy.contains('button', 'Create Deriv MT5 password').click()
   })
 })
