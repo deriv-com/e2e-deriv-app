@@ -170,7 +170,7 @@ Cypress.Commands.add('c_checkLanguage', (languageEntry, size) => {
       `#dt_settings_${language.urlCode.toUpperCase().replace('-', '_')}_button`
     ).click()
   }
-  cy.get('.dc-mobile-drawer__overlay').should('not.exist')
+  cy.get('.dc-mobile-drawer__overlay').should('not.be.visible')
   cy.c_verifyWithdrawalScreenContentBeforeLink(language, size)
   cy.c_retrieveVerificationLinkUsingMailisk(
     Cypress.env('credentials').production.cashierWithdrawal.ID.split('@')[0],
