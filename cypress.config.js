@@ -12,6 +12,8 @@ const {
 const {
   registerNewApplicationId,
 } = require('./cypress/support/helper/applicationRegister')
+const { createPriceProposalID } = require('./cypress/support/helper/proposal')
+const { createBuyContract } = require('./cypress/support/helper/buy')
 
 const DerivAPI = require('@deriv/deriv-api/dist/DerivAPI')
 const WebSocket = require('ws')
@@ -160,6 +162,31 @@ module.exports = defineConfig({
                 registerVerificationURI
               )
               return newApplicationID
+            } catch (e) {
+              console.error('Operation failed', e)
+              throw e
+            }
+          },
+          async createPriceProposalTask(proposalData) {
+            try {
+              const price_proposal_id = await createPriceProposalID(
+                api,
+                proposalData
+              )
+              return price_proposal_id
+            } catch (e) {
+              console.error('Operation failed', e)
+              throw e
+            }
+          },
+          async createBuyContractTask(priceProposalID, buyData) {
+            try {
+              const balance_after_buy = await createBuyContract(
+                api,
+                priceProposalID,
+                buyData
+              )
+              return balance_after_buy
             } catch (e) {
               console.error('Operation failed', e)
               throw e
@@ -422,6 +449,19 @@ module.exports = defineConfig({
     passkeyAppId: process.env.E2E_PASSKEY_APP_ID,
     trackingLink: process.env.E2E_TRACKING_LINK,
     trackingLinkToken: process.env.E2E_TRACKING_LINK_TOKEN,
+    loginEmail: process.env.E2E_LOGIN_EMAIL,
+    priceProposalResponse: process.env.E2E_PRICE_PROPOSAL_RESPONSE,
+    priceProposalID: process.env.E2E_PRICE_PROPOSAL_ID,
+    balanceAfterBuy: process.env.E2E_BUY_RESPONSE,
+    priceProposalCurrency: process.env.E2E_PRICE_PROPOSAL_CURRENCY,
+    priceProposalAmount: process.env.E2E_PRICE_AMOUNT,
+    priceProposalBarrier: process.env.E2E_PRICE_PROPOSAL_BARRIER,
+    priceProposalBasis: process.env.E2E_PRICE_PROPOSAL_BASIS,
+    priceProposalContractType: process.env.E2E_PRICE_PROPOSAL_CONTRACT_TYPE,
+    priceProposalDuration: process.env.E2E_PRICE_PROPOSAL_DURATION,
+    priceProposalDurationUnit: process.env.E2E_PRICE_PROPOSAL_DURATION_UNIT,
+    priceProposalSymbol: process.env.E2E_PRICE_PROPOSAL_SYMBOL,
+    newlyCreatedEmail: process.env.E2E_CREATED_NEW_EMAIL,
     countries: {
       ZA: 'South Africa',
       CO: 'Colombia',
