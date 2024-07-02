@@ -16,3 +16,5 @@ describe('QATEST - 145407 - Checking the Balance', () => {
     cy.task('wsDisconnect')
   })
 })
+
+test
