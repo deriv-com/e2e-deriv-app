@@ -2,7 +2,7 @@ describe('QATEST-5704 - Create a new Swap free demo accounts ', () => {
   const size = ['small', 'desktop']
 
   beforeEach(() => {
-    cy.c_createRealAccount()
+    cy.c_createCRAccount()
     cy.c_login()
   })
 

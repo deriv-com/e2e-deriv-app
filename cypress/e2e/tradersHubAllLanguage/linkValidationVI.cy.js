@@ -3,7 +3,7 @@ describe('QATEST-125246 Verify the hyperlinks on Traders Hub', () => {
   let countryCode = 'co'
 
   beforeEach(() => {
-    cy.c_createRealAccount(countryCode)
+    cy.c_createCRAccount(countryCode)
     cy.c_login()
   })
   size.forEach((size) => {

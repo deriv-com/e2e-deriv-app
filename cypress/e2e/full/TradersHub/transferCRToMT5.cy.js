@@ -92,7 +92,7 @@ describe('QATEST-6064 Validate the transfer from CR to MT5 when CR account is ha
 
 describe('QATEST-6060 Validate the transfer from CR to MT5 when CR account is not having account balance', () => {
   beforeEach(() => {
-    cy.c_createRealAccount()
+    cy.c_createCRAccount()
     cy.c_login()
   })
   it('Should validate the transfer functionality from CR to MT5 account when CR account is not having balance in desktop ', () => {

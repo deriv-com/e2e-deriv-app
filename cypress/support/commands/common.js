@@ -474,10 +474,10 @@ Cypress.Commands.add('c_walletLogout', () => {
 })
 
 /*
-  Usage cy.c_createRealAccount({country_code: 'gh', other_keys: 'value'}) or you may not pass in anything to go with default.
+  Usage cy.c_createCRAccount({country_code: 'gh', other_keys: 'value'}) or you may not pass in anything to go with default.
   Works for CR countries as well as DIEL - non-EU account.
 */
-Cypress.Commands.add('c_createRealAccount', (clientData) => {
+Cypress.Commands.add('c_createCRAccount', (clientData) => {
   cy.c_visitResponsive('/')
   // Call Verify Email and then set the Verification code in env
   try {
@@ -486,7 +486,7 @@ Cypress.Commands.add('c_createRealAccount', (clientData) => {
       cy.c_emailVerification('account_opening_new.html', accountEmail, {
         isViaAPI: true,
       })
-      cy.task('createRealAccountTask', {
+      cy.task('createCRAccountTask', {
         clientData,
       }).then(() => {
         // Updating Cypress environment variables with the new email

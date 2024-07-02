@@ -2,7 +2,7 @@ describe('QATEST-5708 - Create a new Demo cTrader account', () => {
   const size = ['small', 'desktop']
 
   beforeEach(() => {
-    cy.c_createRealAccount()
+    cy.c_createCRAccount()
     cy.c_login()
   })
 

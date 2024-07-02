@@ -3,7 +3,7 @@ describe('QATEST-5918: Verify Change currency functionality for the account whic
   let newCurrency = Cypress.env('accountCurrency').EUR
 
   beforeEach(() => {
-    cy.c_createRealAccount()
+    cy.c_createCRAccount()
     cy.c_login()
   })
 

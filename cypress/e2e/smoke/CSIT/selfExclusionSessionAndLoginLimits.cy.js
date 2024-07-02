@@ -10,7 +10,7 @@ const size = ['small', 'desktop']
 describe('QATEST-116798 Self Exclusion Session and login limits', () => {
   beforeEach(() => {
     cy.c_visitResponsive('/')
-    cy.c_createRealAccount()
+    cy.c_createCRAccount()
     cy.c_login()
   })
 

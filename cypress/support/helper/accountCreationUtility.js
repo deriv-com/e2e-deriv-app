@@ -88,7 +88,7 @@ const createAccountVirtual = async (api, clientData = {}) => {
   }
 }
 
-const createAccountReal = async (api, clientData = {}) => {
+const createAccountCR = async (api, clientData = {}) => {
   const {
     country_code = defaultCRCountryCode,
     currency = defaultCurrency,
@@ -213,7 +213,7 @@ const createAccountMF = async (api, clientData = {}) => {
 
 module.exports = {
   createAccountMF,
-  createAccountReal,
+  createAccountCR,
   createAccountVirtual,
   verifyEmail,
 }

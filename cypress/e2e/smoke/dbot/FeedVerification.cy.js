@@ -6,7 +6,7 @@ describe('QATEST-99340: Verify feed is loading on charts tab', () => {
     if (Cypress.config().baseUrl === Cypress.env('prodURL')) {
       cy.c_login({ user: 'dBot', rateLimitCheck: true })
     } else {
-      cy.c_createRealAccount()
+      cy.c_createCRAccount()
       cy.c_login()
     }
   })
