@@ -116,7 +116,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
     cy.log('Transfer from Crypto account')
     cy.c_visitResponsive('/', 'small')
     cy.findAllByText("Trader's Hub").should('have.length', '1')
-    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+    cy.c_WaitUntilWalletsPageIsLoaded()
     cy.c_skipPasskeysV2()
     cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
     cy.c_switchWalletsAccountResponsive('BTC')
@@ -130,7 +130,7 @@ describe('QATEST-98789 - Transfer to crypto accounts and QATEST-98794 View Crypt
   it('should be able to view transactions of crypto account in responsive', () => {
     cy.log('View Transactions of Crypto account')
     cy.c_visitResponsive('/', 'small')
-    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+    cy.c_WaitUntilWalletsPageIsLoaded()
     cy.c_skipPasskeysV2()
     cy.c_switchWalletsAccountResponsive('BTC')
     cy.contains('Transfer').parent().click()

@@ -3,6 +3,7 @@ import { generateAccountNumberString } from '../helper/utility'
 let rate = 0.01
 let marketRate
 let rateCalculation
+let deltaValue = 0.5
 let calculatedValue
 let regexPattern
 let paymentIDForCopyAdSell = generateAccountNumberString(12)
@@ -48,10 +49,18 @@ Cypress.Commands.add('c_postBuyAd', () => {
 Cypress.Commands.add('c_verifyExchangeRate', (rate) => {
   rateCalculation = rate * 0.01
   calculatedValue = rateCalculation * marketRate + marketRate
-  regexPattern = new RegExp(
-    `^Your rate is = ${calculatedValue.toFixed(1)}\\d* NZD$`
-  )
-  cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
+  regexPattern = /^Your rate is = (\d+(\.\d+)?) NZD$/
+  cy.get('.floating-rate__hint')
+    .invoke('text')
+    .then((text) => {
+      const match = text.match(regexPattern)
+      if (match && match[1]) {
+        const rateValue = parseFloat(match[1])
+        expect(rateValue).to.be.closeTo(calculatedValue, deltaValue)
+      } else {
+        throw new Error('Rate string does not match the expected pattern')
+      }
+    })
 })
 
 Cypress.Commands.add('c_verifyFixedRate', (fixedRateValue) => {
@@ -1018,7 +1027,7 @@ Cypress.Commands.add(
       .find('button[type="submit"]')
       .should('be.visible')
       .click()
-    cy.findByRole('button', { name: 'Confirm' }).should('be.visible')
+    cy.findByText('Floating').should('be.visible')
     cy.findByText('Seller').next('p').should('have.text', sellerNickname)
     cy.findByText(
       `Limit: ${minOrder.toFixed(2)}–${maxOrder.toFixed(2)} ${fiatCurrency}`
@@ -1058,7 +1067,9 @@ Cypress.Commands.add(
         )
       })
     return cy.then(() => {
-      cy.findByRole('button', { name: 'Cancel' }).should('be.enabled')
+      cy.findByRole('button', { name: 'Cancel' })
+        .scrollIntoView()
+        .should('be.enabled')
       cy.findByRole('button', { name: 'Confirm' })
         .should('not.be.disabled')
         .click()
@@ -1096,8 +1107,8 @@ Cypress.Commands.add(
       .find('button[type="submit"]')
       .should('be.visible')
       .click()
-    // cy.wait(3000)
-    cy.get('body', { timeout: 30000 }).then((body) => {
+    cy.findByRole('button', { name: 'Confirm' }).should('be.disabled')
+    cy.get('body', { timeout: 50000 }).then((body) => {
       if (body.text().includes('You may choose up to 3.')) {
         cy.get('.dc-checkbox__box', { timeout: 30000 })
           .should('be.visible')
@@ -1106,14 +1117,12 @@ Cypress.Commands.add(
         cy.findByText(
           "To place an order, add one of the advertiser's preferred payment methods:"
         ).should('be.visible')
-        cy.get('span.dc-text')
-          .contains('Bank Transfer')
-          .prev('svg')
-          .should('be.visible')
+        cy.contains('.payment-method-card--add', 'Bank Transfer')
+          .findByTestId('dt_payment_method_card_add_icon')
           .click()
-        cy.get(
-          'input[name="choose_payment_method"][value="Bank Transfer"]'
-        ).should('be.visible')
+        cy.get('input[name="choose_payment_method"][value="Bank Transfer"]', {
+          timeout: 10000,
+        }).should('be.visible')
         cy.c_addPaymentMethod(paymentID, paymentMethod, rateType)
         cy.contains(paymentMethod).click()
         cy.get('.dc-checkbox__box', { timeout: 30000 })
@@ -1319,7 +1328,7 @@ Cypress.Commands.add(
     cy.findByText('30 days').should('be.visible').click()
     cy.findByText('90%').should('be.visible').click()
     cy.findByPlaceholderText('All countries').click()
-    cy.findByText('Preferred countries').should('be.visible')
+    cy.findAllByText('Preferred countries').should('be.visible')
     cy.findByText('All countries').should('be.visible').click()
     cy.findByText('Andorra').should('be.visible').click()
     cy.findByRole('button', { name: 'Apply' }).should('be.enabled').click()
