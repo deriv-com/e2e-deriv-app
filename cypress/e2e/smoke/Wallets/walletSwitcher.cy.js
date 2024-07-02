@@ -77,6 +77,7 @@ function fiatWalletcheck() {
 }
 function demoWalletCheck() {
   cy.log('it is demo wallet')
+  cy.findByText("Trader's Hub").scrollIntoView().should('be.visible')
   cy.findByLabelText('reset-balance').should('be.visible')
   cy.findByLabelText('account-transfer').should('be.visible')
   cy.findByRole('button', { name: 'Options' })
