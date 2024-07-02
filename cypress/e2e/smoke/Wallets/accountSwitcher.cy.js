@@ -49,24 +49,31 @@ describe('QATEST-129858 -  Validate account switcher ', () => {
   beforeEach(() => {
     cy.c_login({ user: 'walletloginEmail' })
   })
-  it('Navigate to account switcher from Trade page &  Manage account settings page', () => {
-    cy.c_visitResponsive('/', 'large')
-    goToAcctSwitcherFromTradepage('Desktop')
-    cy.get('#dt_reports_tab').should('be.visible')
-    validateAccountSwitcher('.account-switcher-wallet__looking-for-cfds')
-    goToAcctSwitcherFromManagesetting('Settings')
-    validateAccountSwitcher('.account-switcher-wallet__looking-for-cfds')
-  })
+  it(
+    'Navigate to account switcher from Trade page &  Manage account settings page',
+    { scrollBehavior: false },
+    () => {
+      cy.c_visitResponsive('/', 'large')
+      goToAcctSwitcherFromTradepage('Desktop')
+      cy.get('#dt_reports_tab').should('be.visible')
+      validateAccountSwitcher('.account-switcher-wallet__looking-for-cfds')
+      goToAcctSwitcherFromManagesetting('Settings')
+      validateAccountSwitcher('.account-switcher-wallet__looking-for-cfds')
+    }
+  )
 
-  it('Responsive - Navigate to account switcher from Trade page &  Manage account settings page', () => {
-    cy.c_visitResponsive('/', 'small')
-    cy.c_WaitUntilWalletsPageIsLoaded()
-    cy.c_skipPasskeysV2()
-    cy.findByText('Options').click()
-    goToAcctSwitcherFromTradepage('Mobile')
-    cy.get('#dt_positions_toggle').should('be.visible')
-    validateAccountSwitcher('.account-switcher-wallet-mobile__footer')
-    goToAcctSwitcherFromManagesetting('Personal details')
-    validateAccountSwitcher('.account-switcher-wallet-mobile__footer')
-  })
+  it(
+    'Responsive - Navigate to account switcher from Trade page &  Manage account settings page',
+    { scrollBehavior: false },
+    () => {
+      cy.c_visitResponsive('/', 'small')
+      cy.c_skipPasskeysV2()
+      cy.findByText('Options').click()
+      goToAcctSwitcherFromTradepage('Mobile')
+      cy.get('#dt_positions_toggle').should('be.visible')
+      validateAccountSwitcher('.account-switcher-wallet-mobile__footer')
+      goToAcctSwitcherFromManagesetting('Personal details')
+      validateAccountSwitcher('.account-switcher-wallet-mobile__footer')
+    }
+  )
 })

@@ -1,7 +1,11 @@
 describe('QATEST-4249: Bot Builder - Search block menu', () => {
   beforeEach(() => {
-    cy.c_createRealAccount()
-    cy.c_login()
+    if (Cypress.config().baseUrl === Cypress.env('prodURL')) {
+      cy.c_login({ user: 'dBot', rateLimitCheck: true })
+    } else {
+      cy.c_createRealAccount()
+      cy.c_login()
+    }
   })
   it('Should login from app.deriv.com, opening DBot and checking of valid/invalid requests in Search bar', () => {
     cy.c_visitResponsive('/bot#bot_builder', 'large')
