@@ -8,13 +8,10 @@ describe('QATEST-4212: Verify Quick Strategy from bot builder page', () => {
   const botBuilder = new BotBuilder()
   const quickStrategy = new QuickStrategy()
 
-  beforeEach(() => {
-    cy.c_login({ user: 'dBot' })
-  })
-
   size.forEach((size) => {
     it(`Run Martingale Quick Strategy on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
+      cy.c_login({ user: 'dBot' })
       cy.c_visitResponsive('appstore/traders-hub', size)
       //Wait for page to completely load
       cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')

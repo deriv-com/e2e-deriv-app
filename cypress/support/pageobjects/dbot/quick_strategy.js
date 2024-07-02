@@ -10,7 +10,7 @@ class QuickStrategy {
   }
 
   get quickStrategyRunBtn() {
-    return cy.xpath('//button[@class="dc-btn dc-btn--primary"]')
+    return cy.findByTestId('qs-run-button')
   }
 
   get quickStrategyEditBtn() {

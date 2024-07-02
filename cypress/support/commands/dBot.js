@@ -2,7 +2,7 @@ Cypress.Commands.add('c_switchToDemoBot', () => {
   cy.findByTestId('dt_acc_info').click()
   cy.findByText('Demo').click()
   cy.findAllByText('Demo').eq(1).click()
-  cy.findByTestId('dt_acc_info').should('be.visible')
+  cy.findByTestId('dt_acc_info').should('be.visible', { timeout: 000 })
 })
 
 Cypress.Commands.add('c_runBot', () => {
@@ -64,11 +64,12 @@ Cypress.Commands.add('c_openDbotThub', () => {
 Cypress.Commands.add('c_deleteStrategy', (isMobile = false) => {
   if (isMobile) {
     cy.get('.dc-drawer__toggle').click({ force: true })
-    cy.findAllByText('Dashboard', { timeout: 7000 }).click()
-    cy.get('.bot-list__item__actions', { timeout: 7000 }).click()
+    cy.findAllByText('Dashboard').click()
+    cy.wait(7000)
+    cy.get('.bot-list__item__actions').click()
     cy.findByTestId('dt_mobile_bot_list_action-delete').click()
   } else {
-    cy.findAllByText('Dashboard', { timeout: 7000 }).click()
+    cy.findAllByText('Dashboard').click()
     cy.findByTestId('dt_desktop_bot_list_action-delete').click()
   }
   cy.findByText('Yes, delete').click({ force: true })

@@ -21,7 +21,7 @@ class BotDashboard {
   }
 
   get moreActionButton() {
-    return cy.get('.bot-list__item__actions button').first().click()
+    return cy.get('.bot-list__item__actions').first().click()
   }
 
   strategySaveStatus(strategyName) {
@@ -52,6 +52,7 @@ class BotDashboard {
     this.fileInput.selectFile(FILEPATH + `${strategyFileName}.xml`, {
       force: true,
     })
+    cy.findByText('You’ve successfully imported a bot.').should('be.visible')
   }
 
   goToDashboard = () => {

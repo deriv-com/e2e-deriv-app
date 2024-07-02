@@ -8,13 +8,10 @@ describe('QATEST-109419: Run custom strategy Even Odd', () => {
   const runPanel = new RunPanel()
   const botBuilder = new BotBuilder()
 
-  beforeEach(() => {
-    cy.c_login({ user: 'dBot' })
-  })
-
   size.forEach((size) => {
     it(`Run Even and Odd Purchase on ${size == 'small' ? 'mobile' : 'desktop'}`, () => {
       const isMobile = size == 'small' ? true : false
+      cy.c_login({ user: 'dBot' })
       cy.c_visitResponsive('appstore/traders-hub', size)
       //Wait for page to completely load
       cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
