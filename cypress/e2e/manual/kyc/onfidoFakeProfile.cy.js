@@ -23,7 +23,7 @@ describe('QATEST-4777 Onfido fake profile.', () => {
     ).should('be.visible')
     /* Access BO to check Un welcome Login ID status is there */
     cy.c_visitResponsive('/', 'large')
-    ccy.c_visitBackOffice({ login: true })
+    cy.c_visitBackOffice({ login: true })
     cy.findByText('Client Management').click()
     cy.findByPlaceholderText('email@domain.com')
       .should('exist')
