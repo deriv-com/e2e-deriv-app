@@ -56,7 +56,7 @@ describe('QATEST-98798 - Transfer and QATEST-98801 View demo transaction', () =>
   it('should be able to transfer demo funds', () => {
     cy.log('Transfer Demo Funds for Demo Account')
     cy.c_visitResponsive('/', 'large')
-    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+    cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
     resetBalanceDemo('desktop')
     cy.findByText(/Transfer from/).click()
     cy.get('button[class=wallets-transfer-form-account-selection__account]')
@@ -73,7 +73,7 @@ describe('QATEST-98798 - Transfer and QATEST-98801 View demo transaction', () =>
   it('should be able to view demo transactions', () => {
     cy.log('View Transactions for Demo Account')
     cy.c_visitResponsive('/', 'large')
-    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+    cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
     resetBalanceDemo('desktop')
     cy.findByRole('button', { name: 'Transactions' }).click()
     cy.findByTestId('dt_wallets_textfield_icon_right')
