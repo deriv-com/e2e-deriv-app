@@ -3,7 +3,7 @@ describe('QATEST-6032: Create MT5 account without using the existing MT5 passwor
   let countryCode = 'co'
 
   beforeEach(() => {
-    cy.c_createRealAccount(countryCode)
+    cy.c_createCRAccount({ country_code: countryCode })
     cy.c_login()
   })
   size.forEach((size) => {

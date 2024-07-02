@@ -1,6 +1,6 @@
 describe('QATEST-22853 IDV Document Rejected by Smile Identity provider', () => {
   beforeEach(() => {
-    cy.c_createRealAccount('gh')
+    cy.c_createCRAccount({ country_code: 'gh' })
     cy.c_login()
     cy.findByTestId('dt_traders_hub').should('be.visible')
     cy.c_navigateToPoiResponsive('Ghana')

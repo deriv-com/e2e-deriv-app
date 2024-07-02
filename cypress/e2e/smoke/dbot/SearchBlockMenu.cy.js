@@ -3,7 +3,7 @@ describe('QATEST-4249: Bot Builder - Search block menu', () => {
     if (Cypress.config().baseUrl === Cypress.env('prodURL')) {
       cy.c_login({ user: 'dBot', rateLimitCheck: true })
     } else {
-      cy.c_createRealAccount()
+      cy.c_createCRAccount()
       cy.c_login()
     }
   })

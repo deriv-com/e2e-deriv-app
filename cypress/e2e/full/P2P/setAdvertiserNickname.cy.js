@@ -17,7 +17,7 @@ function checkNickname(nickname, message, buttonState) {
 
 describe.skip('QATEST-2292, QATEST-2316, QATEST-2324, QATEST-2300, QATEST-2308, QATEST-2334 - Verify nickname validation checks during advertiser registration, including duplicates, special characters, length, repetition, and for correct nickname.', () => {
   beforeEach(() => {
-    cy.c_createRealAccount('br')
+    cy.c_createCRAccount({ country_code: 'br' })
     cy.c_login()
     cy.c_navigateToPoiResponsive('Brazil', { runFor: 'p2p' })
     cy.c_verifyAccount()

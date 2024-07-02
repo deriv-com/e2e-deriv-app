@@ -2,7 +2,7 @@ const size = ['small', 'desktop']
 
 describe("QATEST-5930 - Validate the hyperlinks on Trader's hub", () => {
   beforeEach(() => {
-    cy.c_createRealAccount()
+    cy.c_createCRAccount()
     cy.c_login()
   })
   size.forEach((size) => {

@@ -474,70 +474,97 @@ Cypress.Commands.add('c_walletLogout', () => {
 })
 
 /*
-  Usage cy.c_createRealAccount('co', 'EUR') or you may not pass in anything to go with default.
-  Currently works for CR countries as well as DIEL - non-EU account.
+  Usage cy.c_createCRAccount({country_code: 'gh', other_keys: 'value'}) or you may not pass in anything to go with default.
+  Works for CR countries as well as DIEL - non-EU account.
 */
-Cypress.Commands.add(
-  'c_createRealAccount',
-  (country_code = 'id', currency = 'USD') => {
-    cy.c_visitResponsive('/')
-    // Call Verify Email and then set the Verification code in env
-    try {
-      cy.task('wsConnect')
-      cy.task('verifyEmailTask').then((accountEmail) => {
-        cy.c_emailVerification('account_opening_new.html', accountEmail, {
-          isViaAPI: true,
-        })
-        cy.task('createRealAccountTask', {
-          country_code: country_code,
-          currency: currency,
-        }).then(() => {
-          // Updating Cypress environment variables with the new email
-          const currentCredentials = Cypress.env('credentials')
-          currentCredentials.test.masterUser.ID = accountEmail
-          Cypress.env('credentials', currentCredentials)
-          //Reset oAuthUrl otherwise it will use the previous URL
-          Cypress.env('oAuthUrl', '<empty>')
-        })
+Cypress.Commands.add('c_createCRAccount', (clientData) => {
+  cy.c_visitResponsive('/')
+  // Call Verify Email and then set the Verification code in env
+  try {
+    cy.task('wsConnect')
+    cy.task('verifyEmailTask').then((accountEmail) => {
+      cy.c_emailVerification('account_opening_new.html', accountEmail, {
+        isViaAPI: true,
       })
-    } catch (e) {
-      console.error('An error occurred during the account creation process:', e)
-    } finally {
-      cy.task('wsDisconnect')
-    }
+      cy.task('createCRAccountTask', {
+        clientData,
+      }).then(() => {
+        // Updating Cypress environment variables with the new email
+        const currentCredentials = Cypress.env('credentials')
+        currentCredentials.test.masterUser.ID = accountEmail
+        Cypress.env('credentials', currentCredentials)
+        //Reset oAuthUrl otherwise it will use the previous URL
+        Cypress.env('oAuthUrl', '<empty>')
+      })
+    })
+  } catch (e) {
+    console.error('An error occurred during the account creation process:', e)
+  } finally {
+    cy.task('wsDisconnect')
   }
-)
+})
 
-Cypress.Commands.add(
-  'c_createDemoAccount',
-  (country_code = 'id', currency = 'USD') => {
-    cy.c_visitResponsive('/')
-    // Call Verify Email and then set the Verification code in env
-    try {
-      cy.task('wsConnect')
-      cy.task('verifyEmailTask').then((accountEmail) => {
-        cy.c_emailVerification('account_opening_new.html', accountEmail, {
-          isViaAPI: true,
-        })
-        cy.task('createVirtualAccountTask', {
-          country_code: country_code,
-          currency: currency,
-        }).then(() => {
-          // Updating Cypress environment variables with the new email
-          const currentCredentials = Cypress.env('credentials')
-          currentCredentials.test.masterUser.ID = accountEmail
-          Cypress.env('credentials', currentCredentials)
-          //Reset oAuthUrl otherwise it will use the previous URL
-          Cypress.env('oAuthUrl', '<empty>')
-        })
+/*
+  Usage cy.c_createMFAccount({country_code: 'de', other_keys: 'value'}) or you may not pass in anything to go with default.
+  Works for MF countries as well as DIEL - EU account.
+*/
+Cypress.Commands.add('c_createMFAccount', (clientData) => {
+  cy.c_visitResponsive('/')
+  // Call Verify Email and then set the Verification code in env
+  try {
+    cy.task('wsConnect')
+    cy.task('verifyEmailTask').then((accountEmail) => {
+      cy.c_emailVerification('account_opening_new.html', accountEmail, {
+        isViaAPI: true,
       })
-    } catch (e) {
-      console.error('An error occurred during the account creation process:', e)
-    } finally {
-      cy.task('wsDisconnect')
-    }
+      cy.task('createMFAccountTask', {
+        clientData,
+      }).then(() => {
+        // Updating Cypress environment variables with the new email
+        const currentCredentials = Cypress.env('credentials')
+        currentCredentials.test.masterUser.ID = accountEmail
+        Cypress.env('credentials', currentCredentials)
+        //Reset oAuthUrl otherwise it will use the previous URL
+        Cypress.env('oAuthUrl', '<empty>')
+      })
+    })
+  } catch (e) {
+    console.error('An error occurred during the account creation process:', e)
+  } finally {
+    cy.task('wsDisconnect')
   }
-)
+})
+
+/*
+  Usage cy.c_createDemoAccount({country_code: 'ke'}) or you may not pass in anything to go with default.
+  Works either CR or MF countries.
+*/
+Cypress.Commands.add('c_createDemoAccount', (clientData) => {
+  cy.c_visitResponsive('/')
+  // Call Verify Email and then set the Verification code in env
+  try {
+    cy.task('wsConnect')
+    cy.task('verifyEmailTask').then((accountEmail) => {
+      cy.c_emailVerification('account_opening_new.html', accountEmail, {
+        isViaAPI: true,
+      })
+      cy.task('createVirtualAccountTask', {
+        clientData,
+      }).then(() => {
+        // Updating Cypress environment variables with the new email
+        const currentCredentials = Cypress.env('credentials')
+        currentCredentials.test.masterUser.ID = accountEmail
+        Cypress.env('credentials', currentCredentials)
+        //Reset oAuthUrl otherwise it will use the previous URL
+        Cypress.env('oAuthUrl', '<empty>')
+      })
+    })
+  } catch (e) {
+    console.error('An error occurred during the account creation process:', e)
+  } finally {
+    cy.task('wsDisconnect')
+  }
+})
 
 Cypress.Commands.add('c_closeModal', () => {
   cy.log('Closing the modal')

@@ -1,6 +1,6 @@
 describe('QATEST-22037 IDV verified by Smile Identity provider', () => {
   beforeEach(() => {
-    cy.c_createRealAccount('za')
+    cy.c_createCRAccount({ country_code: 'za' })
     cy.c_login()
     cy.c_navigateToPoiResponsive('South Africa')
   })

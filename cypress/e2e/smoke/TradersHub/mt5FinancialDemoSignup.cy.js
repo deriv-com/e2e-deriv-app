@@ -3,7 +3,7 @@ describe('QATEST-5699: Create a Financial Demo CFD account', () => {
   let countryCode = 'co'
 
   beforeEach(() => {
-    cy.c_createRealAccount(countryCode)
+    cy.c_createCRAccount({ country_code: countryCode })
     cy.c_login()
   })
   size.forEach((size) => {

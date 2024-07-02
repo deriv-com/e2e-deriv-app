@@ -1,6 +1,6 @@
 describe('QATEST-23015 - IDV POI Name Mismatch - Mobile view', () => {
   beforeEach(() => {
-    cy.c_createRealAccount('ke')
+    cy.c_createCRAccount({ country_code: 'ke' })
     cy.c_login()
     cy.findByTestId('dt_traders_hub').should('be.visible')
     cy.c_navigateToPoiResponsive('Kenya')

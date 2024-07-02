@@ -5,7 +5,10 @@ describe('QATEST-5813: Add USD account for existing BTC account', () => {
   let fiatCurrency = Cypress.env('accountCurrency').USD
 
   beforeEach(() => {
-    cy.c_createRealAccount(countryCode, cryptoCurrency)
+    cy.c_createCRAccount({
+      country_code: countryCode,
+      currency: cryptoCurrency,
+    })
     cy.c_login()
   })
   size.forEach((size) => {

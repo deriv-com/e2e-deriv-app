@@ -3,7 +3,7 @@ describe('QATEST-6000: Create a Financial SVG account', () => {
   let countryCode = 'co'
 
   beforeEach(() => {
-    cy.c_createRealAccount(countryCode)
+    cy.c_createCRAccount({ country_code: countryCode })
     cy.c_login()
   })
   size.forEach((size) => {

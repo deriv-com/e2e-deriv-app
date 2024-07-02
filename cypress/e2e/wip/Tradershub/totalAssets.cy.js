@@ -106,7 +106,7 @@ const getCurrencyList = () => {
 describe('QATEST-54234 - Validate the Total assets for account having crypto siblings accounts', () => {
   it('Should check the Total assets for account having crypto siblings and cfd accounts', () => {
     let totalUSD = 0
-    cy.c_createRealAccount('co')
+    cy.c_createCRAccount({ country_code: 'co' })
     cy.c_login()
     cy.c_visitResponsive('/appstore/traders-hub', 'large')
     cy.c_uiLogin('large', username, pswd)

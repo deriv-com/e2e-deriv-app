@@ -1,6 +1,6 @@
 describe('QATEST-127508 - Onfido (2 attempts) failed clients are redirected to manual upload', () => {
   beforeEach(() => {
-    cy.c_createRealAccount('co')
+    cy.c_createCRAccount({ country_code: 'co' })
     cy.c_login()
     cy.c_navigateToPoiResponsive('Colombia')
   })

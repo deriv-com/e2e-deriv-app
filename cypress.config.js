@@ -1,7 +1,8 @@
 require('dotenv').config()
 const { defineConfig } = require('cypress')
 const {
-  createAccountReal,
+  createAccountMF,
+  createAccountCR,
   createAccountVirtual,
   verifyEmail,
 } = require('./cypress/support/helper/accountCreationUtility')
@@ -87,24 +88,29 @@ module.exports = defineConfig({
 
             return null
           },
-          async createRealAccountTask({ country_code, currency }) {
+          async createCRAccountTask({ clientData }) {
             try {
-              const realAccountDetails = await createAccountReal(
-                api,
-                country_code,
-                currency
-              )
+              const realAccountDetails = await createAccountCR(api, clientData)
               return realAccountDetails
             } catch (error) {
               console.error('Error creating account:', error)
               throw error
             }
           },
-          async createVirtualAccountTask({ country_code }) {
+          async createMFAccountTask({ clientData }) {
+            try {
+              const mfAccountDetails = await createAccountMF(api, clientData)
+              return mfAccountDetails
+            } catch (error) {
+              console.error('Error creating account:', error)
+              throw error
+            }
+          },
+          async createVirtualAccountTask({ clientData }) {
             try {
               const virtualAccountDetails = await createAccountVirtual(
                 api,
-                country_code
+                clientData
               )
               return virtualAccountDetails
             } catch (error) {

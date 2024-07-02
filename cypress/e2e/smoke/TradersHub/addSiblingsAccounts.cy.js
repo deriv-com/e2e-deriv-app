@@ -25,7 +25,7 @@ describe('QATEST-5797, QATEST-5820: Add siblings accounts', () => {
   let nationalIDNum = Cypress.env('nationalIDNum').CO
   let taxIDNum = Cypress.env('taxIDNum').CO
   beforeEach(() => {
-    cy.c_createDemoAccount(countryCode, currencyCode)
+    cy.c_createDemoAccount({ country_code: countryCode })
     cy.c_login()
   })
   size.forEach((size) => {

@@ -6,7 +6,7 @@ const lastName = generateRandomName(7)
 describe('QATEST-115357 - BO General Sanity - Update/Save client details', () => {
   beforeEach(() => {
     cy.c_visitResponsive('/')
-    cy.c_createRealAccount()
+    cy.c_createCRAccount()
     cy.c_login()
   })
 

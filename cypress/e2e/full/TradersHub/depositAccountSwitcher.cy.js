@@ -2,7 +2,7 @@ describe('QATEST-54262 - Verify deposit functionality from account switcher', ()
   const size = ['small', 'desktop']
 
   beforeEach(() => {
-    cy.c_createRealAccount()
+    cy.c_createCRAccount()
     cy.c_login()
   })
 

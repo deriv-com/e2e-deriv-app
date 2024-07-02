@@ -3,7 +3,7 @@ describe('QATEST-24444 - Verify the user is able to close the personal details p
   let countryCode = 'co'
 
   before(() => {
-    cy.c_createDemoAccount(countryCode)
+    cy.c_createDemoAccount({ country_code: countryCode })
   })
   beforeEach(() => {
     cy.c_login()

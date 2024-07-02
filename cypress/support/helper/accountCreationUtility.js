@@ -1,10 +1,56 @@
 require('dotenv').config()
-
+const data = require('../../fixtures/common/common.json')
 const {
   emailGenerator,
   numbersGenerator,
   nameGenerator,
 } = require('./commonJsUtility')
+
+const {
+  non_pep_declaration,
+  account_opening_reason,
+  currency: defaultCurrency,
+  first_name: defaultFirstName,
+  date_of_birth: defaultDateOfBirth,
+  address_line_1: defaultAddressLine1,
+  address_city: defaultAddressCity,
+  tax_residence: defaultTaxResidence,
+} = data.commonDefaults
+
+const {
+  new_account_virtual,
+  type: defaultAccountType,
+  country_code: defaultVRCountryCode,
+} = data.defaultVRDetails
+
+const { new_account_real, country_code: defaultCRCountryCode } =
+  data.defaultCRDetails
+
+const {
+  new_account_maltainvest,
+  accept_risk,
+  country_code: defaultMFCountryCode,
+  salutation,
+  education_level,
+  account_turnover,
+  source_of_wealth,
+  occupation,
+  employment_status,
+  employment_industry,
+  income_source,
+  net_income,
+  estimated_worth,
+  risk_tolerance,
+  source_of_experience,
+  trading_experience_financial_instruments,
+  trading_frequency_financial_instruments,
+  cfd_experience,
+  cfd_frequency,
+  cfd_trading_definition,
+  leverage_impact_trading,
+  leverage_trading_high_risk_stop_loss,
+  required_initial_margin,
+} = data.defaultMFDetails
 
 const verifyEmail = async (api) => {
   const randomEmail = emailGenerator()
@@ -15,17 +61,18 @@ const verifyEmail = async (api) => {
   return randomEmail
 }
 
-const createAccountVirtual = async (
-  api,
-  country_code,
-  password = process.env.E2E_DERIV_PASSWORD
-) => {
+const createAccountVirtual = async (api, clientData = {}) => {
+  const {
+    country_code = defaultVRCountryCode,
+    client_password = process.env.E2E_DERIV_PASSWORD,
+    type = defaultAccountType,
+  } = clientData
   try {
-    if (!password) throw new Error(`Password not on file`)
+    if (!client_password) throw new Error(`Password not on file`)
     const response = await api.basic.newAccountVirtual({
-      new_account_virtual: 1,
-      type: 'trading',
-      client_password: password,
+      new_account_virtual,
+      type,
+      client_password,
       residence: country_code,
       verification_code: process.env.E2E_EMAIL_VERIFICATION_CODE,
     })
@@ -42,31 +89,43 @@ const createAccountVirtual = async (
   }
 }
 
-const createAccountReal = async (api, country_code, currency) => {
+const createAccountCR = async (api, clientData = {}) => {
+  const {
+    country_code = defaultCRCountryCode,
+    currency = defaultCurrency,
+    first_name = defaultFirstName,
+    last_name = nameGenerator(),
+    date_of_birth = defaultDateOfBirth,
+    phone = `+${numbersGenerator()}`,
+    address_line_1 = defaultAddressLine1,
+    address_city = defaultAddressCity,
+    tax_residence = defaultTaxResidence,
+    tax_identification_number = `${numbersGenerator()}`,
+  } = clientData
   try {
-    const resp = await createAccountVirtual(api, country_code)
+    const resp = await createAccountVirtual(api, { country_code })
     const { oauthToken } = resp
     await api.account(oauthToken) // API authentication
 
-    const clientDetails = {
-      new_account_real: 1,
-      non_pep_declaration: 1,
-      account_opening_reason: 'Speculative',
-      currency: currency,
-      first_name: 'Auto Gen',
-      last_name: nameGenerator(),
-      date_of_birth: '2000-09-20',
+    const clientDetailsPayload = {
+      new_account_real,
+      non_pep_declaration,
+      account_opening_reason,
+      currency,
       place_of_birth: country_code,
       residence: country_code,
-      phone: `+${numbersGenerator()}`,
-      address_line_1: '20 Broadway Av',
-      address_city: 'Cyber',
       citizen: country_code,
-      tax_residence: 'aq',
-      tax_identification_number: `${numbersGenerator()}`,
+      first_name,
+      last_name,
+      date_of_birth,
+      phone,
+      address_line_1,
+      address_city,
+      tax_residence,
+      tax_identification_number,
     }
 
-    const response = await api.basic.newAccountReal(clientDetails)
+    const response = await api.basic.newAccountReal(clientDetailsPayload)
     const {
       new_account_real: { client_id },
       echo_req: { residence },
@@ -81,4 +140,81 @@ const createAccountReal = async (api, country_code, currency) => {
   }
 }
 
-module.exports = { createAccountReal, createAccountVirtual, verifyEmail }
+const createAccountMF = async (api, clientData = {}) => {
+  const {
+    country_code = defaultMFCountryCode,
+    currency = defaultCurrency,
+    first_name = defaultFirstName,
+    last_name = nameGenerator(),
+    date_of_birth = defaultDateOfBirth,
+    phone = `+${numbersGenerator()}`,
+    address_line_1 = defaultAddressLine1,
+    address_city = defaultAddressCity,
+    tax_residence = defaultTaxResidence,
+    tax_identification_number = `${numbersGenerator()}`,
+  } = clientData
+  try {
+    const resp = await createAccountVirtual(api, { country_code })
+    const { oauthToken } = resp
+    await api.account(oauthToken) // API authentication
+
+    const clientDetailsPayload = {
+      new_account_maltainvest,
+      non_pep_declaration,
+      account_opening_reason,
+      currency,
+      place_of_birth: country_code,
+      residence: country_code,
+      citizen: country_code,
+      first_name,
+      last_name,
+      date_of_birth,
+      phone,
+      address_line_1,
+      address_city,
+      tax_residence,
+      tax_identification_number,
+      accept_risk,
+      salutation,
+      education_level,
+      account_turnover,
+      source_of_wealth,
+      occupation,
+      employment_status,
+      employment_industry,
+      income_source,
+      net_income,
+      estimated_worth,
+      risk_tolerance,
+      source_of_experience,
+      trading_experience_financial_instruments,
+      trading_frequency_financial_instruments,
+      cfd_experience,
+      cfd_frequency,
+      cfd_trading_definition,
+      leverage_impact_trading,
+      leverage_trading_high_risk_stop_loss,
+      required_initial_margin,
+    }
+
+    const response = await api.basic.newAccountMaltainvest(clientDetailsPayload)
+    const {
+      new_account_maltainvest: { client_id },
+      echo_req: { residence },
+    } = response
+    return {
+      clientID: client_id,
+      residence: residence,
+    }
+  } catch (e) {
+    console.error('Operation failed', e)
+    throw e
+  }
+}
+
+module.exports = {
+  createAccountMF,
+  createAccountCR,
+  createAccountVirtual,
+  verifyEmail,
+}

@@ -1,6 +1,6 @@
 describe('QATEST-160108 Cashier lock when POI expire CR - Low', () => {
   beforeEach(() => {
-    cy.c_createRealAccount('aq')
+    cy.c_createCRAccount({ country_code: 'aq' })
     cy.c_login()
     cy.findByTestId('dt_traders_hub').should('be.visible')
     cy.c_navigateToPoiResponsive('Antarctica')

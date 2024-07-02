@@ -1,6 +1,6 @@
 describe('QATEST-4782 Onfido verified profile', () => {
   beforeEach(() => {
-    cy.c_createRealAccount('co')
+    cy.c_createCRAccount({ country_code: 'co' })
     cy.c_login()
     cy.c_navigateToPoiResponsive('Colombia')
   })

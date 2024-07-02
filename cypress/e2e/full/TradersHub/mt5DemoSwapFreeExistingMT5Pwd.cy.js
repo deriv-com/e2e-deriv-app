@@ -3,7 +3,7 @@ describe('QATEST-5729: CFDs - Create a Swap-free demo account using existing MT5
   let countryCode = 'co'
 
   beforeEach(() => {
-    cy.c_createRealAccount(countryCode)
+    cy.c_createCRAccount({ country_code: countryCode })
     cy.c_login()
   })
   size.forEach((size) => {

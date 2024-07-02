@@ -1,7 +1,7 @@
 const BO_URL = `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
 describe('QATEST-4760 Onfido Expired document.', () => {
   beforeEach(() => {
-    cy.c_createRealAccount('co')
+    cy.c_createCRAccount({ country_code: 'co' })
     cy.c_login()
     cy.c_navigateToPoiResponsive('Colombia')
   })
