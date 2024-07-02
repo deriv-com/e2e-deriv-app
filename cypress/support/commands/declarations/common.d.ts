@@ -124,12 +124,18 @@ declare global {
 
       /**
        * Create a demo account
-       * @param country_code Enter the country code (Default = 'id')
-       * @param currency Enter the currency (Default = 'USD')
-       * @example cy.c_createDemoAccount('co', 'EUR')
+       * @param clientData ClientData object containing country_code, password and account type( trading or wallet)
+       * @param clientData.country_code Enter the country code (Default = 'id')
+       * @param clientData.password Enter the password
+       * @param clientData.type Enter the type (Default = 'trading')
+       * @example cy.c_createDemoAccount({country_code: 'sz', type: 'wallet'})
        * @example cy.c_createDemoAccount()
        */
-      c_createDemoAccount(country_code: string, currency: string): void
+      c_createDemoAccount(clientData?: {
+        country_code?: string
+        password?: string
+        type?: string
+      }): void
     }
   }
 }

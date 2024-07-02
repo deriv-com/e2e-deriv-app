@@ -19,7 +19,7 @@ const {
 
 const {
   new_account_virtual,
-  type,
+  type: defaultAccountType,
   country_code: defaultVRCountryCode,
 } = data.defaultVRDetails
 
@@ -65,6 +65,7 @@ const createAccountVirtual = async (api, clientData = {}) => {
   const {
     country_code = defaultVRCountryCode,
     client_password = process.env.E2E_DERIV_PASSWORD,
+    type = defaultAccountType,
   } = clientData
   try {
     if (!client_password) throw new Error(`Password not on file`)
