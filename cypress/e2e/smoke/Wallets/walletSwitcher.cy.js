@@ -166,7 +166,7 @@ describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
     switchBetweenDemoandReal()
     fiatWalletcheck()
   })
-  it.only(
+  it(
     'Responsive - Check demo and Real wallet switcher',
     { scrollBehavior: false },
     () => {
