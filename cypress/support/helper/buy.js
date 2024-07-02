@@ -8,7 +8,7 @@ const { price } = buyData.buyContract
  * Method to Create a Buy Contract
  * @param {*} api
  * @param {*} priceProposalId
- * @returns Balance After The Contract Is Brought
+ * @returns Balance After The Contract Is Bought
  */
 const createBuyContract = async (api, priceProposalID) => {
   console.log('The Price Proposal Id is : ', priceProposalID)

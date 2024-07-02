@@ -181,12 +181,12 @@ module.exports = defineConfig({
           },
           async createBuyContractTask(priceProposalID, buyData) {
             try {
-              const buy_id = await createBuyContract(
+              const balance_after_buy = await createBuyContract(
                 api,
                 priceProposalID,
                 buyData
               )
-              return buy_id
+              return balance_after_buy
             } catch (e) {
               console.error('Operation failed', e)
               throw e
