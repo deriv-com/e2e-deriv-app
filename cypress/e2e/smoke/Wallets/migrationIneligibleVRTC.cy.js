@@ -12,6 +12,7 @@ describe('QATEST-153921 -  Client without VRTC', () => {
   it('Client without VRTC should not see  Wallets - Enable now banner - Responsive', () => {
     cy.c_visitResponsive('/', 'small')
     cy.c_checkForBanner()
+    cy.c_skipPasskeysV2()
     cy.findByText('US Dollar').should('be.visible')
     cy.c_closeNotificationHeader()
     cy.c_switchToDemo()
@@ -37,8 +38,11 @@ describe('QATEST-154139 -  Client with only VRTC', () => {
   })
   it('Responsive - Client with only VRTC should not see  Wallets - Enable now banner', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
     cy.c_skipPasskeysV2()
     cy.c_checkForBanner()
+    cy.c_skipPasskeysV2()
+
     cy.findByText('demo', { exact: true }).should('be.visible')
     cy.c_closeNotificationHeader()
     cy.c_switchToReal()

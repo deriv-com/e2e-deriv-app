@@ -250,6 +250,10 @@ module.exports = defineConfig({
           ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY,
           PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
         },
+        cashierLegacyPA: {
+          ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY_PA,
+          PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+        },
         cashierLegacyNonUSD: {
           ID: process.env.E2E_LOGIN_ID_CASHIER_LEGACY_NON_USD,
           PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
@@ -308,6 +312,10 @@ module.exports = defineConfig({
         },
         walletMigrationNoVRTC: {
           ID: process.env.E2E_WALLET_MIGRATION_NO_VRTC,
+          PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+        },
+        walletDemoAccount: {
+          ID: process.env.E2E_WALLET_USD_DEMO,
           PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
         },
         walletMigrationVRTConly: {
@@ -380,7 +388,7 @@ module.exports = defineConfig({
     stgAppId: process.env.E2E_STG_APPID,
     qaBoxLoginEmail: process.env.E2E_QABOX_LOGIN,
     qaBoxLoginPassword: process.env.E2E_QABOX_PASSWORD,
-    qaBOEndpoint: process.env.BO_ENDPOINT,
+    qaBOEndpoint: '/d/backoffice/login.cgi',
     mt5BaseUrl: process.env.E2E_MT5_BASEURL,
     configServer: process.env.E2E_CONFIG_SERVER,
     configAppId: process.env.E2E_CONFIG_APPID,

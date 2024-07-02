@@ -52,3 +52,32 @@ export const generateCPFNumber = () => {
   const getRandomDigit = () => Math.floor(Math.random() * 10)
   return `0${getRandomDigit()}${getRandomDigit()}.${getRandomDigit()}${getRandomDigit()}${getRandomDigit()}.${getRandomDigit()}${getRandomDigit()}${getRandomDigit()}-${getRandomDigit()}${getRandomDigit()}`
 }
+
+/**
+ * Generates a random name or string based on specified options.
+ *
+ * @param {Object} [options] - The options for name generation.
+ * @param {boolean} [options.fakeProfile=false] - If true, generates a string without vowels.
+ * @param {number} [options.length=8] - The length of the generated string.
+ * @returns {string} A randomly generated string based on the specified options.
+ * @example
+ * const defaultName = generateRandomName();
+ * console.log(defaultName); // e.g., "RtKlMnPq"
+ * @example
+ * const fakeName = generateRandomName({ fakeProfile: true });  // Generate a fake profile name (no vowels)
+ * console.log(fakeName); // e.g., "BcDfGhJk"
+ */
+const vowels = new Set('aeiouAEIOU')
+const allChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+const consonants = allChars
+  .split('')
+  .filter((char) => !vowels.has(char))
+  .join('')
+
+export function generateRandomName({ fakeProfile = false, length = 8 } = {}) {
+  const characters = fakeProfile ? consonants : allChars
+  return Array.from(
+    { length },
+    () => characters[Math.floor(Math.random() * characters.length)]
+  ).join('')
+}

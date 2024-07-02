@@ -16,6 +16,7 @@ describe('QATEST-154042 -  Client with USD more than 3 months, but registered fo
   })
   it('Responsive - P2P registered client should not see  Wallets - Enable now banner', () => {
     cy.c_visitResponsive('/', 'small')
+    cy.findAllByTestId('dt_balance_text_container').should('have.length', '2')
     cy.c_skipPasskeysV2()
     cy.c_checkForBanner()
     cy.findByText('US Dollar').should('be.visible')

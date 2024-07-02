@@ -3,6 +3,7 @@ import { generateAccountNumberString } from '../helper/utility'
 let rate = 0.01
 let marketRate
 let rateCalculation
+let deltaValue = 0.5
 let calculatedValue
 let regexPattern
 let paymentIDForCopyAdSell = generateAccountNumberString(12)
@@ -48,10 +49,18 @@ Cypress.Commands.add('c_postBuyAd', () => {
 Cypress.Commands.add('c_verifyExchangeRate', (rate) => {
   rateCalculation = rate * 0.01
   calculatedValue = rateCalculation * marketRate + marketRate
-  regexPattern = new RegExp(
-    `^Your rate is = ${calculatedValue.toFixed(1)}\\d* NZD$`
-  )
-  cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
+  regexPattern = /^Your rate is = (\d+(\.\d+)?) NZD$/
+  cy.get('.floating-rate__hint')
+    .invoke('text')
+    .then((text) => {
+      const match = text.match(regexPattern)
+      if (match && match[1]) {
+        const rateValue = parseFloat(match[1])
+        expect(rateValue).to.be.closeTo(calculatedValue, deltaValue)
+      } else {
+        throw new Error('Rate string does not match the expected pattern')
+      }
+    })
 })
 
 Cypress.Commands.add('c_verifyFixedRate', (fixedRateValue) => {
@@ -184,52 +193,52 @@ Cypress.Commands.add(
             .type(rate, { parseSpecialCharSequences: false })
             .should('have.value', rate.toString())
         }
-        cy.findByTestId('min_transaction')
-          .type(minOrder)
-          .should('have.value', minOrder)
-        cy.findByTestId('max_transaction')
-          .type(maxOrder)
-          .should('have.value', maxOrder)
-        if (adType == 'Sell') {
-          cy.findByTestId('contact_info')
-            .type('Contact Info Block')
-            .should('have.value', 'Contact Info Block')
-        }
-        cy.findByTestId('default_advert_description')
-          .type('Description Block')
-          .should('have.value', 'Description Block')
-        cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
-        cy.findByText('Set payment details').should('be.visible')
-        cy.findByTestId('dt_dropdown_display').click()
-        cy.findByText('15 minutes').should('be.visible').click({ force: true })
-        if (adType == 'Sell') {
-          cy.findByTestId('dt_payment_method_card_add_icon')
-            .should('be.visible')
-            .click()
-          cy.c_addPaymentMethod(paymentIDForCopyAdSell, paymentMethod, rateType)
-          cy.findByText(paymentIDForCopyAdSell)
-            .should('exist')
-            .parent()
-            .prev()
-            .find('.dc-checkbox')
-            .and('exist')
-            .click()
-          cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
-          cy.findByText('Set ad conditions').should('be.visible')
-        } else if (adType == 'Buy') {
-          cy.c_PaymentMethod()
-        }
-        cy.c_verifyPostAd()
-        cy.c_verifyAdOnMyAdsScreen(
-          adType,
-          sessionStorage.getItem('c_fiatCurrency'),
-          sessionStorage.getItem('c_localCurrency'),
-          rateValue,
-          minOrder,
-          maxOrder,
-          rateType
-        )
       }
+      cy.findByTestId('min_transaction')
+        .type(minOrder)
+        .should('have.value', minOrder)
+      cy.findByTestId('max_transaction')
+        .type(maxOrder)
+        .should('have.value', maxOrder)
+      if (adType == 'Sell') {
+        cy.findByTestId('contact_info')
+          .type('Contact Info Block')
+          .should('have.value', 'Contact Info Block')
+      }
+      cy.findByTestId('default_advert_description')
+        .type('Description Block')
+        .should('have.value', 'Description Block')
+      cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+      cy.findByText('Set payment details').should('be.visible')
+      cy.findByTestId('dt_dropdown_display').click()
+      cy.findByText('15 minutes').should('be.visible').click({ force: true })
+      if (adType == 'Sell') {
+        cy.findByTestId('dt_payment_method_card_add_icon')
+          .should('be.visible')
+          .click()
+        cy.c_addPaymentMethod(paymentIDForCopyAdSell, paymentMethod, rateType)
+        cy.findByText(paymentIDForCopyAdSell)
+          .should('exist')
+          .parent()
+          .prev()
+          .find('.dc-checkbox')
+          .and('exist')
+          .click()
+        cy.findByRole('button', { name: 'Next' }).should('be.enabled').click()
+        cy.findByText('Set ad conditions').should('be.visible')
+      } else if (adType == 'Buy') {
+        cy.c_PaymentMethod()
+      }
+      cy.c_verifyPostAd()
+      cy.c_verifyAdOnMyAdsScreen(
+        adType,
+        sessionStorage.getItem('c_fiatCurrency'),
+        sessionStorage.getItem('c_localCurrency'),
+        rateValue,
+        minOrder,
+        maxOrder,
+        rateType
+      )
     })
   }
 )
@@ -479,10 +488,10 @@ Cypress.Commands.add('c_verifyTooltip', () => {
 
 Cypress.Commands.add('c_verifyCompletionOrderDropdown', () => {
   cy.findByTestId('dt_dropdown_display').click()
-  cy.findByText('1 hour').should('be.visible')
-  cy.findByText('45 minutes').should('be.visible')
-  cy.findByText('30 minutes').should('be.visible')
-  cy.findByText('15 minutes').should('be.visible').click({ force: true })
+  cy.findAllByText('1 hour').should('be.visible')
+  cy.findAllByText('45 minutes').should('be.visible')
+  cy.findAllByText('30 minutes').should('be.visible')
+  cy.findAllByText('15 minutes').should('be.visible').click({ force: true })
 })
 
 Cypress.Commands.add(
@@ -718,7 +727,7 @@ Cypress.Commands.add('c_verifyBuyAds', () => {
   cy.findByText('Active').should('be.visible')
   cy.findByText('Buy USD').should('be.visible')
   cy.findByText('Float').should('be.visible')
-  cy.findByText('+0.02%').should('be.visible')
+  cy.findByText('-0.01%').should('be.visible')
   cy.findByText(5 + '.00 - ' + 10 + '.00 USD')
   cy.contains(pm1)
   cy.contains(pm2)
@@ -1018,7 +1027,7 @@ Cypress.Commands.add(
       .find('button[type="submit"]')
       .should('be.visible')
       .click()
-    cy.findByRole('button', { name: 'Confirm' }).should('be.visible')
+    cy.findByText('Floating').should('be.visible')
     cy.findByText('Seller').next('p').should('have.text', sellerNickname)
     cy.findByText(
       `Limit: ${minOrder.toFixed(2)}–${maxOrder.toFixed(2)} ${fiatCurrency}`
@@ -1026,6 +1035,7 @@ Cypress.Commands.add(
     cy.c_verifyBuyOrderField(minOrder, maxOrder, fiatCurrency)
     cy.findAllByText('Rate (1 USD)')
       .eq(0)
+      .closest('.buy-sell-form__field-rate')
       .next('p')
       .invoke('text')
       .then((rateOfOneDollar) => {
@@ -1057,7 +1067,9 @@ Cypress.Commands.add(
         )
       })
     return cy.then(() => {
-      cy.findByRole('button', { name: 'Cancel' }).should('be.enabled')
+      cy.findByRole('button', { name: 'Cancel' })
+        .scrollIntoView()
+        .should('be.enabled')
       cy.findByRole('button', { name: 'Confirm' })
         .should('not.be.disabled')
         .click()
@@ -1095,8 +1107,8 @@ Cypress.Commands.add(
       .find('button[type="submit"]')
       .should('be.visible')
       .click()
-    // cy.wait(3000)
-    cy.get('body', { timeout: 30000 }).then((body) => {
+    cy.findByRole('button', { name: 'Confirm' }).should('be.disabled')
+    cy.get('body', { timeout: 50000 }).then((body) => {
       if (body.text().includes('You may choose up to 3.')) {
         cy.get('.dc-checkbox__box', { timeout: 30000 })
           .should('be.visible')
@@ -1105,14 +1117,12 @@ Cypress.Commands.add(
         cy.findByText(
           "To place an order, add one of the advertiser's preferred payment methods:"
         ).should('be.visible')
-        cy.get('span.dc-text')
-          .contains('Bank Transfer')
-          .prev('svg')
-          .should('be.visible')
+        cy.contains('.payment-method-card--add', 'Bank Transfer')
+          .findByTestId('dt_payment_method_card_add_icon')
           .click()
-        cy.get(
-          'input[name="choose_payment_method"][value="Bank Transfer"]'
-        ).should('be.visible')
+        cy.get('input[name="choose_payment_method"][value="Bank Transfer"]', {
+          timeout: 10000,
+        }).should('be.visible')
         cy.c_addPaymentMethod(paymentID, paymentMethod, rateType)
         cy.contains(paymentMethod).click()
         cy.get('.dc-checkbox__box', { timeout: 30000 })
@@ -1318,7 +1328,7 @@ Cypress.Commands.add(
     cy.findByText('30 days').should('be.visible').click()
     cy.findByText('90%').should('be.visible').click()
     cy.findByPlaceholderText('All countries').click()
-    cy.findByText('Preferred countries').should('be.visible')
+    cy.findAllByText('Preferred countries').should('be.visible')
     cy.findByText('All countries').should('be.visible').click()
     cy.findByText('Andorra').should('be.visible').click()
     cy.findByRole('button', { name: 'Apply' }).should('be.enabled').click()

@@ -68,7 +68,8 @@ describe('QATEST-98812 - Fiat withdrawal access iframe from email verification l
   it('should be able to access doughflow iframe in responsive', () => {
     cy.log('Access Fiat Withdrawal Iframe Through Email Link')
     cy.c_visitResponsive('/', 'small')
-    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+    cy.c_WaitUntilWalletsPageIsLoaded()
+    cy.c_skipPasskeysV2()
     cy.c_rateLimit({ waitTimeAfterError: 15000, maxRetries: 5 })
     performFiatWithdraw()
     cy.c_verifyWalletsWithdrawalScreenContentAfterLink('mobile')
