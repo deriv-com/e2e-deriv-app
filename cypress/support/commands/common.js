@@ -507,6 +507,57 @@ Cypress.Commands.add(
     }
   }
 )
+Cypress.Commands.add(
+  'c_createWalletAccount',
+  (currency = 'USD', paymentMethod = 'CreditCard', country_code = 'aq') => {
+    cy.c_visitResponsive('/')
+    try {
+      cy.task('wsConnect')
+      cy.task('verifyEmailTask').then((accountEmail) => {
+        cy.c_emailVerification('account_opening_new.html', accountEmail, {
+          isViaAPI: true,
+        })
+        // cy.task('createWalletAccountTask').then(() => {
+        //   // Updating Cypress environment variables with the new email
+        //   const currentCredentials = Cypress.env('credentials');
+        //   currentCredentials.test.masterUser.ID = accountEmail;
+        //   Cypress.env('credentials', currentCredentials);
+        //   // Reset oAuthUrl otherwise it will use the previous URL
+        //   Cypress.env('oAuthUrl', '<empty>');
+        // });
+        cy.request({
+          method: 'POST',
+          url:
+            'https://' +
+            Cypress.env('configServer') +
+            '/oauth2/authorize?app_id=' +
+            Cypress.env('configAppId') +
+            '&l=en&brand=deriv&date_first_contact=', // Replace with your actual RPC endpoint
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Origin': 'https://oauth.deriv.com', // Add any necessary authentication headers if required
+          },
+          body: {
+            new_account_wallet: 1,
+            account_type: 'doughflow', // Example account type, modify as needed
+            currency: 'USD', // Example currency, modify as needed
+            // Add other required fields as per your JSON schema
+          },
+        }).then((response) => {
+          // Assert on the response as needed
+          console.log('this is where account is created')
+          console.log(response)
+          expect(response.status).to.eq(200) // Example assertion, modify as needed
+          // You can also check specific properties in the response if necessary
+        })
+      })
+    } catch (e) {
+      console.error('An error occurred during the account creation process:', e)
+    } finally {
+      cy.task('wsDisconnect')
+    }
+  }
+)
 
 Cypress.Commands.add(
   'c_createDemoAccount',

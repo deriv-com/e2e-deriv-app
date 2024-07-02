@@ -4,6 +4,7 @@ const {
   createAccountReal,
   createAccountVirtual,
   verifyEmail,
+  createAccountWallet,
 } = require('./cypress/support/helper/accountCreationUtility')
 const {
   authorizeCall,
@@ -163,6 +164,15 @@ module.exports = defineConfig({
             } catch (e) {
               console.error('Operation failed', e)
               throw e
+            }
+          },
+          async createWalletAccountTask() {
+            try {
+              const walletAccountDetails = await createAccountWallet(api)
+              return walletAccountDetails
+            } catch (error) {
+              console.error('Error creating wallet account:', error)
+              throw error
             }
           },
         })

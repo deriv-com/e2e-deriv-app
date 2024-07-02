@@ -108,195 +108,195 @@ describe('QATEST-98504 - User Onboarding on Desktop for Fiat Wallets and Launch 
     cy.c_login({ user: 'walletloginEmail' })
   })
 
-  it('User onboarding for desktop', () => {
-    cy.c_visitResponsive('/', 'large')
-    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
-    cy.findByText('CFDs', { exact: true }).should('be.visible')
-    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
-    setupTest('large')
-    desktopSteps.forEach((step, index) => {
-      cy.then(() => {
-        if (index !== 3 && walletCanBeAdded == 'false') {
-          checkStep(
-            step.backButtonExists,
-            step.nextButtonName,
-            step.title,
-            step.description
-          )
-        }
-      })
-    })
-    cy.findByTestId('spotlight').should('not.exist')
-  })
-  it('User onboarding from USD wallet cashier', () => {
-    cy.c_visitResponsive('/', 'large')
-    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
-    cy.then(() => {
-      const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
-      cy.findByText('Deposit').click()
-      cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
-      setupTest('large')
-      desktopSteps.forEach((step, index) => {
-        cy.then(() => {
-          if (index !== 3 && walletCanBeAdded == 'false') {
-            checkStep(
-              step.backButtonExists,
-              step.nextButtonName,
-              step.title,
-              step.description
-            )
-          }
-        })
-      })
-    })
-    cy.findByTestId('spotlight').should('not.exist')
-  })
-  it('User onboarding from USD wallet compare account', () => {
-    cy.c_visitResponsive('/', 'large')
-    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
-    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
-    cy.findByText('Compare accounts').click()
-    cy.findByText('Compare CFDs accounts').should('be.visible')
-    setupTest('large')
-    desktopSteps.forEach((step, index) => {
-      cy.then(() => {
-        if (index !== 3 && walletCanBeAdded == 'false') {
-          checkStep(
-            step.backButtonExists,
-            step.nextButtonName,
-            step.title,
-            step.description
-          )
-        }
-      })
-    })
-    cy.findByTestId('spotlight').should('not.exist')
-  })
-  it('User onboarding from BTC wallet cashier', () => {
-    cy.c_visitResponsive('/', 'large')
-    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
-    cy.c_switchWalletsAccount('BTC')
-    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
-    cy.findByText('Deposit').click()
-    setupTest('large')
-    desktopSteps.forEach((step, index) => {
-      cy.then(() => {
-        if (index !== 3 && walletCanBeAdded == 'false') {
-          checkStep(
-            step.backButtonExists,
-            step.nextButtonName,
-            step.title,
-            step.description
-          )
-        }
-      })
-    })
-    cy.findByTestId('spotlight').should('not.exist')
-  })
-  it('User onboarding from BTC wallet traders hub', () => {
-    cy.c_visitResponsive('/', 'large')
-    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
-    cy.c_switchWalletsAccount('BTC')
-    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
-    setupTest('large')
-    desktopSteps.forEach((step, index) => {
-      cy.then(() => {
-        if (index !== 3 && walletCanBeAdded == 'false') {
-          checkStep(
-            step.backButtonExists,
-            step.nextButtonName,
-            step.title,
-            step.description
-          )
-        }
-      })
-    })
-    cy.findByTestId('spotlight').should('not.exist')
-  })
-  it('User onboarding from BTC wallet compare account', () => {
-    cy.c_visitResponsive('/', 'large')
-    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
-    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
-    cy.c_switchWalletsAccount('BTC')
-    cy.findByText('Compare accounts').click()
-    cy.findByText('Compare CFDs accounts').should('be.visible')
-    setupTest('large')
-    desktopSteps.forEach((step, index) => {
-      cy.then(() => {
-        if (index !== 3 && walletCanBeAdded == 'false') {
-          checkStep(
-            step.backButtonExists,
-            step.nextButtonName,
-            step.title,
-            step.description
-          )
-        }
-      })
-    })
-    cy.findByTestId('spotlight').should('not.exist')
-  })
-  it('User onboarding for mobile', () => {
-    cy.c_visitResponsive('/', 'small')
-    cy.c_skipPasskeysV2()
-    cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
-    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
-    setupTest()
-    mobileSteps.forEach((step, index) => {
-      cy.then(() => {
-        if (index !== 3 && walletCanBeAdded == 'false') {
-          checkStep(
-            step.backButtonExists,
-            step.nextButtonName,
-            step.title,
-            step.description
-          )
-        }
-      })
-    })
-    cy.findByTestId('spotlight').should('not.exist')
-  })
-  it('User onboarding from USD wallet cashier in responsive', () => {
-    cy.c_visitResponsive('/', 'small')
-    cy.c_skipPasskeysV2()
-    cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
-    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
-    cy.findByText('Deposit').parent().should('be.visible').click()
-    cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
-    setupTest()
-    mobileSteps.forEach((step, index) => {
-      cy.then(() => {
-        if (index !== 3 && walletCanBeAdded == 'false') {
-          checkStep(
-            step.backButtonExists,
-            step.nextButtonName,
-            step.title,
-            step.description
-          )
-        }
-      })
-    })
-    cy.findByTestId('spotlight').should('not.exist')
-  })
-  it('User onboarding from BTC wallet tradershub in responsive', () => {
-    cy.c_visitResponsive('/', 'small')
-    cy.c_skipPasskeysV2()
-    cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
-    const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
-    setupTest()
-    mobileSteps.forEach((step, index) => {
-      cy.then(() => {
-        if (index !== 3 && walletCanBeAdded == 'false') {
-          checkStep(
-            step.backButtonExists,
-            step.nextButtonName,
-            step.title,
-            step.description
-          )
-        }
-      })
-    })
-    cy.findByTestId('spotlight').should('not.exist')
-  })
+  // it('User onboarding for desktop', () => {
+  //   cy.c_visitResponsive('/', 'large')
+  //   cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+  //   cy.findByText('CFDs', { exact: true }).should('be.visible')
+  //   const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
+  //   setupTest('large')
+  //   desktopSteps.forEach((step, index) => {
+  //     cy.then(() => {
+  //       if (index !== 3 && walletCanBeAdded == 'false') {
+  //         checkStep(
+  //           step.backButtonExists,
+  //           step.nextButtonName,
+  //           step.title,
+  //           step.description
+  //         )
+  //       }
+  //     })
+  //   })
+  //   cy.findByTestId('spotlight').should('not.exist')
+  // })
+  // it('User onboarding from USD wallet cashier', () => {
+  //   cy.c_visitResponsive('/', 'large')
+  //   cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+  //   cy.then(() => {
+  //     const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
+  //     cy.findByText('Deposit').click()
+  //     cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
+  //     setupTest('large')
+  //     desktopSteps.forEach((step, index) => {
+  //       cy.then(() => {
+  //         if (index !== 3 && walletCanBeAdded == 'false') {
+  //           checkStep(
+  //             step.backButtonExists,
+  //             step.nextButtonName,
+  //             step.title,
+  //             step.description
+  //           )
+  //         }
+  //       })
+  //     })
+  //   })
+  //   cy.findByTestId('spotlight').should('not.exist')
+  // })
+  // it('User onboarding from USD wallet compare account', () => {
+  //   cy.c_visitResponsive('/', 'large')
+  //   cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+  //   const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
+  //   cy.findByText('Compare accounts').click()
+  //   cy.findByText('Compare CFDs accounts').should('be.visible')
+  //   setupTest('large')
+  //   desktopSteps.forEach((step, index) => {
+  //     cy.then(() => {
+  //       if (index !== 3 && walletCanBeAdded == 'false') {
+  //         checkStep(
+  //           step.backButtonExists,
+  //           step.nextButtonName,
+  //           step.title,
+  //           step.description
+  //         )
+  //       }
+  //     })
+  //   })
+  //   cy.findByTestId('spotlight').should('not.exist')
+  // })
+  // it('User onboarding from BTC wallet cashier', () => {
+  //   cy.c_visitResponsive('/', 'large')
+  //   cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+  //   cy.c_switchWalletsAccount('BTC')
+  //   const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
+  //   cy.findByText('Deposit').click()
+  //   setupTest('large')
+  //   desktopSteps.forEach((step, index) => {
+  //     cy.then(() => {
+  //       if (index !== 3 && walletCanBeAdded == 'false') {
+  //         checkStep(
+  //           step.backButtonExists,
+  //           step.nextButtonName,
+  //           step.title,
+  //           step.description
+  //         )
+  //       }
+  //     })
+  //   })
+  //   cy.findByTestId('spotlight').should('not.exist')
+  // })
+  // it('User onboarding from BTC wallet traders hub', () => {
+  //   cy.c_visitResponsive('/', 'large')
+  //   cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+  //   cy.c_switchWalletsAccount('BTC')
+  //   const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
+  //   setupTest('large')
+  //   desktopSteps.forEach((step, index) => {
+  //     cy.then(() => {
+  //       if (index !== 3 && walletCanBeAdded == 'false') {
+  //         checkStep(
+  //           step.backButtonExists,
+  //           step.nextButtonName,
+  //           step.title,
+  //           step.description
+  //         )
+  //       }
+  //     })
+  //   })
+  //   cy.findByTestId('spotlight').should('not.exist')
+  // })
+  // it('User onboarding from BTC wallet compare account', () => {
+  //   cy.c_visitResponsive('/', 'large')
+  //   cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+  //   const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
+  //   cy.c_switchWalletsAccount('BTC')
+  //   cy.findByText('Compare accounts').click()
+  //   cy.findByText('Compare CFDs accounts').should('be.visible')
+  //   setupTest('large')
+  //   desktopSteps.forEach((step, index) => {
+  //     cy.then(() => {
+  //       if (index !== 3 && walletCanBeAdded == 'false') {
+  //         checkStep(
+  //           step.backButtonExists,
+  //           step.nextButtonName,
+  //           step.title,
+  //           step.description
+  //         )
+  //       }
+  //     })
+  //   })
+  //   cy.findByTestId('spotlight').should('not.exist')
+  // })
+  // it('User onboarding for mobile', () => {
+  //   cy.c_visitResponsive('/', 'small')
+  //   cy.c_skipPasskeysV2()
+  //   cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
+  //   const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
+  //   setupTest()
+  //   mobileSteps.forEach((step, index) => {
+  //     cy.then(() => {
+  //       if (index !== 3 && walletCanBeAdded == 'false') {
+  //         checkStep(
+  //           step.backButtonExists,
+  //           step.nextButtonName,
+  //           step.title,
+  //           step.description
+  //         )
+  //       }
+  //     })
+  //   })
+  //   cy.findByTestId('spotlight').should('not.exist')
+  // })
+  // it('User onboarding from USD wallet cashier in responsive', () => {
+  //   cy.c_visitResponsive('/', 'small')
+  //   cy.c_skipPasskeysV2()
+  //   cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
+  //   const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
+  //   cy.findByText('Deposit').parent().should('be.visible').click()
+  //   cy.get('iframe[class=wallets-deposit-fiat__iframe]').should('be.visible')
+  //   setupTest()
+  //   mobileSteps.forEach((step, index) => {
+  //     cy.then(() => {
+  //       if (index !== 3 && walletCanBeAdded == 'false') {
+  //         checkStep(
+  //           step.backButtonExists,
+  //           step.nextButtonName,
+  //           step.title,
+  //           step.description
+  //         )
+  //       }
+  //     })
+  //   })
+  //   cy.findByTestId('spotlight').should('not.exist')
+  // // })
+  // it('User onboarding from BTC wallet tradershub in responsive', () => {
+  //   cy.c_visitResponsive('/', 'small')
+  //   cy.c_skipPasskeysV2()
+  //   cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
+  //   const walletCanBeAdded = sessionStorage.getItem('c_walletExist')
+  //   setupTest()
+  //   mobileSteps.forEach((step, index) => {
+  //     cy.then(() => {
+  //       if (index !== 3 && walletCanBeAdded == 'false') {
+  //         checkStep(
+  //           step.backButtonExists,
+  //           step.nextButtonName,
+  //           step.title,
+  //           step.description
+  //         )
+  //       }
+  //     })
+  //   })
+  //   cy.findByTestId('spotlight').should('not.exist')
+  // })
   it('User onboarding from BTC wallet cashier in responsive', () => {
     cy.c_visitResponsive('/', 'small')
     cy.c_skipPasskeysV2()

@@ -87,7 +87,7 @@ describe('WALL-2830 - Crypto withdrawal send email', () => {
   it('should be able to send withdrawal verification link', () => {
     cy.log('Send Crypto Withdrawal Verification')
     cy.c_visitResponsive('/', 'large')
-    cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+    cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
     sendWithdrawEmail()
   })
 })
