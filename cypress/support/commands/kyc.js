@@ -1,5 +1,4 @@
-import { generateRandomName } from '../helper/loginUtility'
-import { generateCPFNumber } from '../helper/utility'
+import { generateCPFNumber, generateRandomName } from '../helper/utility'
 
 Cypress.Commands.add('c_navigateToPoi', (country) => {
   cy.get('a[href="/account/personal-details"]').click()
