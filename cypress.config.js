@@ -392,7 +392,7 @@ module.exports = defineConfig({
     stgAppId: process.env.E2E_STG_APPID,
     qaBoxLoginEmail: process.env.E2E_QABOX_LOGIN,
     qaBoxLoginPassword: process.env.E2E_QABOX_PASSWORD,
-    qaBOEndpoint: process.env.BO_ENDPOINT,
+    qaBOEndpoint: '/d/backoffice/login.cgi',
     mt5BaseUrl: process.env.E2E_MT5_BASEURL,
     configServer: process.env.E2E_CONFIG_SERVER,
     configAppId: process.env.E2E_CONFIG_APPID,

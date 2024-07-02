@@ -72,7 +72,7 @@ Cypress.Commands.add('c_switchWalletsAccountResponsive', (account) => {
 
 Cypress.Commands.add('c_switchWalletsAccountDemo', () => {
   /// this is a temp solution for https://deriv-group.slack.com/archives/C0548T15K1P/p1714546473367569
-  cy.findByText('Derived', { timeout: 3000 }).should('exist')
+  cy.findByText('Standard', { timeout: 3000 }).should('exist')
   cy.get('div.wallets-progress-bar')
     .find('div.wallets-progress-bar-inactive')
     .last()
@@ -129,4 +129,11 @@ Cypress.Commands.add('c_setupTradeAccountResponsive', (wallet) => {
         cy.findByText("Trader's Hub").should('be.visible')
       }
     })
+})
+Cypress.Commands.add('c_WaitUntilWalletsPageIsLoaded', () => {
+  cy.findByText(/Wallet/, { timeout: 10000 }).should('exist')
+  cy.get('.wallets-trading-account-card__content')
+    .contains('.wallets-text', 'Financial', { timeout: 3000 })
+    .parent()
+    .closest('.wallets-added-mt5__details, .wallets-available-mt5__details')
 })

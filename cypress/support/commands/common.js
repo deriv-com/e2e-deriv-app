@@ -789,10 +789,13 @@ Cypress.Commands.add(
   }
 )
 
-Cypress.Commands.add('c_visitBackOffice', () => {
+Cypress.Commands.add('c_visitBackOffice', (options = {}) => {
+  const { login = true } = options
   cy.viewport('macbook-16')
   cy.visit(
     `https://${Cypress.env('configServer')}${Cypress.env('qaBOEndpoint')}`
   )
-  cy.findByText('Please login.').click()
+  if (login) {
+    cy.findByText('Please login.').click()
+  }
 })

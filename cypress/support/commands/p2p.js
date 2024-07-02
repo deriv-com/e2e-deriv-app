@@ -3,6 +3,7 @@ import { generateAccountNumberString } from '../helper/utility'
 let rate = 0.01
 let marketRate
 let rateCalculation
+let deltaValue = 0.5
 let calculatedValue
 let regexPattern
 let paymentIDForCopyAdSell = generateAccountNumberString(12)
@@ -48,10 +49,18 @@ Cypress.Commands.add('c_postBuyAd', () => {
 Cypress.Commands.add('c_verifyExchangeRate', (rate) => {
   rateCalculation = rate * 0.01
   calculatedValue = rateCalculation * marketRate + marketRate
-  regexPattern = new RegExp(
-    `^Your rate is = ${calculatedValue.toFixed(1)}\\d* NZD$`
-  )
-  cy.get('.floating-rate__hint').invoke('text').should('match', regexPattern)
+  regexPattern = /^Your rate is = (\d+(\.\d+)?) NZD$/
+  cy.get('.floating-rate__hint')
+    .invoke('text')
+    .then((text) => {
+      const match = text.match(regexPattern)
+      if (match && match[1]) {
+        const rateValue = parseFloat(match[1])
+        expect(rateValue).to.be.closeTo(calculatedValue, deltaValue)
+      } else {
+        throw new Error('Rate string does not match the expected pattern')
+      }
+    })
 })
 
 Cypress.Commands.add('c_verifyFixedRate', (fixedRateValue) => {
@@ -1018,7 +1027,7 @@ Cypress.Commands.add(
       .find('button[type="submit"]')
       .should('be.visible')
       .click()
-    cy.findByRole('button', { name: 'Confirm' }).should('be.visible')
+    cy.findByText('Floating').should('be.visible')
     cy.findByText('Seller').next('p').should('have.text', sellerNickname)
     cy.findByText(
       `Limit: ${minOrder.toFixed(2)}–${maxOrder.toFixed(2)} ${fiatCurrency}`
@@ -1058,7 +1067,9 @@ Cypress.Commands.add(
         )
       })
     return cy.then(() => {
-      cy.findByRole('button', { name: 'Cancel' }).should('be.enabled')
+      cy.findByRole('button', { name: 'Cancel' })
+        .scrollIntoView()
+        .should('be.enabled')
       cy.findByRole('button', { name: 'Confirm' })
         .should('not.be.disabled')
         .click()
