@@ -9,7 +9,6 @@ describe('QATEST-155356 - Verify user should able to see Passkey (UI) option und
       cy.log('Creating a New Account')
       cy.c_createDemoAccount()
       cy.c_login()
-      //  cy.findByRole('link', { name: '/account/personal-details' }).click()
       cy.get('a[href="/account/personal-details"]').click()
       cy.c_logout()
       cy.c_createApplicationId()
@@ -43,13 +42,11 @@ describe('QATEST-155356 - Verify user should able to see Passkey (UI) option und
 
         //Verify the 'Experience safer logins' screen
         cy.c_experienceSafeLogin()
-        //cy.findByRole('button', { name: 'learn more' }).should('be.visible').click() // not working
         cy.get('.dc-btn--secondary').should('be.visible').click()
         //Verify the 'Learn More' screen
         cy.c_passkeysLearnMore()
         // verify the 'Just a reminder' Pop-up
         cy.c_justAReminderPopUp()
-        // cy.findByTestId('dt_initial_loader') // not working
         cy.get('.passkeys-status__description-back-button').click() // <- back icon
         cy.findByTestId('dt_div_100_vh')
           .should('contain.text', 'Experience safer logins')
