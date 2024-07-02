@@ -314,6 +314,10 @@ module.exports = defineConfig({
           ID: process.env.E2E_WALLET_MIGRATION_NO_VRTC,
           PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
         },
+        walletDemoAccount: {
+          ID: process.env.E2E_WALLET_USD_DEMO,
+          PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
+        },
         walletMigrationVRTConly: {
           ID: process.env.E2E_WALLET_MIGRATION_VRTCONLY,
           PSWD: process.env.E2E_QA_ACCOUNT_PASSWORD,
