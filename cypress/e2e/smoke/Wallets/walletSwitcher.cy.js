@@ -67,7 +67,9 @@ function fiatWalletcheck() {
                 .parent()
                 .parent()
                 .find('button', { timeout: 15000 })
-                .should('contain', 'Add')
+                .should(($btn) => {
+                  expect($btn.text().trim()).to.equal('Added')
+                })
             }
           })
       })
