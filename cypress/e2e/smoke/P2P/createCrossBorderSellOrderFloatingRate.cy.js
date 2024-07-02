@@ -11,6 +11,10 @@ let nicknameAndAmount = {
   seller: '',
   amount: '',
 }
+let currency = {
+  name: 'Mongolian Tögrög',
+  code: 'MNT',
+}
 let fiatCurrency = 'USD'
 
 let isSellAdUser = true
@@ -20,22 +24,22 @@ const loginWithNewUser = (userAccount, isSellAdUserAccount) => {
   isSellAdUser = isSellAdUserAccount
 }
 
-describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ads ', () => {
+describe('QATEST-2595 - Place a sell order on cross border ads - Float rate', () => {
   before(() => {
     cy.clearAllSessionStorage()
   })
   beforeEach(() => {
     if (isSellAdUser == true) {
-      loginWithNewUser('p2pFloatingSellOrder1', false)
+      loginWithNewUser('p2pFloatingAdCrossBorder1', false)
     } else {
-      loginWithNewUser('p2pFloatingSellOrder2', true)
+      loginWithNewUser('p2pFloatingAdCrossBorder2', true)
     }
     cy.c_visitResponsive('/appstore/traders-hub', 'small'),
       {
         rateLimitCheck: true,
       }
   })
-  it('Should be able to create a Buy type advert', () => {
+  it('Should be able to create buy type advert and verify all fields and messages for floating rate.', () => {
     cy.c_navigateToP2P()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
@@ -47,11 +51,9 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
     })
     cy.c_clickMyAdTab()
     cy.c_createNewAd('buy')
-    cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Buy', 'float', {
-      paymentMethod: 'Bank Transfer',
-    })
+    cy.c_inputAdDetails(floatRate, minOrder, maxOrder, 'Buy', 'float')
   })
-  it('Should be able to create a Sell order', () => {
+  it('Should be able to place a sell order for cross border advert for floating rate.', () => {
     cy.c_navigateToP2P()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
@@ -61,7 +63,19 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
     cy.c_getProfileBalance().then((balance) => {
       nicknameAndAmount.sellerBalanceBeforeSelling = balance
     })
-    cy.wait(2000) // Give buffer before creating order
+    cy.c_rateLimit({
+      waitTimeAfterError: 15000,
+      maxRetries: 10,
+    })
+    cy.findByText('Buy / Sell').should('be.visible').click()
+    cy.findByRole('button', { name: 'Sell' }).should('be.visible').click()
+    cy.findByTestId('dt_dropdown_container').should('be.visible').click()
+    cy.findByText('Preferred currency').should('be.visible')
+    cy.findByText(currency.name).should('be.visible').click()
+    cy.findByTestId('dt_dropdown_container')
+      .find('.dc-dropdown__display-text')
+      .should('have.text', currency.code)
+    cy.c_loadingCheck()
     cy.then(() => {
       cy.c_createSellOrder(
         nicknameAndAmount.buyer,
@@ -75,7 +89,7 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
     })
     cy.c_waitForPayment()
   })
-  it("Buyer should be able to click on I've Paid and provide the POT attachment", () => {
+  it("Should be able to click on I've Paid and provide the POT attachment.", () => {
     cy.c_navigateToP2P()
     cy.findByText('Orders').should('be.visible').click()
     cy.c_rateLimit({
@@ -84,8 +98,7 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
     })
     cy.then(() => {
       cy.findByText('Pay now').should('be.visible').click()
-      cy.wait(2000) // verify "I've paid" button in the page
-      cy.findByRole('button', { name: "I've paid" }).should('be.visible')
+      cy.findByRole('button', { name: "I've paid" }).should('not.be.disabled')
       cy.findByText('Send')
         .next('span')
         .invoke('text')
@@ -104,7 +117,7 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
         })
     })
   })
-  it("Seller should be able to see I've Received Button and confirm the payment", () => {
+  it("Should be able to see I've Received Button and confirm the payment.", () => {
     cy.c_navigateToP2P()
     cy.findByText('Orders').should('be.visible').click()
     cy.c_rateLimit({
@@ -114,12 +127,13 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
     cy.c_confirmOrder(
       nicknameAndAmount,
       'sell',
-      Cypress.env('credentials').test.p2pFloatingSellOrder2.ID
+      Cypress.env('credentials').test.p2pFloatingAdCrossBorder2.ID
     )
     cy.c_giveRating('buyer')
     cy.findByText('Completed').should('be.visible')
-    cy.findByTestId('dt_page_overlay_header_close').click()
-    cy.c_navigateToP2P()
+    cy.findByTestId('dt_mobile_full_page_return_icon')
+      .should('be.visible')
+      .click()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
     cy.c_getProfileBalance().then((balance) => {
@@ -135,7 +149,7 @@ describe('QATEST-50478 - Place a Sell Order same currency ads - floating rate ad
       )
     })
   })
-  it('Should be able to verify completed order for buyer', () => {
+  it('Should be able to verify completed order for buyer.', () => {
     cy.c_navigateToP2P()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')

@@ -99,7 +99,11 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       waitTimeAfterError: 15000,
       maxRetries: 5,
     })
-    cy.c_confirmOrder(nicknameAndAmount, 'buy')
+    cy.c_confirmOrder(
+      nicknameAndAmount,
+      'buy',
+      Cypress.env('credentials').test.p2pFloatingSellAd1.ID
+    )
     cy.c_giveRating('buyer')
     cy.findByText('Completed').should('be.visible')
     cy.findByTestId('dt_mobile_full_page_return_icon')
@@ -107,7 +111,6 @@ describe('QATEST-50478, QATEST-2709, QATEST-2542, QATEST-2769, QATEST-2610  - Ad
       .click()
     cy.findByText('My profile').should('be.visible').click()
     cy.findByText('Available Deriv P2P balance').should('be.visible')
-
     cy.c_getProfileBalance().then((balance) => {
       nicknameAndAmount.sellerBalanceAfterSelling = balance
     })

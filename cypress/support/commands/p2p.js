@@ -1107,6 +1107,7 @@ Cypress.Commands.add(
       .find('button[type="submit"]')
       .should('be.visible')
       .click()
+    cy.findByTestId('dt_ic_cashier_bank_transfer').should('be.visible')
     cy.findByRole('button', { name: 'Confirm' }).should('be.disabled')
     cy.get('body', { timeout: 50000 }).then((body) => {
       if (body.text().includes('You may choose up to 3.')) {
@@ -1158,45 +1159,43 @@ Cypress.Commands.add('c_waitForPayment', () => {
   ).should('be.visible')
 })
 
-Cypress.Commands.add('c_confirmOrder', (nicknameAndAmount, orderType) => {
-  cy.findByText('Confirm payment').should('be.visible').click()
-  cy.findByText(
-    "Don't risk your funds with cash transactions. Use bank transfers or e-wallets instead."
-  ).should('be.visible')
-  cy.then(() => {
-    cy.findByRole('button', { name: "I've received payment" })
-      .should('be.enabled')
-      .click()
-    cy.findByText('Has the buyer paid you?').should('be.visible')
-    cy.findByText('I didn’t receive the email').should('be.visible')
-    cy.findByTestId('dt_modal_close_icon').should('be.visible').click()
-
-    const emailVerificationId =
-      orderType === 'buy'
-        ? Cypress.env('credentials').test.p2pFloatingSellAd1.ID
-        : Cypress.env('credentials').test.p2pFloatingSellOrder2.ID
-
-    cy.c_emailVerification(
-      'track_p2p_order_confirm_verify.html',
-      emailVerificationId
-    )
-
+Cypress.Commands.add(
+  'c_confirmOrder',
+  (nicknameAndAmount, orderType, emailAddress) => {
+    cy.findByText('Confirm payment').should('be.visible').click()
+    cy.findByText(
+      "Don't risk your funds with cash transactions. Use bank transfers or e-wallets instead."
+    ).should('be.visible')
     cy.then(() => {
-      cy.c_visitResponsive(Cypress.env('verificationUrl'), 'small')
+      cy.findByRole('button', { name: "I've received payment" })
+        .should('be.enabled')
+        .click()
+      cy.findByText('Has the buyer paid you?').should('be.visible')
+      cy.findByText('I didn’t receive the email').should('be.visible')
+      cy.findByTestId('dt_modal_close_icon').should('be.visible').click()
+
+      cy.c_emailVerification(
+        'track_p2p_order_confirm_verify.html',
+        emailAddress
+      )
+
+      cy.then(() => {
+        cy.c_visitResponsive(Cypress.env('verificationUrl'), 'small')
+      })
+      cy.log(`nicknameAndAmount.amount is ${nicknameAndAmount.amount}`)
+      const transactionText =
+        orderType === 'buy'
+          ? `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.seller} in your bank account or e-wallet, hit the button below to complete the order.`
+          : `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.buyer} in your bank account or e-wallet, hit the button below to complete the order.`
+      cy.findByText('One last step before we close this order').should(
+        'be.visible'
+      )
+      cy.findByText(transactionText).should('be.visible')
+      cy.findByRole('button', { name: 'Confirm' }).should('be.enabled').click()
+      cy.findByText('How would you rate this transaction?').should('be.visible')
     })
-    cy.log(`nicknameAndAmount.amount is ${nicknameAndAmount.amount}`)
-    const transactionText =
-      orderType === 'buy'
-        ? `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.seller} in your bank account or e-wallet, hit the button below to complete the order.`
-        : `If you’ve received ${nicknameAndAmount.amount} from ${nicknameAndAmount.buyer} in your bank account or e-wallet, hit the button below to complete the order.`
-    cy.findByText('One last step before we close this order').should(
-      'be.visible'
-    )
-    cy.findByText(transactionText).should('be.visible')
-    cy.findByRole('button', { name: 'Confirm' }).should('be.enabled').click()
-    cy.findByText('How would you rate this transaction?').should('be.visible')
-  })
-})
+  }
+)
 
 Cypress.Commands.add('c_filterByPaymentMethod', (PM) => {
   cy.findByText('Payment methods').should('be.visible').click()
