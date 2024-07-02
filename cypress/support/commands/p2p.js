@@ -1163,11 +1163,9 @@ Cypress.Commands.add(
       cy.findByText('I didn’t receive the email').should('be.visible')
       cy.findByTestId('dt_modal_close_icon').should('be.visible').click()
 
-      const emailVerificationId = emailAddress
-
       cy.c_emailVerification(
         'track_p2p_order_confirm_verify.html',
-        emailVerificationId
+        emailAddress
       )
 
       cy.then(() => {
