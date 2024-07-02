@@ -130,3 +130,89 @@ Cypress.Commands.add('c_setupTradeAccountResponsive', (wallet) => {
       }
     })
 })
+
+Cypress.Commands.add('c_openDTrader', () => {
+  cy.findByText('Deriv Trader').click()
+  cy.url().should('include', 'dtrader?chart_type=')
+  cy.get('.sc-toolbar-widget') // wait for the side menu to be visible
+    .should('be.visible')
+})
+
+Cypress.Commands.add('c_buyAccumulatorContract', (trade, growthRate) => {
+  cy.findByText('Accumulators').click()
+  cy.findByText('All').click()
+  cy.get('.contract-type-list .contract-type-list__wrapper').then((el) => {
+    cy.wrap(el).findByText(trade).click()
+  })
+  cy.get('.contract-type-widget__display')
+    .find('span')
+    .should('have.text', trade)
+  cy.c_verifyTickChange(2000)
+  cy.get('.number-selector__selection').contains(growthRate).click()
+  cy.get('.btn-purchase__text_wrapper').contains('Buy').click()
+  cy.findByText('Recent positions').should('be.visible')
+  cy.get('.dc-contract-card').should('be.visible')
+  cy.findByText('Go to Reports').should('be.visible').click()
+  cy.get('.dc-dropdown__container').first().should('have.text', trade)
+  cy.get('[class="dc-data-table"] a').should('have.length.gte', 1)
+  cy.get('[class="dc-data-table"] a')
+    .find('.growth_rate')
+    .should('have.text', growthRate)
+})
+
+Cypress.Commands.add('c_verifyTickChange', (duration) => {
+  cy.wait(duration)
+  cy.get('body').then(($body) => {
+    if ($body.find('.cq-symbol-closed-text').length > 0) {
+      cy.log('This market is closed currently')
+    } else {
+      let initialPrice
+      cy.get('.cq-current-price')
+        .invoke('text')
+        .should('not.be.empty')
+        .then((text) => {
+          initialPrice = text
+        })
+      cy.wait(duration)
+      cy.get('.cq-current-price')
+        .invoke('text')
+        .should('not.be.empty')
+        .then((text) => {
+          expect(text).to.not.eq(initialPrice)
+        })
+    }
+  })
+})
+
+Cypress.Commands.add(
+  'c_buyAccumulatorContractResponsive',
+  (trade, growthRate) => {
+    cy.findByText('Accumulators').click()
+    cy.get('.contract-type-list .contract-type-list__wrapper').then((el) => {
+      cy.wrap(el).findByText(trade).click()
+    })
+    cy.get('.contract-type-widget__display')
+      .find('span')
+      .should('have.text', trade)
+    cy.c_verifyTickChange(2000)
+    cy.get('.mobile-widget .mobile-widget__item').click() // click on growth percentage
+    cy.get('.dc-radio-group__item').contains(growthRate).click()
+
+    cy.get('.flutter-chart flt-glass-pane') // wait for the visibility of the chart
+      .should('be.visible')
+    cy.get('#dt_purchase_accu_button', { timeout: 3000 }).should('be.enabled')
+    cy.get('.btn-purchase__text_wrapper').contains('Buy').click()
+    cy.get('.swipeable-notification').should('be.visible')
+    cy.get('#dt_positions_toggle').click() // open Recent positions
+    cy.findByText('Recent positions').should('be.visible')
+    cy.get('.dc-contract-card').should('be.visible')
+    cy.findByText('Go to Reports').should('be.visible').click()
+    cy.get('.dc-contract-card').should('be.visible')
+    cy.get('.dc-contract-card__grid')
+      .find('#dc-contract_card_type_label')
+      .should('include.text', trade)
+    cy.get('.dc-contract-card__grid')
+      .find('#dc-contract_card_type_label')
+      .should('include.text', growthRate)
+  }
+)
