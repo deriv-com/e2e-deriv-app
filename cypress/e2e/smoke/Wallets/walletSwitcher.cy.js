@@ -166,34 +166,38 @@ describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
     switchBetweenDemoandReal()
     fiatWalletcheck()
   })
-  it('Responsive - Check demo and Real wallet switcher', () => {
-    cy.c_visitResponsive('/', 'small')
-    cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
-    cy.c_skipPasskeysV2()
-    //User should always login to Real fiat wallet dashboard.
-    verifyMobileHomePage()
-    getTotalNumberOfWallets(
-      '.wallets-progress-bar',
-      '.wallets-progress-bar-inactive'
-    ).then((listbar) => {
-      cy.log('the length of progress bar is ' + listbar)
-      for (let i = 0; i < listbar; i++) {
-        clickProgressBarItem(i)
-        cy.get('@textContent').then((textContent) => {
-          expect(textContent).to.include('Wallet')
-          cy.findByRole('button', { name: 'CFDs' })
-            .should('be.visible', { timeout: 15000 })
-            .click()
-          if (textContent == 'USD Demo Wallet') {
-            demoWalletCheck()
-          } else {
-            cy.log('no demo wallet')
-            cy.get('.wallets-cfd-list__cfd-empty-state').within(() => {
-              cy.get('button').contains('Transfer').should('be.visible')
-            })
-          }
-        })
-      }
-    })
-  })
+  it(
+    'Responsive - Check demo and Real wallet switcher',
+    { scrollBehavior: false },
+    () => {
+      cy.c_visitResponsive('/', 'small')
+      cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
+      cy.c_skipPasskeysV2()
+      //User should always login to Real fiat wallet dashboard.
+      verifyMobileHomePage()
+      getTotalNumberOfWallets(
+        '.wallets-progress-bar',
+        '.wallets-progress-bar-inactive'
+      ).then((listbar) => {
+        cy.log('the length of progress bar is ' + listbar)
+        for (let i = 0; i < listbar; i++) {
+          clickProgressBarItem(i)
+          cy.get('@textContent').then((textContent) => {
+            expect(textContent).to.include('Wallet')
+            cy.findByRole('button', { name: 'CFDs' })
+              .should('be.visible', { timeout: 15000 })
+              .click()
+            if (textContent == 'USD Demo Wallet') {
+              demoWalletCheck()
+            } else {
+              cy.log('no demo wallet')
+              cy.get('.wallets-cfd-list__cfd-empty-state').within(() => {
+                cy.get('button').contains('Transfer').should('be.visible')
+              })
+            }
+          })
+        }
+      })
+    }
+  )
 })
