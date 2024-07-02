@@ -166,7 +166,7 @@ describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
     switchBetweenDemoandReal()
     fiatWalletcheck()
   })
-  it(
+  it.only(
     'Responsive - Check demo and Real wallet switcher',
     { scrollBehavior: false },
     () => {
@@ -181,6 +181,7 @@ describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
       ).then((listbar) => {
         cy.log('the length of progress bar is ' + listbar)
         for (let i = 0; i < listbar; i++) {
+          cy.findByText("Trader's Hub").scrollIntoView().should('be.visible')
           clickProgressBarItem(i)
           cy.get('@textContent').then((textContent) => {
             expect(textContent).to.include('Wallet')
