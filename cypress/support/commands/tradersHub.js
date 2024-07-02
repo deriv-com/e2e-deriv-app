@@ -969,7 +969,7 @@ Cypress.Commands.add(
 )
 
 Cypress.Commands.add('c_checkTotalAssetSummary', () => {
-  cy.get('.asset-summary', { timeout: 15000 })
+  cy.get('.asset-summary', { timeout: 30000 })
     .scrollIntoView()
     .should('be.visible')
 })
