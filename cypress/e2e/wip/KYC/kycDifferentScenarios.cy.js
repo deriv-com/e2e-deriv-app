@@ -194,8 +194,7 @@ describe('QATEST-4745 Trigger KYC check in different scenarios.', () => {
       '.notification.notification--announce[data-testid="dt_default_component"]'
     ).should('be.visible')
   })
-
-  it('Creation of MT5 regulated account, should submit both POI and POA', () => {
+  it('Creation of MT5 regulated account, should ask for both POI and POA', () => {
     cy.c_visitResponsive('/', 'small')
     /* check that to create MT5 regulated account, you have to submit POI and POA */
     cy.findByRole('button', { name: 'CFDs' }).click()
@@ -204,7 +203,21 @@ describe('QATEST-4745 Trigger KYC check in different scenarios.', () => {
       .click()
     cy.findByText('British Virgin Islands').should('be.visible').click()
     cy.get('.dc-checkbox__box').click()
-    cy.findByTestId('dt_modal_footer').contains('button', 'Next').click()
+    cy.contains('button', 'Next').click()
+    cy.get('.dc-checkbox__box').click()
+    cy.findByText('Passport').click()
+    cy.findByText('Submit passport photo pages').should('be.visible')
+    cy.findByText('or upload photo – no scans or photocopies').click()
+    cy.findByText('Upload passport photo page').should('be.visible')
+    cy.get('input[type=file]').selectFile(
+      'cypress/fixtures/kyc/testDriversLicense.jpeg',
+      { force: true }
+    )
+    cy.findByText('Confirm').click()
+    cy.findByText('Continue').click()
+    cy.findByText('Take a selfie').should('be.visible')
+    cy.get('.onfido-sdk-ui-Camera-btn').click()
+    cy.findByText('Confirm').click()
     cy.get('input[type=file]').selectFile(
       'cypress/fixtures/kyc/testDocument.jpg',
       { force: true }
@@ -214,5 +227,8 @@ describe('QATEST-4745 Trigger KYC check in different scenarios.', () => {
       Cypress.env('credentials').test.mt5User.PSWD
     )
     cy.contains('button', 'Create Deriv MT5 password').click()
+    cy.contains('Your Deriv MT5 Standard account is ready.').should(
+      'be.visible'
+    )
   })
 })
