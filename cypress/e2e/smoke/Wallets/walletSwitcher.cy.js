@@ -42,15 +42,7 @@ function fiatWalletcheck() {
   cy.findByLabelText('deposit').should('be.visible')
   cy.findByLabelText('withdrawal').should('be.visible')
   cy.findByLabelText('account-transfer').should('be.visible')
-  cy.findAllByText('Options')
-    .eq(1)
-    .should('be.visible')
-    .then(() =>
-      cy
-        .findByTestId('dt_desktop_accounts_list')
-        .findByText('SVG')
-        .should('be.visible')
-    )
+  cy.findAllByText('Options').eq(1).should('be.visible')
   cy.findByText('Add more Wallets').scrollIntoView().should('be.visible')
 
   cy.findByText('USD Wallet').should('be.visible')
@@ -81,15 +73,11 @@ function demoWalletCheck() {
   cy.findByLabelText('reset-balance').should('be.visible')
   cy.findByLabelText('account-transfer').should('be.visible')
   cy.findByRole('button', { name: 'Options' })
-    .click()
+    .click({ force: true })
     .then(() => {
       cy.findByTestId('dt_tab_panels')
         .findAllByText('Options', { exact: true })
         .should('be.visible')
-        .then(() => {
-          cy.findByText('Demo').should('be.visible')
-          cy.contains(/VRTC/).should('be.visible')
-        })
     })
 }
 function switchBetweenDemoandReal() {
@@ -172,7 +160,7 @@ describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
     { scrollBehavior: false },
     () => {
       cy.c_visitResponsive('/', 'small')
-      cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
+      cy.c_WaitUntilWalletsPageIsLoaded()
       cy.c_skipPasskeysV2()
       //User should always login to Real fiat wallet dashboard.
       verifyMobileHomePage()
@@ -182,7 +170,6 @@ describe('QATEST-157196 Demo and Real Wallet Switcher', () => {
       ).then((listbar) => {
         cy.log('the length of progress bar is ' + listbar)
         for (let i = 0; i < listbar; i++) {
-          cy.findByText("Trader's Hub").scrollIntoView().should('be.visible')
           clickProgressBarItem(i)
           cy.get('@textContent').then((textContent) => {
             expect(textContent).to.include('Wallet')

@@ -21,10 +21,7 @@ describe('QATEST-142456 - Add Trading account', () => {
     { scrollBehavior: false },
     () => {
       cy.c_visitResponsive('/', 'small')
-      cy.c_skipPasskeysV2()
-      cy.findAllByText(/Wallet/, { timeout: 10000 }).should('exist')
-      cy.c_skipPasskeysV2()
-      cy.findAllByText(/Deposit/, { timeout: 10000 }).should('exist')
+      cy.c_WaitUntilWalletsPageIsLoaded()
       cy.c_skipPasskeysV2()
       cy.c_switchWalletsAccountResponsive('BTC')
       cy.c_setupTradeAccountResponsive('BTC')
